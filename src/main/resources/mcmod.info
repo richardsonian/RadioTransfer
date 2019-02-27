@@ -1,0 +1,16 @@
+[
+{
+  "modid": "radiotransfer",
+  "name": "Radio Transfer",
+  "description": "A Mod that implements the construction of Radio apparatus to transfer resources, energy, and data.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Ian Richardson", "Ian Balaguera"],
+  "credits": "To Pick, our beloved AP Comp Sci Teacher",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
