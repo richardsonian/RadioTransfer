@@ -1,5 +1,6 @@
 package com.rlapcs.radiotransfer.proxy;
-import com.rlapcs.radiotransfer.*;
+import com.rlapcs.radiotransfer.common.DemoBlock;
+import com.rlapcs.radiotransfer.common.ModBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;

@@ -1,5 +1,6 @@
-package com.rlapcs.radiotransfer;
+package com.rlapcs.radiotransfer.common;
 
+import com.rlapcs.radiotransfer.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 

@@ -1,4 +1,4 @@
-package com.rlapcs.radiotransfer;
+package com.rlapcs.radiotransfer.common;
 
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
