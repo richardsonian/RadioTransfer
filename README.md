@@ -1,4 +1,4 @@
-# RadioTransfer
+# com.rlapcs.radiotransfer.RadioTransfer
 A Minecraft mod which implements the development of radios to transfer resources, power, and data.
 
 ## How to intitialize environment
