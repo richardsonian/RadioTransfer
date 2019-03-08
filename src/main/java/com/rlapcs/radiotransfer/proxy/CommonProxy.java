@@ -1,6 +1,7 @@
 package com.rlapcs.radiotransfer.proxy;
 import com.rlapcs.radiotransfer.common.DemoBlock;
 import com.rlapcs.radiotransfer.common.ModBlocks;
+import com.rlapcs.radiotransfer.common.items.DemoItem;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -27,7 +28,13 @@ public class CommonProxy {
 
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event) {
+        //~~~~~ Block Items ~~~~~//
+        //DemoBlock
         event.getRegistry().register(new ItemBlock(ModBlocks.demoBlock).setRegistryName
          (ModBlocks.demoBlock.getRegistryName()));
+
+        //~~~~~ Normal Items ~~~~//
+        //demoitem
+        event.getRegistry().register(new DemoItem());
     }
 }
