@@ -1,4 +1,4 @@
-package com.rlapcs.radiotransfer.common;
+package com.rlapcs.radiotransfer.common.blocks;
 
 import com.rlapcs.radiotransfer.*;
 import net.minecraft.block.Block;
