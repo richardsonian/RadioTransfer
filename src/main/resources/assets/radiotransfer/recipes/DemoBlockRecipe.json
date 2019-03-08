@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    " x ",
+    "xxx",
+    " x "
+  ],
+  "key":
+  {
+    "x":
+    {
+      "type": "forge:ore_dict",
+      "ore": "dirt"
+    }
+  },
+  "result":
+  {
+    "item": "radiotransfer:demoitem",
+    "count": 4
+  }
+}
