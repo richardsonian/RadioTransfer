@@ -1,7 +1,11 @@
 package com.rlapcs.radiotransfer;
 
-import net.minecraftforge.fml.common.*;
-import net.minecraftforge.fml.common.event.*;
+import com.rlapcs.radiotransfer.proxy.*;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import org.apache.logging.log4j.Logger;
 
 @Mod(modid = RadioTransfer.MODID, name = RadioTransfer.MODNAME, version = RadioTransfer.MODVERSION,
@@ -12,8 +16,8 @@ public class RadioTransfer {
     public static final String MODNAME = "Radio Transfer";
     public static final String MODVERSION = "0.0.1";
 
-    @SidedProxy(clientSide = "apcs.radiotransfer.proxy.ClientProxy",
-            serverSide = "iabma.radiotransfer.proxy.ServerProxy")
+    @SidedProxy(clientSide = "com.rlapcs.radiotransfer.proxy.ClientProxy",
+            serverSide = "com.rlapcs.radiotransfer.proxy.ServerProxy")
     public static CommonProxy proxy;
 
     @Mod.Instance

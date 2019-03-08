@@ -1,4 +1,5 @@
-package com.rlapcs.radiotransfer;
+package com.rlapcs.radiotransfer.proxy;
+import com.rlapcs.radiotransfer.*;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -25,6 +26,7 @@ public class CommonProxy {
 
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event) {
-        event.getRegistry().register(new ItemBlock(ModBlocks.demoBlock).setRegistryName(ModBlocks.demoBlock.getRegistryName()));
+        event.getRegistry().register(new ItemBlock(ModBlocks.demoBlock).setRegistryName
+         (ModBlocks.demoBlock.getRegistryName()));
     }
 }

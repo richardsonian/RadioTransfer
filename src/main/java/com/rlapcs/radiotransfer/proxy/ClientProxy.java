@@ -1,4 +1,4 @@
-package com.rlapcs.radiotransfer;
+package com.rlapcs.radiotransfer.proxy;
 import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.eventhandler.*;
 import net.minecraftforge.fml.common.*;

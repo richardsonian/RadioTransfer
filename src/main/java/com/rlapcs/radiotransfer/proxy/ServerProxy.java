@@ -1,4 +1,4 @@
-package com.rlapcs.radiotransfer;
+package com.rlapcs.radiotransfer.proxy;
 
 public class ServerProxy extends CommonProxy {
 
