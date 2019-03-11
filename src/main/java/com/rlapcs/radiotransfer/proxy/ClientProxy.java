@@ -1,4 +1,6 @@
 package com.rlapcs.radiotransfer.proxy;
+import com.rlapcs.radiotransfer.common.blocks.ModBlocks;
+import com.rlapcs.radiotransfer.common.items.ModItems;
 import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.eventhandler.*;
 import net.minecraftforge.fml.common.*;
@@ -14,5 +16,7 @@ public class ClientProxy extends CommonProxy {
 
     @SubscribeEvent
     public static void registerModels(ModelRegistryEvent event) {
+        ModBlocks.initModels();
+        ModItems.initModels();
     }
 }
