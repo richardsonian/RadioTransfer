@@ -9,6 +9,9 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.eventhandler.*;
 import net.minecraftforge.fml.common.*;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+
+import static com.rlapcs.radiotransfer.RadioTransfer.instance;
 
 @Mod.EventBusSubscriber
 public class CommonProxy {
@@ -16,6 +19,7 @@ public class CommonProxy {
     }
 
     public void init(FMLInitializationEvent e) {
+        NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiProxy());
     }
 
     public void postInit(FMLPostInitializationEvent e) {
