@@ -1,4 +1,5 @@
 package com.rlapcs.radiotransfer.proxy;
+import com.rlapcs.radiotransfer.RadioTransfer;
 import com.rlapcs.radiotransfer.common.blocks.DemoBlock;
 import com.rlapcs.radiotransfer.common.blocks.ModBlocks;
 import com.rlapcs.radiotransfer.common.items.DemoItem;
@@ -40,5 +41,6 @@ public class CommonProxy {
         //~~~~~ Normal Items ~~~~//
         //demoitem
         event.getRegistry().register(new DemoItem());
+        event.getRegistry().register(new Item().setUnlocalizedName(RadioTransfer.MODID + ".redgem").setRegistryName("redgem"));
     }
 }
