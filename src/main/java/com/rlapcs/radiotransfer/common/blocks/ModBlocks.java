@@ -10,5 +10,6 @@ public class ModBlocks {
 
     @SideOnly(Side.CLIENT)
     public static void initModels() {
+        demoBlock.initModel();
     }
 }
