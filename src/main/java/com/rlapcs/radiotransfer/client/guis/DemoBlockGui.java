@@ -11,7 +11,7 @@ public class DemoBlockGui extends GuiContainer {
     public static final int HEIGHT = 152;
 
     private static final ResourceLocation background = new ResourceLocation(RadioTransfer.MODID, "textures" +
-            "/gui/demogui.png");
+            "/gui/demogui-test.png");
 
     public DemoBlockGui(DemoBlockTileEntity tileEntity, DemoContainer container) {
         super(container);
