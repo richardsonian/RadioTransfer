@@ -27,7 +27,8 @@ public class ModItems {
 
 
     /**
-     * Gets all the static item fields.
+     * Gets all the items in static fields at the top of the class which were filled by the registry.
+     * Useful if you need to get a list of all the items registered.
      * @return A list of the items.
      */
     public static List<Item> getAllItems() {

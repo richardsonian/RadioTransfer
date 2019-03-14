@@ -20,10 +20,12 @@ public class ModBlocks {
         public static final ItemClass item_name = null;
      */
     public static final DemoBlock demoblock = null;
+    public static final Transmitter transmitter = null;
 
 
     /**
-     * Gets all the static Block fields.
+     * Gets all the blocks in static fields at the top of the class which were filled by the registry.
+     * Useful if you need to get a list of all the blocks registered.
      * @return A list of the blocks.
      */
     public static List<Block> getAllBlocks() {
@@ -57,6 +59,7 @@ public class ModBlocks {
 
         /* Add one instance of each block here */
         blocks.add(new DemoBlock());
+        blocks.add(new Transmitter());
         /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
         return blocks;
     }
@@ -76,5 +79,6 @@ public class ModBlocks {
                 new ModelResourceLocation(anon_block.getRegistryName(), "inventory"));
          */
         demoblock.initModel();
+        transmitter.initModel();
     }
 }
