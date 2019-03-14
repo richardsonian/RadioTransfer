@@ -11,7 +11,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ModItems {
 
     @ObjectHolder("demoitem")
-    public static final DemoItem demoItem = null;
+    public static final DemoItem demoItem = null; //will be autofilled
 
     @ObjectHolder("redgem")
     public static final Item redGem = null;
