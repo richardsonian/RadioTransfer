@@ -20,7 +20,7 @@ public class ModBlocks {
         public static final ItemClass item_name = null;
      */
     public static final DemoBlock demoblock = null;
-    public static final Transmitter transmitter = null;
+    public static final TransmitterBlock transmitter = null;
 
     /**
      * Returns a list of instances of blocks that are to be added to the registry.
@@ -31,7 +31,7 @@ public class ModBlocks {
 
         /* Add one instance of each block here */
         blocks.add(new DemoBlock());
-        blocks.add(new Transmitter());
+        blocks.add(new TransmitterBlock());
         /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
         return blocks;
     }

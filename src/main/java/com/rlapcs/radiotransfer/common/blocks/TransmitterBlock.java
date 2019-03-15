@@ -1,7 +1,6 @@
 package com.rlapcs.radiotransfer.common.blocks;
 
 import com.rlapcs.radiotransfer.*;
-import com.rlapcs.radiotransfer.common.tileEntities.DemoBlockTileEntity;
 import com.rlapcs.radiotransfer.common.tileEntities.TransmitterTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -19,10 +18,10 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class Transmitter extends Block implements ITileEntityProvider {
+public class TransmitterBlock extends Block implements ITileEntityProvider {
     public static final int GUI_ID = 2; //?
 
-    public Transmitter() {
+    public TransmitterBlock() {
         super(Material.IRON);
         setUnlocalizedName(RadioTransfer.MODID + ".transmitter");
         setRegistryName("transmitter");

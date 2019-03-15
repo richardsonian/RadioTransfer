@@ -13,7 +13,7 @@ public class TransmitterGui extends GuiContainer {
     private static final ResourceLocation background = new ResourceLocation(RadioTransfer.MODID, "textures" +
             "/gui/demogui-test.png");
 
-    public DemoBlockGui(DemoBlockTileEntity tileEntity, DemoContainer container) {
+    public TransmitterGui(DemoBlockTileEntity tileEntity, DemoContainer container) {
         super(container);
 
         xSize = WIDTH;
