@@ -3,6 +3,8 @@ import com.rlapcs.radiotransfer.RadioTransfer;
 import com.rlapcs.radiotransfer.common.blocks.DemoBlock;
 import com.rlapcs.radiotransfer.common.blocks.ModBlocks;
 import com.rlapcs.radiotransfer.common.items.DemoItem;
+import com.rlapcs.radiotransfer.common.items.ModItems;
+import com.rlapcs.radiotransfer.common.tileEntities.ModTileEntities;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -28,19 +30,25 @@ public class CommonProxy {
 
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
-        event.getRegistry().register(new DemoBlock());
+        //Register Blocks
+        for(Block block : ModBlocks.getInstancesForRegistry()) {
+            event.getRegistry().register(block);
+        }
+
+        //Register Tile Entities
+        ModTileEntities.registerTileEntities();
     }
 
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event) {
-        //~~~~~ Block Items ~~~~~//
-        //DemoBlock
-        event.getRegistry().register(new ItemBlock(ModBlocks.demoBlock).setRegistryName
-         (ModBlocks.demoBlock.getRegistryName()));
+        //Block Items
+        for(Block block : ModBlocks.getAllBlocks()) {
+            event.getRegistry().register(new ItemBlock(block).setRegistryName(block.getRegistryName()));
+        }
 
-        //~~~~~ Normal Items ~~~~//
-        //demoitem
-        event.getRegistry().register(new DemoItem());
-        event.getRegistry().register(new Item().setUnlocalizedName(RadioTransfer.MODID + ".redgem").setRegistryName("redgem"));
+        //Normal Items
+        for(Item item : ModItems.getInstancesForRegistry()) {
+            event.getRegistry().register(item);
+        }
     }
 }
