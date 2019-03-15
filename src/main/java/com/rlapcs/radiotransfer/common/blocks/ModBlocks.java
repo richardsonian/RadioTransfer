@@ -22,34 +22,6 @@ public class ModBlocks {
     public static final DemoBlock demoblock = null;
     public static final Transmitter transmitter = null;
 
-
-    /**
-     * Gets all the blocks in static fields at the top of the class which were filled by the registry.
-     * Useful if you need to get a list of all the blocks registered.
-     * @return A list of the blocks.
-     */
-    public static List<Block> getAllBlocks() {
-        List<Block> blocks = new ArrayList<>();
-
-        Field[] fields = ModBlocks.class.getDeclaredFields();
-        for (Field f : fields) {
-            if(Modifier.isStatic(f.getModifiers())) {
-                Object fieldValue = null;
-                try {
-                    fieldValue = f.get(null);
-                } catch (IllegalAccessException e) {
-                    //Shouldn't happen
-                    System.err.println("Error getting all blocks from static fields.");
-                    e.printStackTrace();
-                }
-                if (fieldValue instanceof Block) {
-                    blocks.add((Block) fieldValue);
-                }
-            }
-        }
-        return blocks;
-    }
-
     /**
      * Returns a list of instances of blocks that are to be added to the registry.
      * @return The list.
@@ -80,5 +52,32 @@ public class ModBlocks {
          */
         demoblock.initModel();
         transmitter.initModel();
+    }
+
+    /**
+     * Gets all the blocks in static fields at the top of the class which were filled by the registry.
+     * Useful if you need to get a list of all the blocks registered.
+     * @return A list of the blocks.
+     */
+    public static List<Block> getAllBlocks() {
+        List<Block> blocks = new ArrayList<>();
+
+        Field[] fields = ModBlocks.class.getDeclaredFields();
+        for (Field f : fields) {
+            if(Modifier.isStatic(f.getModifiers())) {
+                Object fieldValue = null;
+                try {
+                    fieldValue = f.get(null);
+                } catch (IllegalAccessException e) {
+                    //Shouldn't happen
+                    System.err.println("Error getting all blocks from static fields.");
+                    e.printStackTrace();
+                }
+                if (fieldValue instanceof Block) {
+                    blocks.add((Block) fieldValue);
+                }
+            }
+        }
+        return blocks;
     }
 }

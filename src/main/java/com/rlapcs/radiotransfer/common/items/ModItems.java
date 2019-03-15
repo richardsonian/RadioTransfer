@@ -27,34 +27,6 @@ public class ModItems {
 
 
     /**
-     * Gets all the items in static fields at the top of the class which were filled by the registry.
-     * Useful if you need to get a list of all the items registered.
-     * @return A list of the items.
-     */
-    public static List<Item> getAllItems() {
-        List<Item> items = new ArrayList<>();
-
-        Field[] fields = ModItems.class.getDeclaredFields();
-        for (Field f : fields) {
-            if(Modifier.isStatic(f.getModifiers())) {
-                Object fieldValue = null;
-                try {
-                    fieldValue = f.get(null);
-                } catch (IllegalAccessException e) {
-                    //Shouldn't happen
-                    System.err.println("Error getting all items from static fields.");
-                    e.printStackTrace();
-                }
-                if (fieldValue instanceof Item) {
-                    items.add((Item) fieldValue);
-                }
-            }
-        }
-        return items;
-    }
-
-
-    /**
      * Returns a list of instances of items that are to be added to the registry.
      * @return The list.
      */
@@ -83,5 +55,32 @@ public class ModItems {
          */
         demoitem.initModel();
         ModelLoader.setCustomModelResourceLocation(redgem, 0, new ModelResourceLocation(redgem.getRegistryName(), "inventory"));
+    }
+
+    /**
+     * Gets all the items in static fields at the top of the class which were filled by the registry.
+     * Useful if you need to get a list of all the items registered.
+     * @return A list of the items.
+     */
+    public static List<Item> getAllItems() {
+        List<Item> items = new ArrayList<>();
+
+        Field[] fields = ModItems.class.getDeclaredFields();
+        for (Field f : fields) {
+            if(Modifier.isStatic(f.getModifiers())) {
+                Object fieldValue = null;
+                try {
+                    fieldValue = f.get(null);
+                } catch (IllegalAccessException e) {
+                    //Shouldn't happen
+                    System.err.println("Error getting all items from static fields.");
+                    e.printStackTrace();
+                }
+                if (fieldValue instanceof Item) {
+                    items.add((Item) fieldValue);
+                }
+            }
+        }
+        return items;
     }
 }
