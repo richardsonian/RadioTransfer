@@ -1,6 +1,8 @@
 package com.rlapcs.radiotransfer.common.blocks;
 
 import com.rlapcs.radiotransfer.*;
+import com.rlapcs.radiotransfer.common.network.PacketHandler;
+import com.rlapcs.radiotransfer.common.network.PacketSendKey;
 import com.rlapcs.radiotransfer.common.tileEntities.TransmitterTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -41,7 +43,8 @@ public class TransmitterBlock extends Block implements ITileEntityProvider {
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         // Only execute on the server
-        if (worldIn.isRemote) {
+        PacketHandler.INSTANCE.sendToServer(new PacketSendKey());
+        /*if (worldIn.isRemote) {
             return true;
         }
         TileEntity te = worldIn.getTileEntity(pos);
@@ -49,7 +52,7 @@ public class TransmitterBlock extends Block implements ITileEntityProvider {
             return false;
         }
         playerIn.openGui(RadioTransfer.instance, GUI_ID, worldIn, pos.getX(), pos.getY(),
-                pos.getZ());
+                pos.getZ());*/
         return true;
     }
 }

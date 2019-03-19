@@ -4,6 +4,7 @@ import com.rlapcs.radiotransfer.common.blocks.DemoBlock;
 import com.rlapcs.radiotransfer.common.blocks.ModBlocks;
 import com.rlapcs.radiotransfer.common.items.DemoItem;
 import com.rlapcs.radiotransfer.common.items.ModItems;
+import com.rlapcs.radiotransfer.common.network.PacketHandler;
 import com.rlapcs.radiotransfer.common.tileEntities.ModTileEntities;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -19,6 +20,7 @@ import static com.rlapcs.radiotransfer.RadioTransfer.instance;
 @Mod.EventBusSubscriber
 public class CommonProxy {
     public void preInit(FMLPreInitializationEvent e) {
+        PacketHandler.registerMessages("radiotransfer");
     }
 
     public void init(FMLInitializationEvent e) {
