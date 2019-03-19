@@ -19,7 +19,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TransmitterBlock extends Block implements ITileEntityProvider {
-    public static final int GUI_ID = 2; //?
+    public static final int GUI_ID = 2;
 
     public TransmitterBlock() {
         super(Material.IRON);
@@ -32,7 +32,6 @@ public class TransmitterBlock extends Block implements ITileEntityProvider {
         ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0,
                 new ModelResourceLocation(getRegistryName(), "inventory"));
     }
-
 
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta) {

@@ -3,3 +3,4 @@ item.radiotransfer.demoitem.name=Demo Item
 item.radiotransfer.redgem.name=Red Gem
 # blocks
 tile.radiotransfer.demoblock.name=Demo Block
+tile.radiotransfer.transmitter.name=Transmitter

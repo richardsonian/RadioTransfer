@@ -6,7 +6,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ModTileEntities {
     public static void registerTileEntities() {
-        GameRegistry.registerTileEntity(DemoBlockTileEntity.class, new ResourceLocation(RadioTransfer.MODID, "demoblock_tileEntity")); //is this right?
-        GameRegistry.registerTileEntity(TransmitterTileEntity.class, new ResourceLocation(RadioTransfer.MODID, "transmitter_tileEntity"));
+        GameRegistry.registerTileEntity(DemoBlockTileEntity.class, new ResourceLocation(RadioTransfer.MODID, "_tileEntity")); //is this right?
+        GameRegistry.registerTileEntity(TransmitterTileEntity.class, new ResourceLocation(RadioTransfer.MODID, "_tileEntity"));
     }
 }

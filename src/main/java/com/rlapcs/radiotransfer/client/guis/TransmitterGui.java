@@ -1,8 +1,8 @@
 package com.rlapcs.radiotransfer.client.guis;
 
 import com.rlapcs.radiotransfer.RadioTransfer;
-import com.rlapcs.radiotransfer.common.containers.DemoContainer;
-import com.rlapcs.radiotransfer.common.tileEntities.DemoBlockTileEntity;
+import com.rlapcs.radiotransfer.common.containers.TransmitterContainer;
+import com.rlapcs.radiotransfer.common.tileEntities.TransmitterTileEntity;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.util.ResourceLocation;
 
@@ -13,7 +13,7 @@ public class TransmitterGui extends GuiContainer {
     private static final ResourceLocation background = new ResourceLocation(RadioTransfer.MODID, "textures" +
             "/gui/demogui-test.png");
 
-    public TransmitterGui(DemoBlockTileEntity tileEntity, DemoContainer container) {
+    public TransmitterGui(TransmitterTileEntity tileEntity, TransmitterContainer container) {
         super(container);
 
         xSize = WIDTH;
