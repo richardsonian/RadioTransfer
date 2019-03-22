@@ -22,7 +22,7 @@ public class RadioNetwork extends WorldSavedData {
     public RadioNetwork(String s) {
         super(s);
     }
-
+    
     public static void addNode(String callsign, NodeType type, double frequency) {
         nodes.put(new Node(callsign, type, frequency, ID++), type);
     }
