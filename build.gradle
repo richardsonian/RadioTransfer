@@ -1,10 +1,12 @@
 buildscript {
     repositories {
         jcenter()
-        maven { url = "http://files.minecraftforge.net/maven" }
+        maven { url "http://files.minecraftforge.net/maven" }
+        maven { url "http://maven.amadornes.com/" }
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath "MCMultiPart2:MCMultiPart:2.5.3"
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
