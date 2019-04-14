@@ -14,6 +14,4 @@ public enum RadioRegistry {
     private RadioRegistry() {}
 
     public static final double[] FREQUENCIES = {1, 2, 3};
-
-    qw  q   q
 }

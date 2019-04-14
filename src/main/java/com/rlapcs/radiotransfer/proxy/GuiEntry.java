@@ -16,8 +16,9 @@ public class GuiEntry<T extends TileEntity, G extends GuiScreen, C extends Conta
     private Class<C> containerClass;
 
     public GuiEntry(Class<T> tileEntityClass, Class<G> guiClass, Class<C> containerClass) {
-        this.GUI_ID = NEXT_GUI_ID;
+
         NEXT_GUI_ID++;
+        this.GUI_ID = NEXT_GUI_ID;
 
         this.tileEntityClass = tileEntityClass;
         this.guiClass = guiClass;
@@ -44,7 +45,7 @@ public class GuiEntry<T extends TileEntity, G extends GuiScreen, C extends Conta
 
     public C getNewContainer(IInventory inventory, T te) {
         try {
-            return (C) containerClass.getConstructor().newInstance(inventory, te);
+            return (C) containerClass.getConstructor(IInventory.class, tileEntityClass).newInstance(inventory, te);
         } catch(NoSuchMethodException e) {
             //redundant with ReflectiveOperationException
             e.printStackTrace();
@@ -64,7 +65,7 @@ public class GuiEntry<T extends TileEntity, G extends GuiScreen, C extends Conta
 
     public G getNewGuiScreen(T te, C container) {
         try {
-            return (G) guiClass.getConstructor().newInstance(te, container);
+            return (G) guiClass.getConstructor(tileEntityClass, containerClass).newInstance(te, container);
         } catch(NoSuchMethodException e) {
             //redundant with ReflectiveOperationException
             e.printStackTrace();

@@ -21,6 +21,7 @@ public class CommonProxy {
     }
 
     public void init(FMLInitializationEvent e) {
+        ModTileEntities.registerTileEntities(); //Put here so that @ObjectHolder fields have been filled (after registry events). Not sure if this will cause issues.
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiProxy());
     }
 
@@ -34,8 +35,7 @@ public class CommonProxy {
             event.getRegistry().register(block);
         }
 
-        //Register Tile Entities
-        ModTileEntities.registerTileEntities();
+        //Register Tile Entities used to go here
     }
 
     @SubscribeEvent

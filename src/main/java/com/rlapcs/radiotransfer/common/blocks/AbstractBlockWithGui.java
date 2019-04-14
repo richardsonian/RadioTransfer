@@ -7,7 +7,6 @@ import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -24,7 +23,7 @@ public abstract class AbstractBlockWithGui extends Block implements ITileEntityP
     protected Class<? extends GuiScreen> guiClass;
     protected Class<? extends TileEntity> tileEntityClass;
 
-    public AbstractBlockWithGui(Material material, Class<? extends GuiScreen> guiClass, Class<? extends TileEntity> tileEntityClass) {
+    public AbstractBlockWithGui(Material material, Class<? extends TileEntity> tileEntityClass, Class<? extends GuiScreen> guiClass) {
         super(material);
         this.guiClass = guiClass;
         this.tileEntityClass = tileEntityClass;
