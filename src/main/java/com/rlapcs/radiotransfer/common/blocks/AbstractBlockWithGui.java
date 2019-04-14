@@ -1,13 +1,13 @@
 package com.rlapcs.radiotransfer.common.blocks;
 
-import com.rlapcs.radiotransfer.*;
-import com.rlapcs.radiotransfer.common.network.PacketHandler;
-import com.rlapcs.radiotransfer.common.network.PacketSendKey;
-import com.rlapcs.radiotransfer.common.tileEntities.TransmitterTileEntity;
+import com.rlapcs.radiotransfer.RadioTransfer;
+import com.rlapcs.radiotransfer.proxy.GuiProxy;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -20,13 +20,14 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class TransmitterBlock extends Block implements ITileEntityProvider {
-    public static final int GUI_ID = 2;
+public abstract class AbstractBlockWithGui extends Block implements ITileEntityProvider {
+    protected Class<? extends GuiScreen> guiClass;
+    protected Class<? extends TileEntity> tileEntityClass;
 
-    public TransmitterBlock() {
-        super(Material.IRON);
-        setUnlocalizedName(RadioTransfer.MODID + ".transmitter");
-        setRegistryName("transmitter");
+    public AbstractBlockWithGui(Material material, Class<? extends GuiScreen> guiClass, Class<? extends TileEntity> tileEntityClass) {
+        super(material);
+        this.guiClass = guiClass;
+        this.tileEntityClass = tileEntityClass;
     }
 
     @SideOnly(Side.CLIENT)
@@ -36,23 +37,31 @@ public class TransmitterBlock extends Block implements ITileEntityProvider {
     }
 
     @Override
+    public boolean hasTileEntity(IBlockState state) {return true;}
+
+    @Override
     public TileEntity createNewTileEntity(World worldIn, int meta) {
-        return new TransmitterTileEntity();
+        try {
+            return tileEntityClass.getConstructor().newInstance();
+        } catch(ReflectiveOperationException e) {
+            e.printStackTrace();
+            System.err.println("Error creating new TileEntity of type " + tileEntityClass.getName() + " for block " + this);
+            return null;
+        }
     }
 
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        // Only execute on the server
-        PacketHandler.INSTANCE.sendToServer(new PacketSendKey());
-        /*if (worldIn.isRemote) {
+        if (worldIn.isRemote) {
             return true;
         }
         TileEntity te = worldIn.getTileEntity(pos);
-        if (!(te instanceof TransmitterTileEntity)) {
+        if (!(tileEntityClass.isInstance(te))) {
             return false;
         }
-        playerIn.openGui(RadioTransfer.instance, GUI_ID, worldIn, pos.getX(), pos.getY(),
-                pos.getZ());*/
+
+        playerIn.openGui(RadioTransfer.instance, GuiProxy.getIDFromTileEntiyClass(tileEntityClass), worldIn, pos.getX(), pos.getY(),
+                pos.getZ());
         return true;
     }
 }

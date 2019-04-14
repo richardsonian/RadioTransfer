@@ -19,8 +19,8 @@ public class ModBlocks {
         Example:
         public static final ItemClass item_name = null;
      */
-    public static final DemoBlock demoblock = null;
-    public static final TransmitterBlock transmitter = null;
+    public static final BlockDemoBlock demoblock = null;
+    public static final BlockTransmitter transmitter = null;
 
     /**
      * Returns a list of instances of blocks that are to be added to the registry.
@@ -30,8 +30,8 @@ public class ModBlocks {
         List<Block> blocks = new ArrayList<>();
 
         /* Add one instance of each block here */
-        blocks.add(new DemoBlock());
-        blocks.add(new TransmitterBlock());
+        blocks.add(new BlockDemoBlock());
+        blocks.add(new BlockTransmitter());
         /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
         return blocks;
     }

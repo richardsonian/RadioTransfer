@@ -7,8 +7,8 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class DemoItem extends Item {
-    public DemoItem() {
+public class ItemDemoItem extends Item {
+    public ItemDemoItem() {
         setRegistryName("demoitem");  // The unique name (within your mod) that identifies this item
         setUnlocalizedName(RadioTransfer.MODID + ".demoitem");     // Used for localization (en_US.lang)
     }

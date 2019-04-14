@@ -8,7 +8,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class DemoBlockTileEntity extends TileEntity {
+public class TileDemoBlock extends TileEntity {
     public static final int SIZE = 9;
 
     // This item handler will hold our nine inventory slots
@@ -17,7 +17,7 @@ public class DemoBlockTileEntity extends TileEntity {
         protected void onContentsChanged(int slot) {
             // We need to tell the tile entity that something has changed so
             // that the chest contents is persisted
-            DemoBlockTileEntity.this.markDirty();
+            TileDemoBlock.this.markDirty();
         }
     };
 

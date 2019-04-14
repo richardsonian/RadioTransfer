@@ -1,8 +1,5 @@
 package com.rlapcs.radiotransfer.proxy;
-import com.rlapcs.radiotransfer.RadioTransfer;
-import com.rlapcs.radiotransfer.common.blocks.DemoBlock;
 import com.rlapcs.radiotransfer.common.blocks.ModBlocks;
-import com.rlapcs.radiotransfer.common.items.DemoItem;
 import com.rlapcs.radiotransfer.common.items.ModItems;
 import com.rlapcs.radiotransfer.common.network.PacketHandler;
 import com.rlapcs.radiotransfer.common.tileEntities.ModTileEntities;

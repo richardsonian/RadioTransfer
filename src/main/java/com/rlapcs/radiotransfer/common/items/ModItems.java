@@ -23,7 +23,7 @@ public class ModItems {
         public static final ItemClass item_name = null;
      */
     public static final Item redgem = null;
-    public static final DemoItem demoitem = null;
+    public static final ItemDemoItem demoitem = null;
 
 
     /**
@@ -35,7 +35,7 @@ public class ModItems {
 
         /* Add one instance of each item here */
         items.add(new Item().setRegistryName("redgem").setUnlocalizedName(RadioTransfer.MODID + ".redgem"));
-        items.add(new DemoItem());
+        items.add(new ItemDemoItem());
         /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
         return items;
     }

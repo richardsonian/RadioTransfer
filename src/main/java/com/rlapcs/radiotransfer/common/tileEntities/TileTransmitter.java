@@ -4,11 +4,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class TransmitterTileEntity extends TileEntity {
+public class TileTransmitter extends TileEntity implements ITickable {
     public static final int SIZE = 9;
 
     // This item handler will hold our nine inventory slots
@@ -17,7 +18,7 @@ public class TransmitterTileEntity extends TileEntity {
         protected void onContentsChanged(int slot) {
             // We need to tell the tile entity that something has changed so
             // that the chest contents is persisted
-            TransmitterTileEntity.this.markDirty();
+            TileTransmitter.this.markDirty();
         }
     };
 
@@ -55,5 +56,10 @@ public class TransmitterTileEntity extends TileEntity {
             return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(itemStackHandler);
         }
         return super.getCapability(capability, facing);
+    }
+
+    @Override
+    public void update() {
+
     }
 }

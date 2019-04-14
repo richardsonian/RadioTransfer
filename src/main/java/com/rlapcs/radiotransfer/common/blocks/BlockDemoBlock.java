@@ -1,7 +1,7 @@
 package com.rlapcs.radiotransfer.common.blocks;
 
 import com.rlapcs.radiotransfer.*;
-import com.rlapcs.radiotransfer.common.tileEntities.DemoBlockTileEntity;
+import com.rlapcs.radiotransfer.common.tileEntities.TileDemoBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -18,10 +18,10 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class DemoBlock extends Block implements ITileEntityProvider {
+public class BlockDemoBlock extends Block implements ITileEntityProvider {
     public static final int GUI_ID = 1;
 
-    public DemoBlock() {
+    public BlockDemoBlock() {
         super(Material.IRON);
         setUnlocalizedName(RadioTransfer.MODID + ".demoblock");
         setRegistryName("demoblock");
@@ -35,7 +35,7 @@ public class DemoBlock extends Block implements ITileEntityProvider {
 
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta) {
-        return new DemoBlockTileEntity();
+        return new TileDemoBlock();
     }
 
     @Override
@@ -45,7 +45,7 @@ public class DemoBlock extends Block implements ITileEntityProvider {
             return true;
         }
         TileEntity te = worldIn.getTileEntity(pos);
-        if (!(te instanceof DemoBlockTileEntity)) {
+        if (!(te instanceof TileDemoBlock)) {
             return false;
         }
         playerIn.openGui(RadioTransfer.instance, GUI_ID, worldIn, pos.getX(), pos.getY(),
