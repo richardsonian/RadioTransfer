@@ -9,10 +9,12 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class ContainerTransmitter<TileTransmitter> extends AbstractContainerWithPlayerInventory {
+public class ContainerTransmitter extends AbstractContainerWithPlayerInventory {
+    private TileTransmitter te;
 
     public ContainerTransmitter(IInventory playerInventory, TileTransmitter te) {
-        super(playerInventory, te);
+        super(playerInventory);
+        this.te = te;
     }
 
     @Override
