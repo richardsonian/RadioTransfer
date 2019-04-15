@@ -1,6 +1,6 @@
 package com.rlapcs.radiotransfer.proxy;
-import com.rlapcs.radiotransfer.common.blocks.ModBlocks;
-import com.rlapcs.radiotransfer.common.items.ModItems;
+
+import com.rlapcs.radiotransfer.registries.*;
 import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.eventhandler.*;
 import net.minecraftforge.fml.common.*;

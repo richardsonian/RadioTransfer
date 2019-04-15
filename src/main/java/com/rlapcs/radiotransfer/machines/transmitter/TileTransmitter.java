@@ -1,4 +1,4 @@
-package com.rlapcs.radiotransfer.common.tileEntities;
+package com.rlapcs.radiotransfer.machines.transmitter;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;

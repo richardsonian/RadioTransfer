@@ -1,7 +1,8 @@
-package com.rlapcs.radiotransfer.common.tileEntities;
+package com.rlapcs.radiotransfer.registries;
 
 import com.rlapcs.radiotransfer.RadioTransfer;
-import com.rlapcs.radiotransfer.common.blocks.ModBlocks;
+import com.rlapcs.radiotransfer.machines.demo.TileDemoBlock;
+import com.rlapcs.radiotransfer.machines.transmitter.TileTransmitter;
 import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;

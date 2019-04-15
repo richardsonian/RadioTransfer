@@ -1,7 +1,8 @@
-package com.rlapcs.radiotransfer.common.blocks;
+package com.rlapcs.radiotransfer.machines.demo;
 
 import com.rlapcs.radiotransfer.*;
-import com.rlapcs.radiotransfer.common.tileEntities.TileDemoBlock;
+import com.rlapcs.radiotransfer.registries.*;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -19,7 +20,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockDemoBlock extends Block implements ITileEntityProvider {
-    public static final int GUI_ID = 1;
+    private final Class tileEntityClass = TileDemoBlock.class;
 
     public BlockDemoBlock() {
         super(Material.IRON);
@@ -48,7 +49,7 @@ public class BlockDemoBlock extends Block implements ITileEntityProvider {
         if (!(te instanceof TileDemoBlock)) {
             return false;
         }
-        playerIn.openGui(RadioTransfer.instance, GUI_ID, worldIn, pos.getX(), pos.getY(),
+        playerIn.openGui(RadioTransfer.instance, ModGuis.getGuiIDFromTileEntityClass(tileEntityClass), worldIn, pos.getX(), pos.getY(),
                 pos.getZ());
         return true;
     }

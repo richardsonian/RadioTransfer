@@ -1,6 +1,5 @@
-package com.rlapcs.radiotransfer.common.containers;
+package com.rlapcs.radiotransfer.machines.transmitter;
 
-import com.rlapcs.radiotransfer.common.tileEntities.TileDemoBlock;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
@@ -10,11 +9,11 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class ContainerDemoBlock extends Container {
+public class ContainerTransmitter extends Container {
 
-    private TileDemoBlock te;
+    private TileTransmitter te;
 
-    public ContainerDemoBlock(IInventory playerInventory, TileDemoBlock te) {
+    public ContainerTransmitter(IInventory playerInventory, TileTransmitter te) {
         this.te = te;
 
         // This container references items out of our own inventory (the 9 slots we hold ourselves)
@@ -65,11 +64,11 @@ public class ContainerDemoBlock extends Container {
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
 
-            if (index < TileDemoBlock.SIZE) {
-                if (!this.mergeItemStack(itemstack1, TileDemoBlock.SIZE, this.inventorySlots.size(), true)) {
+            if (index < TileTransmitter.SIZE) {
+                if (!this.mergeItemStack(itemstack1, TileTransmitter.SIZE, this.inventorySlots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.mergeItemStack(itemstack1, 0, TileDemoBlock.SIZE, false)) {
+            } else if (!this.mergeItemStack(itemstack1, 0, TileTransmitter.SIZE, false)) {
                 return ItemStack.EMPTY;
             }
 

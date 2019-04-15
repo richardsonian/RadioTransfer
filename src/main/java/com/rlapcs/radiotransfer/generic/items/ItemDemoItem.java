@@ -1,4 +1,4 @@
-package com.rlapcs.radiotransfer.common.items;
+package com.rlapcs.radiotransfer.generic.items;
 
 import com.rlapcs.radiotransfer.RadioTransfer;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;

@@ -1,11 +1,12 @@
-package com.rlapcs.radiotransfer.proxy;
+package com.rlapcs.radiotransfer.generic.clientonly.guis;
+
+
+//note: are Generics types and instance variable class objects redundant ( can we get rid of one of them?)
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;
-
-//note: are Generics types and instance variable class objects redundant ( can we get rid of one of them?)
 
 public class GuiEntry<T extends TileEntity, G extends GuiScreen, C extends Container> {
     private static int NEXT_GUI_ID;

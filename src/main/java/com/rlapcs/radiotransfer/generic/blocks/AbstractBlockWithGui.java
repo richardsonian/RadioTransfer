@@ -1,7 +1,9 @@
-package com.rlapcs.radiotransfer.common.blocks;
+package com.rlapcs.radiotransfer.generic.blocks;
+
 
 import com.rlapcs.radiotransfer.RadioTransfer;
-import com.rlapcs.radiotransfer.proxy.GuiProxy;
+import com.rlapcs.radiotransfer.registries.*;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -59,7 +61,7 @@ public abstract class AbstractBlockWithGui extends Block implements ITileEntityP
             return false;
         }
 
-        playerIn.openGui(RadioTransfer.instance, GuiProxy.getIDFromTileEntiyClass(tileEntityClass), worldIn, pos.getX(), pos.getY(),
+        playerIn.openGui(RadioTransfer.instance, ModGuis.getGuiIDFromTileEntityClass(tileEntityClass), worldIn, pos.getX(), pos.getY(),
                 pos.getZ());
         return true;
     }

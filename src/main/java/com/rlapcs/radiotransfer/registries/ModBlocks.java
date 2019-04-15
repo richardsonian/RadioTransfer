@@ -1,5 +1,7 @@
-package com.rlapcs.radiotransfer.common.blocks;
+package com.rlapcs.radiotransfer.registries;
 
+import com.rlapcs.radiotransfer.machines.demo.BlockDemoBlock;
+import com.rlapcs.radiotransfer.machines.transmitter.BlockTransmitter;
 import net.minecraft.block.Block;
 import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 import net.minecraftforge.fml.relauncher.Side;

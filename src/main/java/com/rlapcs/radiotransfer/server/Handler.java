@@ -1,6 +1,6 @@
 package com.rlapcs.radiotransfer.server;
 
-import com.rlapcs.radiotransfer.common.network.PacketSendKey;
+import com.rlapcs.radiotransfer.network.PacketSendKey;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.TextComponentString;
