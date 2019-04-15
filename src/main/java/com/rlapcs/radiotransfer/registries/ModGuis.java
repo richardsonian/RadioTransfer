@@ -16,9 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ModGuis {
-    /* List all Gui Entries here: */ //note: could also use static method and arraylist
-    public static final GuiEntry<TileDemoBlock, GuiDemoBlock, ContainerDemoBlock> demoblock = new GuiEntry<>(TileDemoBlock.class, GuiDemoBlock.class, ContainerDemoBlock.class);
-    public static final GuiEntry<TileTransmitter, GuiTransmitter, ContainerTransmitter> transmitter = new GuiEntry(TileTransmitter.class, GuiTransmitter.class, ContainerTransmitter.class);
+    /* List all Gui Entries here: */
+    public static final GuiEntry demoblock = new GuiEntry(TileDemoBlock.class, GuiDemoBlock.class, ContainerDemoBlock.class);
+    public static final GuiEntry transmitter = new GuiEntry(TileTransmitter.class, GuiTransmitter.class, ContainerTransmitter.class);
     /* end gui entry list */
 
 

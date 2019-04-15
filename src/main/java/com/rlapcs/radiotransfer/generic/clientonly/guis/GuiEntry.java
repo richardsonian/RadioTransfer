@@ -8,15 +8,15 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.tileentity.TileEntity;
 
-public class GuiEntry<T extends TileEntity, G extends GuiScreen, C extends Container> {
+public class GuiEntry {
     private static int NEXT_GUI_ID;
 
     private int GUI_ID;
-    private Class<T> tileEntityClass;
-    private Class<G> guiClass;
-    private Class<C> containerClass;
+    private Class<? extends TileEntity> tileEntityClass;
+    private Class<? extends GuiScreen> guiClass;
+    private Class<? extends Container> containerClass;
 
-    public GuiEntry(Class<T> tileEntityClass, Class<G> guiClass, Class<C> containerClass) {
+    public GuiEntry( Class<? extends TileEntity> tileEntityClass, Class<? extends GuiScreen> guiClass, Class<? extends Container> containerClass) {
 
         NEXT_GUI_ID++;
         this.GUI_ID = NEXT_GUI_ID;
@@ -30,13 +30,14 @@ public class GuiEntry<T extends TileEntity, G extends GuiScreen, C extends Conta
         return GUI_ID;
     }
 
-    public Class<T> getTileEntityClass() {
+    public Class<? extends TileEntity> getTileEntityClass() {
         return this.tileEntityClass;
     }
 
-    public T castToTileEntityType(TileEntity te) {
+    //is this necessary?
+    public TileEntity castToTileEntityType(TileEntity te) {
         try {
-            return (T) te;
+            return tileEntityClass.cast(te);
         } catch(ClassCastException e) {
             e.printStackTrace();
             System.err.println("Class casting error when casting tile entity " + te + " to type " + tileEntityClass.getName() + " with GuiEntry " + this);
@@ -44,9 +45,12 @@ public class GuiEntry<T extends TileEntity, G extends GuiScreen, C extends Conta
         }
     }
 
-    public C getNewContainer(IInventory inventory, T te) {
+    public Container getNewContainer(IInventory inventory, TileEntity te) {
+        if(!tileEntityClass.isInstance(te)) {
+            throw new RuntimeException("Tile entity provided to container in Gui Handler is not of type " + tileEntityClass.getName());
+        }
         try {
-            return (C) containerClass.getConstructor(IInventory.class, tileEntityClass).newInstance(inventory, te);
+            return containerClass.getConstructor(IInventory.class, tileEntityClass).newInstance(inventory, te);
         } catch(NoSuchMethodException e) {
             //redundant with ReflectiveOperationException
             e.printStackTrace();
@@ -64,9 +68,15 @@ public class GuiEntry<T extends TileEntity, G extends GuiScreen, C extends Conta
         }
     }
 
-    public G getNewGuiScreen(T te, C container) {
+    public GuiScreen getNewGuiScreen(TileEntity te, Container container) {
+        if(!tileEntityClass.isInstance(te)) {
+            throw new RuntimeException("Tile entity provided to container in Gui Handler in " + this + " is not of type " + tileEntityClass.getName());
+        }
+        if(!containerClass.isInstance(container)) {
+            throw new RuntimeException("Container provided to container in Gui Handler in " + this + " is not of type " + containerClass.getName());
+        }
         try {
-            return (G) guiClass.getConstructor(tileEntityClass, containerClass).newInstance(te, container);
+            return guiClass.getConstructor(tileEntityClass, containerClass).newInstance(te, container);
         } catch(NoSuchMethodException e) {
             //redundant with ReflectiveOperationException
             e.printStackTrace();

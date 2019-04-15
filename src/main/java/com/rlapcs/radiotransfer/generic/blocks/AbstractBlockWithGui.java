@@ -21,13 +21,13 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+//note: GUI is associated through a GuiEntry in ModGuis
 public abstract class AbstractBlockWithGui extends Block implements ITileEntityProvider {
-    protected Class<? extends GuiScreen> guiClass;
     protected Class<? extends TileEntity> tileEntityClass;
 
-    public AbstractBlockWithGui(Material material, Class<? extends TileEntity> tileEntityClass, Class<? extends GuiScreen> guiClass) {
+    public AbstractBlockWithGui(Material material, Class<? extends TileEntity> tileEntityClass) {
         super(material);
-        this.guiClass = guiClass;
+
         this.tileEntityClass = tileEntityClass;
     }
 
