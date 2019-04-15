@@ -36,7 +36,7 @@ public class ModGuis {
     public static List<GuiEntry> getAllGuiEntries() {
         List<GuiEntry> guiEntries = new ArrayList<>();
 
-        Field[] fields = GuiProxy.class.getDeclaredFields();
+        Field[] fields = ModGuis.class.getDeclaredFields();
         for (Field f : fields) {
             if(Modifier.isStatic(f.getModifiers())) {
                 Object fieldValue = null;

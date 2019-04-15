@@ -14,6 +14,6 @@ public class ModTileEntities {
     }
 
     private static ResourceLocation getTeResourceLocation(Block block) {
-        return new ResourceLocation(RadioTransfer.MODID, block.getRegistryName() + "_tileEntity");
+        return new ResourceLocation(RadioTransfer.MODID, block.getRegistryName().getResourcePath() + "_tileEntity");
     }
 }
