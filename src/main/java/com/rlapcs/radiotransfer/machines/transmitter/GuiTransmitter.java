@@ -21,6 +21,12 @@ public class GuiTransmitter extends GuiContainer {
     }
 
     @Override
+    public void initGui() {
+
+    }
+
+
+    @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         mc.getTextureManager().bindTexture(background);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
