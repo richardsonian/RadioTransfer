@@ -22,7 +22,8 @@ public class GuiTransmitter extends GuiContainer {
 
     @Override
     public void initGui() {
-
+        super.initGui();
+        //add buttons here
     }
 
 
