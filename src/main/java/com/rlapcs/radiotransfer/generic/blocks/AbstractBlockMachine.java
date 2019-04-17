@@ -21,7 +21,8 @@ import net.minecraftforge.items.IItemHandler;
 import javax.annotation.Nullable;
 
 
-public class AbstractBlockMachine extends Block implements ITileEntityProvider {
+
+public abstract class AbstractBlockMachine extends Block implements ITileEntityProvider {
     protected Class<? extends TileEntity> tileEntityClass;
 
     public AbstractBlockMachine(Material material, Class<? extends TileEntity> tileEntityClass) {
@@ -50,6 +51,7 @@ public class AbstractBlockMachine extends Block implements ITileEntityProvider {
     }
 
     //---- DROPS + HARVESTING -----//
+
     @Override
     public void getDrops(net.minecraft.util.NonNullList<ItemStack> drops, IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
         super.getDrops(drops, world, pos, state, fortune);
@@ -68,7 +70,24 @@ public class AbstractBlockMachine extends Block implements ITileEntityProvider {
         }
     }
 
-    // vv Do we need these? vv
+    // ~~~~~~ other optional-to-override methods that we might want to tweak: ~~~~~~~~~~~~~~~
+
+    /**
+     * Called serverside after this block is replaced with another in Chunk, but before the Tile Entity is updated
+     */
+    //public void breakBlock(World worldIn, BlockPos pos, IBlockState state) { super.breakBlock(worldIn, pos, state); }
+
+    /**
+     * Called before the Block is set to air in the world. Called regardless of if the player's tool can actually
+     * collect this block
+     */
+    //public void onBlockHarvested(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player) { super.onBlockHarvested(worldIn, pos, state, player); }
+
+    /**
+     * Get the Item that this Block should drop when harvested.
+     */
+    //public Item getItemDropped(IBlockState state, Random rand, int fortune) { return super.getItemDropped(state, rand, fortune); } //super method returns block.getItemFromBlock()
+
     @Override
     public boolean removedByPlayer(IBlockState state, World world, BlockPos pos, EntityPlayer player, boolean willHarvest)
     {
