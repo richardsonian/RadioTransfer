@@ -38,11 +38,11 @@ public class ContainerTransmitter extends AbstractContainerWithPlayerInventory<T
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
 
-            if (index < TileTransmitter.SIZE) {
-                if (!this.mergeItemStack(itemstack1, TileTransmitter.SIZE, this.inventorySlots.size(), true)) {
+            if (index < tileEntityItemHandlerSlots) {
+                if (!this.mergeItemStack(itemstack1, tileEntityItemHandlerSlots, this.inventorySlots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.mergeItemStack(itemstack1, 0, TileTransmitter.SIZE, false)) {
+            } else if (!this.mergeItemStack(itemstack1, 0, tileEntityItemHandlerSlots, false)) {
                 return ItemStack.EMPTY;
             }
 

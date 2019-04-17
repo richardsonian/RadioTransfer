@@ -13,9 +13,17 @@ import net.minecraftforge.items.SlotItemHandler;
 
 public abstract class AbstractContainerWithPlayerInventory<T extends TileEntity> extends Container {
     protected T te;
+    protected int tileEntityItemHandlerSlots;
 
     public AbstractContainerWithPlayerInventory(IInventory playerInventory, T te) {
         this.te = te;
+
+        if(te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)) {
+            this.tileEntityItemHandlerSlots = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).getSlots();
+        }
+        else {
+            tileEntityItemHandlerSlots = 0;
+        }
 
         // This container references items out of our own inventory (the 9 slots we hold ourselves)
         // as well as the slots from the player inventory so that the user can transfer items between

@@ -22,33 +22,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 //note: GUI is associated through a GuiEntry in ModGuis
-public abstract class AbstractBlockWithGui extends Block implements ITileEntityProvider {
-    protected Class<? extends TileEntity> tileEntityClass;
+public abstract class AbstractBlockMachineWithGui extends AbstractBlockMachine {
 
-    public AbstractBlockWithGui(Material material, Class<? extends TileEntity> tileEntityClass) {
-        super(material);
-
-        this.tileEntityClass = tileEntityClass;
-    }
-
-    @SideOnly(Side.CLIENT)
-    public void initModel() {
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0,
-                new ModelResourceLocation(getRegistryName(), "inventory"));
-    }
-
-    @Override
-    public boolean hasTileEntity(IBlockState state) {return true;}
-
-    @Override
-    public TileEntity createNewTileEntity(World worldIn, int meta) {
-        try {
-            return tileEntityClass.getConstructor().newInstance();
-        } catch(ReflectiveOperationException e) {
-            e.printStackTrace();
-            System.err.println("Error creating new TileEntity of type " + tileEntityClass.getName() + " for block " + this);
-            return null;
-        }
+    public AbstractBlockMachineWithGui(Material material, Class<? extends TileEntity> tileEntityClass) {
+        super(material, tileEntityClass);
     }
 
     @Override

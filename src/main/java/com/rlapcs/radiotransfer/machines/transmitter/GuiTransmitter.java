@@ -2,6 +2,7 @@ package com.rlapcs.radiotransfer.machines.transmitter;
 
 import com.rlapcs.radiotransfer.RadioTransfer;
 
+import com.rlapcs.radiotransfer.generic.clientonly.guis.GuiSelectButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.util.ResourceLocation;
 
@@ -24,6 +25,8 @@ public class GuiTransmitter extends GuiContainer {
     public void initGui() {
         super.initGui();
         //add buttons here
+        //buttonList.add();
+
     }
 
 

@@ -10,7 +10,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 //this should eventually be an inner class of the superGui we make for the transmitter / receiver
 @SideOnly(Side.CLIENT)
-class GuiSelectButton extends GuiButton {
+public class GuiSelectButton extends GuiButton {
     private final ResourceLocation iconTexture;
     private final int iconX;
     private final int iconY;
