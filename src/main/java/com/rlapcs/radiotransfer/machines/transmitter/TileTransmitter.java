@@ -5,9 +5,10 @@ import net.minecraft.util.ITickable;
 
 
 public class TileTransmitter extends AbstractTileMachine implements ITickable {
+    public static final int ITEM_STACK_HANDLER_SIZE = 9;
 
     public TileTransmitter() {
-        super(9);
+        super(ITEM_STACK_HANDLER_SIZE);
     }
 
     @Override
