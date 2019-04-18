@@ -5,6 +5,8 @@ import net.minecraft.inventory.Container;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 
+import java.awt.*;
+
 
 public abstract class AbstractRadioGui extends AbstractMachineGui {
     public static final int WIDTH = 180;
@@ -37,6 +39,8 @@ public abstract class AbstractRadioGui extends AbstractMachineGui {
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         //draw text
+        String temp = "136.2 mHz";
+        fontRenderer.drawString(temp,  14,  27, Color.white.getRGB());
     }
 
 }

@@ -12,7 +12,7 @@ public class GuiTransmitter extends GuiContainer {
     public static final int HEIGHT = 152;
 
     private static final ResourceLocation background = new ResourceLocation(RadioTransfer.MODID, "textures" +
-            "/gui/demogui-test.png");
+            "/gui/radio.png");
 
     public GuiTransmitter(TileTransmitter tileEntity, ContainerTransmitter container) {
         super(container);

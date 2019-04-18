@@ -17,15 +17,14 @@ public class ContainerTransmitter extends AbstractContainerWithPlayerInventory<T
     @Override
     protected void addTileEntitySlots() {
         IItemHandler itemHandler = this.te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-        int x = 9;
-        int y = 6;
+        int x = 99;
+        int y = 8;
 
         // Add our own slots
         int slotIndex = 0;
         for (int i = 0; i < itemHandler.getSlots(); i++) {
-            addSlotToContainer(new SlotItemHandler(itemHandler, slotIndex, x, y));
+            addSlotToContainer(new SlotItemHandler(itemHandler, slotIndex, x + (slotIndex % 4) * 18, y + (slotIndex / 4) * 18));
             slotIndex++;
-            x += 18;
         }
     }
 
