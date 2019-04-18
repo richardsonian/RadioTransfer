@@ -20,8 +20,6 @@ import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 
-
-
 public abstract class AbstractBlockMachine extends Block implements ITileEntityProvider {
     protected Class<? extends TileEntity> tileEntityClass;
 

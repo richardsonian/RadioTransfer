@@ -26,10 +26,12 @@ public class GuiSelectButton extends GuiButton {
     /**
      * Draws this button to the screen.
      */
+    @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
         if (this.visible) {
-            //mc.getTextureManager().bindTexture(GuiBeacon.BEACON_GUI_TEXTURES); //?
+            //mc.getTextureManager().bindTexture(GuiBeacon.BEACON_GUI_TEXTURES);
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+
             this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
             int i = 219;
             int j = 0;

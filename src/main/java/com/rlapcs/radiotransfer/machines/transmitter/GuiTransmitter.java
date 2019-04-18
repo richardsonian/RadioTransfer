@@ -2,8 +2,8 @@ package com.rlapcs.radiotransfer.machines.transmitter;
 
 import com.rlapcs.radiotransfer.RadioTransfer;
 
-import com.rlapcs.radiotransfer.generic.clientonly.guis.GuiSelectButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiTransmitter extends GuiContainer {
@@ -33,6 +33,7 @@ public class GuiTransmitter extends GuiContainer {
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         mc.getTextureManager().bindTexture(background);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
     }
 }
