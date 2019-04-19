@@ -16,15 +16,22 @@ public abstract class AbstractRadioGui extends AbstractMachineGui {
     public static final int HEIGHT = 152;
 
     public static final String TEXTURE_PATH = "textures/gui/radio.png";
-    public static final String INCREMENT_TEXTURE_PATH = "textures/gui/buttonTopStatic.png";
-    public static final String DECREMENT_TEXTURE_PATH = "textures/gui/buttonBottomStatic.png";
-    public static final String ACTIVATE_TEXTURE_PATH = "textures/gui/buttonBottomStatic.png";
 
-    private GuiIncrementButton frequencyIncrementButton = new GuiIncrementButton(0, 10, 10,
+    public static final String INCREMENT_TEXTURE_PATH = "textures/gui/buttonTopStatic.png";
+    public static final int INCREMENT_X = 10;
+    public static final int INCREMENT_Y = 10;
+    public static final String DECREMENT_TEXTURE_PATH = "textures/gui/buttonBottomStatic.png";
+    public static final int DECREMENT_X = 30;
+    public static final int DECREMENT_Y = 30;
+    public static final String ACTIVATE_TEXTURE_PATH = "textures/gui/buttonBottomStatic.png";
+    public static final int ACTIVATE_X = 50;
+    public static final int ACTIVATE_Y = 50;
+
+    private GuiIncrementButton frequencyIncrementButton = new GuiIncrementButton(0, guiLeft + INCREMENT_X, guiTop + INCREMENT_Y,
             new ResourceLocation(RadioTransfer.MODID, INCREMENT_TEXTURE_PATH));
-    private GuiIncrementButton frequencyDecrementButton = new GuiIncrementButton(1, 30, 30,
+    private GuiIncrementButton frequencyDecrementButton = new GuiIncrementButton(1, guiLeft + DECREMENT_X, guiTop + DECREMENT_Y,
             new ResourceLocation(RadioTransfer.MODID, DECREMENT_TEXTURE_PATH));
-    private GuiIncrementButton activateButton = new GuiIncrementButton(2, 50, 50,
+    private GuiIncrementButton activateButton = new GuiIncrementButton(2, guiLeft + ACTIVATE_X, guiTop + ACTIVATE_Y,
             new ResourceLocation(RadioTransfer.MODID, ACTIVATE_TEXTURE_PATH));
 
     private static final ResourceLocation texture = new ResourceLocation(RadioTransfer.MODID, TEXTURE_PATH);

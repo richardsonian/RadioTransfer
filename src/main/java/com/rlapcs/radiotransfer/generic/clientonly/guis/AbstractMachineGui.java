@@ -6,7 +6,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 
-public class AbstractMachineGui extends GuiContainer {
+public abstract class AbstractMachineGui extends GuiContainer {
     protected ResourceLocation texture;
 
     public AbstractMachineGui(TileEntity tileEntity, Container container, int width, int height, ResourceLocation texture) {
