@@ -16,16 +16,15 @@ public abstract class AbstractRadioGui extends AbstractMachineGui {
     public static final int HEIGHT = 152;
 
     public static final String TEXTURE_PATH = "textures/gui/radio.png";
-    public static final String INCREMENT_TEXTURE_PATH = "textures/gui/buttonTopStatic.png";
-    public static final String DECREMENT_TEXTURE_PATH = "textures/gui/buttonBottomStatic.png";
-    public static final String ACTIVATE_TEXTURE_PATH = "textures/gui/buttonBottomStatic.png";
+    public static final String INCREMENT_TEXTURE_PATH = "textures/gui/button-top-static.png";
+    public static final String DECREMENT_TEXTURE_PATH = "textures/gui/button-bottom-static.png";
+    public static final String ACTIVATE_TEXTURE_PATH = "textures/gui/slider.png";
 
-    private GuiIncrementButton frequencyIncrementButton = new GuiIncrementButton(0, 10, 10,
-            new ResourceLocation(RadioTransfer.MODID, INCREMENT_TEXTURE_PATH));
-    private GuiIncrementButton frequencyDecrementButton = new GuiIncrementButton(1, 30, 30,
-            new ResourceLocation(RadioTransfer.MODID, DECREMENT_TEXTURE_PATH));
-    private GuiIncrementButton activateButton = new GuiIncrementButton(2, 50, 50,
-            new ResourceLocation(RadioTransfer.MODID, ACTIVATE_TEXTURE_PATH));
+    private GuiIncrementButton frequencyIncrementButton = new GuiIncrementButton(0,  20, 20,
+                                                              new ResourceLocation(RadioTransfer.MODID, INCREMENT_TEXTURE_PATH));
+    private GuiIncrementButton frequencyDecrementButton = new GuiIncrementButton(1, 20, 50,
+                                                              new ResourceLocation(RadioTransfer.MODID, DECREMENT_TEXTURE_PATH));
+    private GuiIncrementButton activateButton = new GuiIncrementButton(2, 75, 20, new ResourceLocation(RadioTransfer.MODID, ACTIVATE_TEXTURE_PATH));
 
     private static final ResourceLocation texture = new ResourceLocation(RadioTransfer.MODID, TEXTURE_PATH);
 
@@ -57,8 +56,8 @@ public abstract class AbstractRadioGui extends AbstractMachineGui {
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         //draw text
-        String temp = "136.2 mHz";
-        fontRenderer.drawString(temp,  14,  27, Color.white.getRGB());
+        String temp = "136.2";
+        fontRenderer.drawString(temp,  15,  28, Color.white.getRGB());
     }
 
 }
