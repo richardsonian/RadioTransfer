@@ -5,10 +5,12 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
-public class GuiIncrementButton extends GuiButton {
+
+//not fully implemented
+public class GuiToggleSliderButton extends GuiButton {
     protected ResourceLocation buttonTexture;
 
-    public GuiIncrementButton(int buttonId, int x, int y, int buttonWidth, int buttonHeight, ResourceLocation buttonTexture) {
+    public GuiToggleSliderButton(int buttonId, int x, int y, int buttonWidth, int buttonHeight, ResourceLocation buttonTexture) {
         super(buttonId, x, y, buttonWidth, buttonHeight, "");
         this.buttonTexture = buttonTexture;
     }

@@ -2,6 +2,7 @@ package com.rlapcs.radiotransfer.generic.clientonly.guis;
 
 import com.rlapcs.radiotransfer.RadioTransfer;
 import com.rlapcs.radiotransfer.generic.clientonly.guis.buttons.GuiIncrementButton;
+import com.rlapcs.radiotransfer.generic.clientonly.guis.buttons.GuiToggleSliderButton;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.inventory.Container;
 import net.minecraft.tileentity.TileEntity;
@@ -29,7 +30,7 @@ public abstract class AbstractRadioGui extends AbstractMachineGui {
 
     private GuiIncrementButton frequencyIncrementButton;
     private GuiIncrementButton frequencyDecrementButton;
-    private GuiIncrementButton activateButton;
+    private GuiToggleSliderButton activateButton;
 
     private static final ResourceLocation texture = new ResourceLocation(RadioTransfer.MODID, TEXTURE_PATH);
 
@@ -40,11 +41,11 @@ public abstract class AbstractRadioGui extends AbstractMachineGui {
         this.guiTop = (this.height - this.ySize) / 2;
 
         frequencyIncrementButton = new GuiIncrementButton(0, guiLeft + INCREMENT_X, guiTop + INCREMENT_Y,
-                new ResourceLocation(RadioTransfer.MODID, INCREMENT_TEXTURE_PATH));
+                12, 5, new ResourceLocation(RadioTransfer.MODID, INCREMENT_TEXTURE_PATH));
         frequencyDecrementButton = new GuiIncrementButton(1, guiLeft + DECREMENT_X, guiTop + DECREMENT_Y,
-                new ResourceLocation(RadioTransfer.MODID, DECREMENT_TEXTURE_PATH));
-        activateButton = new GuiIncrementButton(2, guiLeft + ACTIVATE_X, guiTop + ACTIVATE_Y,
-                new ResourceLocation(RadioTransfer.MODID, ACTIVATE_TEXTURE_PATH));
+                12, 5, new ResourceLocation(RadioTransfer.MODID, DECREMENT_TEXTURE_PATH));
+        activateButton = new GuiToggleSliderButton(2, guiLeft + ACTIVATE_X, guiTop + ACTIVATE_Y,
+                1234, 1234, new ResourceLocation(RadioTransfer.MODID, ACTIVATE_TEXTURE_PATH));
 
     }
 
