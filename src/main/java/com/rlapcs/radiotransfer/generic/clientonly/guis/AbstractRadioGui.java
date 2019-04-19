@@ -16,16 +16,15 @@ public abstract class AbstractRadioGui extends AbstractMachineGui {
     public static final int HEIGHT = 152;
 
     public static final String TEXTURE_PATH = "textures/gui/radio.png";
-
-    public static final String INCREMENT_TEXTURE_PATH = "textures/gui/buttonTopStatic.png";
-    public static final int INCREMENT_X = 10;
-    public static final int INCREMENT_Y = 10;
-    public static final String DECREMENT_TEXTURE_PATH = "textures/gui/buttonBottomStatic.png";
-    public static final int DECREMENT_X = 30;
-    public static final int DECREMENT_Y = 30;
-    public static final String ACTIVATE_TEXTURE_PATH = "textures/gui/buttonBottomStatic.png";
-    public static final int ACTIVATE_X = 50;
-    public static final int ACTIVATE_Y = 50;
+    public static final String INCREMENT_TEXTURE_PATH = "textures/gui/button-top-static.png";
+    public static final String DECREMENT_TEXTURE_PATH = "textures/gui/button-bottom-static.png";
+    public static final String ACTIVATE_TEXTURE_PATH = "textures/gui/slider.png";
+    public static final int INCREMENT_X = 20;
+    public static final int INCREMENT_Y = 20;
+    public static final int DECREMENT_X = 20;
+    public static final int DECREMENT_Y = 50;
+    public static final int ACTIVATE_X = 75;
+    public static final int ACTIVATE_Y = 20;
 
     private GuiIncrementButton frequencyIncrementButton = new GuiIncrementButton(0, guiLeft + INCREMENT_X, guiTop + INCREMENT_Y,
             new ResourceLocation(RadioTransfer.MODID, INCREMENT_TEXTURE_PATH));
@@ -64,8 +63,8 @@ public abstract class AbstractRadioGui extends AbstractMachineGui {
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         //draw text
-        String temp = "136.2 mHz";
-        fontRenderer.drawString(temp,  14,  27, Color.white.getRGB());
+        String temp = "136.2";
+        fontRenderer.drawString(temp,  15,  28, Color.white.getRGB());
     }
 
 }
