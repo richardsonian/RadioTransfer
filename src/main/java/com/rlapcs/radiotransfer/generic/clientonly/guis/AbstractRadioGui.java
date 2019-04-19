@@ -16,17 +16,26 @@ public abstract class AbstractRadioGui extends AbstractMachineGui {
 
     public static final String TEXTURE_PATH = "textures/gui/radio.png";
 
+    public static final int INCREMENT_ID = 1;
     public static final String INCREMENT_TEXTURE_PATH = "textures/gui/button-top-static.png";
     public static final int INCREMENT_X = 20;
     public static final int INCREMENT_Y = 20;
+    public static final int INCREMENT_WIDTH = 20;
+    public static final int INCREMENT_HEIGHT = 20;
 
+    public static final int DECREMENT_ID = 2;
     public static final String DECREMENT_TEXTURE_PATH = "textures/gui/button-bottom-static.png";
     public static final int DECREMENT_X = 20;
     public static final int DECREMENT_Y = 50;
+    public static final int DECREMENT_WIDTH = 20;
+    public static final int DECREMENT_HEIGHT = 20;
 
+    public static final int ACTIVATE_ID = 3;
     public static final String ACTIVATE_TEXTURE_PATH = "textures/gui/slider.png";
     public static final int ACTIVATE_X = 75;
     public static final int ACTIVATE_Y = 20;
+    public static final int ACTIVATE_WIDTH = 20;
+    public static final int ACTIVATE_HEIGHT = 20;
 
     private GuiIncrementButton frequencyIncrementButton;
     private GuiIncrementButton frequencyDecrementButton;
@@ -37,32 +46,31 @@ public abstract class AbstractRadioGui extends AbstractMachineGui {
     public AbstractRadioGui(TileEntity tileEntity, Container container) {
         super(tileEntity, container, WIDTH, HEIGHT, texture);
 
-        this.guiLeft = (this.width - this.xSize) / 2;
-        this.guiTop = (this.height - this.ySize) / 2;
-
-        frequencyIncrementButton = new GuiIncrementButton(0, guiLeft + INCREMENT_X, guiTop + INCREMENT_Y,
-                12, 5, new ResourceLocation(RadioTransfer.MODID, INCREMENT_TEXTURE_PATH));
-        frequencyDecrementButton = new GuiIncrementButton(1, guiLeft + DECREMENT_X, guiTop + DECREMENT_Y,
-                12, 5, new ResourceLocation(RadioTransfer.MODID, DECREMENT_TEXTURE_PATH));
-        activateButton = new GuiToggleSliderButton(2, guiLeft + ACTIVATE_X, guiTop + ACTIVATE_Y,
-                1234, 1234, new ResourceLocation(RadioTransfer.MODID, ACTIVATE_TEXTURE_PATH));
-
     }
 
     @Override
     protected void actionPerformed(GuiButton button) {
-        if(button == frequencyIncrementButton) {sendChatMessage("frequency incremented");}
-        if(button == frequencyDecrementButton) {sendChatMessage("frequency decremented");}
-        if(button == activateButton) {sendChatMessage("activate button pressed");}
+        if(button.id == INCREMENT_ID) {sendChatMessage("frequency incremented");}
+        if(button.id == DECREMENT_ID) {sendChatMessage("frequency decremented");}
+        if(button.id == ACTIVATE_ID) {sendChatMessage("activate button pressed");}
     }
 
     @Override
     public void initGui() {
         super.initGui();
         //add buttons here
-        addButton(frequencyIncrementButton);
-        addButton(frequencyDecrementButton);
-        addButton(activateButton);
+
+        //increment button
+        addButton(new GuiIncrementButton(INCREMENT_ID, guiLeft + INCREMENT_X, guiTop + INCREMENT_Y,
+                INCREMENT_WIDTH, INCREMENT_HEIGHT, new ResourceLocation(RadioTransfer.MODID, INCREMENT_TEXTURE_PATH)));
+
+        //decrement button
+        addButton(new GuiIncrementButton(DECREMENT_ID, guiLeft + DECREMENT_X, guiTop + DECREMENT_Y,
+                DECREMENT_WIDTH, DECREMENT_HEIGHT, new ResourceLocation(RadioTransfer.MODID, DECREMENT_TEXTURE_PATH)));
+
+        //activate button
+        addButton(new GuiToggleSliderButton(ACTIVATE_ID, guiLeft + ACTIVATE_X, guiTop + ACTIVATE_Y,
+                ACTIVATE_WIDTH, ACTIVATE_HEIGHT, new ResourceLocation(RadioTransfer.MODID, ACTIVATE_TEXTURE_PATH)));
     }
 
     @Override
