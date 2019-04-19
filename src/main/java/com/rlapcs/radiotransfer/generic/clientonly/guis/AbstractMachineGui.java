@@ -8,9 +8,12 @@ import net.minecraft.util.ResourceLocation;
 
 public abstract class AbstractMachineGui extends GuiContainer {
     protected ResourceLocation texture;
+    protected TileEntity tileEntity;
 
     public AbstractMachineGui(TileEntity tileEntity, Container container, int width, int height, ResourceLocation texture) {
         super(container);
+
+        this.tileEntity = tileEntity;
 
         xSize = width;
         ySize = height;

@@ -3,6 +3,7 @@ package com.rlapcs.radiotransfer.generic.clientonly.guis;
 import com.rlapcs.radiotransfer.RadioTransfer;
 import com.rlapcs.radiotransfer.generic.clientonly.guis.buttons.GuiIncrementButton;
 import com.rlapcs.radiotransfer.generic.clientonly.guis.buttons.GuiToggleSliderButton;
+import com.rlapcs.radiotransfer.generic.tileEntities.AbstractTileRadio;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.inventory.Container;
 import net.minecraft.tileentity.TileEntity;
@@ -32,23 +33,33 @@ public abstract class AbstractRadioGui extends AbstractMachineGui {
 
     public static final int ACTIVATE_ID = 3;
     public static final String ACTIVATE_TEXTURE_PATH = "textures/gui/slider.png";
-    public static final int ACTIVATE_X = 75;
-    public static final int ACTIVATE_Y = 20;
+    public static final int ACTIVATE_ON_X = 75;
+    public static final int ACTIVATE_ON_Y = 20;
+    public static final int ACTIVATE_OFF_X = 75;
+    public static final int ACTIVATE_OFF_Y = 40;
     public static final int ACTIVATE_WIDTH = 20;
     public static final int ACTIVATE_HEIGHT = 20;
 
     private static final ResourceLocation texture = new ResourceLocation(RadioTransfer.MODID, TEXTURE_PATH);
 
-    public AbstractRadioGui(TileEntity tileEntity, Container container) {
+    public AbstractRadioGui(AbstractTileRadio tileEntity, Container container) {
         super(tileEntity, container, WIDTH, HEIGHT, texture);
 
     }
 
     @Override
     protected void actionPerformed(GuiButton button) {
-        if(button.id == INCREMENT_ID) {sendChatMessage("frequency incremented");}
+        if(button.id == INCREMENT_ID) {
+            sendChatMessage("frequency incremented");
+        }
         if(button.id == DECREMENT_ID) {sendChatMessage("frequency decremented");}
-        if(button.id == ACTIVATE_ID) {sendChatMessage("activate button pressed");}
+        if(button.id == ACTIVATE_ID) {
+            GuiToggleSliderButton activateButton = (GuiToggleSliderButton) button;
+
+            int pos = activateButton.flipState();
+            //force redraw (?)
+            ((AbstractTileRadio) tileEntity).setActivated(pos == 1); //does this need to be a packet so that its updated on the server too?
+        }
     }
 
     @Override
@@ -65,7 +76,8 @@ public abstract class AbstractRadioGui extends AbstractMachineGui {
                 DECREMENT_WIDTH, DECREMENT_HEIGHT, new ResourceLocation(RadioTransfer.MODID, DECREMENT_TEXTURE_PATH)));
 
         //activate button
-        addButton(new GuiToggleSliderButton(ACTIVATE_ID, guiLeft + ACTIVATE_X, guiTop + ACTIVATE_Y,
+        addButton(new GuiToggleSliderButton(ACTIVATE_ID, guiLeft + ACTIVATE_ON_X, guiTop + ACTIVATE_ON_Y,
+                guiLeft + ACTIVATE_OFF_X, guiTop + ACTIVATE_OFF_Y,
                 ACTIVATE_WIDTH, ACTIVATE_HEIGHT, new ResourceLocation(RadioTransfer.MODID, ACTIVATE_TEXTURE_PATH)));
     }
 
