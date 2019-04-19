@@ -37,10 +37,6 @@ public abstract class AbstractRadioGui extends AbstractMachineGui {
     public static final int ACTIVATE_WIDTH = 20;
     public static final int ACTIVATE_HEIGHT = 20;
 
-    private GuiIncrementButton frequencyIncrementButton;
-    private GuiIncrementButton frequencyDecrementButton;
-    private GuiToggleSliderButton activateButton;
-
     private static final ResourceLocation texture = new ResourceLocation(RadioTransfer.MODID, TEXTURE_PATH);
 
     public AbstractRadioGui(TileEntity tileEntity, Container container) {
