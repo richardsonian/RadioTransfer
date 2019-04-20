@@ -54,8 +54,12 @@ public abstract class AbstractRadioGui extends AbstractMachineGui {
 
             int pos = activateButton.flipState();
             //force redraw (?) probs not --> redraw isnt correct rn tho
+
+           //update server tileEntity
             ModNetworkMessages.INSTANCE.sendToServer(new MessageActivateTileRadio(tileEntity, pos == 1));
-           //((AbstractTileRadio) tileEntity).setActivated(pos == 1); //also required to update on client side? (probs not)
+
+            //update client tileEntity (partially sure this is required)
+            ((AbstractTileRadio) tileEntity).setActivated(pos == 1);
         }
     }
 
