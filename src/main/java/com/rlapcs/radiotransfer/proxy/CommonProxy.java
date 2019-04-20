@@ -1,7 +1,6 @@
 package com.rlapcs.radiotransfer.proxy;
 
 import com.rlapcs.radiotransfer.registries.*;
-import com.rlapcs.radiotransfer.network.*;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -17,11 +16,12 @@ import static com.rlapcs.radiotransfer.RadioTransfer.instance;
 @Mod.EventBusSubscriber
 public class CommonProxy {
     public void preInit(FMLPreInitializationEvent e) {
-        PacketHandler.registerMessages("radiotransfer");
+        ModNetworkMessages.init("radiotransfer");
     }
 
     public void init(FMLInitializationEvent e) {
         ModTileEntities.registerTileEntities(); //Put here so that @ObjectHolder fields have been filled (after registry events). Not sure if this will cause issues.
+
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiProxy());
     }
 

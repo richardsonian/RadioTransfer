@@ -4,6 +4,9 @@ import com.rlapcs.radiotransfer.RadioTransfer;
 import com.rlapcs.radiotransfer.generic.clientonly.guis.buttons.GuiIncrementButton;
 import com.rlapcs.radiotransfer.generic.clientonly.guis.buttons.GuiToggleSliderButton;
 import com.rlapcs.radiotransfer.generic.clientonly.guis.buttons.IncrementType;
+import com.rlapcs.radiotransfer.generic.network.MessageActivateTileRadio;
+import com.rlapcs.radiotransfer.generic.tileEntities.AbstractTileRadio;
+import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.Container;
@@ -27,8 +30,10 @@ public abstract class AbstractRadioGui extends AbstractMachineGui {
     public static final int DECREMENT_Y = 45;
 
     public static final int ACTIVATE_ID = 3;
-    public static final int ACTIVATE_X = 75;
-    public static final int ACTIVATE_Y = 15;
+    public static final int ACTIVATE_ON_Y = 20;
+    public static final int ACTIVATE_OFF_X = 75;
+    public static final int ACTIVATE_OFF_Y = 30;
+    public static final int ACTIVATE_ON_X = 75;
 
     private static final ResourceLocation background = new ResourceLocation(RadioTransfer.MODID, TEXTURE_PATH);
 
@@ -39,9 +44,19 @@ public abstract class AbstractRadioGui extends AbstractMachineGui {
 
     @Override
     protected void actionPerformed(GuiButton button) {
-        if(button.id == INCREMENT_ID) {sendChatMessage("frequency incremented");}
+        if(button.id == INCREMENT_ID) {
+            sendChatMessage("frequency incremented");
+        }
         if(button.id == DECREMENT_ID) {sendChatMessage("frequency decremented");}
-        if(button.id == ACTIVATE_ID) {sendChatMessage("activate button pressed");}
+        if(button.id == ACTIVATE_ID) {
+            sendChatMessage("activate button pressed");
+            GuiToggleSliderButton activateButton = (GuiToggleSliderButton) button;
+
+            int pos = activateButton.flipState();
+            //force redraw (?) probs not --> redraw isnt correct rn tho
+            ModNetworkMessages.INSTANCE.sendToServer(new MessageActivateTileRadio(tileEntity, pos == 1));
+           //((AbstractTileRadio) tileEntity).setActivated(pos == 1); //also required to update on client side? (probs not)
+        }
     }
 
     @Override
@@ -58,6 +73,9 @@ public abstract class AbstractRadioGui extends AbstractMachineGui {
 
         //activate button
         this.addButton(new GuiToggleSliderButton(ACTIVATE_ID, guiLeft + ACTIVATE_X, guiTop + ACTIVATE_Y));
+        addButton(new GuiToggleSliderButton(ACTIVATE_ID, ((AbstractTileRadio) tileEntity).getActivated() ? 1 : 2, guiLeft + ACTIVATE_ON_X, guiTop + ACTIVATE_ON_Y,
+                guiLeft + ACTIVATE_OFF_X, guiTop + ACTIVATE_OFF_Y,
+                ACTIVATE_WIDTH, ACTIVATE_HEIGHT, new ResourceLocation(RadioTransfer.MODID, ACTIVATE_TEXTURE_PATH)));
     }
 
     @Override
