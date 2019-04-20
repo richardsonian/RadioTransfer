@@ -14,8 +14,8 @@ public class GuiToggleSliderButton extends GuiButton {
 
     protected ResourceLocation buttonTexture;
 
-    public GuiToggleSliderButton(int buttonId, int pos1X, int pos1Y, int pos2X, int pos2Y, int buttonWidth, int buttonHeight, ResourceLocation buttonTexture) {
-        super(buttonId, pos1X, pos1Y, buttonWidth, buttonHeight, "");
+    public GuiToggleSliderButton(int buttonId, int startPos, int pos1X, int pos1Y, int pos2X, int pos2Y, int buttonWidth, int buttonHeight, ResourceLocation buttonTexture) {
+        super(buttonId, (startPos == 1) ? pos1X : pos2X, (startPos == 1) ? pos1Y : pos2Y, buttonWidth, buttonHeight, "");
         this.buttonTexture = buttonTexture;
     }
 

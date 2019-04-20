@@ -17,6 +17,7 @@ public abstract class AbstractTileRadio extends AbstractTileMachine implements I
     public void setActivated(boolean target) {
         activated = target;
     }
+    public boolean getActivated() {return activated;}
 
     public void changeFrequency(int target) {
         frequency = target;
