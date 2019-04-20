@@ -1,16 +1,29 @@
 package com.rlapcs.radiotransfer.generic.clientonly.guis.buttons;
 
+import com.rlapcs.radiotransfer.RadioTransfer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
-public class GuiIncrementButton extends GuiButton {
-    protected ResourceLocation buttonTexture;
+import java.util.HashMap;
+import java.util.Map;
 
-    public GuiIncrementButton(int buttonId, int x, int y, int buttonWidth, int buttonHeight, ResourceLocation buttonTexture) {
-        super(buttonId, x, y, buttonWidth, buttonHeight, "");
-        this.buttonTexture = buttonTexture;
+public class GuiIncrementButton extends GuiButton {
+    protected IncrementType type;
+    protected int u, v;
+
+    private static final ResourceLocation textures = new ResourceLocation(RadioTransfer.MODID, "textures/gui/icons.png");
+
+    public GuiIncrementButton(int buttonId, int x, int y, IncrementType type) {
+        super(buttonId, x, y, 25, 15, "");
+        if (type == IncrementType.UP) {
+            u = 0;
+            v = 0;
+        } else {
+            u = 0;
+            v = 15;
+        }
     }
 
     /**
@@ -19,12 +32,12 @@ public class GuiIncrementButton extends GuiButton {
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
         if (this.visible) {
-            mc.getTextureManager().bindTexture(buttonTexture);
+            mc.getTextureManager().bindTexture(textures);
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
             this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
 
-            this.drawTexturedModalRect(this.x, this.y, 0, 0, this.width, this.height);
+            this.drawTexturedModalRect(this.x, this.y, u, v, this.width, this.height);
         }
     }
 }

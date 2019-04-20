@@ -1,5 +1,6 @@
 package com.rlapcs.radiotransfer.generic.clientonly.guis.buttons;
 
+import com.rlapcs.radiotransfer.RadioTransfer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
@@ -8,11 +9,10 @@ import net.minecraft.util.ResourceLocation;
 
 //not fully implemented
 public class GuiToggleSliderButton extends GuiButton {
-    protected ResourceLocation buttonTexture;
+    private static final ResourceLocation textures = new ResourceLocation(RadioTransfer.MODID, "textures/gui/icons.png");
 
-    public GuiToggleSliderButton(int buttonId, int x, int y, int buttonWidth, int buttonHeight, ResourceLocation buttonTexture) {
-        super(buttonId, x, y, buttonWidth, buttonHeight, "");
-        this.buttonTexture = buttonTexture;
+    public GuiToggleSliderButton(int buttonId, int x, int y) {
+        super(buttonId, x, y, 12, 18, "");
     }
 
     /**
@@ -21,12 +21,12 @@ public class GuiToggleSliderButton extends GuiButton {
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
         if (this.visible) {
-            mc.getTextureManager().bindTexture(buttonTexture);
+            mc.getTextureManager().bindTexture(textures);
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
             this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
 
-            this.drawTexturedModalRect(this.x, this.y, 0, 0, this.width, this.height);
+            this.drawTexturedModalRect(this.x, this.y, 25, 0, this.width, this.height);
         }
     }
 }
