@@ -15,11 +15,12 @@ public class GuiToggleSliderButton extends GuiButton {
 
     private static final ResourceLocation textures = new ResourceLocation(RadioTransfer.MODID, "textures/gui/icons.png");
 
-    public GuiToggleSliderButton(int buttonId, int x, int y) {
-        super(buttonId, x, y, 12, 18, "");
-    public GuiToggleSliderButton(int buttonId, int startPos, int pos1X, int pos1Y, int pos2X, int pos2Y, int buttonWidth, int buttonHeight, ResourceLocation buttonTexture) {
-        super(buttonId, (startPos == 1) ? pos1X : pos2X, (startPos == 1) ? pos1Y : pos2Y, buttonWidth, buttonHeight, "");
-        this.buttonTexture = buttonTexture;
+    public GuiToggleSliderButton(int buttonId, int startPos, int pos1X, int pos1Y, int pos2X, int pos2Y) {
+        super(buttonId, (startPos == 1) ? pos1X : pos2X, (startPos == 1) ? pos1Y : pos2Y, 12, 18, "");
+        this.pos1X = pos1X;
+        this.pos1Y = pos1Y;
+        this.pos2X = pos2X;
+        this.pos2Y = pos2Y;
     }
 
     /**
@@ -45,7 +46,7 @@ public class GuiToggleSliderButton extends GuiButton {
         }
         else {
             x = pos1X;
-            y = pos1X;
+            y = pos1Y;
             pos = 1;
         }
         return pos;

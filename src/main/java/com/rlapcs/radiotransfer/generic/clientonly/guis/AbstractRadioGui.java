@@ -30,16 +30,15 @@ public abstract class AbstractRadioGui extends AbstractMachineGui {
     public static final int DECREMENT_Y = 45;
 
     public static final int ACTIVATE_ID = 3;
-    public static final int ACTIVATE_ON_Y = 20;
+    public static final int ACTIVATE_ON_Y = 15;
     public static final int ACTIVATE_OFF_X = 75;
-    public static final int ACTIVATE_OFF_Y = 30;
+    public static final int ACTIVATE_OFF_Y = 35;
     public static final int ACTIVATE_ON_X = 75;
 
     private static final ResourceLocation background = new ResourceLocation(RadioTransfer.MODID, TEXTURE_PATH);
 
     public AbstractRadioGui(TileEntity tileEntity, Container container) {
         super(tileEntity, container, WIDTH, HEIGHT, background);
-
     }
 
     @Override
@@ -76,10 +75,8 @@ public abstract class AbstractRadioGui extends AbstractMachineGui {
                 IncrementType.DOWN));
 
         //activate button
-        this.addButton(new GuiToggleSliderButton(ACTIVATE_ID, guiLeft + ACTIVATE_X, guiTop + ACTIVATE_Y));
         addButton(new GuiToggleSliderButton(ACTIVATE_ID, ((AbstractTileRadio) tileEntity).getActivated() ? 1 : 2, guiLeft + ACTIVATE_ON_X, guiTop + ACTIVATE_ON_Y,
-                guiLeft + ACTIVATE_OFF_X, guiTop + ACTIVATE_OFF_Y,
-                ACTIVATE_WIDTH, ACTIVATE_HEIGHT, new ResourceLocation(RadioTransfer.MODID, ACTIVATE_TEXTURE_PATH)));
+                guiLeft + ACTIVATE_OFF_X, guiTop + ACTIVATE_OFF_Y));
     }
 
     @Override
