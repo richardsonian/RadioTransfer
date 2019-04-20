@@ -48,22 +48,15 @@ public abstract class AbstractRadioGui extends AbstractMachineGui {
         }
         if(button.id == DECREMENT_ID) {sendChatMessage("frequency decremented");}
         if(button.id == ACTIVATE_ID) {
+            sendChatMessage("activate button pressed"); //DEBUG
 
-            /* ~~~~~ WIP ~~~~ */
-            
-            sendChatMessage("activate button pressed");
             GuiToggleSliderButton activateButton = (GuiToggleSliderButton) button;
-
             int pos = activateButton.flipState();
-            //force redraw (?) probs not --> redraw isnt correct rn tho
 
            //update server tileEntity
             ModNetworkMessages.INSTANCE.sendToServer(new MessageActivateTileRadio(tileEntity, pos == 1));
-
             //update client tileEntity (partially sure this is required)
             ((AbstractTileRadio) tileEntity).setActivated(pos == 1);
-
-            /* end wip */
         }
     }
 
@@ -72,11 +65,11 @@ public abstract class AbstractRadioGui extends AbstractMachineGui {
         super.initGui();
 
         //increment button
-        this.addButton(new GuiIncrementButton(INCREMENT_ID, guiLeft + INCREMENT_X, guiTop + INCREMENT_Y,
+        addButton(new GuiIncrementButton(INCREMENT_ID, guiLeft + INCREMENT_X, guiTop + INCREMENT_Y,
                 IncrementType.UP));
 
         //decrement button
-        this.addButton(new GuiIncrementButton(DECREMENT_ID, guiLeft + DECREMENT_X, guiTop + DECREMENT_Y,
+        addButton(new GuiIncrementButton(DECREMENT_ID, guiLeft + DECREMENT_X, guiTop + DECREMENT_Y,
                 IncrementType.DOWN));
 
         //activate button

@@ -17,6 +17,8 @@ public class GuiToggleSliderButton extends GuiButton {
 
     public GuiToggleSliderButton(int buttonId, int startPos, int pos1X, int pos1Y, int pos2X, int pos2Y) {
         super(buttonId, (startPos == 1) ? pos1X : pos2X, (startPos == 1) ? pos1Y : pos2Y, 12, 18, "");
+
+        this.pos = (startPos == 1) ? 1 : 2; //ensure that pos is only set to 1 or 2
         this.pos1X = pos1X;
         this.pos1Y = pos1Y;
         this.pos2X = pos2X;
