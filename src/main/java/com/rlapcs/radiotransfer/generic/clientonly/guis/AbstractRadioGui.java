@@ -56,6 +56,9 @@ public abstract class AbstractRadioGui extends AbstractMachineGui {
         }
         if(button.id == DECREMENT_ID) {sendChatMessage("frequency decremented");}
         if(button.id == ACTIVATE_ID) {
+
+            /* ~~~~~ WIP ~~~~ */
+            
             sendChatMessage("activate button pressed");
             GuiToggleSliderButton activateButton = (GuiToggleSliderButton) button;
 
@@ -67,6 +70,8 @@ public abstract class AbstractRadioGui extends AbstractMachineGui {
 
             //update client tileEntity (partially sure this is required)
             ((AbstractTileRadio) tileEntity).setActivated(pos == 1);
+
+            /* end wip */
         }
     }
 
