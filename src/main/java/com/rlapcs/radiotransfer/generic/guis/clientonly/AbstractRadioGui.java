@@ -4,7 +4,8 @@ import com.rlapcs.radiotransfer.RadioTransfer;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.buttons.GuiIncrementButton;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.buttons.GuiIncrementButton.IncrementType;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.buttons.GuiToggleSliderButton;
-import com.rlapcs.radiotransfer.generic.network.messages.MessageActivateServerTileRadio;
+import com.rlapcs.radiotransfer.generic.network.messages.MessageActivateTileRadio;
+import com.rlapcs.radiotransfer.generic.network.messages.MessageUpdateTileRadioFrequency;
 import com.rlapcs.radiotransfer.generic.tileEntities.AbstractTileRadio;
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import net.minecraft.client.gui.GuiButton;
@@ -44,8 +45,16 @@ public abstract class AbstractRadioGui extends AbstractMachineGui {
     protected void actionPerformed(GuiButton button) {
         if(button.id == INCREMENT_ID) {
             sendChatMessage("frequency incremented");
+
+            ModNetworkMessages.INSTANCE.sendToServer(new MessageUpdateTileRadioFrequency(tileEntity, true));
+            ((AbstractTileRadio) tileEntity).changeFrequency(true);
         }
-        if(button.id == DECREMENT_ID) {sendChatMessage("frequency decremented");}
+        if(button.id == DECREMENT_ID) {
+            sendChatMessage("frequency decremented");
+
+            ModNetworkMessages.INSTANCE.sendToServer(new MessageUpdateTileRadioFrequency(tileEntity, false));
+            ((AbstractTileRadio) tileEntity).changeFrequency(false);
+        }
         if(button.id == ACTIVATE_ID) {
             sendChatMessage("activate button pressed"); //DEBUG
 
@@ -53,7 +62,7 @@ public abstract class AbstractRadioGui extends AbstractMachineGui {
             int pos = activateButton.flipState();
 
            //update server tileEntity
-            ModNetworkMessages.INSTANCE.sendToServer(new MessageActivateServerTileRadio(tileEntity, pos == 1));
+            ModNetworkMessages.INSTANCE.sendToServer(new MessageActivateTileRadio(tileEntity, pos == 1));
             //update client tileEntity (partially sure this is required)
             ((AbstractTileRadio) tileEntity).setActivated(pos == 1);
         }
@@ -85,8 +94,8 @@ public abstract class AbstractRadioGui extends AbstractMachineGui {
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
         //draw text
-        String temp = "136.2";
-        fontRenderer.drawString(temp,  15,  28, Color.white.getRGB());
+        String frequency = "" + ((AbstractTileRadio) tileEntity).getFrequency();
+        fontRenderer.drawString(frequency,  15,  28, Color.white.getRGB());
     }
 
 }

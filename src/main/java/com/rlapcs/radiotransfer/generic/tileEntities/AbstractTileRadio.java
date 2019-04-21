@@ -8,6 +8,9 @@ import net.minecraft.util.ITickable;
 import javax.annotation.Nullable;
 
 public abstract class AbstractTileRadio extends AbstractTileMachine implements ITickable {
+    public static final int UPPER_FREQUENCY_LIMIT = 5;
+    public static final int LOWER_FREQUENCY_LIMIT = 1;
+
     public static final int ITEM_STACK_HANDLER_SIZE = 12;
 
     protected boolean activated;
@@ -49,7 +52,15 @@ public abstract class AbstractTileRadio extends AbstractTileMachine implements I
     }
     public boolean getActivated() {return activated;}
 
-    public void setFrequency(int target) {
+    public void changeFrequency(boolean toIncrement) {
+        int newFrequency = getFrequency() + (toIncrement ? 1 : -1);
+        if(newFrequency > UPPER_FREQUENCY_LIMIT) newFrequency = UPPER_FREQUENCY_LIMIT;
+        else if(newFrequency < LOWER_FREQUENCY_LIMIT) newFrequency = LOWER_FREQUENCY_LIMIT;
+
+        setFrequency(newFrequency);
+    }
+
+    private void setFrequency(int target) {
         frequency = target;
         this.markDirty();
     }
