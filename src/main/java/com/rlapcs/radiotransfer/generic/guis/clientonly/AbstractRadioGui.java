@@ -8,6 +8,7 @@ import com.rlapcs.radiotransfer.generic.network.messages.MessageActivateTileRadi
 import com.rlapcs.radiotransfer.generic.network.messages.MessageUpdateTileRadioFrequency;
 import com.rlapcs.radiotransfer.generic.tileEntities.AbstractTileRadio;
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.inventory.Container;
 import net.minecraft.tileentity.TileEntity;
@@ -94,8 +95,11 @@ public abstract class AbstractRadioGui extends AbstractMachineGui {
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
         //draw text
+        String name = Minecraft.getMinecraft().world.getBlockState(tileEntity.getPos()).getBlock().getLocalizedName();
+        fontRenderer.drawString(name, 5, 5, Color.white.getRGB());
+
         String frequency = "" + ((AbstractTileRadio) tileEntity).getFrequency();
-        fontRenderer.drawString(frequency,  15,  28, Color.white.getRGB());
+        fontRenderer.drawString(frequency,  18,  30, Color.white.getRGB());
     }
 
 }
