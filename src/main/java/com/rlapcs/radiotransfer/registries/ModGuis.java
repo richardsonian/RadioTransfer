@@ -3,6 +3,9 @@ package com.rlapcs.radiotransfer.registries;
 import com.rlapcs.radiotransfer.machines.demo.ContainerDemoBlock;
 import com.rlapcs.radiotransfer.machines.demo.GuiDemoBlock;
 import com.rlapcs.radiotransfer.machines.demo.TileDemoBlock;
+import com.rlapcs.radiotransfer.machines.receiver.ContainerReceiver;
+import com.rlapcs.radiotransfer.machines.receiver.GuiReceiver;
+import com.rlapcs.radiotransfer.machines.receiver.TileReceiver;
 import com.rlapcs.radiotransfer.machines.transmitter.ContainerTransmitter;
 import com.rlapcs.radiotransfer.machines.transmitter.GuiTransmitter;
 import com.rlapcs.radiotransfer.machines.transmitter.TileTransmitter;
@@ -18,6 +21,7 @@ public class ModGuis {
     /* List all Gui Entries here: */
     public static final GuiEntry demoblock = new GuiEntry(TileDemoBlock.class, GuiDemoBlock.class, ContainerDemoBlock.class);
     public static final GuiEntry transmitter = new GuiEntry(TileTransmitter.class, GuiTransmitter.class, ContainerTransmitter.class);
+    public static final GuiEntry receiver = new GuiEntry(TileReceiver.class, GuiReceiver.class, ContainerReceiver.class);
     /* end gui entry list */
 
 

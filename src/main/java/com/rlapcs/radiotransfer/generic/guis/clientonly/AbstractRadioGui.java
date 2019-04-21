@@ -45,13 +45,13 @@ public abstract class AbstractRadioGui extends AbstractMachineGui {
     @Override
     protected void actionPerformed(GuiButton button) {
         if(button.id == INCREMENT_ID) {
-            sendChatMessage("frequency incremented");
+            sendChatMessage("frequency incremented"); //Debug
 
             ModNetworkMessages.INSTANCE.sendToServer(new MessageUpdateTileRadioFrequency(tileEntity, true));
             ((AbstractTileRadio) tileEntity).changeFrequency(true);
         }
         if(button.id == DECREMENT_ID) {
-            sendChatMessage("frequency decremented");
+            sendChatMessage("frequency decremented"); //debug
 
             ModNetworkMessages.INSTANCE.sendToServer(new MessageUpdateTileRadioFrequency(tileEntity, false));
             ((AbstractTileRadio) tileEntity).changeFrequency(false);
@@ -64,7 +64,7 @@ public abstract class AbstractRadioGui extends AbstractMachineGui {
 
            //update server tileEntity
             ModNetworkMessages.INSTANCE.sendToServer(new MessageActivateTileRadio(tileEntity, pos == 1));
-            //update client tileEntity (partially sure this is required)
+            //update client tileEntity
             ((AbstractTileRadio) tileEntity).setActivated(pos == 1);
         }
     }

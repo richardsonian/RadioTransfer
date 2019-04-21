@@ -1,6 +1,7 @@
 package com.rlapcs.radiotransfer.registries;
 
 import com.rlapcs.radiotransfer.machines.demo.BlockDemoBlock;
+import com.rlapcs.radiotransfer.machines.receiver.BlockReceiver;
 import com.rlapcs.radiotransfer.machines.transmitter.BlockTransmitter;
 import net.minecraft.block.Block;
 import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
@@ -23,6 +24,7 @@ public class ModBlocks {
      */
     public static final BlockDemoBlock demoblock = null;
     public static final BlockTransmitter transmitter = null;
+    public static final BlockReceiver receiver = null;
 
     /**
      * Returns a list of instances of blocks that are to be added to the registry.
@@ -34,6 +36,7 @@ public class ModBlocks {
         /* Add one instance of each block here */
         blocks.add(new BlockDemoBlock());
         blocks.add(new BlockTransmitter());
+        blocks.add(new BlockReceiver());
         /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
         return blocks;
     }
@@ -54,6 +57,7 @@ public class ModBlocks {
          */
         demoblock.initModel();
         transmitter.initModel();
+        receiver.initModel();
     }
 
     /**

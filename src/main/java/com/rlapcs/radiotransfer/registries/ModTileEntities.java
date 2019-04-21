@@ -2,6 +2,7 @@ package com.rlapcs.radiotransfer.registries;
 
 import com.rlapcs.radiotransfer.RadioTransfer;
 import com.rlapcs.radiotransfer.machines.demo.TileDemoBlock;
+import com.rlapcs.radiotransfer.machines.receiver.TileReceiver;
 import com.rlapcs.radiotransfer.machines.transmitter.TileTransmitter;
 import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
@@ -9,8 +10,9 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ModTileEntities {
     public static void registerTileEntities() {
-        GameRegistry.registerTileEntity(TileDemoBlock.class, getTeResourceLocation(ModBlocks.demoblock)); //is this right?
+        GameRegistry.registerTileEntity(TileDemoBlock.class, getTeResourceLocation(ModBlocks.demoblock));
         GameRegistry.registerTileEntity(TileTransmitter.class, getTeResourceLocation(ModBlocks.transmitter));
+        GameRegistry.registerTileEntity(TileReceiver.class, getTeResourceLocation(ModBlocks.receiver));
     }
 
     private static ResourceLocation getTeResourceLocation(Block block) {
