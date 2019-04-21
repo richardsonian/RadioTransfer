@@ -54,7 +54,7 @@ public abstract class AbstractTileMachine extends TileEntity {
     public SPacketUpdateTileEntity getUpdatePacket()
     {
         NBTTagCompound nbtTagCompound = new NBTTagCompound();
-        writeToNBT(nbtTagCompound);
+        writeToNBT(nbtTagCompound); //may be unnecessary to send over items
 
         int metadata = getBlockMetadata();
         return new SPacketUpdateTileEntity(this.pos, metadata, nbtTagCompound);

@@ -45,11 +45,13 @@ public abstract class AbstractTileRadio extends AbstractTileMachine implements I
     /* Attribute getters and setters */
     public void setActivated(boolean target) {
         activated = target;
+        this.markDirty();
     }
     public boolean getActivated() {return activated;}
 
     public void setFrequency(int target) {
         frequency = target;
+        this.markDirty();
     }
     public int getFrequency() {
         return frequency;
