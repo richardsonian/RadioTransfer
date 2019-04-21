@@ -1,13 +1,12 @@
 package com.rlapcs.radiotransfer.registries;
 
-import com.rlapcs.radiotransfer.generic.clientonly.guis.GuiEntry;
 import com.rlapcs.radiotransfer.machines.demo.ContainerDemoBlock;
 import com.rlapcs.radiotransfer.machines.demo.GuiDemoBlock;
 import com.rlapcs.radiotransfer.machines.demo.TileDemoBlock;
 import com.rlapcs.radiotransfer.machines.transmitter.ContainerTransmitter;
 import com.rlapcs.radiotransfer.machines.transmitter.GuiTransmitter;
 import com.rlapcs.radiotransfer.machines.transmitter.TileTransmitter;
-import com.rlapcs.radiotransfer.proxy.GuiProxy;
+import com.rlapcs.radiotransfer.proxy.GuiProxy.GuiEntry;
 import net.minecraft.tileentity.TileEntity;
 
 import java.lang.reflect.Field;
