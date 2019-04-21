@@ -6,7 +6,7 @@ import com.rlapcs.radiotransfer.machines.demo.TileDemoBlock;
 import com.rlapcs.radiotransfer.machines.transmitter.ContainerTransmitter;
 import com.rlapcs.radiotransfer.machines.transmitter.GuiTransmitter;
 import com.rlapcs.radiotransfer.machines.transmitter.TileTransmitter;
-import com.rlapcs.radiotransfer.proxy.GuiProxy.GuiEntry;
+import com.rlapcs.radiotransfer.generic.guis.GuiHandler.GuiEntry;
 import net.minecraft.tileentity.TileEntity;
 
 import java.lang.reflect.Field;

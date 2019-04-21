@@ -1,4 +1,4 @@
-package com.rlapcs.radiotransfer.generic.network;
+package com.rlapcs.radiotransfer.generic.network.messages;
 
 import com.rlapcs.radiotransfer.generic.tileEntities.AbstractTileRadio;
 import io.netty.buffer.ByteBuf;

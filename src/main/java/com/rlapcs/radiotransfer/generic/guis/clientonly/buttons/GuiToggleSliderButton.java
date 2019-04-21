@@ -1,4 +1,4 @@
-package com.rlapcs.radiotransfer.generic.clientonly.guis.buttons;
+package com.rlapcs.radiotransfer.generic.guis.clientonly.buttons;
 
 import com.rlapcs.radiotransfer.RadioTransfer;
 import net.minecraft.client.Minecraft;

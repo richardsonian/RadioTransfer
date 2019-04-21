@@ -1,4 +1,4 @@
-package com.rlapcs.radiotransfer.generic.clientonly.guis.buttons;
+package com.rlapcs.radiotransfer.generic.guis.clientonly.buttons;
 
 import com.rlapcs.radiotransfer.RadioTransfer;
 import net.minecraft.client.Minecraft;
@@ -6,10 +6,12 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class GuiIncrementButton extends GuiButton {
+    public enum IncrementType {
+        UP,
+        DOWN
+    }
+
     protected IncrementType type;
     protected int u, v;
 

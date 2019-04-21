@@ -1,5 +1,6 @@
 package com.rlapcs.radiotransfer.proxy;
 
+import com.rlapcs.radiotransfer.generic.guis.GuiHandler;
 import com.rlapcs.radiotransfer.registries.*;
 
 import net.minecraft.block.Block;
@@ -22,7 +23,7 @@ public class CommonProxy {
     public void init(FMLInitializationEvent e) {
         ModTileEntities.registerTileEntities(); //Put here so that @ObjectHolder fields have been filled (after registry events). Not sure if this will cause issues.
 
-        NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiProxy());
+        NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
     }
 
     public void postInit(FMLPostInitializationEvent e) {

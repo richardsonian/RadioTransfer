@@ -1,14 +1,13 @@
-package com.rlapcs.radiotransfer.generic.clientonly.guis;
+package com.rlapcs.radiotransfer.generic.guis.clientonly;
 
 import com.rlapcs.radiotransfer.RadioTransfer;
-import com.rlapcs.radiotransfer.generic.clientonly.guis.buttons.GuiIncrementButton;
-import com.rlapcs.radiotransfer.generic.clientonly.guis.buttons.GuiToggleSliderButton;
-import com.rlapcs.radiotransfer.generic.clientonly.guis.buttons.IncrementType;
-import com.rlapcs.radiotransfer.generic.network.MessageActivateTileRadio;
+import com.rlapcs.radiotransfer.generic.guis.clientonly.buttons.GuiIncrementButton;
+import com.rlapcs.radiotransfer.generic.guis.clientonly.buttons.GuiIncrementButton.IncrementType;
+import com.rlapcs.radiotransfer.generic.guis.clientonly.buttons.GuiToggleSliderButton;
+import com.rlapcs.radiotransfer.generic.network.messages.MessageActivateTileRadio;
 import com.rlapcs.radiotransfer.generic.tileEntities.AbstractTileRadio;
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.Container;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;

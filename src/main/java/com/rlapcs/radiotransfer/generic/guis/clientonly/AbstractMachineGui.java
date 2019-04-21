@@ -1,4 +1,4 @@
-package com.rlapcs.radiotransfer.generic.clientonly.guis;
+package com.rlapcs.radiotransfer.generic.guis.clientonly;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
