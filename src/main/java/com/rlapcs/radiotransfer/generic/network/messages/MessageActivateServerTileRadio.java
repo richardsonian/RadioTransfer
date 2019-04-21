@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class MessageActivateTileRadio implements IMessage {
+public class MessageActivateServerTileRadio implements IMessage {
     private BlockPos tilePos;
     private boolean activatedState;
 
@@ -31,16 +31,16 @@ public class MessageActivateTileRadio implements IMessage {
         buf.writeBoolean(activatedState);
     }
 
-    public MessageActivateTileRadio() {}
+    public MessageActivateServerTileRadio() {}
 
-    public MessageActivateTileRadio(TileEntity te, Boolean state ) {
+    public MessageActivateServerTileRadio(TileEntity te, Boolean state ) {
         tilePos = te.getPos();
         activatedState = state;
     }
 
-    public static class Handler implements IMessageHandler<MessageActivateTileRadio, IMessage> {
+    public static class Handler implements IMessageHandler<MessageActivateServerTileRadio, IMessage> {
         @Override
-        public IMessage onMessage(MessageActivateTileRadio message, MessageContext ctx) {
+        public IMessage onMessage(MessageActivateServerTileRadio message, MessageContext ctx) {
             // Always use a construct like this to actually handle your message. This ensures that
             // your 'handle' code is run on the main Minecraft thread. 'onMessage' itself
             // is called on the networking thread so it is not safe to do a lot of things
@@ -51,7 +51,7 @@ public class MessageActivateTileRadio implements IMessage {
             return null;
         }
 
-        private void handle(MessageActivateTileRadio message, MessageContext ctx) {
+        private void handle(MessageActivateServerTileRadio message, MessageContext ctx) {
             // This code is run on the server side. So you can do server-side calculations here
             EntityPlayerMP playerEntity = ctx.getServerHandler().player;
             World world = playerEntity.getEntityWorld();

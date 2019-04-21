@@ -4,7 +4,7 @@ import com.rlapcs.radiotransfer.RadioTransfer;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.buttons.GuiIncrementButton;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.buttons.GuiIncrementButton.IncrementType;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.buttons.GuiToggleSliderButton;
-import com.rlapcs.radiotransfer.generic.network.messages.MessageActivateTileRadio;
+import com.rlapcs.radiotransfer.generic.network.messages.MessageActivateServerTileRadio;
 import com.rlapcs.radiotransfer.generic.tileEntities.AbstractTileRadio;
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import net.minecraft.client.gui.GuiButton;
@@ -53,7 +53,7 @@ public abstract class AbstractRadioGui extends AbstractMachineGui {
             int pos = activateButton.flipState();
 
            //update server tileEntity
-            ModNetworkMessages.INSTANCE.sendToServer(new MessageActivateTileRadio(tileEntity, pos == 1));
+            ModNetworkMessages.INSTANCE.sendToServer(new MessageActivateServerTileRadio(tileEntity, pos == 1));
             //update client tileEntity (partially sure this is required)
             ((AbstractTileRadio) tileEntity).setActivated(pos == 1);
         }
