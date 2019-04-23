@@ -1,23 +1,32 @@
 package com.rlapcs.radiotransfer.generic.tileEntities;
 
+import net.minecraft.inventory.ItemStackHelper;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nullable;
 
-public abstract class AbstractTileRadio extends AbstractTileMachine implements ITickable {
+public abstract class AbstractTileRadio extends AbstractTileMachine {
     public static final int UPPER_FREQUENCY_LIMIT = 5;
     public static final int LOWER_FREQUENCY_LIMIT = 1;
 
     public static final int ITEM_STACK_HANDLER_SIZE = 12;
 
+    protected boolean registered;
     protected boolean activated;
     protected int frequency;
 
     public AbstractTileRadio() {
         super(ITEM_STACK_HANDLER_SIZE);
+        registered = false;
         activated = true;
         frequency = 1;
     }
@@ -53,9 +62,7 @@ public abstract class AbstractTileRadio extends AbstractTileMachine implements I
     public boolean getActivated() {return activated;}
 
     public void changeFrequency(boolean toIncrement) {
-        int newFrequency = getFrequency() + (toIncrement ? 1 : -1);
-        if(newFrequency > UPPER_FREQUENCY_LIMIT) newFrequency = UPPER_FREQUENCY_LIMIT;
-        else if(newFrequency < LOWER_FREQUENCY_LIMIT) newFrequency = LOWER_FREQUENCY_LIMIT;
+        int newFrequency = MathHelper.clamp(getFrequency() + (toIncrement ? 1 : -1), LOWER_FREQUENCY_LIMIT, UPPER_FREQUENCY_LIMIT);
 
         setFrequency(newFrequency);
     }
@@ -64,13 +71,8 @@ public abstract class AbstractTileRadio extends AbstractTileMachine implements I
         frequency = target;
         this.markDirty();
     }
+
     public int getFrequency() {
         return frequency;
-    }
-
-
-    @Override
-    public void update() {
-
     }
 }
