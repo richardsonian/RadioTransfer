@@ -20,7 +20,7 @@ public abstract class AbstractRadioGui extends AbstractMachineGui {
     public static final int WIDTH = 180;
     public static final int HEIGHT = 152;
 
-    public static final String TEXTURE_PATH = "textures/gui/radio.png";
+    public static final String TEXTURE_PATH = "textures/gui/pixelatedradio.png";
 
     public static final int INCREMENT_ID = 1;
     public static final int INCREMENT_X = 20;
