@@ -1,24 +1,30 @@
 package com.rlapcs.radiotransfer.generic.tileEntities;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nullable;
 
-public abstract class AbstractTileMachine extends TileEntity {
+public abstract class AbstractTileMachine extends TileEntity implements ITickable {
     public static final double MINIMUM_DISTANCE_TO_USE = 64D;
 
     protected ItemStackHandler itemStackHandler;
+    protected long ticksSinceCreation;
 
     public AbstractTileMachine(int itemStackHandlerSize) {
         super();
+
+        ticksSinceCreation = 0;
+
         itemStackHandler = new ItemStackHandler(itemStackHandlerSize) {
             @Override
             protected void onContentsChanged(int slot) {
@@ -105,6 +111,37 @@ public abstract class AbstractTileMachine extends TileEntity {
             return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(itemStackHandler);
         }
         return super.getCapability(capability, facing);
+    }
+
+    /**
+     * Attempts to merge a stack into an ItemHandler, and returns what was not able to be merged.
+     * Returns ItemStack.EMPTY if the merge was 100% successful
+     * @param stack
+     * @return The remainder of the stack
+     */
+    public ItemStack mergeStackIntoInventory(ItemStack stack) {
+        if(!world.isRemote) {
+            if(stack.isEmpty() || stack == null) return ItemStack.EMPTY;
+
+            ItemStack itemstack = stack.copy();
+            int slot = 0;
+            while(!itemstack.isEmpty() || slot < this.itemStackHandler.getSlots()) {
+                itemstack = this.itemStackHandler.insertItem(slot, itemstack, false);
+                slot++;
+            }
+
+            world.notifyBlockUpdate(getPos(), world.getBlockState(getPos()), world.getBlockState(getPos()), 2);
+            return itemstack;
+        }
+
+        return null;
+    }
+
+    @Override
+    public void update() {
+        if(!world.isRemote) {
+            ticksSinceCreation++;
+        }
     }
 
 }
