@@ -1,30 +1,15 @@
 package com.rlapcs.radiotransfer.machines.transmitter;
 
 import com.rlapcs.radiotransfer.generic.tileEntities.AbstractTileRadio;
-import com.rlapcs.radiotransfer.server.radio.RadioRegistry;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.fml.common.FMLCommonHandler;
+import com.rlapcs.radiotransfer.server.radio.RadioNetwork;
 
 
 public class TileTransmitter extends AbstractTileRadio {
     public static final int NUM_TICKS_BETWEEN_SEND = 20;
     public static final int MAX_STACK_SIZE_IN_PACKET = 16;
 
-    private boolean registered;
-
     public TileTransmitter() {
         super();
-
-        registered = false;
-    }
-
-    @Override
-    public void onChunkUnload() {
-        if(this.registered && !world.isRemote) {
-            RadioRegistry.INSTANCE.deregister(this);
-            registered = false;
-        }
     }
 
     private void processSendItems() {
@@ -33,7 +18,7 @@ public class TileTransmitter extends AbstractTileRadio {
                 if (itemStackHandler.getStackInSlot(slot).isEmpty()) {
                     continue;
                 } else {
-                    boolean itemsWereSent = RadioRegistry.INSTANCE.sendItems(this, slot, MAX_STACK_SIZE_IN_PACKET); //amount not yet implemented
+                    boolean itemsWereSent = RadioNetwork.INSTANCE.sendItems(this, slot, MAX_STACK_SIZE_IN_PACKET); //amount not yet implemented
 
                     //no need for block update
                     /*
@@ -52,11 +37,6 @@ public class TileTransmitter extends AbstractTileRadio {
     public void update() {
         super.update();
         if(!world.isRemote) {
-            if(ticksSinceCreation % 10 == 0 && !registered) {
-                RadioRegistry.INSTANCE.register(this);
-                registered = true;
-            }
-
             if (ticksSinceCreation % NUM_TICKS_BETWEEN_SEND == 0) {
                 processSendItems();
             }

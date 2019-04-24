@@ -1,7 +1,7 @@
 package com.rlapcs.radiotransfer.machines.receiver;
 
 import com.rlapcs.radiotransfer.generic.tileEntities.AbstractTileRadio;
-import com.rlapcs.radiotransfer.server.radio.RadioRegistry;
+import com.rlapcs.radiotransfer.server.radio.RadioNetwork;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.MathHelper;
@@ -18,14 +18,14 @@ public class TileReceiver extends AbstractTileRadio implements ITickable {
 
     public void register() {
         if(!registered){
-            RadioRegistry.INSTANCE.register(this);
+            RadioNetwork.INSTANCE.register(this);
             registered = true;
         }
     }
 
     public void deregister() {
         if(registered) {
-            RadioRegistry.INSTANCE.deregister(this);
+            RadioNetwork.INSTANCE.deregister(this);
             registered = false;
         }
     }
@@ -71,7 +71,7 @@ public class TileReceiver extends AbstractTileRadio implements ITickable {
 
     public void changePriority(boolean toIncrement) {
         int newPriority = getPriority() + (toIncrement ? 1 : -1);
-        setPriority(MathHelper.clamp(newPriority, RadioRegistry.MIN_PRIORITY, RadioRegistry.MAX_PRIORITY));
+        setPriority(MathHelper.clamp(newPriority, RadioNetwork.MIN_PRIORITY, RadioNetwork.MAX_PRIORITY));
     }
 
     @Override
