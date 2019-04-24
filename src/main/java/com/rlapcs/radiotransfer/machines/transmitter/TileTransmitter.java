@@ -3,6 +3,8 @@ package com.rlapcs.radiotransfer.machines.transmitter;
 import com.rlapcs.radiotransfer.generic.tileEntities.AbstractTileRadio;
 import com.rlapcs.radiotransfer.server.radio.RadioRegistry;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 
 public class TileTransmitter extends AbstractTileRadio {
@@ -31,8 +33,15 @@ public class TileTransmitter extends AbstractTileRadio {
                 if (itemStackHandler.getStackInSlot(slot).isEmpty()) {
                     continue;
                 } else {
-                    RadioRegistry.INSTANCE.sendItems(this, slot, MAX_STACK_SIZE_IN_PACKET); //amount not yet implemented
-                    world.notifyBlockUpdate(getPos(), world.getBlockState(getPos()), world.getBlockState(getPos()), 2);
+                    boolean itemsWereSent = RadioRegistry.INSTANCE.sendItems(this, slot, MAX_STACK_SIZE_IN_PACKET); //amount not yet implemented
+
+                    //no need for block update
+                    /*
+                    if(itemsWereSent) {
+                        //world.notifyBlockUpdate(getPos(), world.getBlockState(getPos()), world.getBlockState(getPos()), 2);
+                    }
+                     */
+
                     return;
                 }
             }

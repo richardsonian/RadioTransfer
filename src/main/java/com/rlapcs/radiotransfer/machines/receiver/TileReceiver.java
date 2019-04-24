@@ -16,11 +16,28 @@ public class TileReceiver extends AbstractTileRadio implements ITickable {
         registered = false;
     }
 
+    public void register() {
+        if(!registered){
+            RadioRegistry.INSTANCE.register(this);
+            registered = true;
+        }
+    }
+
+    public void deregister() {
+        if(registered) {
+            RadioRegistry.INSTANCE.deregister(this);
+            registered = false;
+        }
+    }
+
+    public void invalidate() {
+        deregister();
+    }
+
     @Override
     public void onChunkUnload() {
         if(this.registered && !world.isRemote) {
-            RadioRegistry.INSTANCE.deregister(this);
-            registered = false;
+            this.deregister();
         }
     }
 
@@ -31,6 +48,7 @@ public class TileReceiver extends AbstractTileRadio implements ITickable {
         if(compound.hasKey("priority")) {
             this.priority = compound.getInteger("activated");
         }
+        this.registered = false;
     }
 
     @Override
@@ -57,8 +75,7 @@ public class TileReceiver extends AbstractTileRadio implements ITickable {
         super.update();
         if(!world.isRemote) {
             if(ticksSinceCreation % 10 == 0 && !registered) {
-                RadioRegistry.INSTANCE.register(this);
-                registered = true;
+                this.register();
             }
         }
     }

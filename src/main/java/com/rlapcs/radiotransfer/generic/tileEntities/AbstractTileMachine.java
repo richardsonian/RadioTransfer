@@ -8,7 +8,9 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -125,12 +127,18 @@ public abstract class AbstractTileMachine extends TileEntity implements ITickabl
 
             ItemStack itemstack = stack.copy();
             int slot = 0;
-            while(!itemstack.isEmpty() || slot < this.itemStackHandler.getSlots()) {
+            while(!itemstack.isEmpty() && slot < this.itemStackHandler.getSlots()) {
                 itemstack = this.itemStackHandler.insertItem(slot, itemstack, false);
                 slot++;
             }
 
-            world.notifyBlockUpdate(getPos(), world.getBlockState(getPos()), world.getBlockState(getPos()), 2);
+            //No need for block update
+            /*
+            if(ItemStack.areItemStacksEqual(stack, itemstack)) { //if something was merged into the inventory
+                //world.notifyBlockUpdate(getPos(), world.getBlockState(getPos()), world.getBlockState(getPos()), 2);
+            }
+            */
+
             return itemstack;
         }
 
@@ -144,4 +152,8 @@ public abstract class AbstractTileMachine extends TileEntity implements ITickabl
         }
     }
 
+    @Override
+    public String toString() {
+        return String.format("%s at [%d, %d, %d] @%d", this.getClass().getSimpleName(), pos.getX(), pos.getY(), pos.getZ(), this.hashCode());
+    }
 }
