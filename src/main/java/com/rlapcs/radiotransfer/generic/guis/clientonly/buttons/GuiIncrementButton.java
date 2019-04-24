@@ -18,13 +18,13 @@ public class GuiIncrementButton extends GuiButton {
     private static final ResourceLocation textures = new ResourceLocation(RadioTransfer.MODID, "textures/gui/icons.png");
 
     public GuiIncrementButton(int buttonId, int x, int y, IncrementType type) {
-        super(buttonId, x, y, 25, 15, "");
+        super(buttonId, x, y, 17, 10, "");
         if (type == IncrementType.UP) {
             u = 0;
             v = 0;
         } else {
             u = 0;
-            v = 15;
+            v = 10;
         }
     }
 
