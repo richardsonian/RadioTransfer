@@ -10,6 +10,8 @@ public abstract class AbstractMachineGui extends GuiContainer {
     protected ResourceLocation texture;
     protected TileEntity tileEntity;
 
+    private static int ID;
+
     public AbstractMachineGui(TileEntity tileEntity, Container container, int width, int height, ResourceLocation texture) {
         super(container);
 
@@ -27,6 +29,9 @@ public abstract class AbstractMachineGui extends GuiContainer {
         //add buttons here
     }
 
+    protected static int createID() {
+        return ID++;
+    }
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
