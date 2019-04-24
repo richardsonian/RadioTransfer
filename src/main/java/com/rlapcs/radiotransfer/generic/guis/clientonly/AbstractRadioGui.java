@@ -20,19 +20,19 @@ public abstract class AbstractRadioGui extends AbstractMachineGui {
     public static final int WIDTH = 180;
     public static final int HEIGHT = 152;
 
-    protected static int FREQUENCY_INCREMENT_ID;
-    protected static int FREQUENCY_INCREMENT_X;
+    protected static int FREQUENCY_INCREMENT_ID = getNextButtonID();
+    protected static int FREQUENCY_INCREMENT_X; //location should be overridden
     protected static int FREQUENCY_INCREMENT_Y;
 
-    protected static int FREQUENCY_DECREMENT_ID;
-    protected static int FREQUENCY_DECREMENT_X;
+    protected static int FREQUENCY_DECREMENT_ID = getNextButtonID();
+    protected static int FREQUENCY_DECREMENT_X; //location should be overridden
     protected static int FREQUENCY_DECREMENT_Y;
 
-    protected static int ACTIVATE_ID;
-    protected static int ACTIVATE_ON_X;
-    protected static int ACTIVATE_ON_Y;
-    protected static int ACTIVATE_OFF_X;
-    protected static int ACTIVATE_OFF_Y;
+    protected static int ACTIVATE_ID = getNextButtonID();
+    protected static int ACTIVATE_ON_X = 78;
+    protected static int ACTIVATE_ON_Y = 15;
+    protected static int ACTIVATE_OFF_X = 78;
+    protected static int ACTIVATE_OFF_Y = 36;
 
     public AbstractRadioGui(TileEntity tileEntity, Container container, ResourceLocation background) {
         super(tileEntity, container, WIDTH, HEIGHT, background);

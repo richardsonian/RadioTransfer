@@ -11,18 +11,10 @@ public class GuiTransmitter extends AbstractRadioGui {
     public GuiTransmitter(TileTransmitter tileEntity, ContainerTransmitter container) {
         super(tileEntity, container, background);
 
-        FREQUENCY_INCREMENT_ID = createID();
         FREQUENCY_INCREMENT_X = 24;
         FREQUENCY_INCREMENT_Y = 15;
 
-        FREQUENCY_DECREMENT_ID = createID();
         FREQUENCY_DECREMENT_X = 24;
         FREQUENCY_DECREMENT_Y = 45;
-
-        ACTIVATE_ID = createID();
-        ACTIVATE_ON_Y = 15;
-        ACTIVATE_OFF_X = 78;
-        ACTIVATE_OFF_Y = 36;
-        ACTIVATE_ON_X = 78;
     }
 }

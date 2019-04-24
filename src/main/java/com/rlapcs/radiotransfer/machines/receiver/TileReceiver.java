@@ -64,11 +64,15 @@ public class TileReceiver extends AbstractTileRadio implements ITickable {
         return priority;
     }
 
-    public void setPriority(int priority) {
-        this.priority = MathHelper.clamp(priority, RadioRegistry.MIN_PRIORITY, RadioRegistry.MAX_PRIORITY);
+    private void setPriority(int priority) {
+        this.priority = priority;
         this.markDirty();
     }
 
+    public void changePriority(boolean toIncrement) {
+        int newPriority = getPriority() + (toIncrement ? 1 : -1);
+        setPriority(MathHelper.clamp(newPriority, RadioRegistry.MIN_PRIORITY, RadioRegistry.MAX_PRIORITY));
+    }
 
     @Override
     public void update() {

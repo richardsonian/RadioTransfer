@@ -1,18 +1,9 @@
 package com.rlapcs.radiotransfer.generic.tileEntities;
 
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
-import net.minecraft.util.ITickable;
-import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
-import net.minecraftforge.items.ItemStackHandler;
 
-import javax.annotation.Nullable;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.MathHelper;
+
 
 public abstract class AbstractTileRadio extends AbstractTileMachine {
     public static final int UPPER_FREQUENCY_LIMIT = 5;
