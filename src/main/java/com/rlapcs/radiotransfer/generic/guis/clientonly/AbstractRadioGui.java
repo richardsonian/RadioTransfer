@@ -58,7 +58,7 @@ public abstract class AbstractRadioGui extends AbstractMachineGui {
             GuiToggleSliderButton activateButton = (GuiToggleSliderButton) button;
             int pos = activateButton.flipState();
 
-           //update server tileEntity
+            //update server tileEntity
             ModNetworkMessages.INSTANCE.sendToServer(new MessageActivateTileRadio(tileEntity, pos == 1));
             //update client tileEntity
             ((AbstractTileRadio) tileEntity).setActivated(pos == 1);
