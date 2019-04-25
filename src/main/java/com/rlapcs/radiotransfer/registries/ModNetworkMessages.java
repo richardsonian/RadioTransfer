@@ -1,8 +1,8 @@
 package com.rlapcs.radiotransfer.registries;
 
-import com.rlapcs.radiotransfer.generic.network.messages.MessageActivateTileRadio;
-import com.rlapcs.radiotransfer.generic.network.messages.MessageUpdateTileRadioFrequency;
-import com.rlapcs.radiotransfer.generic.network.messages.MessageUpdateTileReceiverPriority;
+import com.rlapcs.radiotransfer.generic.network.messages.deprecated.MessageActivateTileRadio;
+import com.rlapcs.radiotransfer.generic.network.messages.deprecated.MessageUpdateTileRadioFrequency;
+import com.rlapcs.radiotransfer.generic.network.messages.deprecated.MessageUpdateTileReceiverPriority;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;

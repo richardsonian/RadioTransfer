@@ -1,7 +1,7 @@
 package com.rlapcs.radiotransfer.server.radio;
 
-import com.rlapcs.radiotransfer.machines.receiver.TileReceiver;
-import com.rlapcs.radiotransfer.machines.transmitter.TileTransmitter;
+import com.rlapcs.radiotransfer.machines.deprecated.receiver.TileReceiver;
+import com.rlapcs.radiotransfer.machines.deprecated.transmitter.TileTransmitter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentString;
