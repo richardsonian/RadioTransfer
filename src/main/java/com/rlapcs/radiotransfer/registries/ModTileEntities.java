@@ -1,9 +1,9 @@
 package com.rlapcs.radiotransfer.registries;
 
 import com.rlapcs.radiotransfer.RadioTransfer;
-import com.rlapcs.radiotransfer.machines.demo.TileDemoBlock;
-import com.rlapcs.radiotransfer.machines.receiver.TileReceiver;
-import com.rlapcs.radiotransfer.machines.transmitter.TileTransmitter;
+import com.rlapcs.radiotransfer.machines.deprecated.demo.TileDemoBlock;
+import com.rlapcs.radiotransfer.machines.deprecated.receiver.TileReceiver;
+import com.rlapcs.radiotransfer.machines.deprecated.transmitter.TileTransmitter;
 import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;

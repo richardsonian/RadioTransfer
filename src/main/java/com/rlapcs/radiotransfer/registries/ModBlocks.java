@@ -1,8 +1,8 @@
 package com.rlapcs.radiotransfer.registries;
 
-import com.rlapcs.radiotransfer.machines.demo.BlockDemoBlock;
-import com.rlapcs.radiotransfer.machines.receiver.BlockReceiver;
-import com.rlapcs.radiotransfer.machines.transmitter.BlockTransmitter;
+import com.rlapcs.radiotransfer.machines.deprecated.demo.BlockDemoBlock;
+import com.rlapcs.radiotransfer.machines.deprecated.receiver.BlockReceiver;
+import com.rlapcs.radiotransfer.machines.deprecated.transmitter.BlockTransmitter;
 import net.minecraft.block.Block;
 import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 import net.minecraftforge.fml.relauncher.Side;

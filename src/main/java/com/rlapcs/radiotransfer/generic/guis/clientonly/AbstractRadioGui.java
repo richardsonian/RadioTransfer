@@ -1,11 +1,9 @@
 package com.rlapcs.radiotransfer.generic.guis.clientonly;
 
-import com.rlapcs.radiotransfer.RadioTransfer;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.buttons.GuiIncrementButton;
-import com.rlapcs.radiotransfer.generic.guis.clientonly.buttons.GuiIncrementButton.IncrementType;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.buttons.GuiToggleSliderButton;
-import com.rlapcs.radiotransfer.generic.network.messages.MessageActivateTileRadio;
-import com.rlapcs.radiotransfer.generic.network.messages.MessageUpdateTileRadioFrequency;
+import com.rlapcs.radiotransfer.generic.network.messages.deprecated.MessageActivateTileRadio;
+import com.rlapcs.radiotransfer.generic.network.messages.deprecated.MessageUpdateTileRadioFrequency;
 import com.rlapcs.radiotransfer.generic.tileEntities.AbstractTileRadio;
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import net.minecraft.client.Minecraft;

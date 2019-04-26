@@ -5,7 +5,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 
 
-public abstract class AbstractTileRadio extends AbstractTileMachine {
+public abstract class AbstractTileRadio extends AbstractTileMachineWithInventory {
     public static final int UPPER_FREQUENCY_LIMIT = 5;
     public static final int LOWER_FREQUENCY_LIMIT = 1;
 
