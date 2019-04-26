@@ -1,4 +1,7 @@
 package com.rlapcs.radiotransfer.machines.radio;
 
-public class TileRadio {
+import com.rlapcs.radiotransfer.generic.tileEntities.AbstractTileMachine;
+
+public class TileRadio extends AbstractTileMachine {
+    
 }
