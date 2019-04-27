@@ -37,11 +37,11 @@ public class GuiReceiver extends AbstractRadioGui {
 
         //priority increment button
         this.addButton(new GuiIncrementButton(PRIORITY_INCREMENT_ID, guiLeft + PRIORITY_INCREMENT_X, guiTop + PRIORITY_INCREMENT_Y,
-                GuiIncrementButton.IncrementType.UP));
+                GuiIncrementButton.IncrementType.RIGHT)); //hotfix changed from "UP"
 
         //priority decrement button
         this.addButton(new GuiIncrementButton(PRIORITY_DECREMENT_ID, guiLeft + PRIORITY_DECREMENT_X, guiTop + PRIORITY_DECREMENT_Y,
-                GuiIncrementButton.IncrementType.DOWN));
+                GuiIncrementButton.IncrementType.LEFT)); //hotfix changed from "DOWN"
     }
 
     @Override

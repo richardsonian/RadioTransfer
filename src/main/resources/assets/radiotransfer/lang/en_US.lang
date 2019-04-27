@@ -2,7 +2,17 @@
 item.radiotransfer.demoitem.name=Demo Item
 item.radiotransfer.redgem.name=Red Gem
 
-# blocks
+# ~~~ blocks ~~~ #
+
+# demo
 tile.radiotransfer.demoblock.name=Demo Block
 tile.radiotransfer.transmitter.name=Transmitter
 tile.radiotransfer.receiver.name=Receiver
+
+# multiblock radio
+tile.radiotransfer.radio.name=Radio
+tile.radiotransfer.tx_controller.name=TX Controller
+tile.radiotransfer.rx_controller.name=RX Controller
+tile.radiotransfer.item_encoder.name=Item Encoder
+tile.radiotransfer.item_decoder.name=Item Decoder
+tile.radiotransfer.power_supply.name=Power Supply

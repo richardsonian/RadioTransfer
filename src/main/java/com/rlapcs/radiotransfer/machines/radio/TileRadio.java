@@ -10,8 +10,12 @@ public class TileRadio extends AbstractTileMachine {
 
     private MultiblockRadioController multiblock;
 
-    private void sendResources() {
+    public TileRadio() {
+        super();
+        multiblock = new MultiblockRadioController();
+    }
 
+    private void sendResources() {
     }
 
     public MultiblockRadioController getMultiblockController() {

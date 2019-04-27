@@ -1,8 +1,14 @@
 package com.rlapcs.radiotransfer.registries;
 
+import com.rlapcs.radiotransfer.machines.controllers.rx_controller.BlockRxController;
+import com.rlapcs.radiotransfer.machines.controllers.tx_controller.BlockTxController;
+import com.rlapcs.radiotransfer.machines.decoders.item_decoder.BlockItemDecoder;
 import com.rlapcs.radiotransfer.machines.deprecated.demo.BlockDemoBlock;
 import com.rlapcs.radiotransfer.machines.deprecated.receiver.BlockReceiver;
 import com.rlapcs.radiotransfer.machines.deprecated.transmitter.BlockTransmitter;
+import com.rlapcs.radiotransfer.machines.encoders.item_encoder.BlockItemEncoder;
+import com.rlapcs.radiotransfer.machines.power_supply.BlockPowerSupply;
+import com.rlapcs.radiotransfer.machines.radio.BlockRadio;
 import net.minecraft.block.Block;
 import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 import net.minecraftforge.fml.relauncher.Side;
@@ -22,9 +28,22 @@ public class ModBlocks {
         Example:
         public static final ItemClass item_name = null;
      */
+
+    //demo
     public static final BlockDemoBlock demoblock = null;
     public static final BlockTransmitter transmitter = null;
     public static final BlockReceiver receiver = null;
+
+    //multiblock radio
+    public static final BlockRadio radio = null;
+
+    public static final BlockTxController tx_controller = null;
+    public static final BlockRxController rx_controller = null;
+
+    public static final BlockItemEncoder item_encoder = null;
+    public static final BlockItemDecoder item_decoder = null;
+
+    public static final BlockPowerSupply power_supply = null;
 
     /**
      * Returns a list of instances of blocks that are to be added to the registry.
@@ -34,10 +53,21 @@ public class ModBlocks {
         List<Block> blocks = new ArrayList<>();
 
         /* Add one instance of each block here */
+
+        //demo
         blocks.add(new BlockDemoBlock());
         blocks.add(new BlockTransmitter());
         blocks.add(new BlockReceiver());
+
+        //multiblock radio
+        blocks.add(new BlockRadio());
+        blocks.add(new BlockTxController());
+        blocks.add(new BlockRxController());
+        blocks.add(new BlockItemEncoder());
+        blocks.add(new BlockItemDecoder());
+        blocks.add(new BlockPowerSupply());
         /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
         return blocks;
     }
 
@@ -55,9 +85,19 @@ public class ModBlocks {
             ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(anon_block), 0,
                 new ModelResourceLocation(anon_block.getRegistryName(), "inventory"));
          */
+
+        //demo
         demoblock.initModel();
         transmitter.initModel();
         receiver.initModel();
+
+        //multiblock radio
+        radio.initModel();
+        tx_controller.initModel();
+        rx_controller.initModel();
+        item_encoder.initModel();
+        item_decoder.initModel();
+        power_supply.initModel();
     }
 
     /**

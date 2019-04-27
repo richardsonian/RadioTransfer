@@ -1,0 +1,10 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "radiotransfer:item_decoder"
+  },
+  "variants": {
+    "normal": [{}],
+    "inventory": [{}]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "radiotransfer:rx_controller"
+  },
+  "variants": {
+    "normal": [{}],
+    "inventory": [{}]
+  }
+}
