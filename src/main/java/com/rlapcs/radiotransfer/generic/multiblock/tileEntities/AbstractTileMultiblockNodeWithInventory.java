@@ -1,6 +1,6 @@
-package com.rlapcs.radiotransfer.generic.tileEntities;
+package com.rlapcs.radiotransfer.generic.multiblock.tileEntities;
 
-import net.minecraft.entity.player.EntityPlayer;
+import com.rlapcs.radiotransfer.generic.tileEntities.AbstractTileMachineWithInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -8,10 +8,10 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-public abstract class AbstractTileMachineWithInventory extends AbstractTileMachine {
+public abstract class AbstractTileMultiblockNodeWithInventory extends AbstractTileMultiblockNode {
     protected ItemStackHandler itemStackHandler;
 
-    public AbstractTileMachineWithInventory(int itemStackHandlerSize) {
+    public AbstractTileMultiblockNodeWithInventory(int itemStackHandlerSize) {
         super();
 
         ticksSinceCreation = 0;
@@ -21,7 +21,7 @@ public abstract class AbstractTileMachineWithInventory extends AbstractTileMachi
             protected void onContentsChanged(int slot) {
                 // We need to tell the tile entity that something has changed so
                 // that the chest contents is persisted
-                AbstractTileMachineWithInventory.this.markDirty();
+                AbstractTileMultiblockNodeWithInventory.this.markDirty();
             }
         };
     }
