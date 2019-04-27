@@ -1,7 +1,7 @@
 package com.rlapcs.radiotransfer.generic.guis.clientonly;
 
-import com.rlapcs.radiotransfer.generic.guis.clientonly.buttons.GuiIncrementButton;
-import com.rlapcs.radiotransfer.generic.guis.clientonly.buttons.GuiToggleSliderButton;
+import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.buttons.GuiIncrementButton;
+import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.sliders.GuiToggleSliderButton;
 import com.rlapcs.radiotransfer.generic.network.messages.deprecated.MessageActivateTileRadio;
 import com.rlapcs.radiotransfer.generic.network.messages.deprecated.MessageUpdateTileRadioFrequency;
 import com.rlapcs.radiotransfer.generic.tileEntities.AbstractTileRadio;
@@ -15,22 +15,22 @@ import net.minecraft.util.ResourceLocation;
 import java.awt.*;
 
 public abstract class AbstractRadioGui extends AbstractMachineGui {
-    public static final int WIDTH = 180;
-    public static final int HEIGHT = 152;
+    public static final int WIDTH = 170;
+    public static final int HEIGHT = 148;
 
     protected static int FREQUENCY_INCREMENT_ID = getNextButtonID();
-    protected static int FREQUENCY_INCREMENT_X; //location should be overridden
-    protected static int FREQUENCY_INCREMENT_Y;
+    protected static int FREQUENCY_INCREMENT_X = 74;
+    protected static int FREQUENCY_INCREMENT_Y = 30;
 
     protected static int FREQUENCY_DECREMENT_ID = getNextButtonID();
-    protected static int FREQUENCY_DECREMENT_X; //location should be overridden
-    protected static int FREQUENCY_DECREMENT_Y;
+    protected static int FREQUENCY_DECREMENT_X = 13;
+    protected static int FREQUENCY_DECREMENT_Y = 30;
 
     protected static int ACTIVATE_ID = getNextButtonID();
-    protected static int ACTIVATE_ON_X = 78;
-    protected static int ACTIVATE_ON_Y = 15;
-    protected static int ACTIVATE_OFF_X = 78;
-    protected static int ACTIVATE_OFF_Y = 36;
+    protected static int ACTIVATE_ON_X = 149;
+    protected static int ACTIVATE_ON_Y = 22;
+    protected static int ACTIVATE_OFF_X = 149;
+    protected static int ACTIVATE_OFF_Y = 43;
 
     public AbstractRadioGui(TileEntity tileEntity, Container container, ResourceLocation background) {
         super(tileEntity, container, WIDTH, HEIGHT, background);
@@ -69,11 +69,11 @@ public abstract class AbstractRadioGui extends AbstractMachineGui {
 
         //frequency increment button
         this.addButton(new GuiIncrementButton(FREQUENCY_INCREMENT_ID, guiLeft + FREQUENCY_INCREMENT_X, guiTop + FREQUENCY_INCREMENT_Y,
-                GuiIncrementButton.IncrementType.UP));
+                GuiIncrementButton.IncrementType.RIGHT));
 
         //frequency decrement button
         this.addButton(new GuiIncrementButton(FREQUENCY_DECREMENT_ID, guiLeft + FREQUENCY_DECREMENT_X, guiTop + FREQUENCY_DECREMENT_Y,
-                GuiIncrementButton.IncrementType.DOWN));
+                GuiIncrementButton.IncrementType.LEFT));
 
         //activate button
         this.addButton(new GuiToggleSliderButton(ACTIVATE_ID, ((AbstractTileRadio) tileEntity).getActivated() ? 1 : 2, guiLeft + ACTIVATE_ON_X, guiTop + ACTIVATE_ON_Y,
@@ -89,14 +89,14 @@ public abstract class AbstractRadioGui extends AbstractMachineGui {
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
         //draw text
-        String name = Minecraft.getMinecraft().world.getBlockState(tileEntity.getPos()).getBlock().getLocalizedName();
-        fontRenderer.drawString(name, 5, 5, Color.white.getRGB());
+        //String name = Minecraft.getMinecraft().world.getBlockState(tileEntity.getPos()).getBlock().getLocalizedName();
+        //fontRenderer.drawString(name, 5, 5, Color.white.getRGB());
 
-        fontRenderer.drawString("on", 64, 18, Color.white.getRGB());
-        fontRenderer.drawString("off", 60, 44, Color.white.getRGB());
+        //fontRenderer.drawString("on", 64, 18, Color.white.getRGB());
+        //fontRenderer.drawString("off", 60, 44, Color.white.getRGB());
 
-        String frequency = "" + ((AbstractTileRadio) tileEntity).getFrequency();
-        fontRenderer.drawString(frequency,  FREQUENCY_INCREMENT_X + 6,  FREQUENCY_DECREMENT_Y - 15, Color.white.getRGB());
+        String frequency = ((AbstractTileRadio) tileEntity).getFrequency() + "mHz";
+        fontRenderer.drawString(frequency,  22,  30, Color.white.getRGB());
     }
 
 }

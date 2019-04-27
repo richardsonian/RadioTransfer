@@ -2,7 +2,7 @@ package com.rlapcs.radiotransfer.machines.deprecated.receiver;
 
 import com.rlapcs.radiotransfer.RadioTransfer;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.AbstractRadioGui;
-import com.rlapcs.radiotransfer.generic.guis.clientonly.buttons.GuiIncrementButton;
+import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.buttons.GuiIncrementButton;
 import com.rlapcs.radiotransfer.generic.network.messages.deprecated.MessageUpdateTileReceiverPriority;
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import net.minecraft.client.gui.GuiButton;
