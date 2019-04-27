@@ -12,7 +12,7 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
 
     public abstract double getPowerUsagePerTick();
 
-    public abstract void triggerControllerUpdate();
+    //public abstract void triggerControllerUpdate();
 
     public void setController(TileRadio controller) {
         this.controller = controller;
