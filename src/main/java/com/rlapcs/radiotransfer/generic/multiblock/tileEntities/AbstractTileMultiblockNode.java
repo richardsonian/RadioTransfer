@@ -29,11 +29,10 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
 
     public void deregisterFromMultiblock() {
         sendDebugMessage(this + " deregistered from: " + controller);
-        controller.removeNode(this);
-        this.controller = null;
-        registeredInMultiblock = false;
-
+        registeredInMultiblock = false; //must come before notify surrounding
         this.notifySurroundingDetatch();
+        controller.removeNode(this);
+        this.controller = null; //must come after notify surrounding
     }
     public boolean isRegisteredInMultiblock() {
         return registeredInMultiblock;
@@ -70,7 +69,7 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
 
             if(te instanceof TileRadio) {
                 if(((TileRadio) te).getMultiblockController() == controller) {
-                    sendDebugMessage(this + " is adjacent to " + controller);
+                    //sendDebugMessage(this + " is adjacent to " + controller);
                     return true;
                 }
             }
@@ -85,22 +84,27 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
             TileEntity te = world.getTileEntity(n);
             if(te instanceof AbstractTileMultiblockNode) {
                 AbstractTileMultiblockNode node = (AbstractTileMultiblockNode) te;
-                sendDebugMessage("found neighboring multiblock tile " + node + (node.isRegisteredInMultiblock() ? "(registered)" : "(deregistered)")+ " with controller" + node.getController());
-                if(node.isRegisteredInMultiblock() && node.getController() == this.getController()) {
-                    sendDebugMessage("adding " + node + "to neighbor list");
+                //sendDebugMessage("found neighboring multiblock tile " + node + (node.isRegisteredInMultiblock() ? "(registered)" : "(deregistered)")+ " with controller" + node.getController());
+                if(node.isRegisteredInMultiblock() && (node.getController() == this.getController())) {
+                    //sendDebugMessage("adding " + node + "to neighbor list");
                     nodes.add(node);
                 }
             }
         }
-        sendDebugMessage("found neighboring nodes: " + nodes);
+        //sendDebugMessage("found neighboring nodes: " + nodes);
         return nodes;
     }
-    private boolean isConnectedToController() { //recursion :)
+    private boolean isConnectedToController(List<AbstractTileMultiblockNode> alreadyBeingChecked) { //recursion :)
         if(this.isAdjacentToController()) return true;
         else {
-            for(AbstractTileMultiblockNode node : getNeighboringNodes()) {
-                if(node.isConnectedToController()) {
-                    sendDebugMessage(this + " is connected to its controller");
+            //so that it doesn't contain nodes already asked if they're already asking
+            alreadyBeingChecked.add(this);
+            List<AbstractTileMultiblockNode> nodes = getNeighboringNodes();
+            nodes.removeAll(alreadyBeingChecked);
+
+            for(AbstractTileMultiblockNode node : nodes) {
+                if(node.isConnectedToController(alreadyBeingChecked)) {
+                    //sendDebugMessage(this + " is connected to its controller");
                     return true;
                 }
             }
@@ -109,13 +113,13 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
     }
     private void notifySurroundingDetatch() {
         for(AbstractTileMultiblockNode node : getNeighboringNodes()) {
-            sendDebugMessage(this + " notified detatch to " + node);
+            //sendDebugMessage(this + " notified detatch to " + node);
             node.verifyConnectedToController();
         }
     }
     private void verifyConnectedToController() {
         if(registeredInMultiblock) {
-            if(!isConnectedToController()) {
+            if(!isConnectedToController(new ArrayList<>())) {
                 this.deregisterFromMultiblock();
             }
         }
