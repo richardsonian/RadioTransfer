@@ -49,10 +49,25 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
         }
     }
 
+    /**
+     * Called when the chunk this TileEntity is on is Unloaded.
+     */
+    @Override
+    public void onChunkUnload() {
+        super.onChunkUnload();
+        if(!world.isRemote) {
+            if(registeredInMultiblock) {
+                this.deregisterFromMultiblock();
+            }
+        }
+    }
+
     private boolean isAdjacentToController() {
         BlockPos[] neighbors = {pos.up(), pos.down(), pos.north(), pos.south(), pos.east(), pos.west()};
+
         for(BlockPos n : neighbors) {
             TileEntity te = world.getTileEntity(n);
+
             if(te instanceof TileRadio) {
                 if(((TileRadio) te).getMultiblockController() == controller) {
                     sendDebugMessage(this + " is adjacent to " + controller);
@@ -69,17 +84,18 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
         for(BlockPos n : neighbors) {
             TileEntity te = world.getTileEntity(n);
             if(te instanceof AbstractTileMultiblockNode) {
-                sendDebugMessage("found neighboring multiblock tile " + te + (registeredInMultiblock ? "(registered)" : "(deregistered)")+ " with controller" + ((AbstractTileMultiblockNode) te).getController());
-                if(((AbstractTileMultiblockNode) te).isRegisteredInMultiblock() && ((AbstractTileMultiblockNode) te).getController() == this.getController()) {
-                    sendDebugMessage("adding " + te + "to neighbor list");
-                    nodes.add((AbstractTileMultiblockNode) te);
+                AbstractTileMultiblockNode node = (AbstractTileMultiblockNode) te;
+                sendDebugMessage("found neighboring multiblock tile " + node + (node.isRegisteredInMultiblock() ? "(registered)" : "(deregistered)")+ " with controller" + node.getController());
+                if(node.isRegisteredInMultiblock() && node.getController() == this.getController()) {
+                    sendDebugMessage("adding " + node + "to neighbor list");
+                    nodes.add(node);
                 }
             }
         }
         sendDebugMessage("found neighboring nodes: " + nodes);
         return nodes;
     }
-    private boolean isConnectedToController() {
+    private boolean isConnectedToController() { //recursion :)
         if(this.isAdjacentToController()) return true;
         else {
             for(AbstractTileMultiblockNode node : getNeighboringNodes()) {
@@ -94,7 +110,7 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
     private void notifySurroundingDetatch() {
         for(AbstractTileMultiblockNode node : getNeighboringNodes()) {
             sendDebugMessage(this + " notified detatch to " + node);
-            verifyConnectedToController();
+            node.verifyConnectedToController();
         }
     }
     private void verifyConnectedToController() {

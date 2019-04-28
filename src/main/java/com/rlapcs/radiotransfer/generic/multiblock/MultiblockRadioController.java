@@ -15,7 +15,6 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
-import java.util.Map;
 
 public class MultiblockRadioController {
     private TileRadio tileEntity;
@@ -30,22 +29,22 @@ public class MultiblockRadioController {
 
     public MultiblockRadioController(TileRadio te) {
         tileEntity = te;
-        encoders = new EnumMap<TransferType, AbstractTileMultiblockNode>(TransferType.class);
-        decoders = new EnumMap<TransferType, AbstractTileMultiblockNode>(TransferType.class);
+        encoders = new EnumMap<>(TransferType.class);
+        decoders = new EnumMap<>(TransferType.class);
     }
     public TileRadio getTileEntity() {
         return tileEntity;
     }
 
     public boolean canTransmit(@Nonnull TransferType type) {
-        boolean hasEncoder = encoders.get(type) == null || encoders.get(type).isInvalid(); //invalid check redundant
+        boolean hasEncoder = encoders.get(type) != null && !encoders.get(type).isInvalid(); //invalid check redundant
         //other checks?
 
         return hasEncoder;
     }
 
     public boolean canReceive(@Nonnull TransferType type) {
-        boolean hasDecoder = decoders.get(type) == null || decoders.get(type).isInvalid(); //invalid check redundant
+        boolean hasDecoder = decoders.get(type) != null && !decoders.get(type).isInvalid(); //invalid check redundant
         //other checks?
 
         return hasDecoder;
@@ -61,9 +60,11 @@ public class MultiblockRadioController {
 
     public boolean validateAddition(BlockPos pos) {
         TileEntity te = tileEntity.getWorld().getTileEntity(pos);
+
         if(te != null) {
             if (te instanceof AbstractTileMultiblockNode) {
                 AbstractTileMultiblockNode node = ((AbstractTileMultiblockNode) te);
+
                 if (!node.isRegisteredInMultiblock()) {
                     if (node instanceof TileTxController) {
                         if (txController == null || txController.isInvalid()) {

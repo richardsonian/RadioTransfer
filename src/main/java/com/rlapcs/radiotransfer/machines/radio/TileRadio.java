@@ -7,7 +7,6 @@ import net.minecraft.util.math.BlockPos;
 
 public class TileRadio extends AbstractTileMachine {
     public final int MULTIBLOCK_UPDATE_TICKS = 20;
-
     private int SEND_RESOURCES_UPDATE_TICKS = 20;
 
     private MultiblockRadioController multiblock;
