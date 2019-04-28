@@ -1,6 +1,6 @@
-package com.rlapcs.radiotransfer.machines.deprecated.transmitter;
+package com.rlapcs.radiotransfer.machines._deprecated.transmitter;
 
-import com.rlapcs.radiotransfer.generic.tileEntities.AbstractTileRadio;
+import com.rlapcs.radiotransfer.machines._deprecated.other.AbstractTileRadio;
 import com.rlapcs.radiotransfer.server.radio.RadioNetwork;
 
 

@@ -1,5 +1,7 @@
 package com.rlapcs.radiotransfer.machines.encoders.abstract_encoder;
 
-public interface ITileEncoder {
+import com.rlapcs.radiotransfer.server.radio.TransferType;
 
+public interface ITileEncoder {
+    TransferType getTransferType();
 }

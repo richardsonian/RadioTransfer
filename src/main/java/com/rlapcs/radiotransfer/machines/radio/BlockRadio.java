@@ -13,19 +13,7 @@ public class BlockRadio extends AbstractBlockMachine {
         super(Material.IRON, TileRadio.class);
 
         setRegistryName("radio");
-        setUnlocalizedName(RadioTransfer.MODID + "." + getRegistryName());
+        setUnlocalizedName(RadioTransfer.MODID + "." + "radio");
         setCreativeTab(CreativeTabs.MISC);
-    }
-
-    @Override
-    public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor) {
-        TileEntity te = world.getTileEntity(pos);
-        if(te instanceof TileRadio) {
-            TileEntity otherTe = world.getTileEntity(neighbor);
-
-            if(otherTe != null) {
-                ((TileRadio) te).getMultiblockController().validateMultiblockAddition(otherTe);
-            }
-        }
     }
 }

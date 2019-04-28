@@ -1,4 +1,4 @@
-package com.rlapcs.radiotransfer.machines.deprecated.receiver;
+package com.rlapcs.radiotransfer.machines._deprecated.receiver;
 
 import com.rlapcs.radiotransfer.RadioTransfer;
 import com.rlapcs.radiotransfer.generic.blocks.AbstractBlockMachineWithGui;

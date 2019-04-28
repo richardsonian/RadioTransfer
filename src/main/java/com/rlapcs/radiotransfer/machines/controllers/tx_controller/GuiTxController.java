@@ -1,10 +1,10 @@
 package com.rlapcs.radiotransfer.machines.controllers.tx_controller;
 
 import com.rlapcs.radiotransfer.RadioTransfer;
-import com.rlapcs.radiotransfer.generic.guis.clientonly.AbstractRadioGui;
+import com.rlapcs.radiotransfer.machines._deprecated.other.AbstractRadioGui;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.buttons.GuiIncrementButton;
-import com.rlapcs.radiotransfer.machines.deprecated.transmitter.ContainerTransmitter;
-import com.rlapcs.radiotransfer.machines.deprecated.transmitter.TileTransmitter;
+import com.rlapcs.radiotransfer.machines._deprecated.transmitter.ContainerTransmitter;
+import com.rlapcs.radiotransfer.machines._deprecated.transmitter.TileTransmitter;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.ResourceLocation;
 

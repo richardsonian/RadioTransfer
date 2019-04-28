@@ -1,14 +1,14 @@
 package com.rlapcs.radiotransfer.registries;
 
-import com.rlapcs.radiotransfer.machines.deprecated.demo.ContainerDemoBlock;
-import com.rlapcs.radiotransfer.machines.deprecated.demo.GuiDemoBlock;
-import com.rlapcs.radiotransfer.machines.deprecated.demo.TileDemoBlock;
-import com.rlapcs.radiotransfer.machines.deprecated.receiver.ContainerReceiver;
-import com.rlapcs.radiotransfer.machines.deprecated.receiver.GuiReceiver;
-import com.rlapcs.radiotransfer.machines.deprecated.receiver.TileReceiver;
-import com.rlapcs.radiotransfer.machines.deprecated.transmitter.ContainerTransmitter;
-import com.rlapcs.radiotransfer.machines.deprecated.transmitter.GuiTransmitter;
-import com.rlapcs.radiotransfer.machines.deprecated.transmitter.TileTransmitter;
+import com.rlapcs.radiotransfer.machines._deprecated.demo.ContainerDemoBlock;
+import com.rlapcs.radiotransfer.machines._deprecated.demo.GuiDemoBlock;
+import com.rlapcs.radiotransfer.machines._deprecated.demo.TileDemoBlock;
+import com.rlapcs.radiotransfer.machines._deprecated.receiver.ContainerReceiver;
+import com.rlapcs.radiotransfer.machines._deprecated.receiver.GuiReceiver;
+import com.rlapcs.radiotransfer.machines._deprecated.receiver.TileReceiver;
+import com.rlapcs.radiotransfer.machines._deprecated.transmitter.ContainerTransmitter;
+import com.rlapcs.radiotransfer.machines._deprecated.transmitter.GuiTransmitter;
+import com.rlapcs.radiotransfer.machines._deprecated.transmitter.TileTransmitter;
 import com.rlapcs.radiotransfer.generic.guis.GuiHandler.GuiEntry;
 import net.minecraft.tileentity.TileEntity;
 

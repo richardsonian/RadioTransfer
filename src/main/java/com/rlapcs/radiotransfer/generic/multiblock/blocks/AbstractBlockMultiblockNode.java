@@ -11,7 +11,7 @@ public class AbstractBlockMultiblockNode extends AbstractBlockMachine {
     public AbstractBlockMultiblockNode(Material material, Class<? extends AbstractTileMultiblockNode> tileEntityClass) {
         super(material, tileEntityClass);
     }
-
+    /*
     @Override
     public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor) {
         TileEntity te = world.getTileEntity(pos);
@@ -25,4 +25,5 @@ public class AbstractBlockMultiblockNode extends AbstractBlockMachine {
             }
         }
     }
+    */
 }

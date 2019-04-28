@@ -1,6 +1,6 @@
-package com.rlapcs.radiotransfer.generic.containers;
+package com.rlapcs.radiotransfer.machines._deprecated.other;
 
-import com.rlapcs.radiotransfer.generic.tileEntities.AbstractTileRadio;
+import com.rlapcs.radiotransfer.generic.containers.AbstractContainerWithPlayerInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;

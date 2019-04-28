@@ -1,6 +1,8 @@
 package com.rlapcs.radiotransfer;
 
 import com.rlapcs.radiotransfer.proxy.*;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -39,5 +41,9 @@ public class RadioTransfer {
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent e) {
         proxy.postInit(e);
+    }
+
+    public static void sendDebugMessage(String msg) {
+        FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().sendMessage(new TextComponentString(msg));
     }
 }

@@ -1,6 +1,5 @@
-package com.rlapcs.radiotransfer.generic.network.messages.deprecated;
+package com.rlapcs.radiotransfer.machines._deprecated.other;
 
-import com.rlapcs.radiotransfer.generic.tileEntities.AbstractTileRadio;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;

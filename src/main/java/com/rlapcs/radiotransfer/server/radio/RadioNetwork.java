@@ -1,7 +1,7 @@
 package com.rlapcs.radiotransfer.server.radio;
 
-import com.rlapcs.radiotransfer.machines.deprecated.receiver.TileReceiver;
-import com.rlapcs.radiotransfer.machines.deprecated.transmitter.TileTransmitter;
+import com.rlapcs.radiotransfer.machines._deprecated.receiver.TileReceiver;
+import com.rlapcs.radiotransfer.machines._deprecated.transmitter.TileTransmitter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentString;
@@ -10,6 +10,8 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
 import java.util.*;
+
+import static com.rlapcs.radiotransfer.RadioTransfer.sendDebugMessage;
 
 public enum RadioNetwork {
     INSTANCE;
@@ -117,9 +119,5 @@ public enum RadioNetwork {
         slotStack.shrink(amountToSend - remainderCount);
 
         return amount != remainderCount; //whether something was sent
-    }
-
-    private static void sendDebugMessage(String msg) {
-        FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().sendMessage(new TextComponentString(msg));
     }
 }

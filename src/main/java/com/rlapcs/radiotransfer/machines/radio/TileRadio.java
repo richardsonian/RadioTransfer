@@ -12,7 +12,7 @@ public class TileRadio extends AbstractTileMachine {
 
     public TileRadio() {
         super();
-        multiblock = new MultiblockRadioController();
+        multiblock = new MultiblockRadioController(this);
     }
 
     private void sendResources() {
@@ -22,13 +22,21 @@ public class TileRadio extends AbstractTileMachine {
         return multiblock;
     }
 
+    @Override
+    public void invalidate() {
+        super.invalidate();
+        if(!world.isRemote) {
+            multiblock.deregisterAllNodes();
+        }
+    }
+
 
     @Override
     public void update() {
         super.update();
         if(!world.isRemote) {
             if (ticksSinceCreation % MULTIBLOCK_UPDATE_TICKS == 0) {
-                multiblock.validateCurrentMultiblockNodes();
+                multiblock.checkForNewNodes(this.pos);
             }
 
             if(ticksSinceCreation % SEND_RESOURCES_UPDATE_TICKS == 0) {

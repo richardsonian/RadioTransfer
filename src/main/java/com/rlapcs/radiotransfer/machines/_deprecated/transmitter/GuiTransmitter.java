@@ -1,7 +1,7 @@
-package com.rlapcs.radiotransfer.machines.deprecated.transmitter;
+package com.rlapcs.radiotransfer.machines._deprecated.transmitter;
 
 import com.rlapcs.radiotransfer.RadioTransfer;
-import com.rlapcs.radiotransfer.generic.guis.clientonly.AbstractRadioGui;
+import com.rlapcs.radiotransfer.machines._deprecated.other.AbstractRadioGui;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiTransmitter extends AbstractRadioGui {

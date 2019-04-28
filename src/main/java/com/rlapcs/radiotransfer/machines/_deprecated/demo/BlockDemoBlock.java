@@ -1,4 +1,4 @@
-package com.rlapcs.radiotransfer.machines.deprecated.demo;
+package com.rlapcs.radiotransfer.machines._deprecated.demo;
 
 import com.rlapcs.radiotransfer.*;
 import com.rlapcs.radiotransfer.registries.*;

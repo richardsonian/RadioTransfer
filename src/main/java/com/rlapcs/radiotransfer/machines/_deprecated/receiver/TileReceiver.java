@@ -1,6 +1,6 @@
-package com.rlapcs.radiotransfer.machines.deprecated.receiver;
+package com.rlapcs.radiotransfer.machines._deprecated.receiver;
 
-import com.rlapcs.radiotransfer.generic.tileEntities.AbstractTileRadio;
+import com.rlapcs.radiotransfer.machines._deprecated.other.AbstractTileRadio;
 import com.rlapcs.radiotransfer.server.radio.RadioNetwork;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ITickable;
@@ -31,6 +31,7 @@ public class TileReceiver extends AbstractTileRadio implements ITickable {
     }
 
     public void invalidate() {
+        super.invalidate();
         deregister();
     }
 

@@ -1,11 +1,13 @@
-package com.rlapcs.radiotransfer.generic.tileEntities;
+package com.rlapcs.radiotransfer.machines._deprecated.other;
 
 
+import com.rlapcs.radiotransfer.generic.tileEntities.AbstractTileMachineWithInventory;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 
 
-public abstract class AbstractTileRadio extends AbstractTileMachineWithInventory {
+public abstract class
+AbstractTileRadio extends AbstractTileMachineWithInventory {
     public static final int UPPER_FREQUENCY_LIMIT = 5;
     public static final int LOWER_FREQUENCY_LIMIT = 1;
 

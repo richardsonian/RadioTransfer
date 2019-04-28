@@ -1,6 +1,6 @@
-package com.rlapcs.radiotransfer.machines.deprecated.transmitter;
+package com.rlapcs.radiotransfer.machines._deprecated.transmitter;
 
-import com.rlapcs.radiotransfer.generic.containers.AbstractContainerRadio;
+import com.rlapcs.radiotransfer.machines._deprecated.other.AbstractContainerRadio;
 import net.minecraft.inventory.IInventory;
 
 public class ContainerTransmitter extends AbstractContainerRadio {
