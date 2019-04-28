@@ -59,7 +59,7 @@ public class MultiblockRadioController {
         return null;
     }
 
-    public void validateAddition(BlockPos pos) {
+    public boolean validateAddition(BlockPos pos) {
         TileEntity te = tileEntity.getWorld().getTileEntity(pos);
         if(te != null) {
             if (te instanceof AbstractTileMultiblockNode) {
@@ -69,33 +69,39 @@ public class MultiblockRadioController {
                         if (txController == null || txController.isInvalid()) {
                             txController = node;
                             txController.registerInMultiblock(this);
+                            return true;
                         }
                     } else if (node instanceof TileRxController) {
                         if (rxController == null || rxController.isInvalid()) {
                             rxController = node;
                             rxController.registerInMultiblock(this);
+                            return true;
                         }
                     } else if (node instanceof TilePowerSupply) {
                         if (powerSupply == null || powerSupply.isInvalid()) {
                             powerSupply = node;
                             powerSupply.registerInMultiblock(this);
+                            return true;
                         }
                     } else if (node instanceof ITileEncoder) {
                         TransferType type = ((ITileEncoder) node).getTransferType();
                         if (encoders.get(type) == null || encoders.get(type).isInvalid()) {
                             node.registerInMultiblock(this);
                             encoders.put(type, node);
+                            return true;
                         }
                     } else if (node instanceof ITileDecoder) {
                         TransferType type = ((ITileDecoder) node).getTransferType();
                         if (decoders.get(type) == null || decoders.get(type).isInvalid()) {
                             node.registerInMultiblock(this);
                             decoders.put(type, node);
+                            return true;
                         }
                     }
                 }
             }
         }
+        return false; //te not registered
     }
     public void checkForNewNodes(BlockPos around) {
         validateAddition(around.up());
@@ -110,13 +116,14 @@ public class MultiblockRadioController {
         for(AbstractTileMultiblockNode node : getAllNodes()) {
             if(node != null) {
                 node.deregisterFromMultiblock();
+                removeNode(node);
             }
         }
     }
     public void removeNode(AbstractTileMultiblockNode node) {
         if(node == txController) txController = null;
-        else if(node == txController) rxController = null;
-        else if(node == txController) powerSupply = null;
+        else if(node == rxController) rxController = null;
+        else if(node == powerSupply) powerSupply = null;
         else if(node instanceof ITileEncoder) {
             if(encoders.get(((ITileEncoder) node).getTransferType()) == node) encoders.remove(((ITileEncoder) node).getTransferType());
         }

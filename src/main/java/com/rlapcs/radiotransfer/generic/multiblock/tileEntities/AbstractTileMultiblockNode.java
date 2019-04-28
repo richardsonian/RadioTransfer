@@ -3,7 +3,6 @@ package com.rlapcs.radiotransfer.generic.multiblock.tileEntities;
 import com.rlapcs.radiotransfer.generic.multiblock.MultiblockRadioController;
 import com.rlapcs.radiotransfer.generic.tileEntities.AbstractTileMachine;
 import com.rlapcs.radiotransfer.machines.radio.TileRadio;
-import com.sun.org.apache.xpath.internal.operations.Mult;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 
@@ -25,18 +24,16 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
     public void registerInMultiblock(MultiblockRadioController controller) {
         this.controller = controller;
         registeredInMultiblock = true;
-        sendDebugMessage(this + " registered to: " + controller);
+        sendDebugMessage(this + " registered to: " + controller + (registeredInMultiblock ? "(registered)" : "(unregistered)"));
     }
 
     public void deregisterFromMultiblock() {
         sendDebugMessage(this + " deregistered from: " + controller);
-        if(registeredInMultiblock) {
-            controller.removeNode(this);
-            this.controller = null;
-            registeredInMultiblock = false;
+        controller.removeNode(this);
+        this.controller = null;
+        registeredInMultiblock = false;
 
-            this.notifySurroundingDetatch();
-        }
+        this.notifySurroundingDetatch();
     }
     public boolean isRegisteredInMultiblock() {
         return registeredInMultiblock;
