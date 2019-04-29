@@ -1,5 +1,7 @@
 package com.rlapcs.radiotransfer.registries;
 
+import com.rlapcs.radiotransfer.generic.network.messages.MessageChangeTileRxControllerPriority;
+import com.rlapcs.radiotransfer.generic.network.messages.MessageChangeTileTxControllerMode;
 import com.rlapcs.radiotransfer.machines._deprecated.other.messages.MessageActivateTileRadio;
 import com.rlapcs.radiotransfer.machines._deprecated.other.messages.MessageUpdateTileRadioFrequency;
 import com.rlapcs.radiotransfer.machines._deprecated.other.messages.MessageUpdateTileReceiverPriority;
@@ -13,6 +15,8 @@ public class ModNetworkMessages {
         INSTANCE.registerMessage(MessageActivateTileRadio.Handler.class, MessageActivateTileRadio.class, nextID(), Side.SERVER);
         INSTANCE.registerMessage(MessageUpdateTileRadioFrequency.Handler.class, MessageUpdateTileRadioFrequency.class, nextID(), Side.SERVER);
         INSTANCE.registerMessage(MessageUpdateTileReceiverPriority.Handler.class, MessageUpdateTileReceiverPriority.class, nextID(), Side.SERVER);
+        INSTANCE.registerMessage(MessageChangeTileTxControllerMode.Handler.class, MessageChangeTileTxControllerMode.class, nextID(), Side.SERVER);
+        INSTANCE.registerMessage(MessageChangeTileRxControllerPriority.Handler.class, MessageChangeTileRxControllerPriority.class, nextID(), Side.SERVER);
     }
 
     private static int packetId = 0;

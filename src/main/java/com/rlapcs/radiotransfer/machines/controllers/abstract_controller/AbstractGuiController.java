@@ -3,7 +3,6 @@ package com.rlapcs.radiotransfer.machines.controllers.abstract_controller;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.AbstractMachineGui;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.buttons.GuiIncrementButton;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.sliders.GuiToggleSliderButton;
-import com.rlapcs.radiotransfer.machines._deprecated.other.AbstractTileRadio;
 import com.rlapcs.radiotransfer.machines._deprecated.other.messages.MessageActivateTileRadio;
 import com.rlapcs.radiotransfer.machines._deprecated.other.messages.MessageUpdateTileRadioFrequency;
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
@@ -24,6 +23,14 @@ public abstract class AbstractGuiController extends AbstractMachineGui {
     protected static int FREQUENCY_DECREMENT_X = 13;
     protected static int FREQUENCY_DECREMENT_Y = 30;
 
+    protected static int SECONDARY_INCREMENT_ID = getNextButtonID();
+    protected static int SECONDARY_INCREMENT_X = 57;
+    protected static int SECONDARY_INCREMENT_Y = 51;
+
+    protected static int SECONDARY_DECREMENT_ID = getNextButtonID();
+    protected static int SECONDARY_DECREMENT_X = 28;
+    protected static int SECONDARY_DECREMENT_Y = 51;
+
     protected static int ACTIVATE_ID = getNextButtonID();
     protected static int ACTIVATE_ON_X = 149;
     protected static int ACTIVATE_ON_Y = 22;
@@ -40,13 +47,13 @@ public abstract class AbstractGuiController extends AbstractMachineGui {
             sendChatMessage("frequency incremented"); //Debug
 
             ModNetworkMessages.INSTANCE.sendToServer(new MessageUpdateTileRadioFrequency(tileEntity, true));
-            ((AbstractTileRadio) tileEntity).changeFrequency(true);
+            ((AbstractTileController) tileEntity).changeFrequency(true);
         }
         if(button.id == FREQUENCY_DECREMENT_ID) {
             sendChatMessage("frequency decremented"); //debug
 
             ModNetworkMessages.INSTANCE.sendToServer(new MessageUpdateTileRadioFrequency(tileEntity, false));
-            ((AbstractTileRadio) tileEntity).changeFrequency(false);
+            ((AbstractTileController) tileEntity).changeFrequency(false);
         }
         if(button.id == ACTIVATE_ID) {
             sendChatMessage("activate button pressed"); //DEBUG
@@ -57,7 +64,7 @@ public abstract class AbstractGuiController extends AbstractMachineGui {
             //update server tileEntity
             ModNetworkMessages.INSTANCE.sendToServer(new MessageActivateTileRadio(tileEntity, pos == 1));
             //update client tileEntity
-            ((AbstractTileRadio) tileEntity).setActivated(pos == 1);
+            ((AbstractTileController) tileEntity).setActivated(pos == 1);
         }
     }
 
@@ -73,8 +80,16 @@ public abstract class AbstractGuiController extends AbstractMachineGui {
         this.addButton(new GuiIncrementButton(FREQUENCY_DECREMENT_ID, guiLeft + FREQUENCY_DECREMENT_X, guiTop + FREQUENCY_DECREMENT_Y,
                 GuiIncrementButton.IncrementType.LEFT));
 
+        //secondary increment button
+        this.addButton(new GuiIncrementButton(SECONDARY_INCREMENT_ID, guiLeft + SECONDARY_INCREMENT_X, guiTop + SECONDARY_INCREMENT_Y,
+                GuiIncrementButton.IncrementType.RIGHT));
+
+        //secondary decrement button
+        this.addButton(new GuiIncrementButton(SECONDARY_DECREMENT_ID, guiLeft + SECONDARY_DECREMENT_X, guiTop + SECONDARY_DECREMENT_Y,
+                GuiIncrementButton.IncrementType.LEFT));
+
         //activate button
-        this.addButton(new GuiToggleSliderButton(ACTIVATE_ID, ((AbstractTileRadio) tileEntity).getActivated() ? 1 : 2, guiLeft + ACTIVATE_ON_X, guiTop + ACTIVATE_ON_Y,
+        this.addButton(new GuiToggleSliderButton(ACTIVATE_ID, ((AbstractTileController) tileEntity).getActivated() ? 1 : 2, guiLeft + ACTIVATE_ON_X, guiTop + ACTIVATE_ON_Y,
                 guiLeft + ACTIVATE_OFF_X, guiTop + ACTIVATE_OFF_Y));
     }
 
@@ -93,7 +108,7 @@ public abstract class AbstractGuiController extends AbstractMachineGui {
         //fontRenderer.drawString("on", 64, 18, Color.white.getRGB());
         //fontRenderer.drawString("off", 60, 44, Color.white.getRGB());
 
-        String frequency = ((AbstractTileRadio) tileEntity).getFrequency() + "mHz";
+        String frequency = ((AbstractTileController) tileEntity).getFrequency() + "mHz";
         fontRenderer.drawString(frequency,  22,  30, Color.white.getRGB());
     }
 
