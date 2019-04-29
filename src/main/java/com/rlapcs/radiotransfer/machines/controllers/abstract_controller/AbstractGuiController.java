@@ -3,14 +3,8 @@ package com.rlapcs.radiotransfer.machines.controllers.abstract_controller;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.AbstractMachineGui;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.buttons.GuiIncrementButton;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.sliders.GuiToggleSliderButton;
-<<<<<<< HEAD
-import com.rlapcs.radiotransfer.machines._deprecated.other.MessageActivateTileRadio;
-import com.rlapcs.radiotransfer.machines._deprecated.other.MessageUpdateTileRadioFrequency;
-=======
-import com.rlapcs.radiotransfer.machines._deprecated.other.AbstractTileRadio;
 import com.rlapcs.radiotransfer.machines._deprecated.other.messages.MessageActivateTileRadio;
 import com.rlapcs.radiotransfer.machines._deprecated.other.messages.MessageUpdateTileRadioFrequency;
->>>>>>> master
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.ResourceLocation;
@@ -28,6 +22,14 @@ public abstract class AbstractGuiController extends AbstractMachineGui {
     protected static int FREQUENCY_DECREMENT_ID = getNextButtonID();
     protected static int FREQUENCY_DECREMENT_X = 13;
     protected static int FREQUENCY_DECREMENT_Y = 30;
+
+    protected static int SECONDARY_INCREMENT_ID = getNextButtonID();
+    protected static int SECONDARY_INCREMENT_X = 57;
+    protected static int SECONDARY_INCREMENT_Y = 51;
+
+    protected static int SECONDARY_DECREMENT_ID = getNextButtonID();
+    protected static int SECONDARY_DECREMENT_X = 28;
+    protected static int SECONDARY_DECREMENT_Y = 51;
 
     protected static int ACTIVATE_ID = getNextButtonID();
     protected static int ACTIVATE_ON_X = 149;
@@ -76,6 +78,14 @@ public abstract class AbstractGuiController extends AbstractMachineGui {
 
         //frequency decrement button
         this.addButton(new GuiIncrementButton(FREQUENCY_DECREMENT_ID, guiLeft + FREQUENCY_DECREMENT_X, guiTop + FREQUENCY_DECREMENT_Y,
+                GuiIncrementButton.IncrementType.LEFT));
+
+        //secondary increment button
+        this.addButton(new GuiIncrementButton(SECONDARY_INCREMENT_ID, guiLeft + SECONDARY_INCREMENT_X, guiTop + SECONDARY_INCREMENT_Y,
+                GuiIncrementButton.IncrementType.RIGHT));
+
+        //secondary decrement button
+        this.addButton(new GuiIncrementButton(SECONDARY_DECREMENT_ID, guiLeft + SECONDARY_DECREMENT_X, guiTop + SECONDARY_DECREMENT_Y,
                 GuiIncrementButton.IncrementType.LEFT));
 
         //activate button

@@ -12,11 +12,8 @@ public abstract class AbstractTileController extends AbstractTileMultiblockNodeW
     protected boolean activated;
     protected int frequency;
 
-    public int getFrequency() {
-        return frequency;
-    }
     protected static final int INVENTORY_SIZE = 12;
-    protected static final double POWER_USAGE = 10;
+    protected static final double BASE_POWER_USAGE = 10;
 
     public AbstractTileController() {
         super(INVENTORY_SIZE);
@@ -25,9 +22,13 @@ public abstract class AbstractTileController extends AbstractTileMultiblockNodeW
         frequency = 1;
     }
 
+    public int getFrequency() {
+        return frequency;
+    }
+
     @Override
     public double getPowerUsagePerTick() {
-        return POWER_USAGE;
+        return BASE_POWER_USAGE;
     }
 
     /* NBT data */
