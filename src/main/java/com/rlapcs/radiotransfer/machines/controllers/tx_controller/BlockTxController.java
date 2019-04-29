@@ -12,4 +12,6 @@ public class BlockTxController extends AbstractBlockController {
         setUnlocalizedName(RadioTransfer.MODID + "." + getRegistryName());
         setCreativeTab(CreativeTabs.MISC);
     }
+
+
 }

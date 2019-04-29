@@ -10,6 +10,9 @@ import com.rlapcs.radiotransfer.machines._deprecated.transmitter.ContainerTransm
 import com.rlapcs.radiotransfer.machines._deprecated.transmitter.GuiTransmitter;
 import com.rlapcs.radiotransfer.machines._deprecated.transmitter.TileTransmitter;
 import com.rlapcs.radiotransfer.generic.guis.GuiHandler.GuiEntry;
+import com.rlapcs.radiotransfer.machines.controllers.tx_controller.ContainerTxController;
+import com.rlapcs.radiotransfer.machines.controllers.tx_controller.GuiTxController;
+import com.rlapcs.radiotransfer.machines.controllers.tx_controller.TileTxController;
 import net.minecraft.tileentity.TileEntity;
 
 import java.lang.reflect.Field;
@@ -19,6 +22,9 @@ import java.util.List;
 
 public class ModGuis {
     /* List all Gui Entries here: */
+    public static final GuiEntry tx_controller = new GuiEntry(TileTxController.class, GuiTxController.class, ContainerTxController.class);
+
+    // DEPRECATED
     public static final GuiEntry demoblock = new GuiEntry(TileDemoBlock.class, GuiDemoBlock.class, ContainerDemoBlock.class);
     public static final GuiEntry transmitter = new GuiEntry(TileTransmitter.class, GuiTransmitter.class, ContainerTransmitter.class);
     public static final GuiEntry receiver = new GuiEntry(TileReceiver.class, GuiReceiver.class, ContainerReceiver.class);

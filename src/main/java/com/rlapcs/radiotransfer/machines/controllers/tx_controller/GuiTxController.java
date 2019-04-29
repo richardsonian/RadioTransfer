@@ -1,14 +1,12 @@
 package com.rlapcs.radiotransfer.machines.controllers.tx_controller;
 
 import com.rlapcs.radiotransfer.RadioTransfer;
-import com.rlapcs.radiotransfer.machines._deprecated.other.AbstractRadioGui;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.buttons.GuiIncrementButton;
-import com.rlapcs.radiotransfer.machines._deprecated.transmitter.ContainerTransmitter;
-import com.rlapcs.radiotransfer.machines._deprecated.transmitter.TileTransmitter;
+import com.rlapcs.radiotransfer.machines.controllers.abstract_controller.AbstractGuiController;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.ResourceLocation;
 
-public class GuiTxController extends AbstractRadioGui {
+public class GuiTxController extends AbstractGuiController {
 
     public static final ResourceLocation background = new ResourceLocation(RadioTransfer.MODID, "textures/gui/tx_controller.png");
 
@@ -20,7 +18,7 @@ public class GuiTxController extends AbstractRadioGui {
     protected static int MODE_DECREMENT_X = 28;
     protected static int MODE_DECREMENT_Y = 51;
 
-    public GuiTxController(TileTransmitter tileEntity, ContainerTransmitter container) {
+    public GuiTxController(TileTxController tileEntity, ContainerTxController container) {
         super(tileEntity, container, background);
     }
 

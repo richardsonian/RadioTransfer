@@ -32,7 +32,7 @@ public abstract class AbstractContainerWithPlayerInventory<T extends TileEntity>
         addPlayerSlots(playerInventory);
     }
 
-    private void addPlayerSlots(IInventory playerInventory) {
+    protected void addPlayerSlots(IInventory playerInventory) {
         // Slots for the main inventory
         for (int row = 0; row < 3; ++row) {
             for (int col = 0; col < 9; ++col) {
