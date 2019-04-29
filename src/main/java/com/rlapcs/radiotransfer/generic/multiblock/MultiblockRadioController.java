@@ -3,8 +3,8 @@ package com.rlapcs.radiotransfer.generic.multiblock;
 import com.rlapcs.radiotransfer.generic.multiblock.tileEntities.AbstractTileMultiblockNode;
 import com.rlapcs.radiotransfer.machines.controllers.rx_controller.TileRxController;
 import com.rlapcs.radiotransfer.machines.controllers.tx_controller.TileTxController;
-import com.rlapcs.radiotransfer.machines.decoders.abstract_decoder.ITileDecoder;
-import com.rlapcs.radiotransfer.machines.encoders.abstract_encoder.ITileEncoder;
+import com.rlapcs.radiotransfer.machines.decoders.abstract_decoder.AbstractTileDecoder;
+import com.rlapcs.radiotransfer.machines.encoders.abstract_encoder.AbstractTileEncoder;
 import com.rlapcs.radiotransfer.machines.power_supply.TilePowerSupply;
 import com.rlapcs.radiotransfer.machines.radio.TileRadio;
 import com.rlapcs.radiotransfer.server.radio.TransferType;
@@ -16,16 +16,18 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 
+import static com.rlapcs.radiotransfer.RadioTransfer.sendDebugMessage;
+
 public class MultiblockRadioController {
     private TileRadio tileEntity;
 
-    private AbstractTileMultiblockNode txController;
-    private AbstractTileMultiblockNode rxController;
+    private TileTxController txController;
+    private TileRxController rxController;
 
-    private AbstractTileMultiblockNode powerSupply;
+    private TilePowerSupply powerSupply;
 
-    private EnumMap<TransferType, AbstractTileMultiblockNode> encoders;
-    private EnumMap<TransferType, AbstractTileMultiblockNode> decoders;
+    private EnumMap<TransferType, AbstractTileEncoder> encoders;
+    private EnumMap<TransferType, AbstractTileDecoder> decoders;
 
     public MultiblockRadioController(TileRadio te) {
         tileEntity = te;
@@ -68,34 +70,36 @@ public class MultiblockRadioController {
                 if (!node.isRegisteredInMultiblock()) {
                     if (node instanceof TileTxController) {
                         if (txController == null || txController.isInvalid()) {
-                            txController = node;
+                            txController = (TileTxController) node;
                             txController.registerInMultiblock(this);
                             return true;
                         }
                     } else if (node instanceof TileRxController) {
                         if (rxController == null || rxController.isInvalid()) {
-                            rxController = node;
+                            rxController = (TileRxController) node;
                             rxController.registerInMultiblock(this);
                             return true;
                         }
                     } else if (node instanceof TilePowerSupply) {
                         if (powerSupply == null || powerSupply.isInvalid()) {
-                            powerSupply = node;
+                            powerSupply = (TilePowerSupply) node;
                             powerSupply.registerInMultiblock(this);
                             return true;
                         }
-                    } else if (node instanceof ITileEncoder) {
-                        TransferType type = ((ITileEncoder) node).getTransferType();
+                    } else if (node instanceof AbstractTileEncoder) {
+                        AbstractTileEncoder encoder = (AbstractTileEncoder) node;
+                        TransferType type = encoder.getTransferType();
                         if (encoders.get(type) == null || encoders.get(type).isInvalid()) {
-                            node.registerInMultiblock(this);
-                            encoders.put(type, node);
+                            encoder.registerInMultiblock(this);
+                            encoders.put(type, encoder);
                             return true;
                         }
-                    } else if (node instanceof ITileDecoder) {
-                        TransferType type = ((ITileDecoder) node).getTransferType();
+                    } else if (node instanceof AbstractTileDecoder) {
+                        AbstractTileDecoder decoder = (AbstractTileDecoder) node;
+                        TransferType type = decoder.getTransferType();
                         if (decoders.get(type) == null || decoders.get(type).isInvalid()) {
-                            node.registerInMultiblock(this);
-                            decoders.put(type, node);
+                            decoder.registerInMultiblock(this);
+                            decoders.put(type, decoder);
                             return true;
                         }
                     }
@@ -122,14 +126,17 @@ public class MultiblockRadioController {
         }
     }
     public void removeNode(AbstractTileMultiblockNode node) {
-        if(node == txController) txController = null;
+        if(node == txController) {
+            txController = null;
+            sendDebugMessage(node + " removed from " + this);
+        }
         else if(node == rxController) rxController = null;
         else if(node == powerSupply) powerSupply = null;
-        else if(node instanceof ITileEncoder) {
-            if(encoders.get(((ITileEncoder) node).getTransferType()) == node) encoders.remove(((ITileEncoder) node).getTransferType());
+        else if(node instanceof AbstractTileEncoder) {
+            if(encoders.get(((AbstractTileEncoder) node).getTransferType()) == node) encoders.remove(((AbstractTileEncoder) node).getTransferType());
         }
-        else if(node instanceof ITileDecoder) {
-            if(decoders.get(((ITileDecoder) node).getTransferType()) == node) decoders.remove(((ITileDecoder) node).getTransferType());
+        else if(node instanceof AbstractTileDecoder) {
+            if(decoders.get(((AbstractTileDecoder) node).getTransferType()) == node) decoders.remove(((AbstractTileDecoder) node).getTransferType());
         }
     }
 

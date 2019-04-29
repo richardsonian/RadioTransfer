@@ -24,7 +24,7 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
     public void registerInMultiblock(MultiblockRadioController controller) {
         this.controller = controller;
         registeredInMultiblock = true;
-        sendDebugMessage(this + " registered to: " + controller + (registeredInMultiblock ? "(registered)" : "(unregistered)"));
+        sendDebugMessage(this + " registered to: " + controller );
     }
 
     public void deregisterFromMultiblock() {
