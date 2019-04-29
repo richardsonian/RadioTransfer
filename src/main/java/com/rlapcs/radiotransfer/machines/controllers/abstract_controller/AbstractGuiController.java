@@ -3,13 +3,10 @@ package com.rlapcs.radiotransfer.machines.controllers.abstract_controller;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.AbstractMachineGui;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.buttons.GuiIncrementButton;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.sliders.GuiToggleSliderButton;
-import com.rlapcs.radiotransfer.machines._deprecated.other.AbstractTileRadio;
 import com.rlapcs.radiotransfer.machines._deprecated.other.MessageActivateTileRadio;
 import com.rlapcs.radiotransfer.machines._deprecated.other.MessageUpdateTileRadioFrequency;
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.inventory.Container;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 
 import java.awt.*;
@@ -42,13 +39,13 @@ public abstract class AbstractGuiController extends AbstractMachineGui {
             sendChatMessage("frequency incremented"); //Debug
 
             ModNetworkMessages.INSTANCE.sendToServer(new MessageUpdateTileRadioFrequency(tileEntity, true));
-            ((AbstractTileRadio) tileEntity).changeFrequency(true);
+            ((AbstractTileController) tileEntity).changeFrequency(true);
         }
         if(button.id == FREQUENCY_DECREMENT_ID) {
             sendChatMessage("frequency decremented"); //debug
 
             ModNetworkMessages.INSTANCE.sendToServer(new MessageUpdateTileRadioFrequency(tileEntity, false));
-            ((AbstractTileRadio) tileEntity).changeFrequency(false);
+            ((AbstractTileController) tileEntity).changeFrequency(false);
         }
         if(button.id == ACTIVATE_ID) {
             sendChatMessage("activate button pressed"); //DEBUG
@@ -59,7 +56,7 @@ public abstract class AbstractGuiController extends AbstractMachineGui {
             //update server tileEntity
             ModNetworkMessages.INSTANCE.sendToServer(new MessageActivateTileRadio(tileEntity, pos == 1));
             //update client tileEntity
-            ((AbstractTileRadio) tileEntity).setActivated(pos == 1);
+            ((AbstractTileController) tileEntity).setActivated(pos == 1);
         }
     }
 
@@ -76,7 +73,7 @@ public abstract class AbstractGuiController extends AbstractMachineGui {
                 GuiIncrementButton.IncrementType.LEFT));
 
         //activate button
-        this.addButton(new GuiToggleSliderButton(ACTIVATE_ID, ((AbstractTileRadio) tileEntity).getActivated() ? 1 : 2, guiLeft + ACTIVATE_ON_X, guiTop + ACTIVATE_ON_Y,
+        this.addButton(new GuiToggleSliderButton(ACTIVATE_ID, ((AbstractTileController) tileEntity).getActivated() ? 1 : 2, guiLeft + ACTIVATE_ON_X, guiTop + ACTIVATE_ON_Y,
                 guiLeft + ACTIVATE_OFF_X, guiTop + ACTIVATE_OFF_Y));
     }
 
@@ -95,7 +92,7 @@ public abstract class AbstractGuiController extends AbstractMachineGui {
         //fontRenderer.drawString("on", 64, 18, Color.white.getRGB());
         //fontRenderer.drawString("off", 60, 44, Color.white.getRGB());
 
-        String frequency = ((AbstractTileRadio) tileEntity).getFrequency() + "mHz";
+        String frequency = ((AbstractTileController) tileEntity).getFrequency() + "mHz";
         fontRenderer.drawString(frequency,  22,  30, Color.white.getRGB());
     }
 

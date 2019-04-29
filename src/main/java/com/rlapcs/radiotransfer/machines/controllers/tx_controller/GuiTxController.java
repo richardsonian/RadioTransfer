@@ -2,7 +2,13 @@ package com.rlapcs.radiotransfer.machines.controllers.tx_controller;
 
 import com.rlapcs.radiotransfer.RadioTransfer;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.buttons.GuiIncrementButton;
+import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.sliders.GuiToggleSliderButton;
+import com.rlapcs.radiotransfer.machines._deprecated.other.AbstractTileRadio;
+import com.rlapcs.radiotransfer.machines._deprecated.other.MessageActivateTileRadio;
+import com.rlapcs.radiotransfer.machines._deprecated.other.MessageUpdateTileRadioFrequency;
 import com.rlapcs.radiotransfer.machines.controllers.abstract_controller.AbstractGuiController;
+import com.rlapcs.radiotransfer.machines.controllers.abstract_controller.AbstractTileController;
+import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.ResourceLocation;
 
@@ -42,6 +48,8 @@ public class GuiTxController extends AbstractGuiController {
         if (button.id == MODE_INCREMENT_ID) {
             sendChatMessage("mode changed");
 
+            ModNetworkMessages.INSTANCE.sendToServer(new MessageUpdateTileRadioFrequency(tileEntity, true));
+            ((TileTxController) tileEntity).changeMode();
         } else if (button.id == MODE_DECREMENT_ID) {
             sendChatMessage("mode changed");
 

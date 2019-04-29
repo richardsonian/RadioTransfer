@@ -1,0 +1,14 @@
+Discussion Log
+Ian Balaguera and Ian Richardson
+
+SOURCE: https://wiki.mcjty.eu/modding/index.php?title=Main_Page
+USE: Basic concepts of a Forge-based Minecraft mod including some tutorials.
+
+SOURCE: https://github.com/TheGreyGhost/MinecraftByExample
+USE: A collection of examples for every part of making a mod.
+
+SOURCE: https://mcforge.readthedocs.io/en/latest/
+USE: The Forge-given documentation.
+
+SOURCE: Forge-decompiled Minecraft source code
+USE: Looking at methods to override, use, and integrate.
