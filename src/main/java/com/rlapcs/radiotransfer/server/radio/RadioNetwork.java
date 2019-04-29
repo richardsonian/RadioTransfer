@@ -1,6 +1,7 @@
 package com.rlapcs.radiotransfer.server.radio;
 
-import com.rlapcs.radiotransfer.machines._deprecated.receiver.TileReceiver;
+import com.rlapcs.radiotransfer.generic.multiblock.MultiblockRadioController;
+import com.rlapcs.radiotransfer.machines._deprecated.receiver.MultiblockRadioController;
 import com.rlapcs.radiotransfer.machines._deprecated.transmitter.TileTransmitter;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
@@ -19,44 +20,48 @@ public enum RadioNetwork {
     public static final int MAX_PRIORITY = 99;
     public static final int MIN_PRIORITY = 1;
 
-    private HashSet<TileReceiver> receivers;
-    private Map<TileTransmitter, PriorityQueue<TileReceiver>> transmitterSendQueues;
+    public static final int MIN_FREQUENCY = 1;
+    public static final int MAX_FREQUENCY = 5;
+
+    private HashSet<MultiblockRadioController> radios;
+    private Map<MultiblockRadioController, PriorityQueue<MultiblockRadioController>> radioSendQueues;
 
     private RadioNetwork() {
-        receivers = new HashSet();
-        transmitterSendQueues = new HashMap<>();
+        radios = new HashSet();
+        radioSendQueues = new HashMap<>();
     }
 
-    public void register(TileReceiver receiver) {
-        receivers.add(receiver);
-        //sendDebugMessage("registering " + receiver);
+    public void register(MultiblockRadioController radio) {
+        radios.add(radio);
+        //sendDebugMessage("registering " + radio);
     }
-    public void deregister(TileReceiver receiver) {
-        receivers.remove(receiver);
-        //sendDebugMessage("deregistering " + receiver);
+    public void deregister(MultiblockRadioController radio) {
+        radios.remove(radio);
+        //sendDebugMessage("deregistering " + radio);
     }
 
     /**
      * Resets the sendQueue for the given transmitter. Returns false if there are no receivers to add.
-     * @param trans
+     * @param radio
      * @return
      */
-    private boolean resetSendQueue(TileTransmitter trans) {
+    private boolean resetSendQueue(MultiblockRadioController radio) {
         //if there are no receivers, set an empty priority queue
-        if(receivers.size() == 0)  {
-            transmitterSendQueues.put(trans, new PriorityQueue<>());
+        if(radios.size() == 0)  {
+            radioSendQueues.put(radio, new PriorityQueue<>());
             return false;
         }
 
         //copy the receivers list
-        Set<TileReceiver> receiversCopy = (Set<TileReceiver>) receivers.clone();
+        Set<MultiblockRadioController> radiosCopy = (Set<MultiblockRadioController>) radios.clone();
+        radiosCopy.remove(radio); //remove self from the queue
 
         //remove any on a different frequency or that are invalid
-        int freq = trans.getFrequency();
+        int sendFreq = radio.
         receiversCopy.removeIf((r)->r.getFrequency()!=freq || r.isInvalid()); //also test activation here?
 
         // Make a new PriorityQueue with ordering relative to the transmitter
-        PriorityQueue<TileReceiver> pq = new PriorityQueue<>(1, (r1, r2)-> {
+        PriorityQueue<MultiblockRadioController> pq = new PriorityQueue<>(1, (r1, r2)-> {
             if(r1.getPriority() == r2.getPriority()) {
                 return (int) (trans.getDistanceSq(r1.getPos().getX(), r1.getPos().getY(), r1.getPos().getZ())
                         - trans.getDistanceSq(r2.getPos().getX(), r2.getPos().getY(), r2.getPos().getZ()));
@@ -93,7 +98,7 @@ public enum RadioNetwork {
         }
 
         //poll the priority queue until a valid receiver is found or the queue runs out
-        TileReceiver tileReceiver = null;
+        MultiblockRadioController tileReceiver = null;
         while(tileReceiver == null || !receivers.contains(tileReceiver) || tileReceiver.isInvalid()
                 || !tileReceiver.getActivated() || tileReceiver.getFrequency() != tileTransmitter.getFrequency()) { //short circuit avoid null pointer
 

@@ -5,7 +5,9 @@ import com.rlapcs.radiotransfer.generic.tileEntities.AbstractTileMachine;
 
 public class TileRadio extends AbstractTileMachine {
     public final int MULTIBLOCK_UPDATE_TICKS = 20;
+    public final int REGISTER_UPDATE_TICKS = 20;
     private int SEND_RESOURCES_UPDATE_TICKS = 20;
+
 
     private MultiblockRadioController multiblock;
 
@@ -25,6 +27,7 @@ public class TileRadio extends AbstractTileMachine {
     public void invalidate() {
         super.invalidate();
         if(!world.isRemote) {
+            multiblock.deregisterFromNetwork();
             multiblock.deregisterAllNodes();
         }
     }
@@ -36,6 +39,7 @@ public class TileRadio extends AbstractTileMachine {
     public void onChunkUnload() {
         super.onChunkUnload();
         if(!world.isRemote) {
+            multiblock.deregisterFromNetwork();
             multiblock.deregisterAllNodes();
         }
     }
@@ -47,7 +51,9 @@ public class TileRadio extends AbstractTileMachine {
             if (ticksSinceCreation % MULTIBLOCK_UPDATE_TICKS == 0) {
                 multiblock.checkForNewNodes(this.pos);
             }
-
+            if(ticksSinceCreation % REGISTER_UPDATE_TICKS == 0 && !multiblock.isRegisteredToNetwork()) {
+                multiblock.registerToNetwork();
+            }
             if(ticksSinceCreation % SEND_RESOURCES_UPDATE_TICKS == 0) {
                 sendResources();
             }
