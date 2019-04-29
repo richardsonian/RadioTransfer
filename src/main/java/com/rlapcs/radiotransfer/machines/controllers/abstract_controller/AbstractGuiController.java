@@ -3,8 +3,14 @@ package com.rlapcs.radiotransfer.machines.controllers.abstract_controller;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.AbstractMachineGui;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.buttons.GuiIncrementButton;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.sliders.GuiToggleSliderButton;
+<<<<<<< HEAD
 import com.rlapcs.radiotransfer.machines._deprecated.other.MessageActivateTileRadio;
 import com.rlapcs.radiotransfer.machines._deprecated.other.MessageUpdateTileRadioFrequency;
+=======
+import com.rlapcs.radiotransfer.machines._deprecated.other.AbstractTileRadio;
+import com.rlapcs.radiotransfer.machines._deprecated.other.messages.MessageActivateTileRadio;
+import com.rlapcs.radiotransfer.machines._deprecated.other.messages.MessageUpdateTileRadioFrequency;
+>>>>>>> master
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.ResourceLocation;

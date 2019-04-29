@@ -1,6 +1,6 @@
-package com.rlapcs.radiotransfer.machines._deprecated.other;
+package com.rlapcs.radiotransfer.machines._deprecated.other.messages;
 
-import com.rlapcs.radiotransfer.machines._deprecated.receiver.TileReceiver;
+import com.rlapcs.radiotransfer.machines._deprecated.other.AbstractTileRadio;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class MessageUpdateTileReceiverPriority implements IMessage {
+public class MessageUpdateTileRadioFrequency implements IMessage {
     private BlockPos tilePos;
     private boolean toIncrement; //true if going to increment, false if going to decrement
 
@@ -31,16 +31,16 @@ public class MessageUpdateTileReceiverPriority implements IMessage {
         buf.writeBoolean(toIncrement);
     }
 
-    public MessageUpdateTileReceiverPriority() {}
+    public MessageUpdateTileRadioFrequency() {}
 
-    public MessageUpdateTileReceiverPriority(TileEntity te, Boolean toIncrement ) {
+    public MessageUpdateTileRadioFrequency(TileEntity te, Boolean toIncrement ) {
         tilePos = te.getPos();
         this.toIncrement = toIncrement;
     }
 
-    public static class Handler implements IMessageHandler<MessageUpdateTileReceiverPriority, IMessage> {
+    public static class Handler implements IMessageHandler<MessageUpdateTileRadioFrequency, IMessage> {
         @Override
-        public IMessage onMessage(MessageUpdateTileReceiverPriority message, MessageContext ctx) {
+        public IMessage onMessage(MessageUpdateTileRadioFrequency message, MessageContext ctx) {
             // Always use a construct like this to actually handle your message. This ensures that
             // your 'handle' code is run on the main Minecraft thread. 'onMessage' itself
             // is called on the networking thread so it is not safe to do a lot of things
@@ -51,7 +51,7 @@ public class MessageUpdateTileReceiverPriority implements IMessage {
             return null;
         }
 
-        private void handle(MessageUpdateTileReceiverPriority message, MessageContext ctx) {
+        private void handle(MessageUpdateTileRadioFrequency message, MessageContext ctx) {
             // This code is run on the server side. So you can do server-side calculations here
             EntityPlayerMP playerEntity = ctx.getServerHandler().player;
             World world = playerEntity.getEntityWorld();
@@ -60,12 +60,12 @@ public class MessageUpdateTileReceiverPriority implements IMessage {
             // trying to overload a server by randomly loading chunks
             if (world.isBlockLoaded(message.tilePos)) {
                 TileEntity te = world.getTileEntity(message.tilePos);
-                if(te instanceof TileReceiver) {
-                    ((TileReceiver) te).changePriority(message.toIncrement);
+                if(te instanceof AbstractTileRadio) {
+                    ((AbstractTileRadio) te).changeFrequency(message.toIncrement);
                 }
                 //debug
-                playerEntity.sendStatusMessage(new TextComponentString(String.format("%s Tile Entity at (%d, %d, %d) now has priority %d", TextFormatting.GREEN,
-                        message.tilePos.getX(), message.tilePos.getY(), message.tilePos.getZ(), ((TileReceiver) te).getPriority() ) ), false);
+                playerEntity.sendStatusMessage(new TextComponentString(String.format("%s Tile Entity at (%d, %d, %d) is now on frequency %d", TextFormatting.GREEN,
+                        message.tilePos.getX(), message.tilePos.getY(), message.tilePos.getZ(), ((AbstractTileRadio) te).getFrequency() ) ), false);
             }
         }
     }

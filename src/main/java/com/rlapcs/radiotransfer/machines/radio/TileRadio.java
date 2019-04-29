@@ -2,8 +2,6 @@ package com.rlapcs.radiotransfer.machines.radio;
 
 import com.rlapcs.radiotransfer.generic.multiblock.MultiblockRadioController;
 import com.rlapcs.radiotransfer.generic.tileEntities.AbstractTileMachine;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
 
 public class TileRadio extends AbstractTileMachine {
     public final int MULTIBLOCK_UPDATE_TICKS = 20;
