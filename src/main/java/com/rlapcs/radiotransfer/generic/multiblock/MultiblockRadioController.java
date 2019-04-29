@@ -60,7 +60,7 @@ public class MultiblockRadioController {
         return null;
     }
 
-    public boolean validateAddition(BlockPos pos) {
+    private boolean validateAddition(BlockPos pos) {
         TileEntity te = tileEntity.getWorld().getTileEntity(pos);
 
         if(te != null) {
@@ -126,10 +126,7 @@ public class MultiblockRadioController {
         }
     }
     public void removeNode(AbstractTileMultiblockNode node) {
-        if(node == txController) {
-            txController = null;
-            sendDebugMessage(node + " removed from " + this);
-        }
+        if(node == txController) txController = null;
         else if(node == rxController) rxController = null;
         else if(node == powerSupply) powerSupply = null;
         else if(node instanceof AbstractTileEncoder) {
