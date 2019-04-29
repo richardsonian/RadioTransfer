@@ -31,6 +31,17 @@ public class TileRadio extends AbstractTileMachine {
         }
     }
 
+    /**
+     * Called when the chunk this TileEntity is on is Unloaded.
+     */
+    @Override
+    public void onChunkUnload() {
+        super.onChunkUnload();
+        if(!world.isRemote) {
+            multiblock.deregisterAllNodes();
+        }
+    }
+
     @Override
     public void update() {
         super.update();
