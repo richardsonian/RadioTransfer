@@ -22,4 +22,8 @@ public class TileTxController extends AbstractTileController {
             mode = TxMode.SEQUENTIAL;
         }
     }
+
+    public TxMode getMode() {
+        return mode;
+    }
 }

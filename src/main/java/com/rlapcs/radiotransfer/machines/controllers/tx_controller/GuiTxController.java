@@ -3,6 +3,7 @@ package com.rlapcs.radiotransfer.machines.controllers.tx_controller;
 import com.rlapcs.radiotransfer.RadioTransfer;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.buttons.GuiIncrementButton;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.sliders.GuiToggleSliderButton;
+import com.rlapcs.radiotransfer.generic.network.messages.MessageChangeTileTxControllerMode;
 import com.rlapcs.radiotransfer.machines._deprecated.other.AbstractTileRadio;
 import com.rlapcs.radiotransfer.machines._deprecated.other.MessageActivateTileRadio;
 import com.rlapcs.radiotransfer.machines._deprecated.other.MessageUpdateTileRadioFrequency;
@@ -11,6 +12,8 @@ import com.rlapcs.radiotransfer.machines.controllers.abstract_controller.Abstrac
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.ResourceLocation;
+
+import java.awt.*;
 
 public class GuiTxController extends AbstractGuiController {
 
@@ -48,11 +51,19 @@ public class GuiTxController extends AbstractGuiController {
         if (button.id == MODE_INCREMENT_ID) {
             sendChatMessage("mode changed");
 
-            ModNetworkMessages.INSTANCE.sendToServer(new MessageUpdateTileRadioFrequency(tileEntity, true));
+            ModNetworkMessages.INSTANCE.sendToServer(new MessageChangeTileTxControllerMode(tileEntity));
             ((TileTxController) tileEntity).changeMode();
         } else if (button.id == MODE_DECREMENT_ID) {
             sendChatMessage("mode changed");
 
         }
+    }
+
+    @Override
+    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+        super.drawGuiContainerForegroundLayer(mouseX, mouseY);
+
+        String mode = ((TileTxController) tileEntity).getMode() == TileTxController.TxMode.ROUND_ROBIN ? "RR" : "S";
+        fontRenderer.drawString(mode,  39,  52, Color.white.getRGB());
     }
 }
