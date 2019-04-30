@@ -9,7 +9,7 @@ import net.minecraft.util.ResourceLocation;
 
 import java.awt.*;
 
-public class GuiTxController extends AbstractGuiController {
+public class GuiTxController extends AbstractGuiController<TileTxController> {
 
     public static final ResourceLocation background = new ResourceLocation(RadioTransfer.MODID, "textures/gui/tx_controller.png");
 
@@ -25,12 +25,12 @@ public class GuiTxController extends AbstractGuiController {
             sendChatMessage("mode changed");
 
             ModNetworkMessages.INSTANCE.sendToServer(new MessageChangeTileTxControllerMode(tileEntity));
-            ((TileTxController) tileEntity).changeMode();
+            tileEntity.changeMode();
         } else if (button.id == SECONDARY_DECREMENT_ID) {
             sendChatMessage("mode changed");
 
             ModNetworkMessages.INSTANCE.sendToServer(new MessageChangeTileTxControllerMode(tileEntity));
-            ((TileTxController) tileEntity).changeMode();
+            tileEntity.changeMode();
         }
     }
 
@@ -38,7 +38,7 @@ public class GuiTxController extends AbstractGuiController {
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
-        String mode = ((TileTxController) tileEntity).getMode() == TileTxController.TxMode.ROUND_ROBIN ? "RR" : "S";
+        String mode = tileEntity.getMode() == TileTxController.TxMode.ROUND_ROBIN ? "RR" : "S";
         fontRenderer.drawString(mode,  39,  52, Color.white.getRGB());
     }
 }

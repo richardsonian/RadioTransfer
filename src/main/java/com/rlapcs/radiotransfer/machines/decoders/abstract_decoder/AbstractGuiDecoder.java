@@ -1,4 +1,7 @@
 package com.rlapcs.radiotransfer.machines.decoders.abstract_decoder;
 
-public class AbstractGuiDecoder {
+import com.rlapcs.radiotransfer.generic.guis.clientonly.AbstractGuiMachine;
+
+public class AbstractGuiDecoder<T extends AbstractTileDecoder> extends AbstractGuiMachine<T> {
+
 }

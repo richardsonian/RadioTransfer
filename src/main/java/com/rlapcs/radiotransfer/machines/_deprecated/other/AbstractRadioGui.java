@@ -1,6 +1,6 @@
 package com.rlapcs.radiotransfer.machines._deprecated.other;
 
-import com.rlapcs.radiotransfer.generic.guis.clientonly.AbstractMachineGui;
+import com.rlapcs.radiotransfer.generic.guis.clientonly.AbstractGuiMachine;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.buttons.GuiIncrementButton;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.sliders.GuiToggleSliderButton;
 import com.rlapcs.radiotransfer.machines._deprecated.other.messages.MessageActivateTileRadio;
@@ -13,7 +13,7 @@ import net.minecraft.util.ResourceLocation;
 
 import java.awt.*;
 
-public abstract class AbstractRadioGui extends AbstractMachineGui {
+public abstract class AbstractRadioGui extends AbstractGuiMachine {
     public static final int WIDTH = 170;
     public static final int HEIGHT = 148;
 
