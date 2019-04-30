@@ -6,13 +6,13 @@ import net.minecraft.inventory.Container;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 
-public abstract class AbstractMachineGui extends GuiContainer {
+public abstract class AbstractGuiMachine<T extends TileEntity> extends GuiContainer {
     protected ResourceLocation texture;
-    protected TileEntity tileEntity;
+    protected T tileEntity;
 
     private static int nextButtonID;
 
-    public AbstractMachineGui(TileEntity tileEntity, Container container, int width, int height, ResourceLocation texture) {
+    public AbstractGuiMachine(T tileEntity, Container container, int width, int height, ResourceLocation texture) {
         super(container);
 
         this.tileEntity = tileEntity;
