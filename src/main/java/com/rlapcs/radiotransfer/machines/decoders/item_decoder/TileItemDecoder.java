@@ -10,8 +10,10 @@ import net.minecraft.nbt.NBTTagCompound;
 public class TileItemDecoder extends AbstractTileDecoder {
     public static final int INVENTORY_SIZE = 12;
     public static final double POWER_USAGE = 10;
+    public static final int PROCESS_TIME = 15; //in ticks
 
     private ItemPacketQueue packetQueue;
+    private int processTimeElapsed;
 
     public TileItemDecoder() {
         super(INVENTORY_SIZE);
@@ -22,6 +24,11 @@ public class TileItemDecoder extends AbstractTileDecoder {
                 TileItemDecoder.this.markDirty();
             }
         };
+        processTimeElapsed = 0;
+    }
+
+    public double getFractionOfProcessCompleted() {
+        return (double) processTimeElapsed / (double) PROCESS_TIME;
     }
 
     @Override
