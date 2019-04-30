@@ -18,6 +18,6 @@ public class ContainerRxController extends AbstractContainerController {
         IItemHandler itemHandler = this.te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 
         // Speed upgrade
-        this.addSlotToContainer(new SlotItemHandler(itemHandler, 2, 113, 48));
+        this.addSlotToContainer(new SlotItemHandler(itemHandler, 2, 126, 48));
     }
 }

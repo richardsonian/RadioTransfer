@@ -18,9 +18,9 @@ public class ContainerTxController extends AbstractContainerController {
         IItemHandler itemHandler = this.te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 
         // Stack upgrade
-        this.addSlotToContainer(new SlotItemHandler(itemHandler, 2, 95, 48));
+        this.addSlotToContainer(new SlotItemHandler(itemHandler, 2, 106, 48));
 
         // Speed upgrade
-        this.addSlotToContainer(new SlotItemHandler(itemHandler, 3, 113, 48));
+        this.addSlotToContainer(new SlotItemHandler(itemHandler, 3, 126, 48));
     }
 }

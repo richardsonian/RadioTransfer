@@ -12,15 +12,15 @@ import net.minecraft.util.ResourceLocation;
 import java.awt.*;
 
 public abstract class AbstractGuiController extends AbstractMachineGui {
-    public static final int WIDTH = 170;
-    public static final int HEIGHT = 148;
+    public static final int WIDTH = 188;
+    public static final int HEIGHT = 158;
 
     protected static int FREQUENCY_INCREMENT_ID = getNextButtonID();
-    protected static int FREQUENCY_INCREMENT_X = 74;
+    protected static int FREQUENCY_INCREMENT_X = 73;
     protected static int FREQUENCY_INCREMENT_Y = 30;
 
     protected static int FREQUENCY_DECREMENT_ID = getNextButtonID();
-    protected static int FREQUENCY_DECREMENT_X = 13;
+    protected static int FREQUENCY_DECREMENT_X = 11;
     protected static int FREQUENCY_DECREMENT_Y = 30;
 
     protected static int SECONDARY_INCREMENT_ID = getNextButtonID();
@@ -28,13 +28,13 @@ public abstract class AbstractGuiController extends AbstractMachineGui {
     protected static int SECONDARY_INCREMENT_Y = 51;
 
     protected static int SECONDARY_DECREMENT_ID = getNextButtonID();
-    protected static int SECONDARY_DECREMENT_X = 28;
+    protected static int SECONDARY_DECREMENT_X = 27;
     protected static int SECONDARY_DECREMENT_Y = 51;
 
     protected static int ACTIVATE_ID = getNextButtonID();
-    protected static int ACTIVATE_ON_X = 149;
+    protected static int ACTIVATE_ON_X = 166;
     protected static int ACTIVATE_ON_Y = 22;
-    protected static int ACTIVATE_OFF_X = 149;
+    protected static int ACTIVATE_OFF_X = 166;
     protected static int ACTIVATE_OFF_Y = 43;
 
     public AbstractGuiController(AbstractTileController tileEntity, AbstractContainerController container, ResourceLocation background) {
