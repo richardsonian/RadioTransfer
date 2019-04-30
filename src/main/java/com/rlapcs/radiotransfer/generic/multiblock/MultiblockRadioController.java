@@ -1,12 +1,16 @@
 package com.rlapcs.radiotransfer.generic.multiblock;
 
+import com.rlapcs.radiotransfer.generic.capability.item.ITransferHandler;
 import com.rlapcs.radiotransfer.generic.multiblock.tileEntities.AbstractTileMultiblockNode;
 import com.rlapcs.radiotransfer.machines.controllers.rx_controller.TileRxController;
 import com.rlapcs.radiotransfer.machines.controllers.tx_controller.TileTxController;
+import com.rlapcs.radiotransfer.machines.controllers.tx_controller.TileTxController.TxMode;
 import com.rlapcs.radiotransfer.machines.decoders.abstract_decoder.AbstractTileDecoder;
 import com.rlapcs.radiotransfer.machines.encoders.abstract_encoder.AbstractTileEncoder;
 import com.rlapcs.radiotransfer.machines.power_supply.TilePowerSupply;
 import com.rlapcs.radiotransfer.machines.radio.TileRadio;
+import com.rlapcs.radiotransfer.server.radio.RadioNetwork;
+import com.rlapcs.radiotransfer.server.radio.UnsupportedTransferException;
 import com.rlapcs.radiotransfer.server.radio.TransferType;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -16,9 +20,10 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 
-import static com.rlapcs.radiotransfer.RadioTransfer.sendDebugMessage;
-
 public class MultiblockRadioController {
+    private boolean registeredToNetwork;
+    private boolean multiblockValid;
+
     private TileRadio tileEntity;
 
     private TileTxController txController;
@@ -33,31 +38,81 @@ public class MultiblockRadioController {
         tileEntity = te;
         encoders = new EnumMap<>(TransferType.class);
         decoders = new EnumMap<>(TransferType.class);
+        registeredToNetwork = false;
+        multiblockValid = false;
     }
-    public TileRadio getTileEntity() {
-        return tileEntity;
+
+    public boolean isRegisteredToNetwork(){return registeredToNetwork;}
+    public void registerToNetwork() {
+        RadioNetwork.INSTANCE.register(this);
+        registeredToNetwork = true;
     }
+    public void deregisterFromNetwork() {
+        RadioNetwork.INSTANCE.deregister(this);
+        registeredToNetwork = false;
+    }
+
+    public int getTransmitFrequency(@Nonnull TransferType type) {
+        if(!canTransmit(type)) {
+            throw new UnsupportedTransferException(this + " cannot transmit on type " + type);
+        }
+        else {
+            return txController.getFrequency();
+        }
+    }
+    public int getReceiveFrequency(@Nonnull TransferType type) {
+        if(!canReceive(type)) {
+            throw new UnsupportedTransferException(this + " cannot receive on type " + type);
+        }
+        else {
+            return rxController.getFrequency();
+        }
+    }
+    public TxMode getTransmitMode(@Nonnull TransferType type) {
+        if(!canTransmit(type)) {
+            throw new UnsupportedTransferException(this + " cannot transmit on type " + type);
+        }
+        else {
+            return txController.getMode();
+        }
+    }
+    public int getReceivePriority(@Nonnull TransferType type) {
+        if(!canReceive(type)) {
+            throw new UnsupportedTransferException(this + " cannot receive on type " + type);
+        }
+        else {
+            return rxController.getPriority();
+        }
+    }
+
 
     public boolean canTransmit(@Nonnull TransferType type) {
-        boolean hasEncoder = encoders.get(type) != null && !encoders.get(type).isInvalid(); //invalid check redundant
-        //other checks?
+        boolean hasEncoder = encoders.get(type) != null && !encoders.get(type).isInvalid() && !encoders.get(type).getHandler().isEmpty(); //invalid check redundant
+        boolean hasTransmitter = txController != null && !txController.isInvalid() && txController.getActivated();
 
-        return hasEncoder;
+        return hasEncoder && hasTransmitter;
     }
-
     public boolean canReceive(@Nonnull TransferType type) {
         boolean hasDecoder = decoders.get(type) != null && !decoders.get(type).isInvalid(); //invalid check redundant
-        //other checks?
+        boolean hasReceiver = rxController != null && !rxController.isInvalid() && rxController.getActivated();
 
-        return hasDecoder;
+        return hasDecoder && hasReceiver;
     }
-
-    public <T> T getSendHandler(@Nonnull TransferType type) {
-       return null;
+    public ITransferHandler getTransmitHandler(@Nonnull TransferType type) {
+       if(canTransmit(type)) {
+           return encoders.get(type).getHandler();
+       }
+       else {
+           throw new UnsupportedTransferException(this + " cannot transmit " + type);
+       }
     }
-
-    public <T> T getReceiveHandler(@Nonnull TransferType type) {
-        return null;
+    public ITransferHandler getReceiveHandler(@Nonnull TransferType type) {
+        if(canReceive(type)) {
+            return decoders.get(type).getHandler();
+        }
+        else {
+            throw new UnsupportedTransferException(this + " cannot receive " + type);
+        }
     }
 
     private boolean validateAddition(BlockPos pos) {
@@ -136,7 +191,6 @@ public class MultiblockRadioController {
             if(decoders.get(((AbstractTileDecoder) node).getTransferType()) == node) decoders.remove(((AbstractTileDecoder) node).getTransferType());
         }
     }
-
     private List<AbstractTileMultiblockNode> getAllNodes() {
         List<AbstractTileMultiblockNode> list = new ArrayList<>();
 
@@ -147,6 +201,10 @@ public class MultiblockRadioController {
         list.addAll(decoders.values());
 
         return list;
+    }
+
+    public TileRadio getTileEntity() {
+        return tileEntity;
     }
 
     @Override
