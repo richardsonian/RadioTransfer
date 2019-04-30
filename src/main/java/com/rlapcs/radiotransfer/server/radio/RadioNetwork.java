@@ -1,14 +1,9 @@
 package com.rlapcs.radiotransfer.server.radio;
 
+import com.rlapcs.radiotransfer.generic.capability.item.ItemPacketQueue;
 import com.rlapcs.radiotransfer.generic.multiblock.MultiblockRadioController;
-import com.rlapcs.radiotransfer.machines._deprecated.receiver.MultiblockRadioController;
-import com.rlapcs.radiotransfer.machines._deprecated.transmitter.TileTransmitter;
+import com.rlapcs.radiotransfer.machines.controllers.tx_controller.TileTxController;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
 
 import java.util.*;
 
@@ -24,11 +19,14 @@ public enum RadioNetwork {
     public static final int MAX_FREQUENCY = 5;
 
     private HashSet<MultiblockRadioController> radios;
-    private Map<MultiblockRadioController, PriorityQueue<MultiblockRadioController>> radioSendQueues;
+    private Map<TransferType, Map<MultiblockRadioController, PriorityQueue<MultiblockRadioController>>> radioSendQueues;
 
     private RadioNetwork() {
         radios = new HashSet();
-        radioSendQueues = new HashMap<>();
+        radioSendQueues = new EnumMap<>(TransferType.class);
+        for(TransferType t : TransferType.values()) {
+            radioSendQueues.put(t, new HashMap<>());
+        }
     }
 
     public void register(MultiblockRadioController radio) {
@@ -41,14 +39,14 @@ public enum RadioNetwork {
     }
 
     /**
-     * Resets the sendQueue for the given transmitter. Returns false if there are no receivers to add.
+     * Resets the sendQueue for the given radio and type. Returns false if there are no other radios to add.
      * @param radio
      * @return
      */
-    private boolean resetSendQueue(MultiblockRadioController radio) {
-        //if there are no receivers, set an empty priority queue
-        if(radios.size() == 0)  {
-            radioSendQueues.put(radio, new PriorityQueue<>());
+    private boolean resetSendQueue(MultiblockRadioController radio, TransferType type) {
+        //if there are no other radios or the radio cannot transmit on the specified type, set an empty priority queue
+        if(radios.size() <= 1 || !radio.canTransmit(type))  {
+            radioSendQueues.get(type).put(radio, new PriorityQueue<>());
             return false;
         }
 
@@ -57,72 +55,76 @@ public enum RadioNetwork {
         radiosCopy.remove(radio); //remove self from the queue
 
         //remove any on a different frequency or that are invalid
-        int sendFreq = radio.
-        receiversCopy.removeIf((r)->r.getFrequency()!=freq || r.isInvalid()); //also test activation here?
+        int txFreq = radio.getTransmitFrequency(type);
+        radiosCopy.removeIf((r)->r.getTransmitFrequency(type)!=txFreq || radio.getTileEntity().isInvalid()); //also test activation here?
 
         // Make a new PriorityQueue with ordering relative to the transmitter
         PriorityQueue<MultiblockRadioController> pq = new PriorityQueue<>(1, (r1, r2)-> {
-            if(r1.getPriority() == r2.getPriority()) {
-                return (int) (trans.getDistanceSq(r1.getPos().getX(), r1.getPos().getY(), r1.getPos().getZ())
-                        - trans.getDistanceSq(r2.getPos().getX(), r2.getPos().getY(), r2.getPos().getZ()));
+            if(r1.getReceivePriority(type) == r2.getReceivePriority(type)) {
+                return (int) (radio.getTileEntity().getDistanceSq(r1.getTileEntity().getPos().getX(), r1.getTileEntity().getPos().getY(), r1.getTileEntity().getPos().getZ())
+                        - radio.getTileEntity().getDistanceSq(r2.getTileEntity().getPos().getX(), r2.getTileEntity().getPos().getY(), r2.getTileEntity().getPos().getZ()));
                 }
                 else {
-                    return r2.getPriority() - r1.getPriority();
+                    return r2.getReceivePriority(type) - r1.getReceivePriority(type);
                 }
         });
 
         //add all the receivers
-        pq.addAll(receiversCopy);
+        pq.addAll(radiosCopy);
 
-        //sendDebugMessage("Created new priority queue for " + trans + " : " + pq);
+        //sendDebugMessage("Created new priority queue for " + radio + " : " + pq);
         //add the new list
-        transmitterSendQueues.put(trans, pq);
+        radioSendQueues.get(type).put(radio, pq);
         return true;
     }
 
-    /**
+
+    public boolean sendItems(MultiblockRadioController sender, int amount, TileTxController.TxMode mode) {
+        if(mode == TileTxController.TxMode.SEQUENTIAL) return false;
+        else if(mode == TileTxController.TxMode.ROUND_ROBIN) return sendItemsRoundRobin(sender, amount);
+        else return false;
+    }
+
+    /*
      * Returns whether something was sent
-     * @param tileTransmitter
-     * @param slot
-     * @param amount
-     */
-    public boolean sendItems(TileTransmitter tileTransmitter, int slot, int amount) { //test for repeated action?
-        //if receivers empty, don't bother doing logic
-        if(receivers.size() <= 0) return false;
+    */
+    public boolean sendItemsRoundRobin(MultiblockRadioController sender, int amount) { //test for repeated action?
+        if(!sender.canTransmit(TransferType.ITEM)) return false;
 
         //make new queue if one doesn't exist or has been exhausted
-        if(transmitterSendQueues.get(tileTransmitter) == null || transmitterSendQueues.get(tileTransmitter).size() == 0){
-            //sendDebugMessage("Resetting send queue for transmitter: " + tileTransmitter);
-            boolean queueHasContents = resetSendQueue(tileTransmitter);
+        if(radioSendQueues.get(TransferType.ITEM).get(sender) == null || radioSendQueues.get(TransferType.ITEM).get(sender).size() == 0){
+            //sendDebugMessage("Resetting send queue for radio: " + radio);
+            boolean queueHasContents = resetSendQueue(sender, TransferType.ITEM);
             if(!queueHasContents) return false;
         }
 
         //poll the priority queue until a valid receiver is found or the queue runs out
-        MultiblockRadioController tileReceiver = null;
-        while(tileReceiver == null || !receivers.contains(tileReceiver) || tileReceiver.isInvalid()
-                || !tileReceiver.getActivated() || tileReceiver.getFrequency() != tileTransmitter.getFrequency()) { //short circuit avoid null pointer
+        MultiblockRadioController receiver = null;
+        while(receiver == null || !radios.contains(receiver) || receiver.getTileEntity().isInvalid()
+                || !receiver.canReceive(TransferType.ITEM)
+                || receiver.getReceiveFrequency(TransferType.ITEM) != sender.getTransmitFrequency(TransferType.ITEM)) { //short circuit avoid null pointer
+            //check multiblockValid?
 
-            if(transmitterSendQueues.get(tileTransmitter).size() > 0) {
-                tileReceiver = transmitterSendQueues.get(tileTransmitter).poll();
+            if(radioSendQueues.get(TransferType.ITEM).get(sender).size() > 0) {
+                receiver = radioSendQueues.get(TransferType.ITEM).get(sender).poll();
             }
             else {
                 return false; //none left in queue
             }
         }
 
-        //sendDebugMessage("Sending to: " + tileReceiver);
+        //sendDebugMessage("Sending to: " + radio);
 
-        ItemStackHandler senderInv = (ItemStackHandler) tileTransmitter.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-        ItemStack slotStack = senderInv.getStackInSlot(slot);
-        int amountToSend = MathHelper.clamp(slotStack.getCount(), 0, amount);
+        //note: would be nicer to peek packet and then change quantity instead of removing and readding!
+        ItemPacketQueue senderPacketQueue = (ItemPacketQueue) sender.getTransmitHandler(TransferType.ITEM);
+        ItemPacketQueue receiverPacketQueue = (ItemPacketQueue) receiver.getReceiveHandler(TransferType.ITEM);
 
-        ItemStack toSend = slotStack.copy();
-        toSend.setCount(amountToSend);
-        sendDebugMessage("Sending itemStack " + toSend + " to " + tileReceiver);
-        int remainderCount = tileReceiver.mergeStackIntoInventory(toSend).getCount();
-        sendDebugMessage("Returning remainder of " + remainderCount + " items to slot " + slot + " in " + tileTransmitter);
-        slotStack.shrink(amountToSend - remainderCount);
+        ItemStack toSend = senderPacketQueue.getNextPacket(amount);
+        sendDebugMessage("Sending itemStack " + toSend + " to " + receiver);
+        ItemStack remainder = receiverPacketQueue.add(toSend);
+        sendDebugMessage("Returning remainder: " + remainder + " items to " + sender);
+        senderPacketQueue.add(remainder);
 
-        return amount != remainderCount; //whether something was sent
+        return ItemStack.areItemStacksEqual(toSend, remainder); //whether something was sent
     }
 }

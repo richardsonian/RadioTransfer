@@ -8,29 +8,17 @@ import static com.rlapcs.radiotransfer.server.radio.RadioNetwork.MAX_FREQUENCY;
 import static com.rlapcs.radiotransfer.server.radio.RadioNetwork.MIN_FREQUENCY;
 
 public abstract class AbstractTileController extends AbstractTileMultiblockNodeWithInventory {
-    public static final int UPPER_FREQUENCY_LIMIT = 5;
-    public static final int LOWER_FREQUENCY_LIMIT = 1;
-
-    protected boolean registered;
-    protected boolean activated;
-    protected int frequency;
-
     protected static final int INVENTORY_SIZE = 12;
     protected static final double BASE_POWER_USAGE = 10;
 
-    private int frequency;
-    private boolean activated;
-
+    protected boolean activated;
+    protected int frequency;
 
     public AbstractTileController() {
         super(INVENTORY_SIZE);
 
         frequency = MIN_FREQUENCY;
         activated = false;
-    }
-
-    public int getFrequency() {
-        return frequency;
     }
 
     @Override
