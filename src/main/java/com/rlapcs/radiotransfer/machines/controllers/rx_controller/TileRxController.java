@@ -16,7 +16,7 @@ public class TileRxController extends AbstractTileController {
     }
 
     public void changePriority(boolean toIncrement) {
-        priority = MathHelper.clamp(getFrequency() + (toIncrement ? 1 : -1), MIN_PRIORITY, MAX_PRIORITY);
+        priority = MathHelper.clamp(getPriority() + (toIncrement ? 1 : -1), MIN_PRIORITY, MAX_PRIORITY);
         this.markDirty();
     }
     public int getPriority() {

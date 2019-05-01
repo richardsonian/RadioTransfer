@@ -18,14 +18,14 @@ public class TileReceiver extends AbstractTileRadio implements ITickable {
 
     public void register() {
         if(!registered){
-            RadioNetwork.INSTANCE.register(this);
+            //RadioNetwork.INSTANCE.register(this);
             registered = true;
         }
     }
 
     public void deregister() {
         if(registered) {
-            RadioNetwork.INSTANCE.deregister(this);
+            //RadioNetwork.INSTANCE.deregister(this);
             registered = false;
         }
     }

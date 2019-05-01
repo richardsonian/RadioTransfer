@@ -1,27 +1,23 @@
-package com.rlapcs.radiotransfer.machines.decoders.item_decoder;
+package com.rlapcs.radiotransfer.machines.processors.item_processors.abstract_item_processor;
 
 import com.rlapcs.radiotransfer.generic.capability.item.ItemPacketQueue;
-import com.rlapcs.radiotransfer.generic.multiblock.tileEntities.AbstractTileMultiblockNodeWithInventory;
-import com.rlapcs.radiotransfer.machines.decoders.abstract_decoder.AbstractTileDecoder;
-import com.rlapcs.radiotransfer.machines.encoders.item_encoder.TileItemEncoder;
+import com.rlapcs.radiotransfer.machines.processors.abstract_processor.AbstractTileProcessor;
 import com.rlapcs.radiotransfer.server.radio.TransferType;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class TileItemDecoder extends AbstractTileDecoder {
-    public static final int INVENTORY_SIZE = 12;
-    public static final double POWER_USAGE = 10;
+public abstract class AbstractTileItemProcessor extends AbstractTileProcessor<ItemPacketQueue> {
     public static final int PROCESS_TIME = 15; //in ticks
 
-    private ItemPacketQueue packetQueue;
-    private int processTimeElapsed;
+    protected ItemPacketQueue packetQueue;
+    protected int processTimeElapsed;
 
-    public TileItemDecoder() {
-        super(INVENTORY_SIZE);
+    public AbstractTileItemProcessor(int itemStackHandlerSize) {
+        super(itemStackHandlerSize);
 
         packetQueue = new ItemPacketQueue() {
             @Override
             protected void onContentsChanged() {
-                TileItemDecoder.this.markDirty();
+                AbstractTileItemProcessor.this.markDirty();
             }
         };
         processTimeElapsed = 0;
@@ -52,11 +48,6 @@ public class TileItemDecoder extends AbstractTileDecoder {
         compound.setTag("packets", packetQueue.serializeNBT());
 
         return compound;
-    }
-
-    @Override
-    public double getPowerUsagePerTick() {
-        return POWER_USAGE;
     }
 
     @Override

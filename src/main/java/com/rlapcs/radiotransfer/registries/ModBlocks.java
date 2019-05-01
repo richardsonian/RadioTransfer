@@ -2,11 +2,11 @@ package com.rlapcs.radiotransfer.registries;
 
 import com.rlapcs.radiotransfer.machines.controllers.rx_controller.BlockRxController;
 import com.rlapcs.radiotransfer.machines.controllers.tx_controller.BlockTxController;
-import com.rlapcs.radiotransfer.machines.decoders.item_decoder.BlockItemDecoder;
+import com.rlapcs.radiotransfer.machines.processors.item_processors.item_decoder.BlockItemDecoder;
 import com.rlapcs.radiotransfer.machines._deprecated.demo.BlockDemoBlock;
 import com.rlapcs.radiotransfer.machines._deprecated.receiver.BlockReceiver;
 import com.rlapcs.radiotransfer.machines._deprecated.transmitter.BlockTransmitter;
-import com.rlapcs.radiotransfer.machines.encoders.item_encoder.BlockItemEncoder;
+import com.rlapcs.radiotransfer.machines.processors.item_processors.item_encoder.BlockItemEncoder;
 import com.rlapcs.radiotransfer.machines.power_supply.BlockPowerSupply;
 import com.rlapcs.radiotransfer.machines.radio.BlockRadio;
 import net.minecraft.block.Block;

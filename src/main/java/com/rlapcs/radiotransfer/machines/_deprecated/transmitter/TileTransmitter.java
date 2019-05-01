@@ -18,7 +18,7 @@ public class TileTransmitter extends AbstractTileRadio {
                 if (itemStackHandler.getStackInSlot(slot).isEmpty()) {
                     continue;
                 } else {
-                    boolean itemsWereSent = RadioNetwork.INSTANCE.sendItems(this, slot, MAX_STACK_SIZE_IN_PACKET); //amount not yet implemented
+                    //boolean itemsWereSent = RadioNetwork.INSTANCE.sendItems(this, slot, MAX_STACK_SIZE_IN_PACKET); //amount not yet implemented
 
                     //no need for block update
                     /*

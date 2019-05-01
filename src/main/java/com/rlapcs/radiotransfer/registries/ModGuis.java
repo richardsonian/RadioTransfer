@@ -16,6 +16,9 @@ import com.rlapcs.radiotransfer.machines.controllers.rx_controller.TileRxControl
 import com.rlapcs.radiotransfer.machines.controllers.tx_controller.ContainerTxController;
 import com.rlapcs.radiotransfer.machines.controllers.tx_controller.GuiTxController;
 import com.rlapcs.radiotransfer.machines.controllers.tx_controller.TileTxController;
+import com.rlapcs.radiotransfer.machines.processors.item_processors.item_encoder.ContainerItemEncoder;
+import com.rlapcs.radiotransfer.machines.processors.item_processors.item_encoder.GuiItemEncoder;
+import com.rlapcs.radiotransfer.machines.processors.item_processors.item_encoder.TileItemEncoder;
 import net.minecraft.tileentity.TileEntity;
 
 import java.lang.reflect.Field;
@@ -27,6 +30,7 @@ public class ModGuis {
     /* List all Gui Entries here: */
     public static final GuiEntry tx_controller = new GuiEntry(TileTxController.class, GuiTxController.class, ContainerTxController.class);
     public static final GuiEntry rx_controller = new GuiEntry(TileRxController.class, GuiRxController.class, ContainerRxController.class);
+    public static final GuiEntry item_encoder = new GuiEntry(TileItemEncoder.class, GuiItemEncoder.class, ContainerItemEncoder.class);
 
     // DEPRECATED
     public static final GuiEntry demoblock = new GuiEntry(TileDemoBlock.class, GuiDemoBlock.class, ContainerDemoBlock.class);

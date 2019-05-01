@@ -5,9 +5,9 @@ import com.rlapcs.radiotransfer.generic.multiblock.tileEntities.AbstractTileMult
 import com.rlapcs.radiotransfer.machines.controllers.rx_controller.TileRxController;
 import com.rlapcs.radiotransfer.machines.controllers.tx_controller.TileTxController;
 import com.rlapcs.radiotransfer.machines.controllers.tx_controller.TileTxController.TxMode;
-import com.rlapcs.radiotransfer.machines.decoders.abstract_decoder.AbstractTileDecoder;
-import com.rlapcs.radiotransfer.machines.encoders.abstract_encoder.AbstractTileEncoder;
 import com.rlapcs.radiotransfer.machines.power_supply.TilePowerSupply;
+import com.rlapcs.radiotransfer.machines.processors.ProcessorType;
+import com.rlapcs.radiotransfer.machines.processors.abstract_processor.AbstractTileProcessor;
 import com.rlapcs.radiotransfer.machines.radio.TileRadio;
 import com.rlapcs.radiotransfer.server.radio.RadioNetwork;
 import com.rlapcs.radiotransfer.server.radio.UnsupportedTransferException;
@@ -31,13 +31,14 @@ public class MultiblockRadioController {
 
     private TilePowerSupply powerSupply;
 
-    private EnumMap<TransferType, AbstractTileEncoder> encoders;
-    private EnumMap<TransferType, AbstractTileDecoder> decoders;
+    private EnumMap<TransferType, AbstractTileProcessor> encoders;
+    private EnumMap<TransferType, AbstractTileProcessor> decoders;
 
     public MultiblockRadioController(TileRadio te) {
         tileEntity = te;
         encoders = new EnumMap<>(TransferType.class);
         decoders = new EnumMap<>(TransferType.class);
+
         registeredToNetwork = false;
         multiblockValid = false;
     }
@@ -141,21 +142,24 @@ public class MultiblockRadioController {
                             powerSupply.registerInMultiblock(this);
                             return true;
                         }
-                    } else if (node instanceof AbstractTileEncoder) {
-                        AbstractTileEncoder encoder = (AbstractTileEncoder) node;
-                        TransferType type = encoder.getTransferType();
-                        if (encoders.get(type) == null || encoders.get(type).isInvalid()) {
-                            encoder.registerInMultiblock(this);
-                            encoders.put(type, encoder);
-                            return true;
+                    }
+                    else if (node instanceof AbstractTileProcessor) {
+                        AbstractTileProcessor processor = (AbstractTileProcessor) node;
+                        TransferType transferType = processor.getTransferType();
+                        ProcessorType processorType = processor.getProcessorType();
+                        if(processorType == ProcessorType.ENCODER) {
+                            if (encoders.get(transferType) == null || encoders.get(transferType).isInvalid()) {
+                                processor.registerInMultiblock(this);
+                                encoders.put(transferType, processor);
+                                return true;
+                            }
                         }
-                    } else if (node instanceof AbstractTileDecoder) {
-                        AbstractTileDecoder decoder = (AbstractTileDecoder) node;
-                        TransferType type = decoder.getTransferType();
-                        if (decoders.get(type) == null || decoders.get(type).isInvalid()) {
-                            decoder.registerInMultiblock(this);
-                            decoders.put(type, decoder);
-                            return true;
+                        else if(processorType == ProcessorType.DECODER) {
+                            if (decoders.get(transferType) == null || decoders.get(transferType).isInvalid()) {
+                                processor.registerInMultiblock(this);
+                                decoders.put(transferType, processor);
+                                return true;
+                            }
                         }
                     }
                 }
@@ -181,16 +185,24 @@ public class MultiblockRadioController {
         }
     }
     public void removeNode(AbstractTileMultiblockNode node) {
-        if(node == txController) txController = null;
-        else if(node == rxController) rxController = null;
-        else if(node == powerSupply) powerSupply = null;
-        else if(node instanceof AbstractTileEncoder) {
-            if(encoders.get(((AbstractTileEncoder) node).getTransferType()) == node) encoders.remove(((AbstractTileEncoder) node).getTransferType());
-        }
-        else if(node instanceof AbstractTileDecoder) {
-            if(decoders.get(((AbstractTileDecoder) node).getTransferType()) == node) decoders.remove(((AbstractTileDecoder) node).getTransferType());
+        if (node == txController) txController = null;
+        else if (node == rxController) rxController = null;
+        else if (node == powerSupply) powerSupply = null;
+        else if (node instanceof AbstractTileProcessor) {
+            AbstractTileProcessor processor = (AbstractTileProcessor) node;
+            if (processor.getProcessorType() == ProcessorType.ENCODER) {
+                if (encoders.get(processor.getTransferType()) == processor) {
+                    encoders.remove(processor.getTransferType());
+                }
+            }
+            else if (processor.getProcessorType() == ProcessorType.DECODER) {
+                if (decoders.get(processor.getTransferType()) == processor) {
+                    decoders.remove(processor.getTransferType());
+                }
+            }
         }
     }
+
     private List<AbstractTileMultiblockNode> getAllNodes() {
         List<AbstractTileMultiblockNode> list = new ArrayList<>();
 

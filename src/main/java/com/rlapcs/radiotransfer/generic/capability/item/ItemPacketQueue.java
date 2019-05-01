@@ -1,5 +1,7 @@
 package com.rlapcs.radiotransfer.generic.capability.item;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -9,14 +11,17 @@ import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.items.ItemHandlerHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ItemPacketQueue implements INBTSerializable<NBTTagCompound>, ITransferHandler {
     public static final int MAX_QUANTITY = 9999;
     public static final int MAX_BUFFERS = 15;
 
-    private NonNullList<ItemBuffer> itemBuffers;
+    private List<ItemBuffer> itemBuffers;
 
     public ItemPacketQueue() {
-        itemBuffers = new NonNullList<>();
+        itemBuffers = new ArrayList<>();
         (new ItemBuffer(ItemStack.EMPTY)).item = null;
     }
 
@@ -42,7 +47,7 @@ public class ItemPacketQueue implements INBTSerializable<NBTTagCompound>, ITrans
 
     @Override
     public void deserializeNBT(NBTTagCompound nbt) {
-        itemBuffers = new NonNullList<>();
+        //itemBuffers = new NonNullList<>();
         NBTTagList tagList = nbt.getTagList("Items", Constants.NBT.TAG_COMPOUND);
         for (int i = 0; i < tagList.tagCount(); i++)
         {

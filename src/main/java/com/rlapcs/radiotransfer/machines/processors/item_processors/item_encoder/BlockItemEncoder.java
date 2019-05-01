@@ -1,10 +1,10 @@
-package com.rlapcs.radiotransfer.machines.encoders.item_encoder;
+package com.rlapcs.radiotransfer.machines.processors.item_processors.item_encoder;
 
 import com.rlapcs.radiotransfer.RadioTransfer;
-import com.rlapcs.radiotransfer.machines.encoders.abstract_encoder.AbstractBlockEncoder;
+import com.rlapcs.radiotransfer.machines.processors.item_processors.abstract_item_processor.AbstractBlockItemProcessor;
 import net.minecraft.creativetab.CreativeTabs;
 
-public class BlockItemEncoder extends AbstractBlockEncoder {
+public class BlockItemEncoder extends AbstractBlockItemProcessor {
     public BlockItemEncoder() {
         super(TileItemEncoder.class);
 
