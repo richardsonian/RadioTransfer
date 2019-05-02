@@ -8,6 +8,8 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
+import static com.rlapcs.radiotransfer.RadioTransfer.sendDebugMessage;
+
 public abstract class AbstractTileMultiblockNodeWithInventory extends AbstractTileMultiblockNode {
     protected ItemStackHandler itemStackHandler;
 
@@ -17,6 +19,7 @@ public abstract class AbstractTileMultiblockNodeWithInventory extends AbstractTi
         ticksSinceCreation = 0;
 
         itemStackHandler = new ItemStackHandler(itemStackHandlerSize) {
+
             @Override
             protected void onContentsChanged(int slot) {
                 // We need to tell the tile entity that something has changed so
@@ -24,6 +27,8 @@ public abstract class AbstractTileMultiblockNodeWithInventory extends AbstractTi
                 AbstractTileMultiblockNodeWithInventory.this.markDirty();
             }
         };
+        sendDebugMessage("creating itemStackHandler with intended size: "+itemStackHandlerSize
+                +" actual size: " + itemStackHandler.getSlots() + " for " + this);
     }
 
     @Override

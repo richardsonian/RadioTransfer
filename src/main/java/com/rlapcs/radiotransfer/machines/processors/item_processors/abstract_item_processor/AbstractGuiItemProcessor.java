@@ -4,8 +4,11 @@ import com.rlapcs.radiotransfer.generic.guis.clientonly.AbstractGuiMachine;
 import net.minecraft.util.ResourceLocation;
 
 public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcessor> extends AbstractGuiMachine<T> {
-    public AbstractGuiItemProcessor(T tileEntity, AbstractContainerItemProcessor container, int width, int height, ResourceLocation texture) {
-        super(tileEntity, container, width, height, texture);
+    private static final int WIDTH = 188;
+    private static final int HEIGHT = 197;
+
+    public AbstractGuiItemProcessor(T tileEntity, AbstractContainerItemProcessor container, ResourceLocation texture) {
+        super(tileEntity, container, WIDTH, HEIGHT, texture);
     }
 
     @Override
