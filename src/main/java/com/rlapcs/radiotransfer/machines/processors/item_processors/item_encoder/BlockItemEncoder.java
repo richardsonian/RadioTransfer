@@ -5,11 +5,13 @@ import com.rlapcs.radiotransfer.machines.processors.item_processors.abstract_ite
 import net.minecraft.creativetab.CreativeTabs;
 
 public class BlockItemEncoder extends AbstractBlockItemProcessor {
+    public static final String NAME = "item_encoder";
     public BlockItemEncoder() {
         super(TileItemEncoder.class);
 
-        setRegistryName("item_encoder");
-        setUnlocalizedName(RadioTransfer.MODID + "." + getRegistryName());
+
+        setRegistryName(NAME);
+        setUnlocalizedName(RadioTransfer.MODID + "." + NAME);
         setCreativeTab(CreativeTabs.MISC);
     }
 }

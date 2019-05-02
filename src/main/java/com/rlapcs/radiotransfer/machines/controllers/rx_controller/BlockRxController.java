@@ -6,11 +6,13 @@ import com.rlapcs.radiotransfer.machines.controllers.tx_controller.TileTxControl
 import net.minecraft.creativetab.CreativeTabs;
 
 public class BlockRxController extends AbstractBlockController {
+    public static final String NAME = "rx_controller";
+
     public BlockRxController() {
         super(TileRxController.class);
 
-        setRegistryName("rx_controller");
-        setUnlocalizedName(RadioTransfer.MODID + "." + getRegistryName());
+        setRegistryName(NAME);
+        setUnlocalizedName(RadioTransfer.MODID + "." + NAME);
         setCreativeTab(CreativeTabs.MISC);
     }
 }

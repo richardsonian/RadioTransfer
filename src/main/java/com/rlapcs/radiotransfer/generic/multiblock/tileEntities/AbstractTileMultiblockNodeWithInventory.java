@@ -27,8 +27,10 @@ public abstract class AbstractTileMultiblockNodeWithInventory extends AbstractTi
                 AbstractTileMultiblockNodeWithInventory.this.markDirty();
             }
         };
+        /*
         sendDebugMessage("creating itemStackHandler with intended size: "+itemStackHandlerSize
                 +" actual size: " + itemStackHandler.getSlots() + " for " + this);
+        */
     }
 
     @Override

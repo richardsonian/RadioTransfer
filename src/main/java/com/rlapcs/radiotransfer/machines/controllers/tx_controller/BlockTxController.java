@@ -5,11 +5,12 @@ import com.rlapcs.radiotransfer.machines.controllers.abstract_controller.Abstrac
 import net.minecraft.creativetab.CreativeTabs;
 
 public class BlockTxController extends AbstractBlockController {
+    public static final String NAME = "tx_controller";
     public BlockTxController() {
         super(TileTxController.class);
 
-        setRegistryName("tx_controller");
-        setUnlocalizedName(RadioTransfer.MODID + "." + getRegistryName());
+        setRegistryName(NAME);
+        setUnlocalizedName(RadioTransfer.MODID + "." + NAME);
         setCreativeTab(CreativeTabs.MISC);
     }
 
