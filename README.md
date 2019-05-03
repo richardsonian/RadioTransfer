@@ -16,6 +16,19 @@ If all the steps worked correctly, you should now be able to choose the Minecraf
 ## See our progress!
 We've made branches at each of our milestones so you can see the major progression of the mod. So far the branches are:
 - __Demo__: Learning how to write minecraft mods. Added a block, a few items, and a gui/inventory for the block. Wrote a lot of framework for the rest of the mod.
-- singleBlockFunctionalDemo: The core functionality of the mod working! Two blocks that can wirelessly transmit items with frequency and priority selection.
-- multiblockDemo: a demo with placeholder textures and no functionality of a master/slave system for recognition of multiblock structures.
+- __singleBlockFunctionalDemo__: The core functionality of the mod working! Two blocks that can wirelessly transmit items with frequency and priority selection.
+- __multiblockDemo__: a demo with placeholder textures and no functionality of a master/slave system for recognition of multiblock structures.
 
+## For Mr. Poles to play (aka for n00bs)
+1. Make a new single player world with creative mode
+2. Press E to open the creative mode inventory
+3. Navigate to the miscellaneous tab
+__Demo__
+4. Find the Demo Block and place it anywhere in the world. It has a basic inventory, and that's about it.
+__singleBlockFunctionalDemo__
+4. Find the Transmitter and Receiver blocks and place them in the world. Now you may interact with their frequencies and priority, as well as (of course) a fully functioning transmitter/receiver communications framework.
+5. Put something in the transmitter, and watch the magic send it to the receiver(s).
+__multiblockDemo__
+4. Drag the radio, tx controller, rx controller, encoder, and decoder blocks into your inventory
+5. Place all of the blocks adjacent to each other (in no particular order)
+6. This multiblock system is a radio setup, and now you may place items in the encoder, which sends them to the transmitter, whose settings can be adjusted in the gui. The reverse of this process occurs on the receiver/decoder side.
