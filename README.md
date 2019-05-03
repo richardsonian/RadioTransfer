@@ -1,5 +1,5 @@
 # Radio Transfer
-Radio Transfer is a Minecraft mod which allows players to build customizable, upgradeable radios which can wirelessly transfer items, fluids, power, and data.
+Radio Transfer is a Minecraft mod which allows players to build customizable, upgradeable multiblock radios which can wirelessly transfer items, fluids, power, and data.
 
 ## How to intitialize environment and run from the source code (Using IntelliJ IDEA)
 _steps copied from the [Forge Documentation](https://mcforge.readthedocs.io/en/latest/gettingstarted/#terminal-free-intellij-idea-configuration) (Section: "Terminal-free IntelliJ IDEA configuration")_
@@ -24,11 +24,14 @@ We've made branches at each of our milestones so you can see the major progressi
 2. Press E to open the creative mode inventory
 3. Navigate to the miscellaneous tab
 ### Demo
-4. Find the Demo Block and place it anywhere in the world. It has a basic inventory, and that's about it.
+4. Find the Demo Block and place it anywhere in the world. It has a basic inventory that you can store items in, and that's about it. We also added a few items, but they aren't listed in the creative inventory.
 ### singleBlockFunctionalDemo
-4. Find the Transmitter and Receiver blocks and place them in the world. Now you may interact with their frequencies and priority, as well as (of course) a fully functioning transmitter/receiver communications framework.
-5. Put something in the transmitter, and watch the magic send it to the receiver(s).
+4. Find the Transmitter and Receiver blocks and place them in the world. Now you may interact with their frequencies and priority, as well as (of course) a fully functioning transmitter/receiver communications framework (Ask if you're interested how it works).
+5. Put something in the transmitter, and watch the magic send it to the receiver(s). Make sure that they're both activated, and on the right frequency.
 ### multiblockDemo
-4. Drag the radio, tx controller, rx controller, encoder, and decoder blocks into your inventory
+4. Drag the radio, tx controller, rx controller, encoder, and decoder blocks into your inventory from the misc tab
 5. Place all of the blocks adjacent to each other (in no particular order)
-6. This multiblock system is a radio setup, and now you may place items in the encoder, which sends them to the transmitter, whose settings can be adjusted in the gui. The reverse of this process occurs on the receiver/decoder side.
+6. The radio block (the master) will recognize and register only one of each node block, and deregister them if they are detatched
+
+## Current progress on master as of 5/3
+6. This multiblock system is a radio setup, and now you may place items in the encoder, which sends them to the transmitter, whose settings can be adjusted in the gui. The reverse of this process occurs on the receiver/decoder side. Partly implemented, and mostly being debugged right now. If you put an item somewhere, something might happen. Right clicking on a block may or may not open a nice gui. Clicking the buttons in the gui will probably do something
