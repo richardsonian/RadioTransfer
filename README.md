@@ -23,12 +23,12 @@ We've made branches at each of our milestones so you can see the major progressi
 1. Make a new single player world with creative mode
 2. Press E to open the creative mode inventory
 3. Navigate to the miscellaneous tab
-__Demo__
+### Demo
 4. Find the Demo Block and place it anywhere in the world. It has a basic inventory, and that's about it.
-__singleBlockFunctionalDemo__
+### singleBlockFunctionalDemo
 4. Find the Transmitter and Receiver blocks and place them in the world. Now you may interact with their frequencies and priority, as well as (of course) a fully functioning transmitter/receiver communications framework.
 5. Put something in the transmitter, and watch the magic send it to the receiver(s).
-__multiblockDemo__
+### multiblockDemo
 4. Drag the radio, tx controller, rx controller, encoder, and decoder blocks into your inventory
 5. Place all of the blocks adjacent to each other (in no particular order)
 6. This multiblock system is a radio setup, and now you may place items in the encoder, which sends them to the transmitter, whose settings can be adjusted in the gui. The reverse of this process occurs on the receiver/decoder side.
