@@ -1,11 +1,8 @@
-package com.rlapcs.radiotransfer.generic.capability.item;
+package com.rlapcs.radiotransfer.generic.capability;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -15,22 +12,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ItemPacketQueue implements INBTSerializable<NBTTagCompound>, ITransferHandler {
-    public static final int MAX_QUANTITY = 9999;
+    public static final int MAX_QUANTITY = 999;
     public static final int MAX_BUFFERS = 15;
 
-    private List<ItemBuffer> itemBuffers;
+    private List<PacketBuffer> packetBuffers;
 
     public ItemPacketQueue() {
-        itemBuffers = new ArrayList<>();
-        (new ItemBuffer(ItemStack.EMPTY)).item = null;
+        packetBuffers = new ArrayList<>();
+        (new PacketBuffer(ItemStack.EMPTY)).item = null;
     }
 
     @Override
     public NBTTagCompound serializeNBT() {
         NBTTagList nbtTagList = new NBTTagList();
-        for (int i = 0; i < itemBuffers.size(); i++)
+        for (int i = 0; i < packetBuffers.size(); i++)
         {
-            ItemBuffer buff = itemBuffers.get(i);
+            PacketBuffer buff = packetBuffers.get(i);
             if (buff != null && buff.quantity != 0 && !buff.item.isEmpty()) {
                 NBTTagCompound bufferTag = new NBTTagCompound();
                 bufferTag.setInteger("index", i);
@@ -41,13 +38,13 @@ public class ItemPacketQueue implements INBTSerializable<NBTTagCompound>, ITrans
         }
         NBTTagCompound nbt = new NBTTagCompound();
         nbt.setTag("Items", nbtTagList);
-        nbt.setInteger("Size", itemBuffers.size());
+        nbt.setInteger("Size", packetBuffers.size());
         return nbt;
     }
 
     @Override
     public void deserializeNBT(NBTTagCompound nbt) {
-        //itemBuffers = new NonNullList<>();
+        //packetBuffers = new NonNullList<>();
         NBTTagList tagList = nbt.getTagList("Items", Constants.NBT.TAG_COMPOUND);
         for (int i = 0; i < tagList.tagCount(); i++)
         {
@@ -55,8 +52,8 @@ public class ItemPacketQueue implements INBTSerializable<NBTTagCompound>, ITrans
             if(buffTags.hasKey("index") && buffTags.hasKey("quantity")) {
                 int index = buffTags.getInteger("index");
                 int quantity = buffTags.getInteger("quantity");
-                if (index >= 0 && index < itemBuffers.size()) {
-                    itemBuffers.set(index, new ItemBuffer(new ItemStack(buffTags), quantity));
+                if (index >= 0 && index < packetBuffers.size()) {
+                    packetBuffers.set(index, new PacketBuffer(new ItemStack(buffTags), quantity));
                 }
             }
         }
@@ -65,29 +62,29 @@ public class ItemPacketQueue implements INBTSerializable<NBTTagCompound>, ITrans
 
     @Override
     public boolean isEmpty() {
-        for(ItemBuffer b : itemBuffers) {
+        for(PacketBuffer b : packetBuffers) {
             if (b != null && b.quantity > 0 && !b.item.isEmpty()) {
                 return true;
             }
             else {
-                itemBuffers.remove(b);
+                packetBuffers.remove(b);
             }
         }
         return false;
     }
     public ItemStack getNextPacket(int maxAmount) {
-        for(ItemBuffer b : itemBuffers) {
+        for(PacketBuffer b : packetBuffers) {
             if(b != null && b.quantity > 0 && !b.item.isEmpty()) {
                 ItemStack stack = b.item.copy();
                 int numToGive = MathHelper.clamp(b.quantity, 1, maxAmount);
                 stack.setCount(numToGive);
                 b.quantity -= numToGive;
-                if(b.quantity == 0) itemBuffers.remove(b);
+                if(b.quantity == 0) packetBuffers.remove(b);
                 onContentsChanged();
                 return stack;
             }
             else {
-                itemBuffers.remove(b);
+                packetBuffers.remove(b);
                 onContentsChanged();
             }
         }
@@ -97,7 +94,7 @@ public class ItemPacketQueue implements INBTSerializable<NBTTagCompound>, ITrans
         if(stack.isEmpty()) return ItemStack.EMPTY;
 
         ItemStack staq = stack.copy();
-        for(ItemBuffer b : itemBuffers) {
+        for(PacketBuffer b : packetBuffers) {
             if(ItemHandlerHelper.canItemStacksStack(b.item, staq)) {
                 int numToAdd = MathHelper.clamp(staq.getCount(), 0, MAX_QUANTITY - b.quantity);
                 b.quantity += numToAdd;
@@ -106,8 +103,8 @@ public class ItemPacketQueue implements INBTSerializable<NBTTagCompound>, ITrans
                 return staq;
             }
         }
-        if(itemBuffers.size() < MAX_BUFFERS) {
-            itemBuffers.add(new ItemBuffer(stack)); //assuming MAX_QUANTITY is not below 64! Should actually check if can fit here
+        if(packetBuffers.size() < MAX_BUFFERS) {
+            packetBuffers.add(new PacketBuffer(stack)); //assuming MAX_QUANTITY is not below 64! Should actually check if can fit here
             this.onContentsChanged();
             return ItemStack.EMPTY;
         }
@@ -115,22 +112,22 @@ public class ItemPacketQueue implements INBTSerializable<NBTTagCompound>, ITrans
         return staq;
     }
     public void move(int fromIndex, int toIndex) {
-        itemBuffers.add(toIndex, itemBuffers.remove(fromIndex));
+        packetBuffers.add(toIndex, packetBuffers.remove(fromIndex));
         onContentsChanged();
     }
     protected void onContentsChanged() {} //should be overridden to mark tileEntity dirty
     protected void onLoad() {}
 
-    private static class ItemBuffer {
+    public static class PacketBuffer {
         private ItemStack item;
         private int quantity;
 
-        private ItemBuffer(ItemStack item, int quantity) {
+        private PacketBuffer(ItemStack item, int quantity) {
             this.item = item.copy();
             this.item.setCount(1);
             this.quantity = quantity;
         }
-        private ItemBuffer(ItemStack stack) {
+        private PacketBuffer(ItemStack stack) {
             this(stack, stack.getCount());
         }
     }
