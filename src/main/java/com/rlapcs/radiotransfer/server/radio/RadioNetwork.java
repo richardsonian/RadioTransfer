@@ -1,6 +1,6 @@
 package com.rlapcs.radiotransfer.server.radio;
 
-import com.rlapcs.radiotransfer.generic.capability.item.ItemPacketQueue;
+import com.rlapcs.radiotransfer.generic.capability.ItemPacketQueue;
 import com.rlapcs.radiotransfer.generic.multiblock.MultiblockRadioController;
 import com.rlapcs.radiotransfer.machines.controllers.tx_controller.TileTxController;
 import net.minecraft.item.ItemStack;

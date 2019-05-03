@@ -1,6 +1,6 @@
 package com.rlapcs.radiotransfer.machines.processors.abstract_processor;
 
-import com.rlapcs.radiotransfer.generic.capability.item.ITransferHandler;
+import com.rlapcs.radiotransfer.generic.capability.ITransferHandler;
 import com.rlapcs.radiotransfer.generic.multiblock.tileEntities.AbstractTileMultiblockNodeWithInventory;
 import com.rlapcs.radiotransfer.machines.processors.ProcessorType;
 import com.rlapcs.radiotransfer.server.radio.TransferType;

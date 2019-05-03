@@ -1,6 +1,6 @@
 package com.rlapcs.radiotransfer.generic.multiblock;
 
-import com.rlapcs.radiotransfer.generic.capability.item.ITransferHandler;
+import com.rlapcs.radiotransfer.generic.capability.ITransferHandler;
 import com.rlapcs.radiotransfer.generic.multiblock.tileEntities.AbstractTileMultiblockNode;
 import com.rlapcs.radiotransfer.machines.controllers.rx_controller.TileRxController;
 import com.rlapcs.radiotransfer.machines.controllers.tx_controller.TileTxController;
