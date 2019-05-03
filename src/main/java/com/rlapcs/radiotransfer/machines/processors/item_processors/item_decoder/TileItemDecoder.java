@@ -8,6 +8,15 @@ public class TileItemDecoder extends AbstractTileItemProcessor {
     public static final double POWER_USAGE = 10;
 
 
+    @Override
+    protected boolean canDoProcess() {
+        return false;
+    }
+    @Override
+    protected void doProcess() {
+
+    }
+
     public TileItemDecoder() {
         super(INVENTORY_SIZE);
     }

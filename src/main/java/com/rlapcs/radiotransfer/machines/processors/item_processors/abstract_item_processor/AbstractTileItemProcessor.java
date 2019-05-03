@@ -19,6 +19,7 @@ public abstract class AbstractTileItemProcessor extends AbstractTileProcessor<It
         packetQueue = new ItemPacketQueue() {
             @Override
             protected void onContentsChanged() {
+                super.onContentsChanged();
                 AbstractTileItemProcessor.this.markDirty();
             }
         };
@@ -38,7 +39,9 @@ public abstract class AbstractTileItemProcessor extends AbstractTileProcessor<It
         //run on both client and server
         if(ticksSinceCreation % PROCESS_UPDATE_TICKS == 0) {
             if (processTimeElapsed >= PROCESS_TIME) {
-                doProcess();
+                if(!world.isRemote) {
+                    doProcess();
+                }
                 processTimeElapsed = 0;
             }
             else if (canDoProcess()) {

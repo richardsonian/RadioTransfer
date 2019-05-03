@@ -17,14 +17,21 @@ public class TileItemEncoder extends AbstractTileItemProcessor {
 
     @Override
     protected boolean canDoProcess() {
-        return  !ItemUtils.isInventoryEmpty(itemStackHandler, TILE_SLOTS_START_INDEX, itemStackHandler.getSlots());
+        boolean hasItems = !ItemUtils.isInventoryEmpty(itemStackHandler, TILE_SLOTS_START_INDEX, itemStackHandler.getSlots());
+        boolean canSend = ItemUtils.getFirstIndexInInventoryWhich(itemStackHandler, TILE_SLOTS_START_INDEX, itemStackHandler.getSlots(), (i) -> packetQueue.canAddAny(i)) != -1;
+        return  hasItems && canSend;
     }
 
     @Override
     protected void doProcess() {
-        ItemStack stack = ItemUtils.extractNextItems(itemStackHandler, TILE_SLOTS_START_INDEX, itemStackHandler.getSlots(), ITEMS_PER_PROCESS);
-        if(!stack.isEmpty()) {
-            packetQueue.add(stack);
+        int index = ItemUtils.getFirstIndexInInventoryWhich(itemStackHandler, TILE_SLOTS_START_INDEX, itemStackHandler.getSlots(), (i) -> packetQueue.canAddAny(i));
+        if(index != -1) {
+            ItemStack stack = itemStackHandler.getStackInSlot(index);
+            if (!stack.isEmpty()) {
+                ItemStack remainder = packetQueue.add(stack, ITEMS_PER_PROCESS);
+                itemStackHandler.setStackInSlot(index, remainder);
+                //sendDebugMessage()
+            }
         }
     }
 

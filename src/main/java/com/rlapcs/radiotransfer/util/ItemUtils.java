@@ -3,6 +3,8 @@ package com.rlapcs.radiotransfer.util;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 
+import java.util.function.Predicate;
+
 public class ItemUtils {
     /**
      * Attempts to merge a stack into a specified range in an IItemHandler, and returns what was not able to be merged.
@@ -19,7 +21,7 @@ public class ItemUtils {
     public static ItemStack mergeStackIntoInventory(ItemStack stack, IItemHandler inventory, int fromSlot, int toSlot) {
         if(stack == null || stack.isEmpty()) return ItemStack.EMPTY;
         if(inventory == null) throw new NullPointerException("IItemHandler passed is null");
-        if(fromSlot < toSlot || fromSlot < 0 || toSlot >= inventory.getSlots()) throw new IndexOutOfBoundsException("fromSlot or toSlot nonsensical.");
+        if(fromSlot > toSlot || fromSlot < 0 || toSlot > inventory.getSlots()) throw new IndexOutOfBoundsException("fromSlot or toSlot nonsensical.");
 
         ItemStack itemstack = stack.copy();
         int slot = fromSlot;
@@ -33,7 +35,7 @@ public class ItemUtils {
 
     public static boolean isInventoryEmpty(IItemHandler inventory, int fromSlot, int toSlot) {
         if(inventory == null) throw new NullPointerException("IItemHandler passed is null");
-        if(fromSlot < toSlot || fromSlot < 0 || toSlot >= inventory.getSlots()) throw new IndexOutOfBoundsException("fromSlot or toSlot nonsensical.");
+        if(fromSlot > toSlot || fromSlot < 0 || toSlot > inventory.getSlots()) throw new IndexOutOfBoundsException("fromSlot or toSlot nonsensical.");
 
         for(int slot = fromSlot; slot < toSlot; slot++) {
             if(!inventory.getStackInSlot(slot).isEmpty()) return false;
@@ -44,11 +46,22 @@ public class ItemUtils {
 
     public static ItemStack extractNextItems(IItemHandler inventory, int fromSlot, int toSlot, int amount) {
         if(inventory == null) throw new NullPointerException("IItemHandler passed is null");
-        if(fromSlot < toSlot || fromSlot < 0 || toSlot >= inventory.getSlots()) throw new IndexOutOfBoundsException("fromSlot or toSlot nonsensical.");
+        if(fromSlot > toSlot || fromSlot < 0 || toSlot > inventory.getSlots()) throw new IndexOutOfBoundsException("fromSlot or toSlot nonsensical.");
 
         for(int slot = fromSlot; slot < toSlot; slot++) {
             if(!inventory.getStackInSlot(slot).isEmpty()) return inventory.extractItem(slot, amount, false);
         }
         return ItemStack.EMPTY;
+    }
+
+    public static int getFirstIndexInInventoryWhich(IItemHandler inventory, int fromSlot, int toSlot, Predicate<ItemStack> condition) {
+        if(inventory == null) throw new NullPointerException("IItemHandler passed is null");
+        if(fromSlot > toSlot || fromSlot < 0 || toSlot > inventory.getSlots()) throw new IndexOutOfBoundsException("fromSlot or toSlot nonsensical.");
+
+        for(int s = fromSlot; s < toSlot; s++) {
+            if(condition.test(inventory.getStackInSlot(s))) return s;
+        }
+
+        return -1;
     }
 }

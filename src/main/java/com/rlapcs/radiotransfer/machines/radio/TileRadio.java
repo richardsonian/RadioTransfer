@@ -1,7 +1,11 @@
 package com.rlapcs.radiotransfer.machines.radio;
 
+import com.rlapcs.radiotransfer.generic.capability.ITransferHandler;
 import com.rlapcs.radiotransfer.generic.multiblock.MultiblockRadioController;
 import com.rlapcs.radiotransfer.generic.tileEntities.AbstractTileMachine;
+import com.rlapcs.radiotransfer.machines.controllers.tx_controller.TileTxController;
+import com.rlapcs.radiotransfer.server.radio.RadioNetwork;
+import com.rlapcs.radiotransfer.server.radio.TransferType;
 
 public class TileRadio extends AbstractTileMachine {
     public final int MULTIBLOCK_UPDATE_TICKS = 20;
@@ -17,6 +21,9 @@ public class TileRadio extends AbstractTileMachine {
     }
 
     private void sendResources() {
+        if(multiblock.canTransmit(TransferType.ITEM)) {
+            RadioNetwork.INSTANCE.sendItems(multiblock, 16, multiblock.getTransmitMode(TransferType.ITEM));
+        }
     }
 
     public MultiblockRadioController getMultiblockController() {
