@@ -9,11 +9,11 @@ public class TileItemDecoder extends AbstractTileItemProcessor {
 
 
     @Override
-    protected boolean canDoProcess() {
+    public boolean canDoProcess() {
         return false;
     }
     @Override
-    protected void doProcess() {
+    public void doProcess() {
 
     }
 

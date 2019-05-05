@@ -26,10 +26,6 @@ public class TileRadio extends AbstractTileMachine {
         }
     }
 
-    public MultiblockRadioController getMultiblockController() {
-        return multiblock;
-    }
-
     @Override
     public void invalidate() {
         super.invalidate();
@@ -62,8 +58,12 @@ public class TileRadio extends AbstractTileMachine {
                 multiblock.registerToNetwork();
             }
             if(ticksSinceCreation % SEND_RESOURCES_UPDATE_TICKS == 0) {
-                sendResources();
+                //sendResources();
             }
         }
+    }
+
+    public MultiblockRadioController getMultiblockController() {
+        return multiblock;
     }
 }

@@ -10,4 +10,9 @@ public class GuiItemEncoder extends AbstractGuiItemProcessor<TileItemEncoder> {
     public GuiItemEncoder(TileItemEncoder tileEntity, ContainerItemEncoder container) {
         super(tileEntity, container, background);
     }
+
+    @Override
+    protected int[] getProgressBarCoords() {
+        return new int[] {93, 55};
+    }
 }

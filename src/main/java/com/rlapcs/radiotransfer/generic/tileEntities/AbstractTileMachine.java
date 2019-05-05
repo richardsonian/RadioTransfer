@@ -92,9 +92,7 @@ public abstract class AbstractTileMachine extends TileEntity implements ITickabl
 
     @Override
     public void update() {
-        if(!world.isRemote) {
-            ticksSinceCreation++;
-        }
+        ticksSinceCreation++;
     }
 
     @Override

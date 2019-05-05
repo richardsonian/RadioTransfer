@@ -16,19 +16,19 @@ public class TileItemEncoder extends AbstractTileItemProcessor {
     }
 
     @Override
-    protected boolean canDoProcess() {
+    public boolean canDoProcess() {
         boolean hasItems = !ItemUtils.isInventoryEmpty(itemStackHandler, TILE_SLOTS_START_INDEX, itemStackHandler.getSlots());
-        boolean canSend = ItemUtils.getFirstIndexInInventoryWhich(itemStackHandler, TILE_SLOTS_START_INDEX, itemStackHandler.getSlots(), (i) -> packetQueue.canAddAny(i)) != -1;
-        return  hasItems && canSend;
+        boolean hasSpace = ItemUtils.getFirstIndexInInventoryWhich(itemStackHandler, TILE_SLOTS_START_INDEX, itemStackHandler.getSlots(), (stack) -> packetQueue.canAddAny(stack)) != -1;
+        return  hasItems && hasSpace;
     }
 
     @Override
-    protected void doProcess() {
-        int index = ItemUtils.getFirstIndexInInventoryWhich(itemStackHandler, TILE_SLOTS_START_INDEX, itemStackHandler.getSlots(), (i) -> packetQueue.canAddAny(i));
+    public void doProcess() {
+        int index = ItemUtils.getFirstIndexInInventoryWhich(itemStackHandler, TILE_SLOTS_START_INDEX, itemStackHandler.getSlots(), (stack) -> packetQueue.canAddAny(stack));
         if(index != -1) {
             ItemStack stack = itemStackHandler.getStackInSlot(index);
             if (!stack.isEmpty()) {
-                ItemStack remainder = packetQueue.add(stack, ITEMS_PER_PROCESS);
+                ItemStack remainder = packetQueue.add(stack, getItemsPerProcess());
                 itemStackHandler.setStackInSlot(index, remainder);
                 //sendDebugMessage()
             }

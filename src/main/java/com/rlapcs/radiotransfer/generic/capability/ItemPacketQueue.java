@@ -166,6 +166,7 @@ public class ItemPacketQueue implements INBTSerializable<NBTTagCompound>, ITrans
             if(ItemHandlerHelper.canItemStacksStack(b.item, staq)) {
                 int count = MathHelper.clamp(staq.getCount(), 0, maxAmount);
                 int numToAdd = MathHelper.clamp(count, 0, MAX_QUANTITY - b.quantity);
+                sendDebugMessage("Adding " + numToAdd + " of "+ staq);
                 b.quantity += numToAdd;
                 staq.shrink(numToAdd);
                 this.onContentsChanged();
@@ -174,7 +175,8 @@ public class ItemPacketQueue implements INBTSerializable<NBTTagCompound>, ITrans
         }
         //if wasn't merged into a previous buffer, make a new one
         if(packetBuffers.size() < MAX_BUFFERS) {
-            int numToAdd = MathHelper.clamp(staq.getCount(), 0, MAX_QUANTITY);
+            int count = MathHelper.clamp(staq.getCount(), 0, maxAmount);
+            int numToAdd = MathHelper.clamp(count, 0, MAX_QUANTITY);
             packetBuffers.add(new PacketBuffer(stack, numToAdd));
             this.onContentsChanged();
             staq.shrink(numToAdd);
