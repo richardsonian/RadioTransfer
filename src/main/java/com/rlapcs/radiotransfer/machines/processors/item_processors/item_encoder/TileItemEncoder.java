@@ -19,7 +19,7 @@ public class TileItemEncoder extends AbstractTileItemProcessor {
     public boolean canDoProcess() {
         boolean hasItems = !ItemUtils.isInventoryEmpty(itemStackHandler, TILE_SLOTS_START_INDEX, itemStackHandler.getSlots());
         boolean hasSpace = ItemUtils.getFirstIndexInInventoryWhich(itemStackHandler, TILE_SLOTS_START_INDEX, itemStackHandler.getSlots(), (stack) -> packetQueue.canAddAny(stack)) != -1;
-        return  hasItems && hasSpace;
+        return hasItems && hasSpace;
     }
 
     @Override

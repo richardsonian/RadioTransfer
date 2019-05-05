@@ -1,7 +1,12 @@
 package com.rlapcs.radiotransfer.machines.processors.item_processors.item_decoder;
 
+import com.rlapcs.radiotransfer.generic.capability.ItemPacketQueue;
 import com.rlapcs.radiotransfer.machines.processors.ProcessorType;
 import com.rlapcs.radiotransfer.machines.processors.item_processors.abstract_item_processor.AbstractTileItemProcessor;
+import com.rlapcs.radiotransfer.util.ItemUtils;
+import net.minecraft.item.ItemStack;
+
+import static com.rlapcs.radiotransfer.machines.processors.item_processors.abstract_item_processor.AbstractContainerItemProcessor.TILE_SLOTS_START_INDEX;
 
 public class TileItemDecoder extends AbstractTileItemProcessor {
     public static final int INVENTORY_SIZE = 17;
@@ -10,11 +15,16 @@ public class TileItemDecoder extends AbstractTileItemProcessor {
 
     @Override
     public boolean canDoProcess() {
-        return false;
+        boolean hasPackets = !packetQueue.isEmpty();
+        boolean hasSpace = ItemUtils.canMergeAnyIntoInventory(packetQueue.peekNextPacket(ItemPacketQueue.MAX_QUANTITY), itemStackHandler, TILE_SLOTS_START_INDEX, itemStackHandler.getSlots());
+
+        return hasPackets && hasSpace;
     }
     @Override
     public void doProcess() {
-
+        ItemStack toProcess = packetQueue.getNextPacket(getItemsPerProcess());
+        ItemStack remainder = ItemUtils.mergeStackIntoInventory(toProcess, itemStackHandler, TILE_SLOTS_START_INDEX, itemStackHandler.getSlots());
+        packetQueue.add(remainder);
     }
 
     public TileItemDecoder() {

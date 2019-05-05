@@ -27,6 +27,7 @@ public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcess
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
         super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
 
+        //progress bar
         Minecraft.getMinecraft().getTextureManager().bindTexture(new ResourceLocation(RadioTransfer.MODID, "textures/gui/icons.png"));
         double progress = tileEntity.getFractionOfProcessCompleted();
         drawTexturedModalRect(guiLeft + getProgressBarCoords()[0], guiTop + getProgressBarCoords()[1], PROGRESS_BAR_U, PROGRESS_BAR_V,

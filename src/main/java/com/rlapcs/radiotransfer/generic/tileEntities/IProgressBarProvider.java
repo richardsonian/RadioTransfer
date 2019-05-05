@@ -14,7 +14,7 @@ public interface IProgressBarProvider {
     int getProcessTimeElapsed();
     void setProcessTimeElapsed(int target);
 
-    default void doUpdate(World world, int ticksSinceLastCall) {
+    default void doProcessUpdate(World world, int ticksSinceLastCall) {
         if (getProcessTimeElapsed() >= getProcessTime()) {
             if(!world.isRemote) {
                 doProcess();

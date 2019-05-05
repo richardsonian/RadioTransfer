@@ -7,8 +7,6 @@ import com.rlapcs.radiotransfer.server.radio.TransferType;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 
-import static com.rlapcs.radiotransfer.RadioTransfer.sendDebugMessage;
-
 public abstract class AbstractTileItemProcessor extends AbstractTileProcessor<ItemPacketQueue> implements IProgressBarProvider {
     public static final int PROCESS_UPDATE_TICKS = 2;
 
@@ -50,7 +48,7 @@ public abstract class AbstractTileItemProcessor extends AbstractTileProcessor<It
 
         //run on both client and server
         if(ticksSinceCreation % PROCESS_UPDATE_TICKS == 0) {
-            doUpdate(world, PROCESS_UPDATE_TICKS);
+            doProcessUpdate(world, PROCESS_UPDATE_TICKS);
         }
     }
 

@@ -2,6 +2,7 @@ package com.rlapcs.radiotransfer.util;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.function.Predicate;
 
@@ -31,6 +32,23 @@ public class ItemUtils {
         }
 
         return itemstack;
+    }
+
+    public static boolean canMergeAnyIntoInventory(ItemStack stack, IItemHandler inventory, int fromSlot, int toSlot) {
+        if(stack == null || stack.isEmpty()) return false;
+        if(inventory == null) throw new NullPointerException("IItemHandler passed is null");
+        if(fromSlot > toSlot || fromSlot < 0 || toSlot > inventory.getSlots()) throw new IndexOutOfBoundsException("fromSlot or toSlot nonsensical.");
+
+        for(int slot = fromSlot; slot < toSlot; slot++) {
+            ItemStack inventoryStack = inventory.getStackInSlot(slot);
+            if(ItemHandlerHelper.canItemStacksStack(inventoryStack, stack)) {
+                if(inventoryStack.getCount() < inventory.getSlotLimit(slot) && inventoryStack.getCount() < inventoryStack.getMaxStackSize()) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     public static boolean isInventoryEmpty(IItemHandler inventory, int fromSlot, int toSlot) {
