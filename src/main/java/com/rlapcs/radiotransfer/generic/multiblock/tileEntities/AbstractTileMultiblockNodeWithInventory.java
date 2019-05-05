@@ -8,9 +8,12 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
+import javax.annotation.Nonnull;
+
 import static com.rlapcs.radiotransfer.RadioTransfer.sendDebugMessage;
 
-public abstract class AbstractTileMultiblockNodeWithInventory extends AbstractTileMultiblockNode {
+public abstract class
+AbstractTileMultiblockNodeWithInventory extends AbstractTileMultiblockNode {
     protected ItemStackHandler itemStackHandler;
 
     public AbstractTileMultiblockNodeWithInventory(int itemStackHandlerSize) {
@@ -22,16 +25,17 @@ public abstract class AbstractTileMultiblockNodeWithInventory extends AbstractTi
 
             @Override
             protected void onContentsChanged(int slot) {
-                // We need to tell the tile entity that something has changed so
-                // that the chest contents is persisted
+                super.onContentsChanged(slot);
                 AbstractTileMultiblockNodeWithInventory.this.markDirty();
             }
+            @Override
+            public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+                boolean superPassed = super.isItemValid(slot, stack);
+                return superPassed && AbstractTileMultiblockNodeWithInventory.this.isItemValidInSlot(slot, stack);
+            }
         };
-        /*
-        sendDebugMessage("creating itemStackHandler with intended size: "+itemStackHandlerSize
-                +" actual size: " + itemStackHandler.getSlots() + " for " + this);
-        */
     }
+    protected abstract boolean isItemValidInSlot(int slot, @Nonnull ItemStack stack);
 
     @Override
     public void readFromNBT(NBTTagCompound compound) {

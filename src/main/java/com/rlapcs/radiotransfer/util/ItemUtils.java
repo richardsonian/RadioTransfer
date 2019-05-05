@@ -4,9 +4,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
+import java.security.InvalidParameterException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.IntStream;
 
 public class ItemUtils {
+    public static int[] getSlotArrayFromBlackList(IItemHandler inventory, Set<Integer> blackList) {
+        return IntStream.range(0, inventory.getSlots()).filter((i) -> !blackList.contains(i)).toArray();
+    }
+
     /**
      * Attempts to merge a stack into a specified range in an IItemHandler, and returns what was not able to be merged.
      *
@@ -20,26 +29,36 @@ public class ItemUtils {
      * @throws NullPointerException if passed inventory is null
      */
     public static ItemStack mergeStackIntoInventory(ItemStack stack, IItemHandler inventory, int fromSlot, int toSlot) {
+        if(fromSlot > toSlot || fromSlot < 0 || toSlot > inventory.getSlots()) throw new IndexOutOfBoundsException("fromSlot or toSlot nonsensical.");
+        return mergeStackIntoInventory(stack, inventory, IntStream.range(fromSlot, toSlot).toArray());
+    }
+    public static ItemStack mergeStackIntoInventory(ItemStack stack, IItemHandler inventory, int[] allowedSlots) {
         if(stack == null || stack.isEmpty()) return ItemStack.EMPTY;
         if(inventory == null) throw new NullPointerException("IItemHandler passed is null");
-        if(fromSlot > toSlot || fromSlot < 0 || toSlot > inventory.getSlots()) throw new IndexOutOfBoundsException("fromSlot or toSlot nonsensical.");
+
+        if(allowedSlots == null) allowedSlots = IntStream.range(0, inventory.getSlots()).toArray();
 
         ItemStack itemstack = stack.copy();
-        int slot = fromSlot;
-        while(!itemstack.isEmpty() && slot < toSlot) {
+        for(int slot : allowedSlots) {
+            if(slot < 0 || slot >= inventory.getSlots()) throw new IndexOutOfBoundsException("Slot " + slot + " in allowedSlots out of bounds");
             itemstack = inventory.insertItem(slot, itemstack, false);
-            slot++;
+            if(itemstack.isEmpty()) return ItemStack.EMPTY;
         }
-
         return itemstack;
     }
 
     public static boolean canMergeAnyIntoInventory(ItemStack stack, IItemHandler inventory, int fromSlot, int toSlot) {
-        if(stack == null || stack.isEmpty()) return false;
-        if(inventory == null) throw new NullPointerException("IItemHandler passed is null");
         if(fromSlot > toSlot || fromSlot < 0 || toSlot > inventory.getSlots()) throw new IndexOutOfBoundsException("fromSlot or toSlot nonsensical.");
 
-        for(int slot = fromSlot; slot < toSlot; slot++) {
+        return canMergeAnyIntoInventory(stack, inventory, IntStream.range(fromSlot, toSlot).toArray());
+    }
+    public static boolean canMergeAnyIntoInventory(ItemStack stack, IItemHandler inventory, int[] allowedSlots) {
+        if(stack == null || stack.isEmpty()) return false;
+        if(inventory == null) throw new NullPointerException("IItemHandler passed is null");
+        if(allowedSlots == null) allowedSlots = IntStream.range(0, inventory.getSlots()).toArray();
+
+        for(int slot : allowedSlots) {
+            if(slot < 0 || slot >= inventory.getSlots()) throw new IndexOutOfBoundsException("Slot " + slot + " in allowedSlots out of bounds");
             ItemStack inventoryStack = inventory.getStackInSlot(slot);
             if(ItemHandlerHelper.canItemStacksStack(inventoryStack, stack)) {
                 if(inventoryStack.getCount() < inventory.getSlotLimit(slot) && inventoryStack.getCount() < inventoryStack.getMaxStackSize()) {
@@ -52,32 +71,50 @@ public class ItemUtils {
     }
 
     public static boolean isInventoryEmpty(IItemHandler inventory, int fromSlot, int toSlot) {
-        if(inventory == null) throw new NullPointerException("IItemHandler passed is null");
         if(fromSlot > toSlot || fromSlot < 0 || toSlot > inventory.getSlots()) throw new IndexOutOfBoundsException("fromSlot or toSlot nonsensical.");
 
-        for(int slot = fromSlot; slot < toSlot; slot++) {
+        return isInventoryEmpty(inventory, IntStream.range(fromSlot, toSlot).toArray());
+    }
+    public static boolean isInventoryEmpty(IItemHandler inventory, int[] slotsToCheck) {
+        if(inventory == null) throw new NullPointerException("IItemHandler passed is null");
+        if(slotsToCheck == null) slotsToCheck = IntStream.range(0, inventory.getSlots()).toArray();
+
+        for(int slot : slotsToCheck) {
             if(!inventory.getStackInSlot(slot).isEmpty()) return false;
         }
 
         return true;
     }
 
+
     public static ItemStack extractNextItems(IItemHandler inventory, int fromSlot, int toSlot, int amount) {
-        if(inventory == null) throw new NullPointerException("IItemHandler passed is null");
         if(fromSlot > toSlot || fromSlot < 0 || toSlot > inventory.getSlots()) throw new IndexOutOfBoundsException("fromSlot or toSlot nonsensical.");
 
-        for(int slot = fromSlot; slot < toSlot; slot++) {
+        return extractNextItems(inventory, IntStream.range(fromSlot, toSlot).toArray(), amount);
+    }
+    public static ItemStack extractNextItems(IItemHandler inventory, int[] allowedSlots, int amount) {
+        if(inventory == null) throw new NullPointerException("IItemHandler passed is null");
+        if(amount <= 0) throw new InvalidParameterException("amount must be greater than 0");
+        if(allowedSlots == null) allowedSlots = IntStream.range(0, inventory.getSlots()).toArray();
+
+        for(int slot : allowedSlots) {
             if(!inventory.getStackInSlot(slot).isEmpty()) return inventory.extractItem(slot, amount, false);
         }
         return ItemStack.EMPTY;
     }
 
     public static int getFirstIndexInInventoryWhich(IItemHandler inventory, int fromSlot, int toSlot, Predicate<ItemStack> condition) {
-        if(inventory == null) throw new NullPointerException("IItemHandler passed is null");
+
         if(fromSlot > toSlot || fromSlot < 0 || toSlot > inventory.getSlots()) throw new IndexOutOfBoundsException("fromSlot or toSlot nonsensical.");
 
-        for(int s = fromSlot; s < toSlot; s++) {
-            if(condition.test(inventory.getStackInSlot(s))) return s;
+        return getFirstIndexInInventoryWhich(inventory, IntStream.range(fromSlot, toSlot).toArray(), condition);
+    }
+    public static int getFirstIndexInInventoryWhich(IItemHandler inventory, int[] slotsToCheck, Predicate<ItemStack> condition) {
+        if(inventory == null) throw new NullPointerException("IItemHandler passed is null");
+        if(slotsToCheck == null) slotsToCheck = IntStream.range(0, inventory.getSlots()).toArray();
+
+        for(int slot : slotsToCheck) {
+            if(condition.test(inventory.getStackInSlot(slot))) return slot;
         }
 
         return -1;

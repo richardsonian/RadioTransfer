@@ -7,6 +7,8 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
+import javax.annotation.Nonnull;
+
 public abstract class AbstractTileMachineWithInventory extends AbstractTileMachine {
     protected ItemStackHandler itemStackHandler;
 
@@ -18,12 +20,18 @@ public abstract class AbstractTileMachineWithInventory extends AbstractTileMachi
         itemStackHandler = new ItemStackHandler(itemStackHandlerSize) {
             @Override
             protected void onContentsChanged(int slot) {
-                // We need to tell the tile entity that something has changed so
-                // that the chest contents is persisted
+                super.onContentsChanged(slot);
                 AbstractTileMachineWithInventory.this.markDirty();
+
+            }
+
+            @Override
+            public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+                return super.isItemValid(slot, stack) && AbstractTileMachineWithInventory.this.isItemValidInSlot(slot, stack);
             }
         };
     }
+    protected abstract boolean isItemValidInSlot(int slot, @Nonnull ItemStack stack);
 
     @Override
     public void readFromNBT(NBTTagCompound compound) {

@@ -3,9 +3,15 @@ package com.rlapcs.radiotransfer.machines.processors.item_processors.abstract_it
 import com.rlapcs.radiotransfer.generic.capability.ItemPacketQueue;
 import com.rlapcs.radiotransfer.generic.tileEntities.IProgressBarProvider;
 import com.rlapcs.radiotransfer.machines.processors.abstract_processor.AbstractTileProcessor;
+import com.rlapcs.radiotransfer.registries.ModItems;
 import com.rlapcs.radiotransfer.server.radio.TransferType;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
+
+import javax.annotation.Nonnull;
+
+import static com.rlapcs.radiotransfer.machines.processors.item_processors.abstract_item_processor.AbstractContainerItemProcessor.SPEED_UPGRADE_SLOT_INDEX;
 
 public abstract class AbstractTileItemProcessor extends AbstractTileProcessor<ItemPacketQueue> implements IProgressBarProvider {
     public static final int PROCESS_UPDATE_TICKS = 2;
@@ -37,7 +43,7 @@ public abstract class AbstractTileItemProcessor extends AbstractTileProcessor<It
     }
     @Override
     public int getProcessTime() {
-        int numUpgrades = itemStackHandler.getStackInSlot(AbstractContainerItemProcessor.SPEED_UPGRADE_SLOT_INDEX).getCount();
+        int numUpgrades = itemStackHandler.getStackInSlot(SPEED_UPGRADE_SLOT_INDEX).getCount();
         int processTime = (int) (BASE_PROCESS_TIME * Math.pow(PROCESS_TIME_MULTIPLIER, numUpgrades));
         return (int) MathHelper.clamp(processTime, MIN_PROCESS_TIME, BASE_PROCESS_TIME);
     }
@@ -49,6 +55,16 @@ public abstract class AbstractTileItemProcessor extends AbstractTileProcessor<It
         //run on both client and server
         if(ticksSinceCreation % PROCESS_UPDATE_TICKS == 0) {
             doProcessUpdate(world, PROCESS_UPDATE_TICKS);
+        }
+    }
+
+    @Override
+    protected boolean isItemValidInSlot(int slot, @Nonnull ItemStack stack) {
+        if(slot == SPEED_UPGRADE_SLOT_INDEX) {
+            return stack.getItem() == ModItems.redgem;
+        }
+        else {
+            return true;
         }
     }
 
