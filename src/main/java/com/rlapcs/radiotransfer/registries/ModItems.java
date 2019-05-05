@@ -3,6 +3,7 @@ package com.rlapcs.radiotransfer.registries;
 import com.rlapcs.radiotransfer.RadioTransfer;
 import com.rlapcs.radiotransfer.generic.items.ItemDemoItem;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
@@ -35,7 +36,7 @@ public class ModItems {
         List<Item> items = new ArrayList<>();
 
         /* Add one instance of each item here */
-        items.add(new Item().setRegistryName("redgem").setUnlocalizedName(RadioTransfer.MODID + ".redgem"));
+        items.add(new Item().setRegistryName("redgem").setUnlocalizedName(RadioTransfer.MODID + ".redgem").setCreativeTab(CreativeTabs.MISC));
         items.add(new ItemDemoItem());
         /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
         return items;

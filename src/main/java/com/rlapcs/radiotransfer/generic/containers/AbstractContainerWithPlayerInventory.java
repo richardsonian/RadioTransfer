@@ -14,11 +14,13 @@ import net.minecraftforge.items.IItemHandler;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.rlapcs.radiotransfer.RadioTransfer.sendDebugMessage;
+
 
 public abstract class AbstractContainerWithPlayerInventory<T extends TileEntity> extends Container {
     protected T te;
     protected int tileEntityItemHandlerSlots;
-    protected Map<Integer, Item> slotBlackList;
+    protected Map<Item, Integer> slotBlackList;
 
     public AbstractContainerWithPlayerInventory(IInventory playerInventory, T te) {
         this.te = te;
@@ -48,27 +50,33 @@ public abstract class AbstractContainerWithPlayerInventory<T extends TileEntity>
 
     protected abstract void addTileEntitySlots();
 
+
+    //BROKEN
     public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
+        sendDebugMessage("transferring stack in slot for Container for " + te);
         if(te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)) {
             IItemHandler teInventory = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
             ItemStack stack = super.transferStackInSlot(playerIn, index); //this is weird, but it should work
+            if(stack.isEmpty()) return ItemStack.EMPTY;
 
-            ItemStack remainder = ItemStack.EMPTY;
-            if(slotBlackList.containsValue(stack.getItem())) {
-                //handle upgrade card transfer
+            ItemStack remainder;
+            if(slotBlackList.containsKey(stack.getItem())) {
+                //black list
+                remainder = teInventory.insertItem(slotBlackList.get(stack.getItem()), stack, false);
             }
             else {
                 //other items
-                int[] allowedSlots = ItemUtils.getSlotArrayFromBlackList(teInventory, slotBlackList.keySet());
+                int[] allowedSlots = ItemUtils.getSlotArrayFromBlackList(teInventory, slotBlackList.values());
                 remainder = ItemUtils.mergeStackIntoInventory(stack, teInventory, allowedSlots);
             }
+            sendDebugMessage("Returning remainder " + remainder);
             return remainder;
         }
         return ItemStack.EMPTY;
     }
     public abstract boolean canInteractWith(EntityPlayer playerIn);
 
-    public Map<Integer, Item> getSlotBlackList() {
+    public Map<Item, Integer> getSlotBlackList() {
         return slotBlackList;
     }
 }

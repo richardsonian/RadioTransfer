@@ -7,12 +7,13 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
 public class ItemUtils {
-    public static int[] getSlotArrayFromBlackList(IItemHandler inventory, Set<Integer> blackList) {
+    public static int[] getSlotArrayFromBlackList(IItemHandler inventory, Collection<Integer> blackList) {
         return IntStream.range(0, inventory.getSlots()).filter((i) -> !blackList.contains(i)).toArray();
     }
 
@@ -41,8 +42,10 @@ public class ItemUtils {
         ItemStack itemstack = stack.copy();
         for(int slot : allowedSlots) {
             if(slot < 0 || slot >= inventory.getSlots()) throw new IndexOutOfBoundsException("Slot " + slot + " in allowedSlots out of bounds");
-            itemstack = inventory.insertItem(slot, itemstack, false);
-            if(itemstack.isEmpty()) return ItemStack.EMPTY;
+            if(inventory.isItemValid(slot, itemstack)) {
+                itemstack = inventory.insertItem(slot, itemstack, false);
+                if (itemstack.isEmpty()) return ItemStack.EMPTY;
+            }
         }
         return itemstack;
     }
@@ -60,7 +63,7 @@ public class ItemUtils {
         for(int slot : allowedSlots) {
             if(slot < 0 || slot >= inventory.getSlots()) throw new IndexOutOfBoundsException("Slot " + slot + " in allowedSlots out of bounds");
             ItemStack inventoryStack = inventory.getStackInSlot(slot);
-            if(ItemHandlerHelper.canItemStacksStack(inventoryStack, stack)) {
+            if(ItemHandlerHelper.canItemStacksStack(inventoryStack, stack) && inventory.isItemValid(slot, stack)) {
                 if(inventoryStack.getCount() < inventory.getSlotLimit(slot) && inventoryStack.getCount() < inventoryStack.getMaxStackSize()) {
                     return true;
                 }

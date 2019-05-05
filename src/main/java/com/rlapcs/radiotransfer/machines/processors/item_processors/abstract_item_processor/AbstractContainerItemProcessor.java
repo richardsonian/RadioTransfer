@@ -1,6 +1,7 @@
 package com.rlapcs.radiotransfer.machines.processors.item_processors.abstract_item_processor;
 
 import com.rlapcs.radiotransfer.machines.processors.abstract_processor.AbstractContainerProcessor;
+import com.rlapcs.radiotransfer.registries.ModItems;
 import net.minecraft.inventory.IInventory;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -14,6 +15,7 @@ public abstract class AbstractContainerItemProcessor extends AbstractContainerPr
 
     public AbstractContainerItemProcessor(IInventory playerInventory, AbstractTileItemProcessor te) {
         super(playerInventory, te);
+        slotBlackList.put(ModItems.redgem, SPEED_UPGRADE_SLOT_INDEX);
     }
 
     @Override

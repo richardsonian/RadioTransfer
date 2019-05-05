@@ -2,9 +2,12 @@ package com.rlapcs.radiotransfer.machines._deprecated.receiver;
 
 import com.rlapcs.radiotransfer.machines._deprecated.other.AbstractTileRadio;
 import com.rlapcs.radiotransfer.server.radio.RadioNetwork;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.MathHelper;
+
+import javax.annotation.Nonnull;
 
 public class TileReceiver extends AbstractTileRadio implements ITickable {
 
@@ -40,6 +43,11 @@ public class TileReceiver extends AbstractTileRadio implements ITickable {
         if(this.registered && !world.isRemote) {
             this.deregister();
         }
+    }
+
+    @Override
+    protected boolean isItemValidInSlot(int slot, @Nonnull ItemStack stack) {
+        return true;
     }
 
     @Override

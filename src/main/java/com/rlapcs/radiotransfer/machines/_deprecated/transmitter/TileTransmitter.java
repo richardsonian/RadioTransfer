@@ -2,6 +2,9 @@ package com.rlapcs.radiotransfer.machines._deprecated.transmitter;
 
 import com.rlapcs.radiotransfer.machines._deprecated.other.AbstractTileRadio;
 import com.rlapcs.radiotransfer.server.radio.RadioNetwork;
+import net.minecraft.item.ItemStack;
+
+import javax.annotation.Nonnull;
 
 
 public class TileTransmitter extends AbstractTileRadio {
@@ -41,5 +44,10 @@ public class TileTransmitter extends AbstractTileRadio {
                 processSendItems();
             }
         }
+    }
+
+    @Override
+    protected boolean isItemValidInSlot(int slot, @Nonnull ItemStack stack) {
+        return true;
     }
 }

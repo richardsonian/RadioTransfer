@@ -1,8 +1,11 @@
 package com.rlapcs.radiotransfer.machines.controllers.abstract_controller;
 
 import com.rlapcs.radiotransfer.generic.multiblock.tileEntities.AbstractTileMultiblockNodeWithInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
+
+import javax.annotation.Nonnull;
 
 import static com.rlapcs.radiotransfer.server.radio.RadioNetwork.MAX_FREQUENCY;
 import static com.rlapcs.radiotransfer.server.radio.RadioNetwork.MIN_FREQUENCY;
@@ -19,6 +22,12 @@ public abstract class AbstractTileController extends AbstractTileMultiblockNodeW
 
         frequency = MIN_FREQUENCY;
         activated = false;
+    }
+
+    @Override
+    protected boolean isItemValidInSlot(int slot, @Nonnull ItemStack stack) {
+        return true;
+        //reference blacklist here
     }
 
     @Override
