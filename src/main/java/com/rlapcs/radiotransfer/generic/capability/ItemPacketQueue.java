@@ -69,10 +69,12 @@ public class ItemPacketQueue implements INBTSerializable<NBTTagCompound>, ITrans
                 return false;
             }
             else {
+                //sendDebugMessage("found and removing empty packetBuffer " + b);
                 packetBuffers.remove(b);
                 onContentsChanged();
             }
         }
+
         return true;
     }
 
@@ -193,6 +195,7 @@ public class ItemPacketQueue implements INBTSerializable<NBTTagCompound>, ITrans
 
     protected void onContentsChanged() {
         sendDebugMessage(this.toString());
+        sendDebugMessage("isEmpty?: " + this.isEmpty());
     } //should be overridden to mark tileEntity dirty
     protected void onLoad() {}
 
@@ -221,7 +224,7 @@ public class ItemPacketQueue implements INBTSerializable<NBTTagCompound>, ITrans
         }
 
         public boolean isEmpty() {
-            return quantity <= 0 || item.isEmpty();
+            return (quantity <= 0) || item.isEmpty();
         }
 
         public ItemStack getItemStack() {
