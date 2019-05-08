@@ -1,5 +1,6 @@
 package com.rlapcs.radiotransfer.generic.tileEntities;
 
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -8,14 +9,20 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.IntStream;
 
 public abstract class AbstractTileMachineWithInventory extends AbstractTileMachine {
     protected ItemStackHandler itemStackHandler;
+    protected Map<Integer, Set<Item>> upgradeSlotWhitelists; //slots that should only accept one item
 
     public AbstractTileMachineWithInventory(int itemStackHandlerSize) {
         super();
 
         ticksSinceCreation = 0;
+        upgradeSlotWhitelists = new HashMap<>();
 
         itemStackHandler = new ItemStackHandler(itemStackHandlerSize) {
             @Override
@@ -31,7 +38,13 @@ public abstract class AbstractTileMachineWithInventory extends AbstractTileMachi
             }
         };
     }
-    protected abstract boolean isItemValidInSlot(int slot, @Nonnull ItemStack stack);
+    protected boolean isItemValidInSlot(int slot, @Nonnull ItemStack stack) {
+        Set<Item> whitelist = getSlotWhitelist(slot);
+        if(whitelist == null) return true;
+        else {
+            return whitelist.contains(stack.getItem());
+        }
+    }
 
     @Override
     public void readFromNBT(NBTTagCompound compound) {
@@ -62,5 +75,16 @@ public abstract class AbstractTileMachineWithInventory extends AbstractTileMachi
             return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(itemStackHandler);
         }
         return super.getCapability(capability, facing);
+    }
+
+    public Map<Integer, Set<Item>> getUpgradeSlotWhitelists() {
+        return upgradeSlotWhitelists;
+    }
+    public Set<Item> getSlotWhitelist(int slot) {
+        if(slot < 0 || slot >= itemStackHandler.getSlots()) throw new IndexOutOfBoundsException("Slot index out of bounds.");
+        return upgradeSlotWhitelists.get(slot);
+    }
+    public int[] getNonUpgradeInventorySlots() {
+        return IntStream.range(0, itemStackHandler.getSlots()).filter((s) -> !upgradeSlotWhitelists.keySet().contains(s)).toArray();
     }
 }

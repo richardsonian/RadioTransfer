@@ -3,8 +3,6 @@ package com.rlapcs.radiotransfer.machines.controllers.abstract_controller;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.AbstractGuiMachine;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.buttons.GuiIncrementButton;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.sliders.GuiToggleSliderButton;
-import com.rlapcs.radiotransfer.machines._deprecated.other.messages.MessageActivateTileRadio;
-import com.rlapcs.radiotransfer.machines._deprecated.other.messages.MessageUpdateTileRadioFrequency;
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.ResourceLocation;
@@ -46,13 +44,13 @@ public abstract class AbstractGuiController<T extends AbstractTileController> ex
         if(button.id == FREQUENCY_INCREMENT_ID) {
             sendChatMessage("frequency incremented"); //Debug
 
-            ModNetworkMessages.INSTANCE.sendToServer(new MessageUpdateTileRadioFrequency(tileEntity, true));
+            //ModNetworkMessages.INSTANCE.sendToServer(new MessageUpdateTileRadioFrequency(tileEntity, true));
             tileEntity.changeFrequency(true);
         }
         if(button.id == FREQUENCY_DECREMENT_ID) {
             sendChatMessage("frequency decremented"); //debug
 
-            ModNetworkMessages.INSTANCE.sendToServer(new MessageUpdateTileRadioFrequency(tileEntity, false));
+            //ModNetworkMessages.INSTANCE.sendToServer(new MessageUpdateTileRadioFrequency(tileEntity, false));
             tileEntity.changeFrequency(false);
         }
         if(button.id == ACTIVATE_ID) {
@@ -62,7 +60,7 @@ public abstract class AbstractGuiController<T extends AbstractTileController> ex
             int pos = activateButton.flipState();
 
             //update server tileEntity
-            ModNetworkMessages.INSTANCE.sendToServer(new MessageActivateTileRadio(tileEntity, pos == 1));
+            //ModNetworkMessages.INSTANCE.sendToServer(new MessageActivateTileRadio(tileEntity, pos == 1));
             //update client tileEntity
             tileEntity.setActivated(pos == 1);
         }

@@ -79,9 +79,9 @@ public enum RadioNetwork {
     }
 
 
-    public boolean sendItems(MultiblockRadioController sender, int amount, TileTxController.TxMode mode) {
-        if(mode == TileTxController.TxMode.SEQUENTIAL) return false;
-        else if(mode == TileTxController.TxMode.ROUND_ROBIN) return sendItemsRoundRobin(sender, amount);
+    public boolean sendItems(MultiblockRadioController sender, int amount, TxMode mode) {
+        if(mode == TxMode.SEQUENTIAL) return false;
+        else if(mode == TxMode.ROUND_ROBIN) return sendItemsRoundRobin(sender, amount);
         else return false;
     }
 

@@ -1,5 +1,6 @@
 package com.rlapcs.radiotransfer.generic.multiblock.tileEntities;
 
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -8,15 +9,22 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.IntStream;
 
 public abstract class
 AbstractTileMultiblockNodeWithInventory extends AbstractTileMultiblockNode {
     protected ItemStackHandler itemStackHandler;
+    protected Map<Integer, Set<Item>> upgradeSlotWhitelists; //slots that should only accept one item
 
     public AbstractTileMultiblockNodeWithInventory(int itemStackHandlerSize) {
         super();
 
         ticksSinceCreation = 0;
+        upgradeSlotWhitelists = new HashMap<>();
 
         itemStackHandler = new ItemStackHandler(itemStackHandlerSize) {
 
@@ -32,7 +40,13 @@ AbstractTileMultiblockNodeWithInventory extends AbstractTileMultiblockNode {
             }
         };
     }
-    protected abstract boolean isItemValidInSlot(int slot, @Nonnull ItemStack stack);
+    protected boolean isItemValidInSlot(int slot, @Nonnull ItemStack stack) {
+        Set<Item> whitelist = getSlotWhitelist(slot);
+        if(whitelist == null) return true;
+        else {
+            return whitelist.contains(stack.getItem());
+        }
+    }
 
     @Override
     public void readFromNBT(NBTTagCompound compound) {
@@ -65,33 +79,16 @@ AbstractTileMultiblockNodeWithInventory extends AbstractTileMultiblockNode {
         return super.getCapability(capability, facing);
     }
 
-    /**
-     * Attempts to merge a stack into an ItemHandler, and returns what was not able to be merged.
-     * Returns ItemStack.EMPTY if the merge was 100% successful
-     * @param stack
-     * @return The remainder of the stack
-     */
-    public ItemStack mergeStackIntoInventory(ItemStack stack) {
-        if(!world.isRemote) {
-            if(stack.isEmpty() || stack == null) return ItemStack.EMPTY;
-
-            ItemStack itemstack = stack.copy();
-            int slot = 0;
-            while(!itemstack.isEmpty() && slot < this.itemStackHandler.getSlots()) {
-                itemstack = this.itemStackHandler.insertItem(slot, itemstack, false);
-                slot++;
-            }
-
-            //No need for block update
-            /*
-            if(ItemStack.areItemStacksEqual(stack, itemstack)) { //if something was merged into the inventory
-                //world.notifyBlockUpdate(getPos(), world.getBlockState(getPos()), world.getBlockState(getPos()), 2);
-            }
-            */
-
-            return itemstack;
-        }
-
-        return null;
+    public Map<Integer, Set<Item>> getUpgradeSlotWhitelists() {
+        return upgradeSlotWhitelists;
+    }
+    public Set<Item> getSlotWhitelist(int slot) {
+        if(slot < 0 || slot >= itemStackHandler.getSlots()) throw new IndexOutOfBoundsException("Slot index out of bounds.");
+        return upgradeSlotWhitelists.get(slot);
+    }
+    public int[] getNonUpgradeInventorySlots() {
+        IntStream allSlots = IntStream.range(0, itemStackHandler.getSlots());
+        IntStream inventorySlotsOnly = allSlots.filter((s) -> !upgradeSlotWhitelists.keySet().contains(s));
+        return inventorySlotsOnly.toArray();
     }
 }

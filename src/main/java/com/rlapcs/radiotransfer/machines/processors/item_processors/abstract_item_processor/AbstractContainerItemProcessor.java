@@ -8,14 +8,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
-import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
-
 public abstract class AbstractContainerItemProcessor extends AbstractContainerProcessor {
-    public static final Item SPEED_UPGRADE_ITEM = Items.APPLE;
-
-    protected static final int NUM_TE_SLOT_ROWS = 4;
-    protected static final int NUM_TE_SLOT_COLS = 4;
-
     protected int[] PROCESSOR_SLOTS_POS;
     protected int[] SPEED_UPGRADE_SLOT_POS;
 
@@ -27,23 +20,26 @@ public abstract class AbstractContainerItemProcessor extends AbstractContainerPr
     protected void addTileEntitySlots() {
         IItemHandler itemHandler = this.tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 
-        TILE_ENTITY_START_INDEX = peekNextSlotId();
+        TILE_ENTITY_START_INDEX = nextContainerSlotId;
 
         // Speed upgrade
-        int index = getNextSlotId();
-        this.addSlotToContainer((new SlotItemHandler(itemHandler, index, SPEED_UPGRADE_SLOT_POS[0], SPEED_UPGRADE_SLOT_POS[1])));
-        slotBlackList.put(SPEED_UPGRADE_ITEM, index);
+        this.addSlotToContainer((new SlotItemHandler(itemHandler, AbstractTileItemProcessor.SPEED_UPGRADE_SLOT_INDEX, SPEED_UPGRADE_SLOT_POS[0], SPEED_UPGRADE_SLOT_POS[1])));
+
+        final int teInvRows = 4;
+        final int teInvCols = 4;
+        final int numUpgradeCards = 1;
 
         //te inventory slots
-        for (int row = 0; row < NUM_TE_SLOT_ROWS; ++row) {
-            for (int col = 0; col < NUM_TE_SLOT_COLS; ++col) {
+        for (int row = 0; row < teInvRows; ++row) {
+            for (int col = 0; col < teInvCols; ++col) {
                 int x = PROCESSOR_SLOTS_POS[0] + (col * (SLOT_SIZE + SLOT_SPACING));
                 int y = PROCESSOR_SLOTS_POS[1] + (row * (SLOT_SIZE + SLOT_SPACING));
+                int index = numUpgradeCards + col + (row * teInvCols);
 
-                this.addSlotToContainer(new SlotItemHandler(itemHandler, getNextSlotId(), x, y));
+                this.addSlotToContainer(new SlotItemHandler(itemHandler, index, x, y));
             }
         }
 
-        TILE_ENTITY_END_INDEX = peekNextSlotId();
+        TILE_ENTITY_END_INDEX = nextContainerSlotId;
     }
 }

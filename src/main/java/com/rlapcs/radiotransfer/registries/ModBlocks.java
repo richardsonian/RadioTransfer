@@ -3,9 +3,6 @@ package com.rlapcs.radiotransfer.registries;
 import com.rlapcs.radiotransfer.machines.controllers.rx_controller.BlockRxController;
 import com.rlapcs.radiotransfer.machines.controllers.tx_controller.BlockTxController;
 import com.rlapcs.radiotransfer.machines.processors.item_processors.item_decoder.BlockItemDecoder;
-import com.rlapcs.radiotransfer.machines._deprecated.demo.BlockDemoBlock;
-import com.rlapcs.radiotransfer.machines._deprecated.receiver.BlockReceiver;
-import com.rlapcs.radiotransfer.machines._deprecated.transmitter.BlockTransmitter;
 import com.rlapcs.radiotransfer.machines.processors.item_processors.item_encoder.BlockItemEncoder;
 import com.rlapcs.radiotransfer.machines.power_supply.BlockPowerSupply;
 import com.rlapcs.radiotransfer.machines.radio.BlockRadio;
@@ -29,11 +26,6 @@ public class ModBlocks {
         public static final ItemClass item_name = null;
      */
 
-    //demo
-    public static final BlockDemoBlock demoblock = null;
-    public static final BlockTransmitter transmitter = null;
-    public static final BlockReceiver receiver = null;
-
     //multiblock radio
     public static final BlockRadio radio = null;
 
@@ -53,11 +45,6 @@ public class ModBlocks {
         List<Block> blocks = new ArrayList<>();
 
         /* Add one instance of each block here */
-
-        //demo
-        blocks.add(new BlockDemoBlock());
-        blocks.add(new BlockTransmitter());
-        blocks.add(new BlockReceiver());
 
         //multiblock radio
         blocks.add(new BlockRadio());
@@ -85,12 +72,6 @@ public class ModBlocks {
             ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(anon_block), 0,
                 new ModelResourceLocation(anon_block.getRegistryName(), "inventory"));
          */
-
-        //demo
-        demoblock.initModel();
-        transmitter.initModel();
-        receiver.initModel();
-
         //multiblock radio
         radio.initModel();
         tx_controller.initModel();

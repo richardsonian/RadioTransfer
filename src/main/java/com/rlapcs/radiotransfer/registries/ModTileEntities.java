@@ -4,9 +4,6 @@ import com.rlapcs.radiotransfer.RadioTransfer;
 import com.rlapcs.radiotransfer.machines.controllers.rx_controller.TileRxController;
 import com.rlapcs.radiotransfer.machines.controllers.tx_controller.TileTxController;
 import com.rlapcs.radiotransfer.machines.processors.item_processors.item_decoder.TileItemDecoder;
-import com.rlapcs.radiotransfer.machines._deprecated.demo.TileDemoBlock;
-import com.rlapcs.radiotransfer.machines._deprecated.receiver.TileReceiver;
-import com.rlapcs.radiotransfer.machines._deprecated.transmitter.TileTransmitter;
 import com.rlapcs.radiotransfer.machines.processors.item_processors.item_encoder.TileItemEncoder;
 import com.rlapcs.radiotransfer.machines.power_supply.TilePowerSupply;
 import com.rlapcs.radiotransfer.machines.radio.TileRadio;
@@ -16,11 +13,6 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ModTileEntities {
     public static void registerTileEntities() {
-        //demo
-        GameRegistry.registerTileEntity(TileDemoBlock.class, getTeResourceLocation(ModBlocks.demoblock));
-        GameRegistry.registerTileEntity(TileTransmitter.class, getTeResourceLocation(ModBlocks.transmitter));
-        GameRegistry.registerTileEntity(TileReceiver.class, getTeResourceLocation(ModBlocks.receiver));
-
         //multiblock radio
         GameRegistry.registerTileEntity(TileRadio.class, getTeResourceLocation(ModBlocks.radio));
 

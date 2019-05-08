@@ -1,6 +1,5 @@
 package com.rlapcs.radiotransfer.generic.containers;
 
-import com.rlapcs.radiotransfer.util.ItemUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
@@ -8,23 +7,18 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
 
 
 public abstract class AbstractContainerWithPlayerInventory<T extends TileEntity> extends Container {
     //instance variables
-    protected int nextContainerSlotId = 0;
+    protected int nextContainerSlotId = 0; //keeps track of the next CONTAINER slot index; incremented when you call addSlotToContainer()
 
-    //Constants for slot drawing override these in the constructor before calling initSlots()
+    //Constants for slot drawing with some default vals-- override these in the constructor before calling initSlots()
     protected int[] PLAYER_INVENTORY_POS;
     protected int[] HOTBAR_POS;
-    protected int SLOT_SPACING;
+    protected int SLOT_SPACING = 2;
     protected int SLOT_SIZE = 18;
 
     //--Index ranges of the slots in the CONTAINER (START INCLUSIVE, END EXCLUSIVE); initialized when slots drawn
@@ -36,11 +30,9 @@ public abstract class AbstractContainerWithPlayerInventory<T extends TileEntity>
     protected int TILE_ENTITY_END_INDEX = -1;
 
     protected T tileEntity;
-    protected Map<Item, Integer> slotBlackList; //slots that should only accept one item
 
     public AbstractContainerWithPlayerInventory(IInventory playerInventory, T te) {
         this.tileEntity = te;
-        slotBlackList = new HashMap<>();
 
         //should call initSlots(playerInventory) in CONCRETE CLASS constructor
     }
@@ -51,30 +43,39 @@ public abstract class AbstractContainerWithPlayerInventory<T extends TileEntity>
     }
 
     protected void addPlayerSlots(IInventory playerInventory) {
+        //constants for calculation
+        final int numHotbarSlots = 9;
+        final int playerInvRows = 3;
+        final int playerInvCols = 9;
+        final int playerInvSlots = playerInvCols * playerInvRows;
+
         // Slots for the hotbar; indexes 0-8
         HOTBAR_START_INDEX = nextContainerSlotId;
-        for (int col = 0; col < 9; col++) {
+        sendDebugMessage("HOTBAR START: " + HOTBAR_START_INDEX);
+        for (int col = 0; col < numHotbarSlots; col++) {
             int x = HOTBAR_POS[0] + col * (SLOT_SIZE + SLOT_SPACING);
             int y = HOTBAR_POS[1];
             int index = col; //index within inventory
 
             this.addSlotToContainer(new Slot(playerInventory, index, x, y));
-            nextContainerSlotId++;
         }
         HOTBAR_END_INDEX = nextContainerSlotId; //end bound exclusive
+        sendDebugMessage("HOTBAR END: " + HOTBAR_END_INDEX);
 
         // Slots for the main inventory; 9 - 35
         PLAYER_INVENTORY_START_INDEX = nextContainerSlotId;
-        for (int row = 0; row < 3; ++row) {
-            for (int col = 0; col < 9; ++col) {
+        sendDebugMessage("PLAYER_INV START: " + PLAYER_INVENTORY_START_INDEX);
+        for (int row = 0; row < playerInvRows; ++row) {
+            for (int col = 0; col < playerInvCols; ++col) {
                 int x = PLAYER_INVENTORY_POS[0] + col * (SLOT_SIZE + SLOT_SPACING);
                 int y = PLAYER_INVENTORY_POS[1] + row * (SLOT_SIZE + SLOT_SPACING);
-                int index = 9 + col + (row * 9); //is this right
+                int index = numHotbarSlots + col + (row * playerInvCols);
+
                 this.addSlotToContainer(new Slot(playerInventory, index, x, y));
-                nextContainerSlotId++;
             }
         }
         PLAYER_INVENTORY_END_INDEX = nextContainerSlotId;
+        sendDebugMessage("PLAYER_INV START: " + PLAYER_INVENTORY_START_INDEX);
 
     }
     protected abstract void addTileEntitySlots();
@@ -82,6 +83,8 @@ public abstract class AbstractContainerWithPlayerInventory<T extends TileEntity>
 
     //BROKEN NOT WORKING
     public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
+        return super.transferStackInSlot(playerIn, index);
+        /*
         sendDebugMessage("transferring stack in slot for Container for " + tileEntity);
         if(tileEntity.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)) {
             IItemHandler teInventory = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
@@ -89,24 +92,28 @@ public abstract class AbstractContainerWithPlayerInventory<T extends TileEntity>
             if(stack.isEmpty()) return ItemStack.EMPTY;
 
             ItemStack remainder;
-            if(slotBlackList.containsKey(stack.getItem())) {
+            if(upgradeSlotWhitelists.containsKey(stack.getItem())) {
                 //black list
-                remainder = teInventory.insertItem(slotBlackList.get(stack.getItem()), stack, false);
+                remainder = teInventory.insertItem(upgradeSlotWhitelists.get(stack.getItem()), stack, false);
             }
             else {
                 //other items
-                int[] allowedSlots = ItemUtils.getSlotArrayFromBlackList(teInventory, slotBlackList.values());
+                int[] allowedSlots = ItemUtils.getSlotArrayFromBlackList(teInventory, upgradeSlotWhitelists.values());
                 remainder = ItemUtils.mergeStackIntoInventory(stack, teInventory, allowedSlots);
             }
             sendDebugMessage("Returning remainder " + remainder);
             return remainder;
         }
         return ItemStack.EMPTY;
+
+         */
     }
 
     public abstract boolean canInteractWith(EntityPlayer playerIn);
 
-    public Map<Item, Integer> getSlotBlackList() {
-        return slotBlackList;
+    @Override
+    protected Slot addSlotToContainer(Slot slotIn) {
+        nextContainerSlotId++;
+        return super.addSlotToContainer(slotIn);
     }
 }

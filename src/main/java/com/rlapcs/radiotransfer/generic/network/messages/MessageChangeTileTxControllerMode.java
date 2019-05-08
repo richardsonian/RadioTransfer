@@ -1,6 +1,5 @@
 package com.rlapcs.radiotransfer.generic.network.messages;
 
-import com.rlapcs.radiotransfer.machines._deprecated.other.AbstractTileRadio;
 import com.rlapcs.radiotransfer.machines.controllers.tx_controller.TileTxController;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;

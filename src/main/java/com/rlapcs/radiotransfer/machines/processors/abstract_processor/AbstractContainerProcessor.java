@@ -12,8 +12,6 @@ public abstract class AbstractContainerProcessor extends AbstractContainerWithPl
         //constant overrides
         PLAYER_INVENTORY_POS = new int[] {6, 112};
         HOTBAR_POS = new int[] {6, 174};
-        SLOT_SPACING = 2;
-        SLOT_SIZE = 18;
     }
 
     @Override
