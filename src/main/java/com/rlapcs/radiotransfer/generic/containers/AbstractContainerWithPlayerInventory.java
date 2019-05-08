@@ -18,18 +18,16 @@ import static com.rlapcs.radiotransfer.RadioTransfer.sendDebugMessage;
 
 
 public abstract class AbstractContainerWithPlayerInventory<T extends TileEntity> extends Container {
-    //constants
-
     //instance variables
-    private int nextSlotId;
+    protected int nextContainerSlotId = 0;
 
-    //overrideable constants for slot drawing
+    //Constants for slot drawing override these in the constructor before calling initSlots()
     protected int[] PLAYER_INVENTORY_POS;
     protected int[] HOTBAR_POS;
     protected int SLOT_SPACING;
     protected int SLOT_SIZE = 18;
 
-    //--Index ranges of the slots in the container (START INCLUSIVE, END EXCLUSIVE); initialized when slots drawn
+    //--Index ranges of the slots in the CONTAINER (START INCLUSIVE, END EXCLUSIVE); initialized when slots drawn
     protected int HOTBAR_START_INDEX = -1;
     protected int HOTBAR_END_INDEX = -1;
     protected int PLAYER_INVENTORY_START_INDEX = -1;
@@ -43,45 +41,40 @@ public abstract class AbstractContainerWithPlayerInventory<T extends TileEntity>
     public AbstractContainerWithPlayerInventory(IInventory playerInventory, T te) {
         this.tileEntity = te;
         slotBlackList = new HashMap<>();
-        nextSlotId = 0;
 
         //should call initSlots(playerInventory) in CONCRETE CLASS constructor
     }
 
     protected void initSlots(IInventory playerInventory) {
-        addTileEntitySlots();
         addPlayerSlots(playerInventory);
-    }
-
-    protected int getNextSlotId() {
-        int temp = nextSlotId;
-        this.nextSlotId++;
-        return temp;
-    }
-    protected int peekNextSlotId() {
-        return nextSlotId;
+        addTileEntitySlots();
     }
 
     protected void addPlayerSlots(IInventory playerInventory) {
         // Slots for the hotbar; indexes 0-8
-        HOTBAR_START_INDEX = peekNextSlotId();
+        HOTBAR_START_INDEX = nextContainerSlotId;
         for (int col = 0; col < 9; col++) {
             int x = HOTBAR_POS[0] + col * (SLOT_SIZE + SLOT_SPACING);
             int y = HOTBAR_POS[1];
-            this.addSlotToContainer(new Slot(playerInventory, getNextSlotId(), x, y));
+            int index = col; //index within inventory
+
+            this.addSlotToContainer(new Slot(playerInventory, index, x, y));
+            nextContainerSlotId++;
         }
-        HOTBAR_END_INDEX = peekNextSlotId(); //end bound exclusive
+        HOTBAR_END_INDEX = nextContainerSlotId; //end bound exclusive
 
         // Slots for the main inventory; 9 - 35
-        PLAYER_INVENTORY_START_INDEX = peekNextSlotId();
+        PLAYER_INVENTORY_START_INDEX = nextContainerSlotId;
         for (int row = 0; row < 3; ++row) {
             for (int col = 0; col < 9; ++col) {
                 int x = PLAYER_INVENTORY_POS[0] + col * (SLOT_SIZE + SLOT_SPACING);
                 int y = PLAYER_INVENTORY_POS[1] + row * (SLOT_SIZE + SLOT_SPACING);
-                this.addSlotToContainer(new Slot(playerInventory, getNextSlotId(), x, y));
+                int index = 9 + col + (row * 9); //is this right
+                this.addSlotToContainer(new Slot(playerInventory, index, x, y));
+                nextContainerSlotId++;
             }
         }
-        PLAYER_INVENTORY_END_INDEX = peekNextSlotId();
+        PLAYER_INVENTORY_END_INDEX = nextContainerSlotId;
 
     }
     protected abstract void addTileEntitySlots();

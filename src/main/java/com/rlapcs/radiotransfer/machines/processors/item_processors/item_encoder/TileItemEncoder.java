@@ -6,7 +6,6 @@ import com.rlapcs.radiotransfer.util.ItemUtils;
 import net.minecraft.item.ItemStack;
 
 import static com.rlapcs.radiotransfer.RadioTransfer.sendDebugMessage;
-import static com.rlapcs.radiotransfer.machines.processors.item_processors.abstract_item_processor.AbstractContainerItemProcessor.TILE_SLOTS_START_INDEX;
 
 public class TileItemEncoder extends AbstractTileItemProcessor {
     public static final int INVENTORY_SIZE = 17;
@@ -18,7 +17,7 @@ public class TileItemEncoder extends AbstractTileItemProcessor {
 
     @Override
     public boolean canDoProcess() {
-        boolean hasItems = !ItemUtils.isInventoryEmpty(itemStackHandler, TILE_SLOTS_START_INDEX, itemStackHandler.getSlots());
+        boolean hasItems = !ItemUtils.isInventoryEmpty(itemStackHandler, TILE_ENTITY_START_INDEX, itemStackHandler.getSlots());
         boolean hasSpace = ItemUtils.getFirstIndexInInventoryWhich(itemStackHandler, TILE_SLOTS_START_INDEX, itemStackHandler.getSlots(), (stack) -> packetQueue.canAddAny(stack)) != -1;
         return hasItems && hasSpace;
     }

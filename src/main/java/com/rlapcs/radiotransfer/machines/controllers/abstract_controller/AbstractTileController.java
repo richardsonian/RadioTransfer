@@ -14,6 +14,8 @@ public abstract class AbstractTileController extends AbstractTileMultiblockNodeW
     protected static final int INVENTORY_SIZE = 12;
     protected static final double BASE_POWER_USAGE = 10;
 
+    public static final int ENCRYPTION_CARD_SLOT_INDEX = 0;
+
     protected boolean activated;
     protected int frequency;
 

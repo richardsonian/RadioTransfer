@@ -28,14 +28,14 @@ public abstract class AbstractContainerController extends AbstractContainerWithP
     protected void addTileEntitySlots() {
         IItemHandler itemHandler = this.tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 
-        TILE_ENTITY_START_INDEX = peekNextSlotId();
+        TILE_ENTITY_START_INDEX = nextContainerSlotId; //one time for all subclasses
 
         // Encryption card
-        int index = getNextSlotId();
-        this.addSlotToContainer(new SlotItemHandler(itemHandler, index, ENCRYPTION_SLOT_POS[0], ENCRYPTION_SLOT_POS[1]));
-        slotBlackList.put(ENCRYPTION_CARD_ITEM, index);
+        this.addSlotToContainer(new SlotItemHandler(itemHandler, AbstractTileController.ENCRYPTION_CARD_SLOT_INDEX, ENCRYPTION_SLOT_POS[0], ENCRYPTION_SLOT_POS[1]));
+        slotBlackList.put(ENCRYPTION_CARD_ITEM, nextContainerSlotId);
+        nextContainerSlotId++;
 
-        TILE_ENTITY_END_INDEX = peekNextSlotId();
+        TILE_ENTITY_END_INDEX = nextContainerSlotId;
     }
 
     @Override
