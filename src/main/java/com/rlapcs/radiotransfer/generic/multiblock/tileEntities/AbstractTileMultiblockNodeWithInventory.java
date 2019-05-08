@@ -1,6 +1,5 @@
 package com.rlapcs.radiotransfer.generic.multiblock.tileEntities;
 
-import com.rlapcs.radiotransfer.generic.tileEntities.AbstractTileMachineWithInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -9,8 +8,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
-
-import static com.rlapcs.radiotransfer.RadioTransfer.sendDebugMessage;
 
 public abstract class
 AbstractTileMultiblockNodeWithInventory extends AbstractTileMultiblockNode {

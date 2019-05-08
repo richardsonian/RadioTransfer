@@ -11,7 +11,6 @@ import net.minecraft.util.math.MathHelper;
 
 import javax.annotation.Nonnull;
 
-import static com.rlapcs.radiotransfer.RadioTransfer.sendDebugMessage;
 import static com.rlapcs.radiotransfer.machines.processors.item_processors.abstract_item_processor.AbstractContainerItemProcessor.SPEED_UPGRADE_SLOT_INDEX;
 
 public abstract class AbstractTileItemProcessor extends AbstractTileProcessor<ItemPacketQueue> implements IProgressBarProvider {

@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 
 import java.util.*;
 
-import static com.rlapcs.radiotransfer.RadioTransfer.sendDebugMessage;
+import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
 
 public enum RadioNetwork {
     INSTANCE;

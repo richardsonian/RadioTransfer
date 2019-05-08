@@ -1,6 +1,5 @@
 package com.rlapcs.radiotransfer.generic.capability;
 
-import com.sun.javaws.exceptions.InvalidArgumentException;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -13,7 +12,7 @@ import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.rlapcs.radiotransfer.RadioTransfer.sendDebugMessage;
+import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
 
 public class ItemPacketQueue implements INBTSerializable<NBTTagCompound>, ITransferHandler {
     public static final int MAX_QUANTITY = 999;

@@ -5,7 +5,6 @@ import com.rlapcs.radiotransfer.machines.processors.item_processors.abstract_ite
 import com.rlapcs.radiotransfer.util.ItemUtils;
 import net.minecraft.item.ItemStack;
 
-import static com.rlapcs.radiotransfer.RadioTransfer.sendDebugMessage;
 import static com.rlapcs.radiotransfer.machines.processors.item_processors.abstract_item_processor.AbstractContainerItemProcessor.TILE_SLOTS_START_INDEX;
 
 public class TileItemEncoder extends AbstractTileItemProcessor {

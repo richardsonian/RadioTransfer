@@ -43,7 +43,4 @@ public class RadioTransfer {
         proxy.postInit(e);
     }
 
-    public static void sendDebugMessage(String msg) {
-        FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().sendMessage(new TextComponentString(msg));
-    }
 }

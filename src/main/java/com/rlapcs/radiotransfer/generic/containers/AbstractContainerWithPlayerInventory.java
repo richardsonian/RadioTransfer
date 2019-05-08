@@ -14,7 +14,7 @@ import net.minecraftforge.items.IItemHandler;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.rlapcs.radiotransfer.RadioTransfer.sendDebugMessage;
+import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
 
 
 public abstract class AbstractContainerWithPlayerInventory<T extends TileEntity> extends Container {
@@ -36,6 +36,8 @@ public abstract class AbstractContainerWithPlayerInventory<T extends TileEntity>
             for (int col = 0; col < 9; ++col) {
                 int x = 9 + col * 18;
                 int y = row * 18 + 70;
+
+                sendDebugMessage("Adding player slot index: " + (col + row * 9 + 10) + " to " + te);
                 this.addSlotToContainer(new Slot(playerInventory, col + row * 9 + 10, x, y));
             }
         }
@@ -44,6 +46,7 @@ public abstract class AbstractContainerWithPlayerInventory<T extends TileEntity>
         for (int row = 0; row < 9; ++row) {
             int x = 9 + row * 18;
             int y = 58 + 70;
+            sendDebugMessage("Adding player slot index: " + row + " to " + te);
             this.addSlotToContainer(new Slot(playerInventory, row, x, y));
         }
     }

@@ -7,7 +7,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
-import static com.rlapcs.radiotransfer.RadioTransfer.sendDebugMessage;
+import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
 
 public abstract class AbstractContainerItemProcessor extends AbstractContainerProcessor {
     public static final int SPEED_UPGRADE_SLOT_INDEX = 0; //changed this to 0
@@ -35,6 +35,7 @@ public abstract class AbstractContainerItemProcessor extends AbstractContainerPr
                 int y = getSlotsPos()[1] + (row * slotSize);
                 int index = col + (row * 4) + TILE_SLOTS_START_INDEX;
 
+                sendDebugMessage("Adding tileEntity slot index: " + (col + row * 9 + 10) + " to " + te);
                 this.addSlotToContainer(new SlotItemHandler(itemHandler, index, x, y));
             }
         }
