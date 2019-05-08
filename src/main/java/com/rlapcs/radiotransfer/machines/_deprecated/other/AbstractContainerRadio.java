@@ -16,7 +16,7 @@ public abstract class AbstractContainerRadio extends AbstractContainerWithPlayer
 
     @Override
     protected void addTileEntitySlots() {
-        IItemHandler itemHandler = this.te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+        IItemHandler itemHandler = this.tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
         int x = 99;
         int y = 8;
 
@@ -57,6 +57,6 @@ public abstract class AbstractContainerRadio extends AbstractContainerWithPlayer
 
     @Override
     public boolean canInteractWith(EntityPlayer playerIn) {
-        return te.canInteractWith(playerIn);
+        return tileEntity.canInteractWith(playerIn);
     }
 }

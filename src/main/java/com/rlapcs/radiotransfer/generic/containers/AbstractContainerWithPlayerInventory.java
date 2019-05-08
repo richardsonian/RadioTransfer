@@ -18,47 +18,73 @@ import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
 
 
 public abstract class AbstractContainerWithPlayerInventory<T extends TileEntity> extends Container {
-    protected T te;
-    protected int tileEntityItemHandlerSlots;
-    protected Map<Item, Integer> slotBlackList;
+    //instance variables
+    protected int nextContainerSlotId = 0;
+
+    //Constants for slot drawing override these in the constructor before calling initSlots()
+    protected int[] PLAYER_INVENTORY_POS;
+    protected int[] HOTBAR_POS;
+    protected int SLOT_SPACING;
+    protected int SLOT_SIZE = 18;
+
+    //--Index ranges of the slots in the CONTAINER (START INCLUSIVE, END EXCLUSIVE); initialized when slots drawn
+    protected int HOTBAR_START_INDEX = -1;
+    protected int HOTBAR_END_INDEX = -1;
+    protected int PLAYER_INVENTORY_START_INDEX = -1;
+    protected int PLAYER_INVENTORY_END_INDEX = -1;
+    protected int TILE_ENTITY_START_INDEX = -1;
+    protected int TILE_ENTITY_END_INDEX = -1;
+
+    protected T tileEntity;
+    protected Map<Item, Integer> slotBlackList; //slots that should only accept one item
 
     public AbstractContainerWithPlayerInventory(IInventory playerInventory, T te) {
-        this.te = te;
+        this.tileEntity = te;
         slotBlackList = new HashMap<>();
 
-        addTileEntitySlots();
+        //should call initSlots(playerInventory) in CONCRETE CLASS constructor
+    }
+
+    protected void initSlots(IInventory playerInventory) {
         addPlayerSlots(playerInventory);
+        addTileEntitySlots();
     }
 
     protected void addPlayerSlots(IInventory playerInventory) {
-        // Slots for the main inventory
+        // Slots for the hotbar; indexes 0-8
+        HOTBAR_START_INDEX = nextContainerSlotId;
+        for (int col = 0; col < 9; col++) {
+            int x = HOTBAR_POS[0] + col * (SLOT_SIZE + SLOT_SPACING);
+            int y = HOTBAR_POS[1];
+            int index = col; //index within inventory
+
+            this.addSlotToContainer(new Slot(playerInventory, index, x, y));
+            nextContainerSlotId++;
+        }
+        HOTBAR_END_INDEX = nextContainerSlotId; //end bound exclusive
+
+        // Slots for the main inventory; 9 - 35
+        PLAYER_INVENTORY_START_INDEX = nextContainerSlotId;
         for (int row = 0; row < 3; ++row) {
             for (int col = 0; col < 9; ++col) {
-                int x = 9 + col * 18;
-                int y = row * 18 + 70;
-
-                sendDebugMessage("Adding player slot index: " + (col + row * 9 + 10) + " to " + te);
-                this.addSlotToContainer(new Slot(playerInventory, col + row * 9 + 10, x, y));
+                int x = PLAYER_INVENTORY_POS[0] + col * (SLOT_SIZE + SLOT_SPACING);
+                int y = PLAYER_INVENTORY_POS[1] + row * (SLOT_SIZE + SLOT_SPACING);
+                int index = 9 + col + (row * 9); //is this right
+                this.addSlotToContainer(new Slot(playerInventory, index, x, y));
+                nextContainerSlotId++;
             }
         }
+        PLAYER_INVENTORY_END_INDEX = nextContainerSlotId;
 
-        // Slots for the hotbar
-        for (int row = 0; row < 9; ++row) {
-            int x = 9 + row * 18;
-            int y = 58 + 70;
-            sendDebugMessage("Adding player slot index: " + row + " to " + te);
-            this.addSlotToContainer(new Slot(playerInventory, row, x, y));
-        }
     }
-
     protected abstract void addTileEntitySlots();
 
 
-    //BROKEN
+    //BROKEN NOT WORKING
     public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
-        sendDebugMessage("transferring stack in slot for Container for " + te);
-        if(te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)) {
-            IItemHandler teInventory = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+        sendDebugMessage("transferring stack in slot for Container for " + tileEntity);
+        if(tileEntity.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)) {
+            IItemHandler teInventory = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
             ItemStack stack = super.transferStackInSlot(playerIn, index); //this is weird, but it should work
             if(stack.isEmpty()) return ItemStack.EMPTY;
 
@@ -77,6 +103,7 @@ public abstract class AbstractContainerWithPlayerInventory<T extends TileEntity>
         }
         return ItemStack.EMPTY;
     }
+
     public abstract boolean canInteractWith(EntityPlayer playerIn);
 
     public Map<Item, Integer> getSlotBlackList() {

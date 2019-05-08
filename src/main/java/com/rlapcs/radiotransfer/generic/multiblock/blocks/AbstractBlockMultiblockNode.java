@@ -15,10 +15,10 @@ public class AbstractBlockMultiblockNode extends AbstractBlockMachine {
     /* //no longer used
     @Override
     public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor) {
-        TileEntity te = world.getTileEntity(pos);
+        TileEntity tileEntity = world.getTileEntity(pos);
 
-        if(te instanceof AbstractTileMultiblockNode) {
-            AbstractTileMultiblockNode blockTe = (AbstractTileMultiblockNode) te;
+        if(tileEntity instanceof AbstractTileMultiblockNode) {
+            AbstractTileMultiblockNode blockTe = (AbstractTileMultiblockNode) tileEntity;
 
             TileEntity neighborTe = world.getTileEntity(neighbor);
             if(neighborTe != null) {

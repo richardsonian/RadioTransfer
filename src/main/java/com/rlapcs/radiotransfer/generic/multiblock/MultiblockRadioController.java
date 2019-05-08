@@ -165,7 +165,7 @@ public class MultiblockRadioController {
                 }
             }
         }
-        return false; //te not registered
+        return false; //tileEntity not registered
     }
     public void checkForNewNodes(BlockPos around) {
         validateAddition(around.up());
