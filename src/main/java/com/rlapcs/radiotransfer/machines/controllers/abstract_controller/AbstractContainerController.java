@@ -2,75 +2,44 @@ package com.rlapcs.radiotransfer.machines.controllers.abstract_controller;
 
 import com.rlapcs.radiotransfer.generic.containers.AbstractContainerWithPlayerInventory;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.Item;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
 public abstract class AbstractContainerController extends AbstractContainerWithPlayerInventory<AbstractTileController> {
+    public static final Item ENCRYPTION_CARD_ITEM = Items.DIAMOND; //placeholder
+    protected int[] ENCRYPTION_SLOT_POS = {126, 28};
 
     public AbstractContainerController(IInventory playerInventory, AbstractTileController te) {
         super(playerInventory, te);
+
+        //constant overrides
+        PLAYER_INVENTORY_POS = new int[] {6, 74};
+        HOTBAR_POS = new int[] {6, 136};
+        SLOT_SPACING = 2;
+        SLOT_SIZE = 18;
     }
 
-    @Override
-    protected void addPlayerSlots(IInventory playerInventory) {
-        // Slots for the main inventory
-        for (int row = 0; row < 3; ++row) {
-            for (int col = 0; col < 9; ++col) {
-                int x = 6 + col * 20;
-                int y = row * 20 + 74;
-                this.addSlotToContainer(new Slot(playerInventory, col + row * 9 + 9, x, y));
-            }
-        }
-
-        // Slots for the hotbar
-        for (int row = 0; row < 9; ++row) {
-            int x = 6 + row * 20;
-            int y = 136;
-            this.addSlotToContainer(new Slot(playerInventory, row, x, y));
-        }
-    }
 
     @Override
     protected void addTileEntitySlots() {
-        IItemHandler itemHandler = this.te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+        IItemHandler itemHandler = this.tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+
+        TILE_ENTITY_START_INDEX = peekNextSlotId();
 
         // Encryption card
-        this.addSlotToContainer(new SlotItemHandler(itemHandler, 1, 126, 28));
-    }
+        int index = getNextSlotId();
+        this.addSlotToContainer(new SlotItemHandler(itemHandler, index, ENCRYPTION_SLOT_POS[0], ENCRYPTION_SLOT_POS[1]));
+        slotBlackList.put(ENCRYPTION_CARD_ITEM, index);
 
-    @Override
-    public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
-        ItemStack itemstack = ItemStack.EMPTY;
-        Slot slot = this.inventorySlots.get(index);
-
-        if (slot != null && slot.getHasStack()) {
-            ItemStack itemstack1 = slot.getStack();
-            itemstack = itemstack1.copy();
-
-            if (index < tileEntityItemHandlerSlots) {
-                if (!this.mergeItemStack(itemstack1, tileEntityItemHandlerSlots, this.inventorySlots.size(), true)) {
-                    return ItemStack.EMPTY;
-                }
-            } else if (!this.mergeItemStack(itemstack1, 0, tileEntityItemHandlerSlots, false)) {
-                return ItemStack.EMPTY;
-            }
-
-            if (itemstack1.isEmpty()) {
-                slot.putStack(ItemStack.EMPTY);
-            } else {
-                slot.onSlotChanged();
-            }
-        }
-
-        return itemstack;
+        TILE_ENTITY_END_INDEX = peekNextSlotId();
     }
 
     @Override
     public boolean canInteractWith(EntityPlayer playerIn) {
-        return te.canInteractWith(playerIn);
+        return tileEntity.canInteractWith(playerIn);
     }
 }
