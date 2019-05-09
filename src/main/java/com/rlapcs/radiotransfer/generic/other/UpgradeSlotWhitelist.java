@@ -5,10 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class UpgradeSlotWhitelist {
     private Set<UpgradeCardEntry> cardEntries;
@@ -26,11 +23,23 @@ public class UpgradeSlotWhitelist {
         }
         return false;
     }
+    public UpgradeCardEntry getMatchingUpgradeCardEntry(ItemStack stack) {
+        for(UpgradeCardEntry e : cardEntries) {
+            if(e.canInsert(stack)) return e;
+        }
+        return null;
+    }
 
     public void addEntry(UpgradeCardEntry entry) {
         cardEntries.add(entry);
     }
 
+    @Override
+    public String toString() {
+        return "Whitelist: " + cardEntries.toString();
+    }
+
+    /* INNER CLASS */
     public static class UpgradeCardEntry {
         private Item item;
 
@@ -83,12 +92,13 @@ public class UpgradeSlotWhitelist {
             return item;
         }
 
-        public void setItem(Item item) {
-            this.item = item;
-        }
 
         public NBTTagCompound getNbtTags() {
             return nbtTags;
+        }
+
+        public int getMaxAmount() {
+            return maxAmount;
         }
 
         @Override
@@ -105,6 +115,11 @@ public class UpgradeSlotWhitelist {
             else {
                 return false;
             }
+        }
+
+        @Override
+        public String toString() {
+            return item.toString();
         }
     }
 }
