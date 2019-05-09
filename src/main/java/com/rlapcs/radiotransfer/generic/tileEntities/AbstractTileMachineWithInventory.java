@@ -34,6 +34,17 @@ public abstract class AbstractTileMachineWithInventory extends AbstractTileMachi
             public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
                 return super.isItemValid(slot, stack) && AbstractTileMachineWithInventory.this.isItemValidInSlot(slot, stack);
             }
+
+            @Override
+            public int getStackLimit(int slot, ItemStack stack) {
+                UpgradeSlotWhitelist wl = upgradeSlotWhitelists.get(slot);
+                if(wl != null && wl.canInsertStack(stack)) {
+                    return Math.min(wl.getMatchingUpgradeCardEntry(stack).getMaxAmount(), super.getStackLimit(slot, stack));
+                }
+                else {
+                    return super.getStackLimit(slot, stack);
+                }
+            }
         };
     }
 

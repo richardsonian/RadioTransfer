@@ -8,6 +8,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import java.util.*;
 
 public class UpgradeSlotWhitelist {
+    public static int findIndexWhereAllowed(ItemStack stack, Map<Integer, UpgradeSlotWhitelist> upgradeSlotWhitelists) {
+        for(int s : upgradeSlotWhitelists.keySet()) {
+            UpgradeSlotWhitelist wl = upgradeSlotWhitelists.get(s);
+            if(wl.canInsertStack(stack)) return s;
+        }
+        return -1;
+    }
+
     private Set<UpgradeCardEntry> cardEntries;
 
     public UpgradeSlotWhitelist() {

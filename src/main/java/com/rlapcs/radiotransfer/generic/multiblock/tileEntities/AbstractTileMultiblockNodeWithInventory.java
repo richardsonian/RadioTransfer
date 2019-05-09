@@ -36,6 +36,16 @@ AbstractTileMultiblockNodeWithInventory extends AbstractTileMultiblockNode imple
                 boolean superPassed = super.isItemValid(slot, stack);
                 return superPassed && AbstractTileMultiblockNodeWithInventory.this.isItemValidInSlot(slot, stack);
             }
+            @Override
+            public int getStackLimit(int slot, ItemStack stack) {
+                UpgradeSlotWhitelist wl = upgradeSlotWhitelists.get(slot);
+                if(wl != null && wl.canInsertStack(stack)) {
+                    return Math.min(wl.getMatchingUpgradeCardEntry(stack).getMaxAmount(), super.getStackLimit(slot, stack));
+                }
+                else {
+                    return super.getStackLimit(slot, stack);
+                }
+            }
         };
     }
 
