@@ -16,8 +16,8 @@ public class TileTxController extends AbstractTileController {
     public TileTxController() {
         super(INVENTORY_SIZE);
 
-        upgradeSlotWhitelists.put(STACK_UPGRADE_SLOT_INDEX, ModConstants.UpgradeCards.STACK_UPGRADE_ITEMS);
-        upgradeSlotWhitelists.put(SPEED_UPGRADE_SLOT_INDEX, ModConstants.UpgradeCards.SPEED_UPGRADE_ITEMS);
+        upgradeSlotWhitelists.put(STACK_UPGRADE_SLOT_INDEX, ModConstants.UpgradeCards.STACK_UPGRADE_WHITELIST);
+        upgradeSlotWhitelists.put(SPEED_UPGRADE_SLOT_INDEX, ModConstants.UpgradeCards.SPEED_UPGRADE_WHITELIST);
 
         mode = TxMode.ROUND_ROBIN;
     }

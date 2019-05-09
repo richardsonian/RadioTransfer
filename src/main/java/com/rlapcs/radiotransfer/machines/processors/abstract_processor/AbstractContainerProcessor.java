@@ -1,10 +1,10 @@
 package com.rlapcs.radiotransfer.machines.processors.abstract_processor;
 
-import com.rlapcs.radiotransfer.generic.containers.AbstractContainerWithPlayerInventory;
+import com.rlapcs.radiotransfer.generic.containers.AbstractContainerMachine;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 
-public abstract class AbstractContainerProcessor extends AbstractContainerWithPlayerInventory<AbstractTileProcessor> {
+public abstract class AbstractContainerProcessor extends AbstractContainerMachine<AbstractTileProcessor> {
 
     public AbstractContainerProcessor(IInventory playerInventory, AbstractTileProcessor te) {
         super(playerInventory, te);

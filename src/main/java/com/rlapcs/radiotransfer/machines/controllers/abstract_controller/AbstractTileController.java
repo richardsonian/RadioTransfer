@@ -21,7 +21,7 @@ public abstract class AbstractTileController extends AbstractTileMultiblockNodeW
     public AbstractTileController(int itemStackHandlerSize) {
         super(itemStackHandlerSize);
 
-        upgradeSlotWhitelists.put(ENCRYPTION_CARD_SLOT_INDEX, ModConstants.UpgradeCards.ENCRPYION_CARD_ITEMS);
+        upgradeSlotWhitelists.put(ENCRYPTION_CARD_SLOT_INDEX, ModConstants.UpgradeCards.ENCRYPTION_CARD_WHITELIST);
 
         frequency = RadioNetwork.MIN_FREQUENCY;
         activated = false;

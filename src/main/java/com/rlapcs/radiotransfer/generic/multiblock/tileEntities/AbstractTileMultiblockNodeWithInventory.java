@@ -1,6 +1,7 @@
 package com.rlapcs.radiotransfer.generic.multiblock.tileEntities;
 
-import net.minecraft.item.Item;
+import com.rlapcs.radiotransfer.generic.other.UpgradeSlotWhitelist;
+import com.rlapcs.radiotransfer.generic.tileEntities.ITileItemHandlerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -10,15 +11,12 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.IntStream;
 
 public abstract class
-AbstractTileMultiblockNodeWithInventory extends AbstractTileMultiblockNode {
+AbstractTileMultiblockNodeWithInventory extends AbstractTileMultiblockNode implements ITileItemHandlerProvider {
     protected ItemStackHandler itemStackHandler;
-    protected Map<Integer, Set<Item>> upgradeSlotWhitelists; //slots that should only accept one item
+    protected Map<Integer, UpgradeSlotWhitelist> upgradeSlotWhitelists; //slots that should only accept certain items
 
     public AbstractTileMultiblockNodeWithInventory(int itemStackHandlerSize) {
         super();
@@ -40,26 +38,17 @@ AbstractTileMultiblockNodeWithInventory extends AbstractTileMultiblockNode {
             }
         };
     }
-    protected boolean isItemValidInSlot(int slot, @Nonnull ItemStack stack) {
-        Set<Item> whitelist = getSlotWhitelist(slot);
-        if(whitelist == null) return true;
-        else {
-            return whitelist.contains(stack.getItem());
-        }
-    }
 
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
-        if (compound.hasKey("items")) {
-            itemStackHandler.deserializeNBT((NBTTagCompound) compound.getTag("items"));
-        }
+        deserializeInventoryNBT(compound);
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
-        compound.setTag("items", itemStackHandler.serializeNBT());
+        serializeInventoryNBT(compound);
         return compound;
     }
 
@@ -79,16 +68,14 @@ AbstractTileMultiblockNodeWithInventory extends AbstractTileMultiblockNode {
         return super.getCapability(capability, facing);
     }
 
-    public Map<Integer, Set<Item>> getUpgradeSlotWhitelists() {
+    //DO NOT USE THIS GETTER, use capabilities instead
+    @Override
+    public ItemStackHandler getItemStackHandler() {
+        return itemStackHandler;
+    }
+
+    @Override
+    public Map<Integer, UpgradeSlotWhitelist> getUpgradeSlotWhitelists() {
         return upgradeSlotWhitelists;
-    }
-    public Set<Item> getSlotWhitelist(int slot) {
-        if(slot < 0 || slot >= itemStackHandler.getSlots()) throw new IndexOutOfBoundsException("Slot index out of bounds.");
-        return upgradeSlotWhitelists.get(slot);
-    }
-    public int[] getNonUpgradeInventorySlots() {
-        IntStream allSlots = IntStream.range(0, itemStackHandler.getSlots());
-        IntStream inventorySlotsOnly = allSlots.filter((s) -> !upgradeSlotWhitelists.keySet().contains(s));
-        return inventorySlotsOnly.toArray();
     }
 }

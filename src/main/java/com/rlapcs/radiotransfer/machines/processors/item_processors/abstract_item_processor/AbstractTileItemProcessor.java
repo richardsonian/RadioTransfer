@@ -29,7 +29,7 @@ public abstract class AbstractTileItemProcessor extends AbstractTileProcessor<It
         super(INVENTORY_SIZE);
 
         processTimeElapsed = 0;
-        upgradeSlotWhitelists.put(SPEED_UPGRADE_SLOT_INDEX, ModConstants.UpgradeCards.SPEED_UPGRADE_ITEMS);
+        upgradeSlotWhitelists.put(SPEED_UPGRADE_SLOT_INDEX, ModConstants.UpgradeCards.SPEED_UPGRADE_WHITELIST);
 
         packetQueue = new ItemPacketQueue() {
             @Override

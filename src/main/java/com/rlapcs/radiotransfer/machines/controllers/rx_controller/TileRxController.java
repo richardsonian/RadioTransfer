@@ -18,7 +18,7 @@ public class TileRxController extends AbstractTileController {
     public TileRxController() {
         super(INVENTORY_SIZE);
 
-        upgradeSlotWhitelists.put(FILTER_SLOT_INDEX, ModConstants.UpgradeCards.FILTER_CARD_ITEMS);
+        upgradeSlotWhitelists.put(FILTER_SLOT_INDEX, ModConstants.UpgradeCards.FILTER_CARD_WHITELIST);
 
         priority = MIN_PRIORITY;
     }

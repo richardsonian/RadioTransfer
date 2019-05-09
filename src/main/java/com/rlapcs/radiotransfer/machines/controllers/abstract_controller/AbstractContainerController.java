@@ -1,17 +1,15 @@
 package com.rlapcs.radiotransfer.machines.controllers.abstract_controller;
 
-import com.rlapcs.radiotransfer.generic.containers.AbstractContainerWithPlayerInventory;
+import com.rlapcs.radiotransfer.generic.containers.AbstractContainerMachine;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
 import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
 
-public abstract class AbstractContainerController extends AbstractContainerWithPlayerInventory<AbstractTileController> {
+public abstract class AbstractContainerController extends AbstractContainerMachine<AbstractTileController> {
     protected int[] ENCRYPTION_SLOT_POS = {126, 28};
 
     public AbstractContainerController(IInventory playerInventory, AbstractTileController te) {

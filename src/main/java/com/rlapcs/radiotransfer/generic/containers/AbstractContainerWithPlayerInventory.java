@@ -4,12 +4,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 
 import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
-
 
 public abstract class AbstractContainerWithPlayerInventory<T extends TileEntity> extends Container {
     //instance variables
@@ -75,39 +73,10 @@ public abstract class AbstractContainerWithPlayerInventory<T extends TileEntity>
             }
         }
         PLAYER_INVENTORY_END_INDEX = nextContainerSlotId;
-        sendDebugMessage("PLAYER_INV START: " + PLAYER_INVENTORY_START_INDEX);
+        sendDebugMessage("PLAYER_INV END: " + PLAYER_INVENTORY_END_INDEX);
 
     }
     protected abstract void addTileEntitySlots();
-
-
-    //BROKEN NOT WORKING
-    public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
-        return super.transferStackInSlot(playerIn, index);
-        /*
-        sendDebugMessage("transferring stack in slot for Container for " + tileEntity);
-        if(tileEntity.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)) {
-            IItemHandler teInventory = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
-            ItemStack stack = super.transferStackInSlot(playerIn, index); //this is weird, but it should work
-            if(stack.isEmpty()) return ItemStack.EMPTY;
-
-            ItemStack remainder;
-            if(upgradeSlotWhitelists.containsKey(stack.getItem())) {
-                //black list
-                remainder = teInventory.insertItem(upgradeSlotWhitelists.get(stack.getItem()), stack, false);
-            }
-            else {
-                //other items
-                int[] allowedSlots = ItemUtils.getSlotArrayFromBlackList(teInventory, upgradeSlotWhitelists.values());
-                remainder = ItemUtils.mergeStackIntoInventory(stack, teInventory, allowedSlots);
-            }
-            sendDebugMessage("Returning remainder " + remainder);
-            return remainder;
-        }
-        return ItemStack.EMPTY;
-
-         */
-    }
 
     public abstract boolean canInteractWith(EntityPlayer playerIn);
 
