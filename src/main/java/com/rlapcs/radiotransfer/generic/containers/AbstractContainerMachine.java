@@ -79,11 +79,11 @@ public abstract class AbstractContainerMachine<T extends AbstractTileMachine & I
                             if(numToTransfer > 0) {
                                 stack.shrink(numToTransfer);
                                 existingUpgradeStack.grow(numToTransfer);
-                                return ItemStack.EMPTY; //or return ItemStack.EMPTY to stop
+                                return stackCopy; //or return ItemStack.EMPTY ?
                             }
-                            //else { //or move on?
-                            //    return ItemStack.EMPTY;
-                            //}
+                            else { //Without this clause, excess upgrades are sent into processor on same click
+                                return ItemStack.EMPTY;
+                            }
                         }
                     }
                 }
