@@ -4,10 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-
-import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
 
 public abstract class AbstractContainerWithPlayerInventory<T extends TileEntity> extends Container {
     //instance variables
@@ -49,7 +46,7 @@ public abstract class AbstractContainerWithPlayerInventory<T extends TileEntity>
 
         // Slots for the hotbar; indexes 0-8
         HOTBAR_START_INDEX = nextContainerSlotId;
-        sendDebugMessage("HOTBAR START: " + HOTBAR_START_INDEX);
+        //sendDebugMessage("HOTBAR START: " + HOTBAR_START_INDEX);
         for (int col = 0; col < numHotbarSlots; col++) {
             int x = HOTBAR_POS[0] + col * (SLOT_SIZE + SLOT_SPACING);
             int y = HOTBAR_POS[1];
@@ -58,11 +55,11 @@ public abstract class AbstractContainerWithPlayerInventory<T extends TileEntity>
             this.addSlotToContainer(new Slot(playerInventory, index, x, y));
         }
         HOTBAR_END_INDEX = nextContainerSlotId; //end bound exclusive
-        sendDebugMessage("HOTBAR END: " + HOTBAR_END_INDEX);
+        //sendDebugMessage("HOTBAR END: " + HOTBAR_END_INDEX);
 
         // Slots for the main inventory; 9 - 35
         PLAYER_INVENTORY_START_INDEX = nextContainerSlotId;
-        sendDebugMessage("PLAYER_INV START: " + PLAYER_INVENTORY_START_INDEX);
+        //sendDebugMessage("PLAYER_INV START: " + PLAYER_INVENTORY_START_INDEX);
         for (int row = 0; row < playerInvRows; ++row) {
             for (int col = 0; col < playerInvCols; ++col) {
                 int x = PLAYER_INVENTORY_POS[0] + col * (SLOT_SIZE + SLOT_SPACING);
@@ -73,7 +70,7 @@ public abstract class AbstractContainerWithPlayerInventory<T extends TileEntity>
             }
         }
         PLAYER_INVENTORY_END_INDEX = nextContainerSlotId;
-        sendDebugMessage("PLAYER_INV END: " + PLAYER_INVENTORY_END_INDEX);
+        //sendDebugMessage("PLAYER_INV END: " + PLAYER_INVENTORY_END_INDEX);
 
     }
     protected abstract void addTileEntitySlots();

@@ -1,6 +1,7 @@
 package com.rlapcs.radiotransfer.generic.network.messages;
 
-import com.rlapcs.radiotransfer.machines.controllers.rx_controller.TileRxController;
+import com.rlapcs.radiotransfer.machines.controllers.abstract_controller.AbstractTileController;
+import com.rlapcs.radiotransfer.machines.controllers.tx_controller.TileTxController;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
@@ -13,34 +14,32 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class MessageChangeTileRxControllerPriority implements IMessage {
+public class MessageUpdateTileControllerFrequency implements IMessage{
     private BlockPos tilePos;
     private boolean toIncrement;
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        // Encoding the position as a long is more efficient
         tilePos = BlockPos.fromLong(buf.readLong());
         toIncrement = buf.readBoolean();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        // Encoding the position as a long is more efficient
         buf.writeLong(tilePos.toLong());
         buf.writeBoolean(toIncrement);
     }
 
-    public MessageChangeTileRxControllerPriority() {}
+    public MessageUpdateTileControllerFrequency() {}
 
-    public MessageChangeTileRxControllerPriority(TileEntity te, boolean toIncrement) {
+    public MessageUpdateTileControllerFrequency(TileEntity te, boolean toIncrement) {
         tilePos = te.getPos();
         this.toIncrement = toIncrement;
     }
 
-    public static class Handler implements IMessageHandler<MessageChangeTileRxControllerPriority, IMessage> {
+    public static class Handler implements IMessageHandler<MessageUpdateTileControllerFrequency, IMessage> {
         @Override
-        public IMessage onMessage(MessageChangeTileRxControllerPriority message, MessageContext ctx) {
+        public IMessage onMessage(MessageUpdateTileControllerFrequency message, MessageContext ctx) {
             // Always use a construct like this to actually handle your message. This ensures that
             // your 'handle' code is run on the main Minecraft thread. 'onMessage' itself
             // is called on the networking thread so it is not safe to do a lot of things
@@ -51,7 +50,7 @@ public class MessageChangeTileRxControllerPriority implements IMessage {
             return null;
         }
 
-        private void handle(MessageChangeTileRxControllerPriority message, MessageContext ctx) {
+        private void handle(MessageUpdateTileControllerFrequency message, MessageContext ctx) {
             // This code is run on the server side. So you can do server-side calculations here
             EntityPlayerMP playerEntity = ctx.getServerHandler().player;
             World world = playerEntity.getEntityWorld();
@@ -60,13 +59,12 @@ public class MessageChangeTileRxControllerPriority implements IMessage {
             // trying to overload a server by randomly loading chunks
             if (world.isBlockLoaded(message.tilePos)) {
                 TileEntity te = world.getTileEntity(message.tilePos);
-                if(te instanceof TileRxController) {
-                    ((TileRxController) te).changePriority(message.toIncrement);
+                if(te instanceof AbstractTileController) {
+                    ((AbstractTileController) te).changeFrequency(message.toIncrement);
 
                     //debug
-                    playerEntity.sendStatusMessage(new TextComponentString(String.format("%s Tile Entity at (%d, %d, %d) now has priority %s", TextFormatting.GREEN,
-                            message.tilePos.getX(), message.tilePos.getY(), message.tilePos.getZ(), ((TileRxController) te).getPriority()) ), false);
-
+                    playerEntity.sendStatusMessage(new TextComponentString(String.format("%s Tile Entity at (%d, %d, %d) is now on frequency %s", TextFormatting.GREEN,
+                            message.tilePos.getX(), message.tilePos.getY(), message.tilePos.getZ(), ((TileTxController) te).getFrequency()) ), false);
                 }
             }
         }

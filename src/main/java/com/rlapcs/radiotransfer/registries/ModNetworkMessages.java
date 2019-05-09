@@ -1,7 +1,9 @@
 package com.rlapcs.radiotransfer.registries;
 
+import com.rlapcs.radiotransfer.generic.network.messages.MessageActivateTileController;
 import com.rlapcs.radiotransfer.generic.network.messages.MessageChangeTileRxControllerPriority;
 import com.rlapcs.radiotransfer.generic.network.messages.MessageChangeTileTxControllerMode;
+import com.rlapcs.radiotransfer.generic.network.messages.MessageUpdateTileControllerFrequency;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -11,6 +13,8 @@ public class ModNetworkMessages {
         // Register messages here with the specified receiving side
         INSTANCE.registerMessage(MessageChangeTileTxControllerMode.Handler.class, MessageChangeTileTxControllerMode.class, nextID(), Side.SERVER);
         INSTANCE.registerMessage(MessageChangeTileRxControllerPriority.Handler.class, MessageChangeTileRxControllerPriority.class, nextID(), Side.SERVER);
+        INSTANCE.registerMessage(MessageUpdateTileControllerFrequency.Handler.class, MessageUpdateTileControllerFrequency.class, nextID(), Side.SERVER);
+        INSTANCE.registerMessage(MessageActivateTileController.Handler.class, MessageActivateTileController.class, nextID(), Side.SERVER);
     }
 
     private static int packetId = 0;

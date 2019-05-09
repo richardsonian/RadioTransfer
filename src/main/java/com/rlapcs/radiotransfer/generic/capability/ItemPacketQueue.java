@@ -32,30 +32,36 @@ public class ItemPacketQueue implements INBTSerializable<NBTTagCompound>, ITrans
             PacketBuffer buff = packetBuffers.get(i);
             if (buff != null && !buff.isEmpty()) {
                 NBTTagCompound bufferTag = new NBTTagCompound();
-                bufferTag.setInteger("index", i);
-                buff.item.writeToNBT(bufferTag);
+
+                //item
+                NBTTagCompound itemTag = new NBTTagCompound();
+                buff.item.writeToNBT(itemTag);
+                bufferTag.setTag("item", itemTag);
+                //data
+                //bufferTag.setInteger("index", i);
                 bufferTag.setInteger("quantity", buff.quantity);
+
+                //append to list
                 nbtTagList.appendTag(bufferTag);
             }
         }
         NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setTag("items", nbtTagList);
-        nbt.setInteger("size", packetBuffers.size());
+        nbt.setTag("buffers", nbtTagList);
+        //nbt.setInteger("size", nbtTagList.tagCount());
         return nbt;
     }
     @Override
     public void deserializeNBT(NBTTagCompound nbt) {
         packetBuffers = new ArrayList<>();
-        NBTTagList tagList = nbt.getTagList("items", Constants.NBT.TAG_COMPOUND);
-        for (int i = 0; i < tagList.tagCount(); i++)
-        {
+
+        NBTTagList tagList = nbt.getTagList("buffers", Constants.NBT.TAG_COMPOUND);
+        for (int i = 0; i < tagList.tagCount(); i++) {
             NBTTagCompound buffTags = tagList.getCompoundTagAt(i);
-            if(buffTags.hasKey("index") && buffTags.hasKey("quantity")) {
-                int index = buffTags.getInteger("index");
+            if(buffTags.hasKey("quantity") && buffTags.hasKey("item")) {
                 int quantity = buffTags.getInteger("quantity");
-                if (index >= 0 && index < packetBuffers.size()) {
-                    packetBuffers.set(index, new PacketBuffer(new ItemStack(buffTags), quantity));
-                }
+                ItemStack item = new ItemStack(buffTags.getCompoundTag("item"));
+
+                packetBuffers.add(new PacketBuffer(item, quantity));
             }
         }
         onLoad();
