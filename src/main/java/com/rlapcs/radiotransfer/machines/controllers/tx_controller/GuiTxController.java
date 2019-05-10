@@ -1,7 +1,7 @@
 package com.rlapcs.radiotransfer.machines.controllers.tx_controller;
 
 import com.rlapcs.radiotransfer.RadioTransfer;
-import com.rlapcs.radiotransfer.generic.network.messages.MessageChangeTileTxControllerMode;
+import com.rlapcs.radiotransfer.generic.network.messages.toServer.MessageChangeTileTxControllerMode;
 import com.rlapcs.radiotransfer.machines.controllers.abstract_controller.AbstractGuiController;
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import com.rlapcs.radiotransfer.server.radio.TxMode;

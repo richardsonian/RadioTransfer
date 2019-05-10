@@ -1,6 +1,7 @@
 package com.rlapcs.radiotransfer.registries;
 
-import com.rlapcs.radiotransfer.generic.network.messages.*;
+import com.rlapcs.radiotransfer.generic.network.messages.toClient.MessageUpdateClientPacketQueue;
+import com.rlapcs.radiotransfer.generic.network.messages.toServer.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -14,7 +15,7 @@ public class ModNetworkMessages {
         INSTANCE.registerMessage(MessageActivateTileController.Handler.class, MessageActivateTileController.class, nextID(), Side.SERVER);
 
         INSTANCE.registerMessage(MessageUpdateClientPacketQueue.Handler.class, MessageUpdateClientPacketQueue.class, nextID(), Side.CLIENT);
-        INSTANCE.registerMessage(MessageUpdateClientPacketQueue.Request.Handler.class, MessageUpdateClientPacketQueue.Request.class, nextID(), Side.SERVER);
+        INSTANCE.registerMessage(MessageAddClientListener.Handler.class, MessageAddClientListener.class, nextID(), Side.SERVER);
     }
 
     private static int packetId = 0;

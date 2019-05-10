@@ -1,7 +1,7 @@
-package com.rlapcs.radiotransfer.generic.network.messages;
+package com.rlapcs.radiotransfer.generic.network.messages.toServer;
 
+import com.rlapcs.radiotransfer.machines.controllers.abstract_controller.AbstractTileController;
 import com.rlapcs.radiotransfer.machines.controllers.tx_controller.TileTxController;
-import com.rlapcs.radiotransfer.server.radio.TxMode;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
@@ -14,33 +14,33 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class MessageChangeTileTxControllerMode implements IMessage {
+public class MessageActivateTileController implements IMessage {
     private BlockPos tilePos;
-    private TxMode targetMode;
+    private boolean target;
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        // Encoding the position as a long is more efficient
         tilePos = BlockPos.fromLong(buf.readLong());
-        targetMode = TxMode.values()[buf.readInt()];
+        target = buf.readBoolean();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        // Encoding the position as a long is more efficient
         buf.writeLong(tilePos.toLong());
-        buf.writeInt(targetMode.ordinal());
+        buf.writeBoolean(target);
     }
 
-    public MessageChangeTileTxControllerMode() {}
-    public MessageChangeTileTxControllerMode(TileTxController te) {
+    public MessageActivateTileController() {
+    }
+
+    public MessageActivateTileController(TileEntity te, boolean target) {
         tilePos = te.getPos();
-        targetMode = TxMode.getNext(te.getMode());
+        this.target = target;
     }
 
-    public static class Handler implements IMessageHandler<MessageChangeTileTxControllerMode, IMessage> {
+    public static class Handler implements IMessageHandler<MessageActivateTileController, IMessage> {
         @Override
-        public IMessage onMessage(MessageChangeTileTxControllerMode message, MessageContext ctx) {
+        public IMessage onMessage(MessageActivateTileController message, MessageContext ctx) {
             // Always use a construct like this to actually handle your message. This ensures that
             // your 'handle' code is run on the main Minecraft thread. 'onMessage' itself
             // is called on the networking thread so it is not safe to do a lot of things
@@ -51,7 +51,7 @@ public class MessageChangeTileTxControllerMode implements IMessage {
             return null;
         }
 
-        private void handle(MessageChangeTileTxControllerMode message, MessageContext ctx) {
+        private void handle(MessageActivateTileController message, MessageContext ctx) {
             // This code is run on the server side. So you can do server-side calculations here
             EntityPlayerMP playerEntity = ctx.getServerHandler().player;
             World world = playerEntity.getEntityWorld();
@@ -60,12 +60,13 @@ public class MessageChangeTileTxControllerMode implements IMessage {
             // trying to overload a server by randomly loading chunks
             if (world.isBlockLoaded(message.tilePos)) {
                 TileEntity te = world.getTileEntity(message.tilePos);
-                if(te instanceof TileTxController) {
-                    ((TileTxController) te).changeMode();
+                if (te instanceof AbstractTileController) {
+                    ((AbstractTileController) te).setActivated(message.target);
 
                     //debug
-                    playerEntity.sendStatusMessage(new TextComponentString(String.format("%s Tile Entity at (%d, %d, %d) is now on mode %s", TextFormatting.GREEN,
-                            message.tilePos.getX(), message.tilePos.getY(), message.tilePos.getZ(), ((TileTxController) te).getMode()) ), false);
+                    playerEntity.sendStatusMessage(new TextComponentString(String.format("%s Tile Entity at (%d, %d, %d) is now %s", TextFormatting.GREEN,
+                            message.tilePos.getX(), message.tilePos.getY(), message.tilePos.getZ(),
+                            ((TileTxController) te).getActivated() ? "Activated" : "Deactivated")), false);
                 }
             }
         }
