@@ -1,13 +1,21 @@
 package com.rlapcs.radiotransfer.machines.processors.item_processors.abstract_item_processor;
 
+import com.rlapcs.radiotransfer.ModConstants;
 import com.rlapcs.radiotransfer.generic.capability.ItemPacketQueue;
+import com.rlapcs.radiotransfer.generic.network.messages.MessageUpdateClientPacketQueue;
 import com.rlapcs.radiotransfer.generic.tileEntities.IProgressBarProvider;
 import com.rlapcs.radiotransfer.machines.processors.abstract_processor.AbstractTileProcessor;
+import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import com.rlapcs.radiotransfer.server.radio.TransferType;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 
+
 public abstract class AbstractTileItemProcessor extends AbstractTileProcessor<ItemPacketQueue> implements IProgressBarProvider {
+    public static final int SPEED_UPGRADE_SLOT_INDEX = 0;
+
+    public static final int INVENTORY_SIZE = 17;
+
     public static final int PROCESS_UPDATE_TICKS = 2;
 
     public static final int BASE_PROCESS_TIME = 30;
@@ -17,9 +25,14 @@ public abstract class AbstractTileItemProcessor extends AbstractTileProcessor<It
 
     protected ItemPacketQueue packetQueue;
     protected int processTimeElapsed;
+    public boolean playerIsTracking; //only for client; true when client needs updates
 
-    public AbstractTileItemProcessor(int itemStackHandlerSize) {
-        super(itemStackHandlerSize);
+    public AbstractTileItemProcessor() {
+        super(INVENTORY_SIZE);
+
+        processTimeElapsed = 0;
+        upgradeSlotWhitelists.put(SPEED_UPGRADE_SLOT_INDEX, ModConstants.UpgradeCards.SPEED_UPGRADE_WHITELIST);
+        playerIsTracking = false;
 
         packetQueue = new ItemPacketQueue() {
             @Override
@@ -28,20 +41,20 @@ public abstract class AbstractTileItemProcessor extends AbstractTileProcessor<It
                 AbstractTileItemProcessor.this.markDirty();
             }
         };
-        processTimeElapsed = 0;
     }
 
     public ItemPacketQueue getPacketQueue() {
         return packetQueue;
     }
 
+    //ProgressBar updates
     protected int getItemsPerProcess() {
         return BASE_ITEMS_PER_PROCESS;
     }
 
     @Override
     public int getProcessTime() {
-        int numUpgrades = itemStackHandler.getStackInSlot(AbstractContainerItemProcessor.SPEED_UPGRADE_SLOT_INDEX).getCount();
+        int numUpgrades = itemStackHandler.getStackInSlot(SPEED_UPGRADE_SLOT_INDEX).getCount();
         int processTime = (int) (BASE_PROCESS_TIME * Math.pow(PROCESS_TIME_MULTIPLIER, numUpgrades));
         return (int) MathHelper.clamp(processTime, MIN_PROCESS_TIME, BASE_PROCESS_TIME);
     }
@@ -49,13 +62,20 @@ public abstract class AbstractTileItemProcessor extends AbstractTileProcessor<It
     @Override
     public void update() {
         super.update();
-
         //run on both client and server
         if(ticksSinceCreation % PROCESS_UPDATE_TICKS == 0) {
             doProcessUpdate(world, PROCESS_UPDATE_TICKS);
         }
     }
 
+    @Override
+    public void doClientUpdate() {
+        if(playerIsTracking) {
+            ModNetworkMessages.INSTANCE.sendToServer(new MessageUpdateClientPacketQueue.Request(this));
+        }
+    }
+
+    //NBT handling
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
@@ -74,6 +94,8 @@ public abstract class AbstractTileItemProcessor extends AbstractTileProcessor<It
         return compound;
     }
 
+
+    //Getters and setters
     @Override
     public ItemPacketQueue getHandler() {
         return packetQueue;

@@ -1,5 +1,6 @@
 package com.rlapcs.radiotransfer.generic.tileEntities;
 
+import com.rlapcs.radiotransfer.generic.other.UpgradeSlotWhitelist;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -7,20 +8,42 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-public abstract class AbstractTileMachineWithInventory extends AbstractTileMachine {
+import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map;
+
+public abstract class AbstractTileMachineWithInventory extends AbstractTileMachine implements ITileItemHandlerProvider {
     protected ItemStackHandler itemStackHandler;
+    protected Map<Integer, UpgradeSlotWhitelist> upgradeSlotWhitelists; //slots that should only accept certain items
 
     public AbstractTileMachineWithInventory(int itemStackHandlerSize) {
         super();
 
         ticksSinceCreation = 0;
+        upgradeSlotWhitelists = new HashMap<>();
 
         itemStackHandler = new ItemStackHandler(itemStackHandlerSize) {
             @Override
             protected void onContentsChanged(int slot) {
-                // We need to tell the tile entity that something has changed so
-                // that the chest contents is persisted
+                super.onContentsChanged(slot);
                 AbstractTileMachineWithInventory.this.markDirty();
+
+            }
+
+            @Override
+            public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+                return super.isItemValid(slot, stack) && AbstractTileMachineWithInventory.this.isItemValidInSlot(slot, stack);
+            }
+
+            @Override
+            public int getStackLimit(int slot, ItemStack stack) {
+                UpgradeSlotWhitelist wl = upgradeSlotWhitelists.get(slot);
+                if(wl != null && wl.canInsertStack(stack)) {
+                    return Math.min(wl.getMatchingUpgradeCardEntry(stack).getMaxAmount(), super.getStackLimit(slot, stack));
+                }
+                else {
+                    return super.getStackLimit(slot, stack);
+                }
             }
         };
     }
@@ -28,15 +51,13 @@ public abstract class AbstractTileMachineWithInventory extends AbstractTileMachi
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
-        if (compound.hasKey("items")) {
-            itemStackHandler.deserializeNBT((NBTTagCompound) compound.getTag("items"));
-        }
+        deserializeInventoryNBT(compound);
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
-        compound.setTag("items", itemStackHandler.serializeNBT());
+        serializeInventoryNBT(compound);
         return compound;
     }
 
@@ -54,5 +75,16 @@ public abstract class AbstractTileMachineWithInventory extends AbstractTileMachi
             return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(itemStackHandler);
         }
         return super.getCapability(capability, facing);
+    }
+
+    //DO NOT USE THIS GETTER, use capabilities instead
+    @Override
+    public ItemStackHandler getItemStackHandler() {
+        return itemStackHandler;
+    }
+
+    @Override
+    public Map<Integer, UpgradeSlotWhitelist> getUpgradeSlotWhitelists() {
+        return upgradeSlotWhitelists;
     }
 }

@@ -1,6 +1,8 @@
 package com.rlapcs.radiotransfer.machines.controllers.abstract_controller;
 
 import com.rlapcs.radiotransfer.generic.multiblock.tileEntities.AbstractTileMultiblockNodeWithInventory;
+import com.rlapcs.radiotransfer.server.radio.RadioNetwork;
+import com.rlapcs.radiotransfer.ModConstants;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 
@@ -8,16 +10,20 @@ import static com.rlapcs.radiotransfer.server.radio.RadioNetwork.MAX_FREQUENCY;
 import static com.rlapcs.radiotransfer.server.radio.RadioNetwork.MIN_FREQUENCY;
 
 public abstract class AbstractTileController extends AbstractTileMultiblockNodeWithInventory {
-    protected static final int INVENTORY_SIZE = 12;
+    public static final int ENCRYPTION_CARD_SLOT_INDEX = 0;
+
+    protected static final int ABSTRACT_INVENTORY_SIZE = 1;
     protected static final double BASE_POWER_USAGE = 10;
 
     protected boolean activated;
     protected int frequency;
 
-    public AbstractTileController() {
-        super(INVENTORY_SIZE);
+    public AbstractTileController(int itemStackHandlerSize) {
+        super(itemStackHandlerSize);
 
-        frequency = MIN_FREQUENCY;
+        upgradeSlotWhitelists.put(ENCRYPTION_CARD_SLOT_INDEX, ModConstants.UpgradeCards.ENCRYPTION_CARD_WHITELIST);
+
+        frequency = RadioNetwork.MIN_FREQUENCY;
         activated = false;
     }
 

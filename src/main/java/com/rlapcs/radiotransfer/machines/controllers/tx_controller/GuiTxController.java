@@ -4,6 +4,7 @@ import com.rlapcs.radiotransfer.RadioTransfer;
 import com.rlapcs.radiotransfer.generic.network.messages.MessageChangeTileTxControllerMode;
 import com.rlapcs.radiotransfer.machines.controllers.abstract_controller.AbstractGuiController;
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
+import com.rlapcs.radiotransfer.server.radio.TxMode;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.ResourceLocation;
 
@@ -38,7 +39,7 @@ public class GuiTxController extends AbstractGuiController<TileTxController> {
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
-        String mode = tileEntity.getMode() == TileTxController.TxMode.ROUND_ROBIN ? "RR" : "S";
+        String mode = tileEntity.getMode() == TxMode.ROUND_ROBIN ? "RR" : "S";
         fontRenderer.drawString(mode,  39,  52, Color.white.getRGB());
     }
 }

@@ -1,18 +1,24 @@
 package com.rlapcs.radiotransfer.machines.controllers.tx_controller;
 
 import com.rlapcs.radiotransfer.machines.controllers.abstract_controller.AbstractTileController;
+import com.rlapcs.radiotransfer.server.radio.TxMode;
+import com.rlapcs.radiotransfer.ModConstants;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class TileTxController extends AbstractTileController {
-    public enum TxMode {
-        ROUND_ROBIN,
-        SEQUENTIAL
-    }
+    public static final int STACK_UPGRADE_SLOT_INDEX = 1;
+    public static final int SPEED_UPGRADE_SLOT_INDEX = 2;
+
+    public static final int INVENTORY_SIZE = ABSTRACT_INVENTORY_SIZE + 2;
 
     private TxMode mode;
 
     public TileTxController() {
-        super();
+        super(INVENTORY_SIZE);
+
+        upgradeSlotWhitelists.put(STACK_UPGRADE_SLOT_INDEX, ModConstants.UpgradeCards.STACK_UPGRADE_WHITELIST);
+        upgradeSlotWhitelists.put(SPEED_UPGRADE_SLOT_INDEX, ModConstants.UpgradeCards.SPEED_UPGRADE_WHITELIST);
+
         mode = TxMode.ROUND_ROBIN;
     }
 

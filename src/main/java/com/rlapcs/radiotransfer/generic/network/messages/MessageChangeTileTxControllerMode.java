@@ -1,7 +1,7 @@
 package com.rlapcs.radiotransfer.generic.network.messages;
 
-import com.rlapcs.radiotransfer.machines._deprecated.other.AbstractTileRadio;
 import com.rlapcs.radiotransfer.machines.controllers.tx_controller.TileTxController;
+import com.rlapcs.radiotransfer.server.radio.TxMode;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
@@ -16,23 +16,26 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class MessageChangeTileTxControllerMode implements IMessage {
     private BlockPos tilePos;
+    private TxMode targetMode;
 
     @Override
     public void fromBytes(ByteBuf buf) {
         // Encoding the position as a long is more efficient
         tilePos = BlockPos.fromLong(buf.readLong());
+        targetMode = TxMode.values()[buf.readInt()];
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         // Encoding the position as a long is more efficient
         buf.writeLong(tilePos.toLong());
+        buf.writeInt(targetMode.ordinal());
     }
 
     public MessageChangeTileTxControllerMode() {}
-
-    public MessageChangeTileTxControllerMode(TileEntity te) {
+    public MessageChangeTileTxControllerMode(TileTxController te) {
         tilePos = te.getPos();
+        targetMode = TxMode.getNext(te.getMode());
     }
 
     public static class Handler implements IMessageHandler<MessageChangeTileTxControllerMode, IMessage> {
@@ -59,10 +62,11 @@ public class MessageChangeTileTxControllerMode implements IMessage {
                 TileEntity te = world.getTileEntity(message.tilePos);
                 if(te instanceof TileTxController) {
                     ((TileTxController) te).changeMode();
+
+                    //debug
+                    playerEntity.sendStatusMessage(new TextComponentString(String.format("%s Tile Entity at (%d, %d, %d) is now on mode %s", TextFormatting.GREEN,
+                            message.tilePos.getX(), message.tilePos.getY(), message.tilePos.getZ(), ((TileTxController) te).getMode()) ), false);
                 }
-                //debug
-                playerEntity.sendStatusMessage(new TextComponentString(String.format("%s Tile Entity at (%d, %d, %d) is now on frequency %s", TextFormatting.GREEN,
-                        message.tilePos.getX(), message.tilePos.getY(), message.tilePos.getZ(), ((TileTxController) te).getMode()) ), false);
             }
         }
     }

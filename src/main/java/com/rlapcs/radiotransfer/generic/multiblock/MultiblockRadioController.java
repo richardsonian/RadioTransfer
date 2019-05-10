@@ -4,12 +4,12 @@ import com.rlapcs.radiotransfer.generic.capability.ITransferHandler;
 import com.rlapcs.radiotransfer.generic.multiblock.tileEntities.AbstractTileMultiblockNode;
 import com.rlapcs.radiotransfer.machines.controllers.rx_controller.TileRxController;
 import com.rlapcs.radiotransfer.machines.controllers.tx_controller.TileTxController;
-import com.rlapcs.radiotransfer.machines.controllers.tx_controller.TileTxController.TxMode;
 import com.rlapcs.radiotransfer.machines.power_supply.TilePowerSupply;
 import com.rlapcs.radiotransfer.machines.processors.ProcessorType;
 import com.rlapcs.radiotransfer.machines.processors.abstract_processor.AbstractTileProcessor;
 import com.rlapcs.radiotransfer.machines.radio.TileRadio;
 import com.rlapcs.radiotransfer.server.radio.RadioNetwork;
+import com.rlapcs.radiotransfer.server.radio.TxMode;
 import com.rlapcs.radiotransfer.server.radio.UnsupportedTransferException;
 import com.rlapcs.radiotransfer.server.radio.TransferType;
 import net.minecraft.tileentity.TileEntity;
@@ -165,7 +165,7 @@ public class MultiblockRadioController {
                 }
             }
         }
-        return false; //te not registered
+        return false; //tileEntity not registered
     }
     public void checkForNewNodes(BlockPos around) {
         validateAddition(around.up());

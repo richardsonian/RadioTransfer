@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static com.rlapcs.radiotransfer.RadioTransfer.sendDebugMessage;
+import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
 
 public class ItemPacketQueue implements INBTSerializable<NBTTagCompound>, ITransferHandler, Iterable<ItemPacketQueue.PacketBuffer> {
     public static final int MAX_QUANTITY = 999;
@@ -32,30 +32,37 @@ public class ItemPacketQueue implements INBTSerializable<NBTTagCompound>, ITrans
             PacketBuffer buff = packetBuffers.get(i);
             if (buff != null && !buff.isEmpty()) {
                 NBTTagCompound bufferTag = new NBTTagCompound();
-                bufferTag.setInteger("index", i);
-                buff.item.writeToNBT(bufferTag);
+
+                //item
+                NBTTagCompound itemTag = new NBTTagCompound();
+                buff.item.writeToNBT(itemTag);
+                bufferTag.setTag("item", itemTag);
+                //data
+                //bufferTag.setInteger("index", i);
                 bufferTag.setInteger("quantity", buff.quantity);
+
+                //append to list
                 nbtTagList.appendTag(bufferTag);
             }
         }
         NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setTag("items", nbtTagList);
-        nbt.setInteger("size", packetBuffers.size());
+        nbt.setTag("buffers", nbtTagList);
+        //nbt.setInteger("size", nbtTagList.tagCount());
         return nbt;
     }
 
     @Override
     public void deserializeNBT(NBTTagCompound nbt) {
         packetBuffers = new ArrayList<>();
-        NBTTagList tagList = nbt.getTagList("items", Constants.NBT.TAG_COMPOUND);
+
+        NBTTagList tagList = nbt.getTagList("buffers", Constants.NBT.TAG_COMPOUND);
         for (int i = 0; i < tagList.tagCount(); i++) {
             NBTTagCompound buffTags = tagList.getCompoundTagAt(i);
-            if (buffTags.hasKey("index") && buffTags.hasKey("quantity")) {
-                int index = buffTags.getInteger("index");
+            if(buffTags.hasKey("quantity") && buffTags.hasKey("item")) {
                 int quantity = buffTags.getInteger("quantity");
-                if (index >= 0 && index < packetBuffers.size()) {
-                    packetBuffers.set(index, new PacketBuffer(new ItemStack(buffTags), quantity));
-                }
+                ItemStack item = new ItemStack(buffTags.getCompoundTag("item"));
+
+                packetBuffers.add(new PacketBuffer(item, quantity));
             }
         }
         onLoad();
@@ -66,11 +73,14 @@ public class ItemPacketQueue implements INBTSerializable<NBTTagCompound>, ITrans
         for (PacketBuffer b : packetBuffers) {
             if (b != null && !b.isEmpty()) {
                 return false;
-            } else {
+            }
+            else {
+                //sendDebugMessage("found and removing empty packetBuffer " + b);
                 packetBuffers.remove(b);
                 onContentsChanged();
             }
         }
+
         return true;
     }
 
@@ -206,7 +216,8 @@ public class ItemPacketQueue implements INBTSerializable<NBTTagCompound>, ITrans
     }
 
     protected void onContentsChanged() {
-        //sendDebugMessage(this.toString());
+        sendDebugMessage(this.toString());
+        sendDebugMessage("isEmpty?: " + this.isEmpty());
     } //should be overridden to mark tileEntity dirty
 
     protected void onLoad() {

@@ -1,6 +1,7 @@
 package com.rlapcs.radiotransfer.generic.multiblock.tileEntities;
 
-import com.rlapcs.radiotransfer.generic.tileEntities.AbstractTileMachineWithInventory;
+import com.rlapcs.radiotransfer.generic.other.UpgradeSlotWhitelist;
+import com.rlapcs.radiotransfer.generic.tileEntities.ITileItemHandlerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -8,43 +9,56 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 
-import static com.rlapcs.radiotransfer.RadioTransfer.sendDebugMessage;
+import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map;
 
-public abstract class AbstractTileMultiblockNodeWithInventory extends AbstractTileMultiblockNode {
+public abstract class
+AbstractTileMultiblockNodeWithInventory extends AbstractTileMultiblockNode implements ITileItemHandlerProvider {
     protected ItemStackHandler itemStackHandler;
+    protected Map<Integer, UpgradeSlotWhitelist> upgradeSlotWhitelists; //slots that should only accept certain items
 
     public AbstractTileMultiblockNodeWithInventory(int itemStackHandlerSize) {
         super();
 
         ticksSinceCreation = 0;
+        upgradeSlotWhitelists = new HashMap<>();
 
         itemStackHandler = new ItemStackHandler(itemStackHandlerSize) {
 
             @Override
             protected void onContentsChanged(int slot) {
-                // We need to tell the tile entity that something has changed so
-                // that the chest contents is persisted
+                super.onContentsChanged(slot);
                 AbstractTileMultiblockNodeWithInventory.this.markDirty();
             }
+            @Override
+            public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
+                boolean superPassed = super.isItemValid(slot, stack);
+                return superPassed && AbstractTileMultiblockNodeWithInventory.this.isItemValidInSlot(slot, stack);
+            }
+            @Override
+            public int getStackLimit(int slot, ItemStack stack) {
+                UpgradeSlotWhitelist wl = upgradeSlotWhitelists.get(slot);
+                if(wl != null && wl.canInsertStack(stack)) {
+                    return Math.min(wl.getMatchingUpgradeCardEntry(stack).getMaxAmount(), super.getStackLimit(slot, stack));
+                }
+                else {
+                    return super.getStackLimit(slot, stack);
+                }
+            }
         };
-        /*
-        sendDebugMessage("creating itemStackHandler with intended size: "+itemStackHandlerSize
-                +" actual size: " + itemStackHandler.getSlots() + " for " + this);
-        */
     }
 
     @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
-        if (compound.hasKey("items")) {
-            itemStackHandler.deserializeNBT((NBTTagCompound) compound.getTag("items"));
-        }
+        deserializeInventoryNBT(compound);
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         super.writeToNBT(compound);
-        compound.setTag("items", itemStackHandler.serializeNBT());
+        serializeInventoryNBT(compound);
         return compound;
     }
 
@@ -64,33 +78,14 @@ public abstract class AbstractTileMultiblockNodeWithInventory extends AbstractTi
         return super.getCapability(capability, facing);
     }
 
-    /**
-     * Attempts to merge a stack into an ItemHandler, and returns what was not able to be merged.
-     * Returns ItemStack.EMPTY if the merge was 100% successful
-     * @param stack
-     * @return The remainder of the stack
-     */
-    public ItemStack mergeStackIntoInventory(ItemStack stack) {
-        if(!world.isRemote) {
-            if(stack.isEmpty() || stack == null) return ItemStack.EMPTY;
+    //DO NOT USE THIS GETTER, use capabilities instead
+    @Override
+    public ItemStackHandler getItemStackHandler() {
+        return itemStackHandler;
+    }
 
-            ItemStack itemstack = stack.copy();
-            int slot = 0;
-            while(!itemstack.isEmpty() && slot < this.itemStackHandler.getSlots()) {
-                itemstack = this.itemStackHandler.insertItem(slot, itemstack, false);
-                slot++;
-            }
-
-            //No need for block update
-            /*
-            if(ItemStack.areItemStacksEqual(stack, itemstack)) { //if something was merged into the inventory
-                //world.notifyBlockUpdate(getPos(), world.getBlockState(getPos()), world.getBlockState(getPos()), 2);
-            }
-            */
-
-            return itemstack;
-        }
-
-        return null;
+    @Override
+    public Map<Integer, UpgradeSlotWhitelist> getUpgradeSlotWhitelists() {
+        return upgradeSlotWhitelists;
     }
 }

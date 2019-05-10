@@ -1,6 +1,7 @@
-package com.rlapcs.radiotransfer.machines._deprecated.other.messages;
+package com.rlapcs.radiotransfer.generic.network.messages;
 
-import com.rlapcs.radiotransfer.machines._deprecated.receiver.TileReceiver;
+import com.rlapcs.radiotransfer.machines.controllers.abstract_controller.AbstractTileController;
+import com.rlapcs.radiotransfer.machines.controllers.tx_controller.TileTxController;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
@@ -13,34 +14,33 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class MessageUpdateTileReceiverPriority implements IMessage {
+public class MessageActivateTileController implements IMessage {
     private BlockPos tilePos;
-    private boolean toIncrement; //true if going to increment, false if going to decrement
+    private boolean target;
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        // Encoding the position as a long is more efficient
         tilePos = BlockPos.fromLong(buf.readLong());
-        toIncrement = buf.readBoolean();
+        target = buf.readBoolean();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        // Encoding the position as a long is more efficient
         buf.writeLong(tilePos.toLong());
-        buf.writeBoolean(toIncrement);
+        buf.writeBoolean(target);
     }
 
-    public MessageUpdateTileReceiverPriority() {}
+    public MessageActivateTileController() {
+    }
 
-    public MessageUpdateTileReceiverPriority(TileEntity te, Boolean toIncrement ) {
+    public MessageActivateTileController(TileEntity te, boolean target) {
         tilePos = te.getPos();
-        this.toIncrement = toIncrement;
+        this.target = target;
     }
 
-    public static class Handler implements IMessageHandler<MessageUpdateTileReceiverPriority, IMessage> {
+    public static class Handler implements IMessageHandler<MessageActivateTileController, IMessage> {
         @Override
-        public IMessage onMessage(MessageUpdateTileReceiverPriority message, MessageContext ctx) {
+        public IMessage onMessage(MessageActivateTileController message, MessageContext ctx) {
             // Always use a construct like this to actually handle your message. This ensures that
             // your 'handle' code is run on the main Minecraft thread. 'onMessage' itself
             // is called on the networking thread so it is not safe to do a lot of things
@@ -51,7 +51,7 @@ public class MessageUpdateTileReceiverPriority implements IMessage {
             return null;
         }
 
-        private void handle(MessageUpdateTileReceiverPriority message, MessageContext ctx) {
+        private void handle(MessageActivateTileController message, MessageContext ctx) {
             // This code is run on the server side. So you can do server-side calculations here
             EntityPlayerMP playerEntity = ctx.getServerHandler().player;
             World world = playerEntity.getEntityWorld();
@@ -60,12 +60,14 @@ public class MessageUpdateTileReceiverPriority implements IMessage {
             // trying to overload a server by randomly loading chunks
             if (world.isBlockLoaded(message.tilePos)) {
                 TileEntity te = world.getTileEntity(message.tilePos);
-                if(te instanceof TileReceiver) {
-                    ((TileReceiver) te).changePriority(message.toIncrement);
+                if (te instanceof AbstractTileController) {
+                    ((AbstractTileController) te).setActivated(message.target);
+
+                    //debug
+                    playerEntity.sendStatusMessage(new TextComponentString(String.format("%s Tile Entity at (%d, %d, %d) is now %s", TextFormatting.GREEN,
+                            message.tilePos.getX(), message.tilePos.getY(), message.tilePos.getZ(),
+                            ((TileTxController) te).getActivated() ? "Activated" : "Deactivated")), false);
                 }
-                //debug
-                playerEntity.sendStatusMessage(new TextComponentString(String.format("%s Tile Entity at (%d, %d, %d) now has priority %d", TextFormatting.GREEN,
-                        message.tilePos.getX(), message.tilePos.getY(), message.tilePos.getZ(), ((TileReceiver) te).getPriority() ) ), false);
             }
         }
     }

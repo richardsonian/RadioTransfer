@@ -7,17 +7,22 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerRxController extends AbstractContainerController {
+    protected int[] FILTER_SLOT_POS = {126, 48};
+
     public ContainerRxController(IInventory playerInventory, TileRxController te) {
         super(playerInventory, te);
+        initSlots(playerInventory);
     }
 
     @Override
     protected void addTileEntitySlots() {
         super.addTileEntitySlots();
 
-        IItemHandler itemHandler = this.te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+        IItemHandler itemHandler = this.tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 
-        // Speed upgrade
-        this.addSlotToContainer(new SlotItemHandler(itemHandler, 2, 126, 48));
+        // Filter card
+        this.addSlotToContainer(new SlotItemHandler(itemHandler, TileRxController.FILTER_SLOT_INDEX, FILTER_SLOT_POS[0], FILTER_SLOT_POS[1]));
+
+        TILE_ENTITY_END_INDEX = nextContainerSlotId;
     }
 }

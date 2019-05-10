@@ -50,6 +50,8 @@ public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcess
     @Override
     public void initGui() {
         super.initGui();
+        tileEntity.playerIsTracking = true;
+        sendChatMessage("Player now tracking" + tileEntity);
         queue = new ItemPacketQueue();
         queue.add(new ItemStack(ModItems.redgem, 64)).getDisplayName();
         queue.add(new ItemStack(ModItems.demoitem, 64)).getDisplayName();
@@ -64,6 +66,13 @@ public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcess
         queue.add(new ItemStack(Items.APPLE, 64)).getDisplayName();
         visual = new GuiList(queue, LIST_POS[0], LIST_POS[1], guiLeft, guiTop);
         bar = visual.getBar();
+    }
+
+    @Override
+    public void onGuiClosed() {
+        super.onGuiClosed();
+        tileEntity.playerIsTracking = false;
+        sendChatMessage("Player no longer tracking " + tileEntity);
     }
 
     @Override

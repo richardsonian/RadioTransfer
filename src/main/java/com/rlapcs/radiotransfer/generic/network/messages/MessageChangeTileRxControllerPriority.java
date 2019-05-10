@@ -1,7 +1,6 @@
 package com.rlapcs.radiotransfer.generic.network.messages;
 
 import com.rlapcs.radiotransfer.machines.controllers.rx_controller.TileRxController;
-import com.rlapcs.radiotransfer.machines.controllers.tx_controller.TileTxController;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
@@ -63,10 +62,12 @@ public class MessageChangeTileRxControllerPriority implements IMessage {
                 TileEntity te = world.getTileEntity(message.tilePos);
                 if(te instanceof TileRxController) {
                     ((TileRxController) te).changePriority(message.toIncrement);
+
+                    //debug
+                    playerEntity.sendStatusMessage(new TextComponentString(String.format("%s Tile Entity at (%d, %d, %d) now has priority %s", TextFormatting.GREEN,
+                            message.tilePos.getX(), message.tilePos.getY(), message.tilePos.getZ(), ((TileRxController) te).getPriority()) ), false);
+
                 }
-                //debug
-                playerEntity.sendStatusMessage(new TextComponentString(String.format("%s Tile Entity at (%d, %d, %d) now has priority %s", TextFormatting.GREEN,
-                        message.tilePos.getX(), message.tilePos.getY(), message.tilePos.getZ(), ((TileRxController) te).getPriority()) ), false);
             }
         }
     }

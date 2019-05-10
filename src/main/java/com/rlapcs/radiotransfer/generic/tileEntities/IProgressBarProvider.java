@@ -8,6 +8,7 @@ import net.minecraft.world.World;
  */
 public interface IProgressBarProvider {
     void doProcess();
+    void doClientUpdate();
     boolean canDoProcess();
 
     int getProcessTime();
@@ -16,8 +17,11 @@ public interface IProgressBarProvider {
 
     default void doProcessUpdate(World world, int ticksSinceLastCall) {
         if (getProcessTimeElapsed() >= getProcessTime()) {
-            if(!world.isRemote) {
+            if(!world.isRemote) { //server side
                 doProcess();
+            }
+            else { //client side
+                doClientUpdate();
             }
             setProcessTimeElapsed(0);
         }

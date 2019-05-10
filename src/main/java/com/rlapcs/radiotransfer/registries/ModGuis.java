@@ -1,14 +1,5 @@
 package com.rlapcs.radiotransfer.registries;
 
-import com.rlapcs.radiotransfer.machines._deprecated.demo.ContainerDemoBlock;
-import com.rlapcs.radiotransfer.machines._deprecated.demo.GuiDemoBlock;
-import com.rlapcs.radiotransfer.machines._deprecated.demo.TileDemoBlock;
-import com.rlapcs.radiotransfer.machines._deprecated.receiver.ContainerReceiver;
-import com.rlapcs.radiotransfer.machines._deprecated.receiver.GuiReceiver;
-import com.rlapcs.radiotransfer.machines._deprecated.receiver.TileReceiver;
-import com.rlapcs.radiotransfer.machines._deprecated.transmitter.ContainerTransmitter;
-import com.rlapcs.radiotransfer.machines._deprecated.transmitter.GuiTransmitter;
-import com.rlapcs.radiotransfer.machines._deprecated.transmitter.TileTransmitter;
 import com.rlapcs.radiotransfer.generic.guis.GuiHandler.GuiEntry;
 import com.rlapcs.radiotransfer.machines.controllers.rx_controller.ContainerRxController;
 import com.rlapcs.radiotransfer.machines.controllers.rx_controller.GuiRxController;
@@ -32,10 +23,6 @@ public class ModGuis {
     public static final GuiEntry rx_controller = new GuiEntry(TileRxController.class, GuiRxController.class, ContainerRxController.class);
     public static final GuiEntry item_encoder = new GuiEntry(TileItemEncoder.class, GuiItemEncoder.class, ContainerItemEncoder.class);
 
-    // DEPRECATED
-    public static final GuiEntry demoblock = new GuiEntry(TileDemoBlock.class, GuiDemoBlock.class, ContainerDemoBlock.class);
-    public static final GuiEntry transmitter = new GuiEntry(TileTransmitter.class, GuiTransmitter.class, ContainerTransmitter.class);
-    public static final GuiEntry receiver = new GuiEntry(TileReceiver.class, GuiReceiver.class, ContainerReceiver.class);
     /* end gui entry list */
 
 

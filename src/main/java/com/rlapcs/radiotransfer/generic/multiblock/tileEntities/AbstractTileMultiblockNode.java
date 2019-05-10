@@ -10,7 +10,7 @@ import net.minecraft.util.text.TextFormatting;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.rlapcs.radiotransfer.RadioTransfer.sendDebugMessage;
+import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
 
 public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
     public static final int MULTIBLOCK_UPDATE_TICKS = 20;
