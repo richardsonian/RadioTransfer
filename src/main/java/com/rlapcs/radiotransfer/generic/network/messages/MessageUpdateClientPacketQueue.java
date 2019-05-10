@@ -1,12 +1,12 @@
 package com.rlapcs.radiotransfer.generic.network.messages;
 
-import com.rlapcs.radiotransfer.RadioTransfer;
 import com.rlapcs.radiotransfer.machines.processors.item_processors.abstract_item_processor.AbstractTileItemProcessor;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -64,8 +64,8 @@ public class MessageUpdateClientPacketQueue implements IMessage {
                         te.readFromNBT(teTags);
 
                         //debug
-                        RadioTransfer.logger.debug(TextFormatting.LIGHT_PURPLE + "Updated packet queue.");
-
+                        world.playerEntities.forEach(p -> p.sendMessage(new TextComponentString(
+                                TextFormatting.LIGHT_PURPLE + "Updated packet queue for " + TextFormatting.RESET + te)));
                     }
                 }
             }

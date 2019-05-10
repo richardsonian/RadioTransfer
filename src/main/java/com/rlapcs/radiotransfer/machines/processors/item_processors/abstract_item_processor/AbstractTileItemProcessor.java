@@ -40,11 +40,14 @@ public abstract class AbstractTileItemProcessor extends AbstractTileProcessor<It
                 super.onContentsChanged();
                 AbstractTileItemProcessor.this.markDirty();
 
-                //probably quite laggy -> only update to those who are looking at TE?
-                int dimension = AbstractTileItemProcessor.this.world.provider.getDimension();
-                ModNetworkMessages.INSTANCE.sendToAllTracking(new MessageUpdateClientPacketQueue(AbstractTileItemProcessor.this),
-                        new NetworkRegistry.TargetPoint(dimension, AbstractTileItemProcessor.this.pos.getX(),
-                                AbstractTileItemProcessor.this.pos.getY(), AbstractTileItemProcessor.this.pos.getZ(), -1));
+                //update client copy of packetQueue
+                //probably quite laggy -> only update to those who are looking at gui + only send changed slot?
+                if(!AbstractTileItemProcessor.this.world.isRemote) {
+                    int dimension = AbstractTileItemProcessor.this.world.provider.getDimension();
+                    ModNetworkMessages.INSTANCE.sendToAllTracking(new MessageUpdateClientPacketQueue(AbstractTileItemProcessor.this),
+                            new NetworkRegistry.TargetPoint(dimension, AbstractTileItemProcessor.this.pos.getX(),
+                                    AbstractTileItemProcessor.this.pos.getY(), AbstractTileItemProcessor.this.pos.getZ(), -1));
+                }
             }
         };
     }
@@ -62,7 +65,6 @@ public abstract class AbstractTileItemProcessor extends AbstractTileProcessor<It
     @Override
     public void update() {
         super.update();
-
         //run on both client and server
         if(ticksSinceCreation % PROCESS_UPDATE_TICKS == 0) {
             doProcessUpdate(world, PROCESS_UPDATE_TICKS);
