@@ -31,7 +31,6 @@ public abstract class AbstractTileItemProcessor extends AbstractTileProcessor<It
     public static final double MIN_PROCESS_TIME = 6;
     public static final int BASE_ITEMS_PER_PROCESS = 1;
 
-
     protected ItemPacketQueue packetQueue;
     protected int processTimeElapsed;
     public List<EntityPlayerMP> clientListeners; //stores on server the clients with the GUI open
@@ -85,10 +84,15 @@ public abstract class AbstractTileItemProcessor extends AbstractTileProcessor<It
         return false;
     }
 
+    public ItemPacketQueue getPacketQueue() {
+        return packetQueue;
+    }
+
     //ProgressBar updates
     protected int getItemsPerProcess() {
         return BASE_ITEMS_PER_PROCESS;
     }
+
     @Override
     public int getProcessTime() {
         int numUpgrades = itemStackHandler.getStackInSlot(SPEED_UPGRADE_SLOT_INDEX).getCount();

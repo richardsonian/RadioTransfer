@@ -7,9 +7,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
 public abstract class InteractiveGuiElement extends GuiButton {
-    private static final ResourceLocation ICONS = new ResourceLocation(RadioTransfer.MODID, "textures/gui/icons.png");
-
-    protected int iconU, iconV;
+    protected static final ResourceLocation ICONS = new ResourceLocation(RadioTransfer.MODID, "textures/gui/icons.png");
 
     public InteractiveGuiElement(int id, int x, int y, int iconWidth, int iconHeight) {
         super(id, x, y, iconWidth, iconHeight, "");
@@ -26,7 +24,9 @@ public abstract class InteractiveGuiElement extends GuiButton {
 
             this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
 
-            this.drawTexturedModalRect(this.x, this.y, iconU, iconV, this.width, this.height);
+            this.drawTexturedModalRect(this.x, this.y, getUV()[0], getUV()[1], this.width, this.height);
         }
     }
+
+    protected abstract int[] getUV();
 }
