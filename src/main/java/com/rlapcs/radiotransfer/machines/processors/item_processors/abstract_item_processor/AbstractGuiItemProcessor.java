@@ -6,22 +6,11 @@ import com.rlapcs.radiotransfer.generic.guis.clientonly.AbstractGuiMachine;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.GuiList;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.sliders.GuiDraggableSliderButton;
 import com.rlapcs.radiotransfer.registries.ModItems;
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderItem;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Items;
-import net.minecraft.inventory.ClickType;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Mouse;
-
-import java.io.IOException;
-
-import static com.rlapcs.radiotransfer.RadioTransfer.sendDebugMessage;
 
 public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcessor> extends AbstractGuiMachine<T> {
     private static final int WIDTH = 188;
@@ -52,7 +41,8 @@ public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcess
         super.initGui();
         tileEntity.playerIsTracking = true;
         sendChatMessage("Player now tracking" + tileEntity);
-        queue = new ItemPacketQueue();
+        queue = tileEntity.getPacketQueue();
+        /*queue = new ItemPacketQueue();
         queue.add(new ItemStack(ModItems.redgem, 64)).getDisplayName();
         queue.add(new ItemStack(ModItems.demoitem, 64)).getDisplayName();
         queue.add(new ItemStack(Items.DIAMOND, 64)).getDisplayName();
@@ -63,7 +53,7 @@ public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcess
         queue.add(new ItemStack(Items.FEATHER, 64)).getDisplayName();
         queue.add(new ItemStack(Items.FERMENTED_SPIDER_EYE, 64)).getDisplayName();
         queue.add(new ItemStack(Items.ACACIA_BOAT, 64)).getDisplayName();
-        queue.add(new ItemStack(Items.APPLE, 64)).getDisplayName();
+        queue.add(new ItemStack(Items.APPLE, 64)).getDisplayName();*/
         visual = new GuiList(queue, LIST_POS[0], LIST_POS[1], guiLeft, guiTop);
         bar = visual.getBar();
     }
@@ -90,6 +80,7 @@ public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcess
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
+        queue = tileEntity.getPacketQueue();
         boolean flag = Mouse.isButtonDown(0);
 
         if (!wasClicking && flag && bar.isMouseOver())
@@ -110,11 +101,13 @@ public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcess
         int scroll = Mouse.getEventDWheel();
         boolean up = scroll > 0;
         scrollVal = up ? Math.log(Math.abs(scroll) + 1) : -Math.log(Math.abs(scroll) + 1);
-        sendDebugMessage((scrollVal / (double) queue.size()) + "");
         scrollPos = (bar.getY() - 24) / 59d;
 
-        visual.drawList(Minecraft.getMinecraft(), this, this.itemRender, scrollPos);
-        bar.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, isScrolling, scrollVal / (double) queue.size());
+        if (queue.size() > 0) {
+            visual.drawList(Minecraft.getMinecraft(), this, this.itemRender, scrollPos);
+            if (queue.size() > 3)
+                bar.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, isScrolling, scrollVal / (double) queue.size());
+        }
     }
 
     protected abstract int[] getProgressBarCoords();

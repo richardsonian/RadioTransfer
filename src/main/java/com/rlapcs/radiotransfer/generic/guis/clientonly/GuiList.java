@@ -10,8 +10,6 @@ import net.minecraft.util.math.MathHelper;
 
 import java.util.List;
 
-import static com.rlapcs.radiotransfer.RadioTransfer.sendDebugMessage;
-
 public class GuiList {
     private ItemPacketQueue queue;
     private int[] XY;
