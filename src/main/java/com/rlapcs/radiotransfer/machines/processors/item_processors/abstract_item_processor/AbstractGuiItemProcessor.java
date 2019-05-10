@@ -21,6 +21,15 @@ public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcess
     @Override
     public void initGui() {
         super.initGui();
+        tileEntity.playerIsTracking = true;
+        sendChatMessage("Player now tracking" + tileEntity);
+    }
+
+    @Override
+    public void onGuiClosed() {
+        super.onGuiClosed();
+        tileEntity.playerIsTracking = false;
+        sendChatMessage("Player no longer tracking " + tileEntity);
     }
 
     @Override

@@ -1,8 +1,12 @@
 package com.rlapcs.radiotransfer.generic.network.messages;
 
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
 import com.rlapcs.radiotransfer.machines.processors.item_processors.abstract_item_processor.AbstractTileItemProcessor;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -16,7 +20,94 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
+import javax.annotation.Nullable;
+
+import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
+
 public class MessageUpdateClientPacketQueue implements IMessage {
+    public static class Request implements IMessage {
+        private BlockPos tilePos;
+
+        public Request() {}
+        public Request(TileEntity te) {
+            tilePos = te.getPos();
+        }
+
+        @Override
+        public void fromBytes(ByteBuf buf) {
+            tilePos = BlockPos.fromLong(buf.readLong());
+        }
+        @Override
+        public void toBytes(ByteBuf buf) {
+            buf.writeLong(tilePos.toLong());
+        }
+
+        public static class Handler implements IMessageHandler<Request, MessageUpdateClientPacketQueue> {
+            @Override
+            public MessageUpdateClientPacketQueue onMessage(Request message, MessageContext ctx) {
+                if(ctx.side == Side.SERVER) {
+                    sendDebugMessage("Update packetqueue request received");
+
+                    ListenableFuture<Object> listenable =  FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask(
+                            () -> getServerTileEntity(message, ctx));
+
+                    final AbstractTileItemProcessor[] te = new AbstractTileItemProcessor[1]; //hack to allow reference in callback
+                    Futures.addCallback(listenable, new FutureCallback<Object>() {
+                        @Override
+                        public void onSuccess(@Nullable Object result) {
+                            if(result == null) {
+                                onFailure(new NullPointerException("Result was null."));
+                            }
+                            else if(!(result instanceof AbstractTileItemProcessor)) {
+                                onFailure(new RuntimeException("Result is not of right type"));
+                            }
+                            else {
+                                te[0] = (AbstractTileItemProcessor) result;
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Throwable t) {
+                            //print error, but just return no response
+                            sendDebugMessage("Problem processing client request for packetqueue, sending no response.");
+                            t.printStackTrace();
+                            te[0] = null;
+                        }
+                    });
+
+                    //return no message if te is null
+                    sendDebugMessage("te null after callback, returning no message");
+                    if(te[0] == null) return null;
+
+                    //return message
+                    sendDebugMessage("Returning update message!");
+                    return new MessageUpdateClientPacketQueue(te[0]);
+                }
+
+                sendDebugMessage("Not on server... sending no message back");
+                return null;
+            }
+
+            private AbstractTileItemProcessor getServerTileEntity(Request message, MessageContext ctx) {
+                sendDebugMessage("Getting server tileEntity on game thread.");
+
+                EntityPlayerMP playerEntity = ctx.getServerHandler().player;
+                World world = playerEntity.getEntityWorld();
+
+                if (world.isBlockLoaded(message.tilePos)) {
+                    sendDebugMessage("tile loaded");
+                    TileEntity te = world.getTileEntity(message.tilePos);
+                    if(te instanceof AbstractTileItemProcessor) {
+                        sendDebugMessage("Instance of AbstractTileItemProcessor; returning te");
+                        return (AbstractTileItemProcessor) te;
+                    }
+                }
+                sendDebugMessage("Could not get te; returning null");
+                return null;
+            }
+        }
+    }
+
     private BlockPos tilePos;
     private NBTTagCompound packetNbt;
 

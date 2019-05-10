@@ -9,7 +9,6 @@ import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import com.rlapcs.radiotransfer.server.radio.TransferType;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 
 public abstract class AbstractTileItemProcessor extends AbstractTileProcessor<ItemPacketQueue> implements IProgressBarProvider {
@@ -27,31 +26,25 @@ public abstract class AbstractTileItemProcessor extends AbstractTileProcessor<It
 
     protected ItemPacketQueue packetQueue;
     protected int processTimeElapsed;
+    public boolean playerIsTracking; //only for client; true when client needs updates
 
     public AbstractTileItemProcessor() {
         super(INVENTORY_SIZE);
 
         processTimeElapsed = 0;
         upgradeSlotWhitelists.put(SPEED_UPGRADE_SLOT_INDEX, ModConstants.UpgradeCards.SPEED_UPGRADE_WHITELIST);
+        playerIsTracking = false;
 
         packetQueue = new ItemPacketQueue() {
             @Override
             protected void onContentsChanged() {
                 super.onContentsChanged();
                 AbstractTileItemProcessor.this.markDirty();
-
-                //update client copy of packetQueue
-                //probably quite laggy -> only update to those who are looking at gui + only send changed slot?
-                if(!AbstractTileItemProcessor.this.world.isRemote) {
-                    int dimension = AbstractTileItemProcessor.this.world.provider.getDimension();
-                    ModNetworkMessages.INSTANCE.sendToAllTracking(new MessageUpdateClientPacketQueue(AbstractTileItemProcessor.this),
-                            new NetworkRegistry.TargetPoint(dimension, AbstractTileItemProcessor.this.pos.getX(),
-                                    AbstractTileItemProcessor.this.pos.getY(), AbstractTileItemProcessor.this.pos.getZ(), -1));
-                }
             }
         };
     }
 
+    //ProgressBar updates
     protected int getItemsPerProcess() {
         return BASE_ITEMS_PER_PROCESS;
     }
@@ -72,6 +65,14 @@ public abstract class AbstractTileItemProcessor extends AbstractTileProcessor<It
     }
 
     @Override
+    public void doClientUpdate() {
+        if(playerIsTracking) {
+            ModNetworkMessages.INSTANCE.sendToServer(new MessageUpdateClientPacketQueue.Request(this));
+        }
+    }
+
+    //NBT handling
+    @Override
     public void readFromNBT(NBTTagCompound compound) {
         super.readFromNBT(compound);
 
@@ -89,6 +90,8 @@ public abstract class AbstractTileItemProcessor extends AbstractTileProcessor<It
         return compound;
     }
 
+
+    //Getters and setters
     @Override
     public ItemPacketQueue getHandler() {
         return packetQueue;

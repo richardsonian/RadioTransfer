@@ -14,6 +14,7 @@ public class ModNetworkMessages {
         INSTANCE.registerMessage(MessageActivateTileController.Handler.class, MessageActivateTileController.class, nextID(), Side.SERVER);
 
         INSTANCE.registerMessage(MessageUpdateClientPacketQueue.Handler.class, MessageUpdateClientPacketQueue.class, nextID(), Side.CLIENT);
+        INSTANCE.registerMessage(MessageUpdateClientPacketQueue.Request.Handler.class, MessageUpdateClientPacketQueue.Request.class, nextID(), Side.SERVER);
     }
 
     private static int packetId = 0;
