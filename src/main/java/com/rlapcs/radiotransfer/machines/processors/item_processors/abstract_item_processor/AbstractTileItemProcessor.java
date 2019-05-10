@@ -2,16 +2,24 @@ package com.rlapcs.radiotransfer.machines.processors.item_processors.abstract_it
 
 import com.rlapcs.radiotransfer.ModConstants;
 import com.rlapcs.radiotransfer.generic.capability.ItemPacketQueue;
-import com.rlapcs.radiotransfer.generic.network.messages.MessageUpdateClientPacketQueue;
+import com.rlapcs.radiotransfer.generic.network.messages.toClient.MessageUpdateClientPacketQueue;
 import com.rlapcs.radiotransfer.generic.tileEntities.IProgressBarProvider;
+import com.rlapcs.radiotransfer.generic.tileEntities.ITileClientUpdater;
 import com.rlapcs.radiotransfer.machines.processors.abstract_processor.AbstractTileProcessor;
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import com.rlapcs.radiotransfer.server.radio.TransferType;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextFormatting;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.rlapcs.radiotransfer.util.Debug.sendToAllPlayers;
 
 
-public abstract class AbstractTileItemProcessor extends AbstractTileProcessor<ItemPacketQueue> implements IProgressBarProvider {
+public abstract class AbstractTileItemProcessor extends AbstractTileProcessor<ItemPacketQueue> implements IProgressBarProvider, ITileClientUpdater {
     public static final int SPEED_UPGRADE_SLOT_INDEX = 0;
 
     public static final int INVENTORY_SIZE = 17;
@@ -25,22 +33,55 @@ public abstract class AbstractTileItemProcessor extends AbstractTileProcessor<It
 
     protected ItemPacketQueue packetQueue;
     protected int processTimeElapsed;
-    public boolean playerIsTracking; //only for client; true when client needs updates
+    public List<EntityPlayerMP> clientListeners; //stores on server the clients with the GUI open
 
     public AbstractTileItemProcessor() {
         super(INVENTORY_SIZE);
 
         processTimeElapsed = 0;
         upgradeSlotWhitelists.put(SPEED_UPGRADE_SLOT_INDEX, ModConstants.UpgradeCards.SPEED_UPGRADE_WHITELIST);
-        playerIsTracking = false;
+        clientListeners = new ArrayList<>();
 
         packetQueue = new ItemPacketQueue() {
             @Override
             protected void onContentsChanged() {
                 super.onContentsChanged();
                 AbstractTileItemProcessor.this.markDirty();
+
+                if(!AbstractTileItemProcessor.this.world.isRemote) {
+                    AbstractTileItemProcessor.this.doClientUpdate();
+                }
             }
         };
+    }
+    //client updates
+    @Override
+    public void doClientUpdate() {
+        clientListeners.forEach(p -> {
+            ModNetworkMessages.INSTANCE.sendTo(new MessageUpdateClientPacketQueue(this), p);
+        });
+    }
+    @Override
+    public boolean addClientListener(EntityPlayerMP player) {
+        if(!world.isRemote) {
+            if(!clientListeners.contains(player)) {
+                sendToAllPlayers(TextFormatting.GREEN + "Adding player " + player + " from tracking list for " + this, world);
+                clientListeners.add(player);
+                return true;
+            }
+        }
+        return false;
+    }
+    @Override
+    public boolean removeClientListener(EntityPlayerMP player) {
+        if(!world.isRemote) {
+            if(clientListeners.contains(player)) {
+                sendToAllPlayers(TextFormatting.RED + "Removing player " + player + " from tracking list for " + this, world);
+                clientListeners.remove(player);
+                return true;
+            }
+        }
+        return false;
     }
 
     public ItemPacketQueue getPacketQueue() {
@@ -65,13 +106,6 @@ public abstract class AbstractTileItemProcessor extends AbstractTileProcessor<It
         //run on both client and server
         if(ticksSinceCreation % PROCESS_UPDATE_TICKS == 0) {
             doProcessUpdate(world, PROCESS_UPDATE_TICKS);
-        }
-    }
-
-    @Override
-    public void doClientUpdate() {
-        if(playerIsTracking) {
-            ModNetworkMessages.INSTANCE.sendToServer(new MessageUpdateClientPacketQueue.Request(this));
         }
     }
 

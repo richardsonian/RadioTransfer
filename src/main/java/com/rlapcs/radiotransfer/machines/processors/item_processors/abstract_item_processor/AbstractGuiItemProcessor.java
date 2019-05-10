@@ -6,11 +6,15 @@ import com.rlapcs.radiotransfer.generic.guis.clientonly.AbstractGuiMachine;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.GuiList;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.sliders.GuiDraggableSliderButton;
 import com.rlapcs.radiotransfer.registries.ModItems;
+import com.rlapcs.radiotransfer.generic.network.messages.toServer.MessageAddClientListener;
+import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import net.minecraft.client.Minecraft;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Mouse;
+
+import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
 
 public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcessor> extends AbstractGuiMachine<T> {
     private static final int WIDTH = 188;
@@ -39,7 +43,7 @@ public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcess
     @Override
     public void initGui() {
         super.initGui();
-        tileEntity.playerIsTracking = true;
+        ModNetworkMessages.INSTANCE.sendToServer(new MessageAddClientListener(tileEntity, true));
         sendChatMessage("Player now tracking" + tileEntity);
         queue = tileEntity.getPacketQueue();
         /*queue = new ItemPacketQueue();
@@ -61,7 +65,7 @@ public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcess
     @Override
     public void onGuiClosed() {
         super.onGuiClosed();
-        tileEntity.playerIsTracking = false;
+        ModNetworkMessages.INSTANCE.sendToServer(new MessageAddClientListener(tileEntity, false));
         sendChatMessage("Player no longer tracking " + tileEntity);
     }
 
@@ -72,6 +76,7 @@ public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcess
         //progress bar
         Minecraft.getMinecraft().getTextureManager().bindTexture(new ResourceLocation(RadioTransfer.MODID, "textures/gui/icons.png"));
         double progress = tileEntity.getFractionOfProcessCompleted();
+        //sendChatMessage("process time completed: " + progress);
         drawTexturedModalRect(guiLeft + getProgressBarCoords()[0], guiTop + getProgressBarCoords()[1], PROGRESS_BAR_U, PROGRESS_BAR_V,
                 ((int)(progress * PROGRESS_BAR_WIDTH)), PROGRESS_BAR_HEIGHT);
 
