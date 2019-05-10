@@ -1,12 +1,15 @@
 package com.rlapcs.radiotransfer.machines.processors.item_processors.abstract_item_processor;
 
+import com.rlapcs.radiotransfer.ModConstants;
 import com.rlapcs.radiotransfer.generic.capability.ItemPacketQueue;
+import com.rlapcs.radiotransfer.generic.network.messages.MessageUpdateClientPacketQueue;
 import com.rlapcs.radiotransfer.generic.tileEntities.IProgressBarProvider;
 import com.rlapcs.radiotransfer.machines.processors.abstract_processor.AbstractTileProcessor;
+import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import com.rlapcs.radiotransfer.server.radio.TransferType;
-import com.rlapcs.radiotransfer.ModConstants;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 
 public abstract class AbstractTileItemProcessor extends AbstractTileProcessor<ItemPacketQueue> implements IProgressBarProvider {
@@ -36,6 +39,12 @@ public abstract class AbstractTileItemProcessor extends AbstractTileProcessor<It
             protected void onContentsChanged() {
                 super.onContentsChanged();
                 AbstractTileItemProcessor.this.markDirty();
+
+                //probably quite laggy -> only update to those who are looking at TE?
+                int dimension = AbstractTileItemProcessor.this.world.provider.getDimension();
+                ModNetworkMessages.INSTANCE.sendToAllTracking(new MessageUpdateClientPacketQueue(AbstractTileItemProcessor.this),
+                        new NetworkRegistry.TargetPoint(dimension, AbstractTileItemProcessor.this.pos.getX(),
+                                AbstractTileItemProcessor.this.pos.getY(), AbstractTileItemProcessor.this.pos.getZ(), -1));
             }
         };
     }

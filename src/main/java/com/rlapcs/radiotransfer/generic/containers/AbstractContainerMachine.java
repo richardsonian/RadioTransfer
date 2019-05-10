@@ -9,10 +9,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.items.ItemHandlerHelper;
-
-import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
 
 
 public abstract class AbstractContainerMachine<T extends AbstractTileMachine & ITileItemHandlerProvider> extends AbstractContainerWithPlayerInventory<T> {
@@ -23,7 +20,7 @@ public abstract class AbstractContainerMachine<T extends AbstractTileMachine & I
     }
 
     public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
-        sendDebugMessage("transferring stack in slot for Container for " + tileEntity);
+        //sendDebugMessage("transferring stack in slot for Container for " + tileEntity);
 
         Slot slot = this.inventorySlots.get(index);
         if(slot != null && slot.getHasStack()) {
@@ -43,7 +40,7 @@ public abstract class AbstractContainerMachine<T extends AbstractTileMachine & I
                 else return stackCopy;
             }
             else { //slot is in the main inventory
-                sendDebugMessage("Trying to merge into TileEntity");
+                //sendDebugMessage("Trying to merge into TileEntity");
                 boolean success = false;
 
                 int s = UpgradeSlotWhitelist.findIndexWhereAllowed(stack, tileEntity.getUpgradeSlotWhitelists());
@@ -55,25 +52,25 @@ public abstract class AbstractContainerMachine<T extends AbstractTileMachine & I
                     //make sure the slot doesn't have any ghost init items in it
                     if(!whitelist.canInsertStack(existingUpgradeStack)) upgradeSlot.putStack(ItemStack.EMPTY);
 
-                    sendDebugMessage(TextFormatting.BLUE + "Trying upgrade slot: " + TextFormatting.RESET + s + " " + TextFormatting.GOLD + whitelist
-                            + TextFormatting.LIGHT_PURPLE + " which contains: " + TextFormatting.RESET + existingUpgradeStack);
+                    //sendDebugMessage(TextFormatting.BLUE + "Trying upgrade slot: " + TextFormatting.RESET + s + " " + TextFormatting.GOLD + whitelist
+                    //        + TextFormatting.LIGHT_PURPLE + " which contains: " + TextFormatting.RESET + existingUpgradeStack);
                     if(whitelist != null && whitelist.canInsertStack(stack)) {
-                        sendDebugMessage("Can insert stack");
+                        //sendDebugMessage("Can insert stack");
                         UpgradeSlotWhitelist.UpgradeCardEntry matchingEntry = whitelist.getMatchingUpgradeCardEntry(stack);
-                        sendDebugMessage("existing upgrade stack is Empty?: " + existingUpgradeStack.isEmpty());
-                        sendDebugMessage("Can stacks stack? : " + ItemHandlerHelper.canItemStacksStack(stack, existingUpgradeStack));
+                        //sendDebugMessage("existing upgrade stack is Empty?: " + existingUpgradeStack.isEmpty());
+                        //sendDebugMessage("Can stacks stack? : " + ItemHandlerHelper.canItemStacksStack(stack, existingUpgradeStack));
 
                         if(existingUpgradeStack.isEmpty()) {
                             int numToInsert = MathHelper.clamp(stack.getCount(), 1, matchingEntry.getMaxAmount());
                             ItemStack temp = stack.copy();
                             temp.setCount(numToInsert);
-                            sendDebugMessage("slot empty, inserting" + temp);
+                            //sendDebugMessage("slot empty, inserting" + temp);
                             upgradeSlot.putStack(temp);
                             stack.shrink(numToInsert);
                             return stackCopy;
                         }
                         else if(ItemHandlerHelper.canItemStacksStack(stack, existingUpgradeStack)) { //third check for buggy init
-                            sendDebugMessage("Can stack stacks.");
+                            //sendDebugMessage("Can stack stacks.");
 
                             int numToTransfer = matchingEntry.getMaxAmount() - existingUpgradeStack.getCount();
                             if(numToTransfer > 0) {
