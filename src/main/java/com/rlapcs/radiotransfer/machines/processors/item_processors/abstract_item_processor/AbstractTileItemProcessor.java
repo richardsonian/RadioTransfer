@@ -15,7 +15,6 @@ public abstract class AbstractTileItemProcessor extends AbstractTileProcessor<It
     public static final double MIN_PROCESS_TIME = 6;
     public static final int BASE_ITEMS_PER_PROCESS = 1;
 
-
     protected ItemPacketQueue packetQueue;
     protected int processTimeElapsed;
 
@@ -32,9 +31,14 @@ public abstract class AbstractTileItemProcessor extends AbstractTileProcessor<It
         processTimeElapsed = 0;
     }
 
+    public ItemPacketQueue getPacketQueue() {
+        return packetQueue;
+    }
+
     protected int getItemsPerProcess() {
         return BASE_ITEMS_PER_PROCESS;
     }
+
     @Override
     public int getProcessTime() {
         int numUpgrades = itemStackHandler.getStackInSlot(AbstractContainerItemProcessor.SPEED_UPGRADE_SLOT_INDEX).getCount();

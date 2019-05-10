@@ -1,24 +1,19 @@
 package com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.sliders;
 
-import com.rlapcs.radiotransfer.RadioTransfer;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.InteractiveGuiElement;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
 
 
 //not fully implemented
 public class GuiToggleSliderButton extends InteractiveGuiElement {
+    private static final int[] UV = {76, 0};
+    private static final int[] DIMS = {16, 26};
+
     private int pos1X, pos1Y, pos2X, pos2Y;
 
     private int pos; //1 or 2
 
     public GuiToggleSliderButton(int buttonId, int startPos, int pos1X, int pos1Y, int pos2X, int pos2Y) {
-        super(buttonId, (startPos == 1) ? pos1X : pos2X, (startPos == 1) ? pos1Y : pos2Y, 16, 26);
-
-        iconU = 76;
-        iconV = 0;
+        super(buttonId, (startPos == 1) ? pos1X : pos2X, (startPos == 1) ? pos1Y : pos2Y, DIMS[0], DIMS[1]);
 
         this.pos = (startPos == 1) ? 1 : 2; //ensure that pos is only set to 1 or 2
         this.pos1X = pos1X;
@@ -39,5 +34,10 @@ public class GuiToggleSliderButton extends InteractiveGuiElement {
             pos = 1;
         }
         return pos;
+    }
+
+    @Override
+    protected int[] getUV() {
+        return UV;
     }
 }

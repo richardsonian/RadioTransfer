@@ -8,17 +8,21 @@ public class GuiIncrementButton extends InteractiveGuiElement {
         LEFT
     }
 
+    private static final int[] UV = {71, 0};
+    private static final int[] DIMS = {5, 8};
+
     protected IncrementType type;
 
     public GuiIncrementButton(int id, int x, int y, IncrementType type) {
-        super(id, x, y, 5, 8);
-        iconV = 0;
-        if (type == IncrementType.RIGHT) {
-            iconU = 71;
-            iconV = 0;
-        } else {
-            iconU = 66;
-            iconV = 0;
-        }
+        super(id, x, y, DIMS[0], DIMS[1]);
+        if (type == IncrementType.RIGHT)
+            UV[0] = 71;
+        else
+            UV[0] = 6;
+    }
+
+    @Override
+    protected int[] getUV() {
+        return UV;
     }
 }
