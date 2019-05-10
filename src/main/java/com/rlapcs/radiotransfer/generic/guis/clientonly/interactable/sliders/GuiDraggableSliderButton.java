@@ -5,11 +5,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.MathHelper;
 
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-
-import static com.rlapcs.radiotransfer.RadioTransfer.sendDebugMessage;
-
 public class GuiDraggableSliderButton extends InteractiveGuiElement {
     private static final int[] UV = {0, 15};
     private static final int[] DIMS = {8, 15};

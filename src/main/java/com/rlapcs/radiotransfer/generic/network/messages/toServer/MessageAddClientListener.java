@@ -56,7 +56,7 @@ public class MessageAddClientListener implements IMessage{
             player.sendStatusMessage(new TextComponentString(TextFormatting.AQUA + "Server received request to " +
                     (message.toAdd ? "add" : "remove") + " from clientListeners."), false);
 
-            if (true/*world.isBlockLoaded(message.tilePos)*/) {
+            if (world.isBlockLoaded(message.tilePos)) {
                 TileEntity te = world.getTileEntity(message.tilePos);
                 if(te instanceof ITileClientUpdater) {
                     ITileClientUpdater tile = (ITileClientUpdater) te;
