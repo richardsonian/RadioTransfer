@@ -65,7 +65,7 @@ public abstract class AbstractTileItemProcessor extends AbstractTileProcessor<It
     public boolean addClientListener(EntityPlayerMP player) {
         if(!world.isRemote) {
             if(!clientListeners.contains(player)) {
-                sendToAllPlayers(TextFormatting.GREEN + "Adding player " + player + " from tracking list for " + this, world);
+                //sendToAllPlayers(TextFormatting.GREEN + "Adding player " + player + " from tracking list for " + this, world);
                 clientListeners.add(player);
                 return true;
             }
@@ -76,16 +76,12 @@ public abstract class AbstractTileItemProcessor extends AbstractTileProcessor<It
     public boolean removeClientListener(EntityPlayerMP player) {
         if(!world.isRemote) {
             if(clientListeners.contains(player)) {
-                sendToAllPlayers(TextFormatting.RED + "Removing player " + player + " from tracking list for " + this, world);
+                //sendToAllPlayers(TextFormatting.RED + "Removing player " + player + " from tracking list for " + this, world);
                 clientListeners.remove(player);
                 return true;
             }
         }
         return false;
-    }
-
-    public ItemPacketQueue getPacketQueue() {
-        return packetQueue;
     }
 
     //ProgressBar updates

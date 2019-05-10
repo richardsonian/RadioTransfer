@@ -32,8 +32,10 @@ public class GuiList {
         int start = MathHelper.clamp((int) ((queue.size() - 3) * ratio), 0, queue.size() - 3);
         List<ItemPacketQueue.PacketBuffer> itemList = queue.getAsList();
         //sendDebugMessage("bar: " + bar.getY());
-        for (int i = 0; i < 3; i++)
-            (new GuiListItem(i, XY[0], XY[1] + i * 24, itemList.get(MathHelper.clamp(start + i, 0, queue.size() - 1)).getItemStack())).drawItem(mc, screen, renderer);
+        if(!itemList.isEmpty()) {
+            for (int i = 0; i < 3; i++)
+                (new GuiListItem(i, XY[0], XY[1] + i * 24, itemList.get(MathHelper.clamp(start + i, 0, queue.size() - 1)).getItemStack())).drawItem(mc, screen, renderer);
+        }
     }
 
     public GuiDraggableSliderButton getBar() {

@@ -62,9 +62,8 @@ public class MessageUpdateClientPacketQueue implements IMessage {
                 if (world.isBlockLoaded(message.tilePos)) {
                     TileEntity te = world.getTileEntity(message.tilePos);
                     if (te instanceof AbstractTileItemProcessor) {
-                        NBTTagCompound teTags = new NBTTagCompound();
-                        teTags.setTag("packets", message.packetNbt);
-                        te.readFromNBT(teTags);
+                        AbstractTileItemProcessor tile = (AbstractTileItemProcessor) te;
+                        tile.getHandler().deserializeNBT(message.packetNbt);
 
                         //debug
                         player.sendMessage(new TextComponentString(
