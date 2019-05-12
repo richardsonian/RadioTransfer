@@ -34,6 +34,7 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
             sendDebugMessage(TextFormatting.GREEN + " " + this + " registered " + TextFormatting.RESET + " to: " + controller);
 
             updateClientsRegisteredState(true);
+            onRegisterInMultiblock();
         }
     }
     public void deregisterFromMultiblock() {
@@ -45,11 +46,14 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
             this.controller = null; //must come after notify surrounding
 
             updateClientsRegisteredState(false);
+            onDeregisterInMultiblock();
         }
     }
     public boolean isRegisteredInMultiblock() {
         return registeredInMultiblock;
     }
+    protected void onRegisterInMultiblock() {}
+    protected void onDeregisterInMultiblock() {}
 
     /**
      * Sets the registered state without performing any logic

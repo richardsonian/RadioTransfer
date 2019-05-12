@@ -9,10 +9,12 @@ import java.util.List;
 
 public interface ITileClientUpdater {
     List<EntityPlayerMP> getClientListeners();
+    void doAllClientUpdates();
     default boolean addClientListener(EntityPlayerMP player) {
         if(!getClientListeners().contains(player)) {
             //sendToAllPlayers(TextFormatting.GREEN + "Adding player " + player + " from tracking list for " + this, world);
             getClientListeners().add(player);
+            doAllClientUpdates();
             return true;
         }
         return false;
