@@ -3,6 +3,7 @@ package com.rlapcs.radiotransfer;
 import com.rlapcs.radiotransfer.generic.other.UpgradeSlotWhitelist;
 import com.rlapcs.radiotransfer.generic.other.UpgradeSlotWhitelist.UpgradeCardEntry;
 import net.minecraft.init.Items;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.energy.CapabilityEnergy;
 
 /**
@@ -51,4 +52,5 @@ public class ModConstants {
         );
     }
 
+    public static final ResourceLocation ICONS = new ResourceLocation(RadioTransfer.MODID, "textures/gui/icons.png");
 }

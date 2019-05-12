@@ -1,5 +1,6 @@
 package com.rlapcs.radiotransfer.generic.guis.clientonly.interactable;
 
+import com.rlapcs.radiotransfer.ModConstants;
 import com.rlapcs.radiotransfer.RadioTransfer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -7,8 +8,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
 public abstract class InteractiveGuiElement extends GuiButton {
-    protected static final ResourceLocation ICONS = new ResourceLocation(RadioTransfer.MODID, "textures/gui/icons.png");
-
     public InteractiveGuiElement(int id, int x, int y, int iconWidth, int iconHeight) {
         super(id, x, y, iconWidth, iconHeight, "");
     }
@@ -19,7 +18,7 @@ public abstract class InteractiveGuiElement extends GuiButton {
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
         if (this.visible) {
-            mc.getTextureManager().bindTexture(ICONS);
+            mc.getTextureManager().bindTexture(ModConstants.ICONS);
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
             this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;

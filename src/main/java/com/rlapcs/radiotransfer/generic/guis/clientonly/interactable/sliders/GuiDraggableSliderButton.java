@@ -1,5 +1,6 @@
 package com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.sliders;
 
+import com.rlapcs.radiotransfer.ModConstants;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.InteractiveGuiElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -55,14 +56,14 @@ public class GuiDraggableSliderButton extends InteractiveGuiElement {
      */
     public void drawButton(Minecraft mc, int mouseX, int mouseY, boolean dragging, double scroll) {
         if (this.visible) {
-            mc.getTextureManager().bindTexture(ICONS);
+            mc.getTextureManager().bindTexture(ModConstants.ICONS);
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
             //sendDebugMessage("pressed: " + mousePressed(mc, mouseX, mouseY));
             //if (dragging)
             //    XY[1] = MathHelper.clamp(mouseY, guiTop + minMax[0] + mouseOffset, guiTop + minMax[1] + mouseOffset);
             if (!wasDragging && dragging)
-                mouseOffset = (mouseY - XY[1]);
+                mouseOffset = mouseY - XY[1];
             if (dragging)
                 XY[1] = mouseY - mouseOffset;
             else if (!wasDragging)
