@@ -98,7 +98,7 @@ public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcess
         scrollPos = (bar.getY() - 24) / 59d;
 
         //sendDebugMessage(tileEntity.isRegisteredInMultiblock() + " : " + tileEntity.getController());
-        visual.drawList(Minecraft.getMinecraft(), mouseX, mouseY, partialTicks, this, this.itemRender, scrollPos, tileEntity.getDumpableData());
+        visual.drawList(Minecraft.getMinecraft(), mouseX, mouseY, partialTicks, this, this.itemRender, scrollPos, tileEntity);
         bar.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, isScrolling, scrollVal / (double) tileEntity.getHandler().size());
     }
 
