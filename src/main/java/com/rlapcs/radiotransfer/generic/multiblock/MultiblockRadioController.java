@@ -23,6 +23,7 @@ import java.util.List;
 public class MultiblockRadioController {
     private boolean registeredToNetwork;
     private boolean multiblockValid;
+    private boolean isPowered;
 
     private TileRadio tileEntity;
 
@@ -52,6 +53,31 @@ public class MultiblockRadioController {
         RadioNetwork.INSTANCE.deregister(this);
         registeredToNetwork = false;
     }
+
+    public double calculatePowerUsagePerTick() {
+        double sum = 0;
+        for(AbstractTileMultiblockNode node : getAllNodes()) {
+            sum += node.getPowerUsagePerTick();
+        }
+        return sum;
+    }
+    public boolean hasSufficientPower(int ticksSinceLastUpdate) {
+        if(powerSupply != null && !powerSupply.isInvalid()) {
+            int needed = (int)calculatePowerUsagePerTick() * ticksSinceLastUpdate;
+            int extracted = powerSupply.extractEnergy(needed, true);
+            return extracted >= needed;
+        }
+        return false;
+    }
+    public boolean usePower(int ticksSinceLastUpdate) {
+        if(!hasSufficientPower()) return false;
+
+        int needed = (int)calculatePowerUsagePerTick() * ticksSinceLastUpdate;
+        int extracted = powerSupply.extractEnergy(needed, false);
+        return extracted >= needed;
+    }
+    public boolean isPowered() {return isPowered;}
+    public void setPowered(boolean target) {isPowered = target;}
 
     public int getTransmitFrequency(@Nonnull TransferType type) {
         if(!canTransmit(type)) {
@@ -85,7 +111,6 @@ public class MultiblockRadioController {
             return rxController.getPriority();
         }
     }
-
 
     public boolean canTransmit(@Nonnull TransferType type) {
         boolean hasEncoder = encoders.get(type) != null && !encoders.get(type).isInvalid() && !encoders.get(type).getHandler().isEmpty(); //invalid check redundant
