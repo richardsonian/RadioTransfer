@@ -2,6 +2,7 @@ package com.rlapcs.radiotransfer.machines.processors.item_processors.abstract_it
 
 import com.rlapcs.radiotransfer.ModConstants;
 import com.rlapcs.radiotransfer.generic.capability.ItemPacketQueue;
+import com.rlapcs.radiotransfer.generic.multiblock.MultiblockRadioController;
 import com.rlapcs.radiotransfer.generic.network.messages.toClient.MessageUpdateClientPacketQueue;
 import com.rlapcs.radiotransfer.generic.tileEntities.IProgressBarProvider;
 import com.rlapcs.radiotransfer.generic.tileEntities.ITileClientUpdater;
@@ -51,11 +52,11 @@ public abstract class AbstractTileItemProcessor extends AbstractTileMaterialProc
                 if(!AbstractTileItemProcessor.this.world.isRemote) {
                     AbstractTileItemProcessor.this.doClientPacketQueueUpdate();
                     if(getProcessorType() == ProcessorType.ENCODER) {
-                        sendToAllPlayers("Contents changed! Doing client update for " + this, world);
                         AbstractTileItemProcessor.this.doClientDumpableUpdate();
                     }
                     else {
-                        ((AbstractTileMaterialProcessor) AbstractTileItemProcessor.this.getController().getEncoder(AbstractTileItemProcessor.this.getTransferType())).doClientDumpableUpdate();
+                        AbstractTileMaterialProcessor encoder = ((AbstractTileMaterialProcessor) AbstractTileItemProcessor.this.getController().getEncoder(AbstractTileItemProcessor.this.getTransferType()));
+                        if(encoder != null) encoder.doClientDumpableUpdate();
                     }
                 }
             }

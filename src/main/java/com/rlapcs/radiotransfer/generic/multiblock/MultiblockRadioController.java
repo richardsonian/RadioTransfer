@@ -7,6 +7,7 @@ import com.rlapcs.radiotransfer.machines.controllers.tx_controller.TileTxControl
 import com.rlapcs.radiotransfer.machines.power_supply.TilePowerSupply;
 import com.rlapcs.radiotransfer.machines.processors.ProcessorType;
 import com.rlapcs.radiotransfer.machines.processors.abstract_processor.AbstractTileProcessor;
+import com.rlapcs.radiotransfer.machines.processors.material_processor.AbstractTileMaterialProcessor;
 import com.rlapcs.radiotransfer.machines.radio.TileRadio;
 import com.rlapcs.radiotransfer.server.radio.RadioNetwork;
 import com.rlapcs.radiotransfer.server.radio.TxMode;
@@ -242,6 +243,12 @@ public class MultiblockRadioController {
             } else if (processor.getProcessorType() == ProcessorType.DECODER) {
                 if (decoders.get(processor.getTransferType()) == processor) {
                     decoders.remove(processor.getTransferType());
+
+                    //update encoder dumpable data when decoder removed
+                    AbstractTileProcessor encoder = encoders.get(processor.getTransferType());
+                    if(encoder != null && !encoder.isInvalid() && encoder instanceof AbstractTileMaterialProcessor) {
+                        ((AbstractTileMaterialProcessor) encoder).doClientDumpableUpdate();
+                    }
                 }
             }
         }

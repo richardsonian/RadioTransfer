@@ -24,7 +24,13 @@ public abstract class AbstractTileMaterialProcessor<T extends IMaterialTransferH
         super(itemStackHandlerSize);
         clientListeners = new ArrayList<>();
 
-        //must init dumpable data in subclass after creating MaterialTransferHandler (like dumpableData = new boolean[packetQueue.size()];) also do this in NBT
+        //must init dumpable data in subclass after creating MaterialTransferHandler (like dumpableData = new boolean[packetQueue.size()];) also do this in NBT read
+    }
+
+    @Override
+    public void doAllClientUpdates() {
+        doClientDumpableUpdate();
+        doClientPacketQueueUpdate();
     }
 
     @Override
@@ -52,18 +58,19 @@ public abstract class AbstractTileMaterialProcessor<T extends IMaterialTransferH
         });
     }
 
-
     //very type unsafe lol
     public void doClientDumpableUpdate() {
         if(this.getProcessorType() == ProcessorType.ENCODER && this.isRegisteredInMultiblock()) {
             int size = getHandler().size();
             boolean[] data = new boolean[size];
-            ITransferHandler decoderUncast = this.getController().getDecoder(this.getTransferType()).getHandler();
-            if (!(decoderUncast instanceof IMaterialTransferHandler)) { //also checks null
+
+            AbstractTileProcessor decoderUncast = this.getController().getDecoder(this.getTransferType());
+            if (decoderUncast == null) { //also checks null
                 sendListenersDumpableMessage(data); //send all false
+                return;
             }
 
-            IMaterialTransferHandler decoderHandler = (IMaterialTransferHandler) decoderUncast;
+            IMaterialTransferHandler decoderHandler = (IMaterialTransferHandler) decoderUncast.getHandler();
             List ourPackets = getHandler().getAsList();
             for (int i = 0; i < size; i++) {
                 if(decoderHandler.canReceiveDump(ourPackets.get(i))) {
