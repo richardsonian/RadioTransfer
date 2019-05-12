@@ -18,20 +18,16 @@ public class GuiList {
     private Minecraft mc;
     private GuiScreen screen;
     private ItemPacketQueue queue;
-    private int[] XY;
     private GuiDraggableSliderButton bar;
-    private List<Coordinate> itemCoords;
+    private List<GuiListItem> items;
 
     public GuiList(Minecraft mc, GuiScreen screen, ItemPacketQueue queue, int x, int y, int guiLeft, int guiTop) {
         this.mc = mc;
         this.screen = screen;
         this.queue = queue;
-        itemCoords = new ArrayList<>();
-        XY = new int[2];
-        XY[0] = guiLeft + x;
-        XY[1] = guiTop + y;
+        items = new ArrayList<>();
         for (int i = 0; i < 3; i++)
-            itemCoords.add(i, new Coordinate(XY[0], XY[1] + i * 24));
+            items.add(new GuiListItem(i, guiLeft + x, guiTop + y + i * 24));
         bar = new GuiDraggableSliderButton(queue.size(), 174, 26, guiLeft, guiTop, 24, 83);
     }
 
@@ -43,7 +39,7 @@ public class GuiList {
         if (!itemList.isEmpty()) {
             for (int i = 0; i < 3; i++) {
                 int index = MathHelper.clamp(start + i, 0, queue.size() - 1);
-                (new GuiListItem(i, itemCoords.get(i).x(), itemCoords.get(i).y(), itemList.get(index).getItemStack())).drawItem(mc, mouseX, mouseY, partialTicks, screen, renderer, tile.getDumpableData()[index]);
+                items.get(i).drawItem(mc, mouseX, mouseY, partialTicks, screen, renderer, itemList.get(index).getItemStack(), index, tile);
             }
         }
     }
