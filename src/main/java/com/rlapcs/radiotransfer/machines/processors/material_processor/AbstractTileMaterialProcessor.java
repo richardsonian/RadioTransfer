@@ -24,7 +24,7 @@ public abstract class AbstractTileMaterialProcessor<T extends IMaterialTransferH
         super(itemStackHandlerSize);
         clientListeners = new ArrayList<>();
 
-        //must init dumpable data in subclass after creating MaterialTransferHandler
+        //must init dumpable data in subclass after creating MaterialTransferHandler (like dumpableData = new boolean[packetQueue.size()];) also do this in NBT
     }
 
     @Override

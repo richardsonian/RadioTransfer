@@ -93,6 +93,7 @@ public abstract class AbstractTileItemProcessor extends AbstractTileMaterialProc
         if(compound.hasKey("packets")) {
             packetQueue.deserializeNBT(compound.getCompoundTag("packets"));
         }
+        dumpableData = new boolean[packetQueue.size()];
     }
 
     @Override

@@ -25,14 +25,16 @@ public class GuiList {
         bar = new GuiDraggableSliderButton(queue.size(),  174,  26, guiLeft, guiTop, 24, 83);
     }
 
-    public void drawList(Minecraft mc, int mouseX, int mouseY, float partialTicks, GuiScreen screen, RenderItem renderer, double ratio, boolean dumpable) {
+    public void drawList(Minecraft mc, int mouseX, int mouseY, float partialTicks, GuiScreen screen, RenderItem renderer, double ratio, boolean[] dumpable) {
         int start = MathHelper.clamp((int) ((queue.size() - 3) * ratio), 0, queue.size() - 3);
         List<ItemPacketQueue.PacketBuffer> itemList = queue.getAsList();
         //sendDebugMessage("bar: " + bar.getY());
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         if(!itemList.isEmpty()) {
-            for (int i = 0; i < 3; i++)
-                (new GuiListItem(i, XY[0], XY[1] + i * 24, itemList.get(MathHelper.clamp(start + i, 0, queue.size() - 1)).getItemStack())).drawItem(mc, mouseX, mouseY, partialTicks, screen, renderer, dumpable);
+            for (int i = 0; i < 3; i++) {
+                int index = MathHelper.clamp(start + i, 0, queue.size() - 1); //is this right
+                (new GuiListItem(i, XY[0], XY[1] + i * 24, itemList.get(index).getItemStack())).drawItem(mc, mouseX, mouseY, partialTicks, screen, renderer, dumpable[index]);
+            }
         }
     }
 
