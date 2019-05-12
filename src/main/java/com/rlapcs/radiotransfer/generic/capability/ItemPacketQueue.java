@@ -214,8 +214,10 @@ public class ItemPacketQueue implements IMaterialTransferHandler<ItemStack, Item
 
     @Override
     public void move(int fromIndex, int toIndex) {
-        packetBuffers.add(toIndex, packetBuffers.remove(fromIndex));
+        if (validateIndex(fromIndex) && validateIndex(toIndex)) {
+            packetBuffers.add(toIndex, packetBuffers.remove(fromIndex));
         onContentsChanged();
+        }
     }
 
     public List<PacketBuffer> getAsList() {

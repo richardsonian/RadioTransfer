@@ -23,4 +23,8 @@ public interface IMaterialTransferHandler<MATERIAL, PACKET> extends ITransferHan
     NBTTagCompound serializeNBT();
     @Override
     void deserializeNBT(NBTTagCompound nbt);
+
+    default boolean validateIndex(int index) {
+        return (index > 0) && (index < size());
+    }
 }
