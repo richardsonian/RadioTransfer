@@ -3,6 +3,7 @@ package com.rlapcs.radiotransfer;
 import com.rlapcs.radiotransfer.generic.other.UpgradeSlotWhitelist;
 import com.rlapcs.radiotransfer.generic.other.UpgradeSlotWhitelist.UpgradeCardEntry;
 import net.minecraft.init.Items;
+import net.minecraftforge.energy.CapabilityEnergy;
 
 /**
  * This class is for global mod variables, but NOT CONFIG VARIABLES. Just meant to get some central information in one place,
@@ -40,6 +41,14 @@ public class ModConstants {
                 new UpgradeCardEntry(Items.BOOK, FILTER_CARD_MAX_QUANTITY)
         );
 
+
+        //Power supply -> not really an upgrade per se, but can work in this framework
+        public static final int POWER_ITEM_MAX_QUANTITY = 1;
+        public static final UpgradeSlotWhitelist POWER_ITEM_WHITELIST = new UpgradeSlotWhitelist(
+                new UpgradeCardEntry(POWER_ITEM_MAX_QUANTITY, itemStack ->
+                   itemStack.hasCapability(CapabilityEnergy.ENERGY, null)
+                )
+        );
     }
 
 }

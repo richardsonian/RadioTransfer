@@ -1,11 +1,16 @@
 package com.rlapcs.radiotransfer.generic.multiblock.tileEntities;
 
 import com.rlapcs.radiotransfer.generic.multiblock.MultiblockRadioController;
+import com.rlapcs.radiotransfer.generic.network.messages.toClient.MessageUpdateClientMultiblockNodeRegistered;
 import com.rlapcs.radiotransfer.generic.tileEntities.AbstractTileMachine;
 import com.rlapcs.radiotransfer.machines.radio.TileRadio;
+import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,29 +28,48 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
     }
 
     public void registerInMultiblock(MultiblockRadioController controller) {
-        this.controller = controller;
-        registeredInMultiblock = true;
-        sendDebugMessage(TextFormatting.GREEN + " " + this + " registered " + TextFormatting.RESET + " to: " + controller );
-    }
+        if(!registeredInMultiblock) {
+            this.controller = controller;
+            registeredInMultiblock = true;
+            sendDebugMessage(TextFormatting.GREEN + " " + this + " registered " + TextFormatting.RESET + " to: " + controller);
 
+            updateClientsRegisteredState(true);
+        }
+    }
     public void deregisterFromMultiblock() {
-        sendDebugMessage(TextFormatting.RED + " " + this + " deregistered " + TextFormatting.RESET + " from: " + controller);
-        registeredInMultiblock = false; //must come before notify surrounding
-        this.notifySurroundingDetatch();
-        controller.removeNode(this);
-        this.controller = null; //must come after notify surrounding
+        if (registeredInMultiblock) {
+            sendDebugMessage(TextFormatting.RED + " " + this + " deregistered " + TextFormatting.RESET + " from: " + controller);
+            registeredInMultiblock = false; //must come before notify surrounding
+            this.notifySurroundingDetatch();
+            controller.removeNode(this);
+            this.controller = null; //must come after notify surrounding
+
+            updateClientsRegisteredState(false);
+        }
     }
     public boolean isRegisteredInMultiblock() {
         return registeredInMultiblock;
+    }
+
+    /**
+     * Sets the registered state without performing any logic
+     * @param target What to set it to
+     */
+    public void setRegisteredInMultiblock(boolean target) {
+        registeredInMultiblock = target;
+    }
+    public void updateClientsRegisteredState(boolean target) {
+        int dimension = this.world.provider.getDimension();
+        ModNetworkMessages.INSTANCE.sendToAllTracking(new MessageUpdateClientMultiblockNodeRegistered(this, target), new NetworkRegistry.TargetPoint(
+                dimension, pos.getX(), pos.getY(), pos.getZ(), -1
+        ));
     }
 
     @Override
     public void invalidate() {
         super.invalidate();
         if(!world.isRemote) {
-            if(registeredInMultiblock) {
-                this.deregisterFromMultiblock();
-            }
+            this.deregisterFromMultiblock();
         }
     }
 
@@ -56,9 +80,7 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
     public void onChunkUnload() {
         super.onChunkUnload();
         if(!world.isRemote) {
-            if(registeredInMultiblock) {
-                this.deregisterFromMultiblock();
-            }
+            this.deregisterFromMultiblock();
         }
     }
 
