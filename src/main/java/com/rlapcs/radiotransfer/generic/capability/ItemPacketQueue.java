@@ -1,12 +1,10 @@
 package com.rlapcs.radiotransfer.generic.capability;
 
-import com.sun.xml.internal.bind.v2.runtime.reflect.Lister;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.security.InvalidParameterException;
