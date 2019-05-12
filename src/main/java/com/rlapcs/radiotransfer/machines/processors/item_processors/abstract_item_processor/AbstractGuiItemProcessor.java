@@ -44,9 +44,7 @@ public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcess
         super.initGui();
         sendChatMessage("Gui opened.");
         ModNetworkMessages.INSTANCE.sendToServer(new MessageAddClientListener(tileEntity, true));
-
-        /*
-        queue = new ItemPacketQueue();
+        /*queue = new ItemPacketQueue();
         queue.add(new ItemStack(ModItems.redgem, 64)).getDisplayName();
         queue.add(new ItemStack(ModItems.demoitem, 64)).getDisplayName();
         queue.add(new ItemStack(Items.DIAMOND, 64)).getDisplayName();
@@ -57,9 +55,7 @@ public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcess
         queue.add(new ItemStack(Items.FEATHER, 64)).getDisplayName();
         queue.add(new ItemStack(Items.FERMENTED_SPIDER_EYE, 64)).getDisplayName();
         queue.add(new ItemStack(Items.ACACIA_BOAT, 64)).getDisplayName();
-        queue.add(new ItemStack(Items.APPLE, 64)).getDisplayName();
-         */
-
+        queue.add(new ItemStack(Items.APPLE, 64)).getDisplayName();*/
         visual = new GuiList(tileEntity.getHandler(), LIST_POS[0], LIST_POS[1], guiLeft, guiTop);
         bar = visual.getBar();
     }
@@ -80,7 +76,7 @@ public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcess
         double progress = tileEntity.getFractionOfProcessCompleted();
         //sendChatMessage("process time completed: " + progress);
         drawTexturedModalRect(guiLeft + getProgressBarCoords()[0], guiTop + getProgressBarCoords()[1], PROGRESS_BAR_U, PROGRESS_BAR_V,
-                ((int)(progress * PROGRESS_BAR_WIDTH)), PROGRESS_BAR_HEIGHT);
+                ((int) (progress * PROGRESS_BAR_WIDTH)), PROGRESS_BAR_HEIGHT);
 
     }
 
@@ -107,10 +103,10 @@ public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcess
         int scroll = Mouse.getEventDWheel();
         boolean up = scroll > 0;
         scrollVal = up ? Math.log(Math.abs(scroll) + 1) : -Math.log(Math.abs(scroll) + 1);
-        //sendDebugMessage((scrollVal / (double) queue.size()) + "");
         scrollPos = (bar.getY() - 24) / 59d;
 
-        visual.drawList(Minecraft.getMinecraft(), this, this.itemRender, scrollPos);
+        sendDebugMessage(tileEntity.isRegisteredInMultiblock() + " : " + tileEntity.getController());
+        visual.drawList(Minecraft.getMinecraft(), mouseX, mouseY, partialTicks, this, this.itemRender, scrollPos, tileEntity.isRegisteredInMultiblock() && tileEntity.getController().canReceive(tileEntity.getTransferType()));
         bar.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, isScrolling, scrollVal / (double) tileEntity.getHandler().size());
     }
 

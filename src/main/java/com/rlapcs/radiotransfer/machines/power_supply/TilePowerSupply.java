@@ -18,7 +18,7 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory {
     }
 
     public int extractEnergy(int amount, boolean simulate) {
-        return extractEnergy(amount, simulate);
+        return 0;//extractEnergy(amount, simulate);
     }
 
     @Override

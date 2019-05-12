@@ -44,11 +44,15 @@ public class MultiblockRadioController {
         multiblockValid = false;
     }
 
-    public boolean isRegisteredToNetwork(){return registeredToNetwork;}
+    public boolean isRegisteredToNetwork() {
+        return registeredToNetwork;
+    }
+
     public void registerToNetwork() {
         RadioNetwork.INSTANCE.register(this);
         registeredToNetwork = true;
     }
+
     public void deregisterFromNetwork() {
         RadioNetwork.INSTANCE.deregister(this);
         registeredToNetwork = false;
@@ -56,58 +60,65 @@ public class MultiblockRadioController {
 
     public double calculatePowerUsagePerTick() {
         double sum = 0;
-        for(AbstractTileMultiblockNode node : getAllNodes()) {
+        for (AbstractTileMultiblockNode node : getAllNodes()) {
             sum += node.getPowerUsagePerTick();
         }
         return sum;
     }
+
     public boolean hasSufficientPower(int ticksSinceLastUpdate) {
-        if(powerSupply != null && !powerSupply.isInvalid()) {
-            int needed = (int)calculatePowerUsagePerTick() * ticksSinceLastUpdate;
+        if (powerSupply != null && !powerSupply.isInvalid()) {
+            int needed = (int) calculatePowerUsagePerTick() * ticksSinceLastUpdate;
             int extracted = powerSupply.extractEnergy(needed, true);
             return extracted >= needed;
         }
         return false;
     }
+
     public boolean usePower(int ticksSinceLastUpdate) {
         if(!hasSufficientPower(ticksSinceLastUpdate)) return false;
 
-        int needed = (int)calculatePowerUsagePerTick() * ticksSinceLastUpdate;
+        int needed = (int) calculatePowerUsagePerTick() * ticksSinceLastUpdate;
         int extracted = powerSupply.extractEnergy(needed, false);
         return extracted >= needed;
     }
-    public boolean isPowered() {return isPowered;}
-    public void setPowered(boolean target) {isPowered = target;}
+
+    public boolean isPowered() {
+        return isPowered;
+    }
+
+    public void setPowered(boolean target) {
+        isPowered = target;
+    }
 
     public int getTransmitFrequency(@Nonnull TransferType type) {
-        if(!canTransmit(type)) {
+        if (!canTransmit(type)) {
             throw new UnsupportedTransferException(this + " cannot transmit on type " + type);
-        }
-        else {
+        } else {
             return txController.getFrequency();
         }
     }
+
     public int getReceiveFrequency(@Nonnull TransferType type) {
-        if(!canReceive(type)) {
+        if (!canReceive(type)) {
             throw new UnsupportedTransferException(this + " cannot receive on type " + type);
-        }
-        else {
+        } else {
             return rxController.getFrequency();
         }
     }
+
     public TxMode getTransmitMode(@Nonnull TransferType type) {
-        if(!canTransmit(type)) {
+        if (!canTransmit(type)) {
             throw new UnsupportedTransferException(this + " cannot transmit on type " + type);
-        }
-        else {
+        } else {
             return txController.getMode();
         }
     }
+
     public int getReceivePriority(@Nonnull TransferType type) {
-        if(!canReceive(type)) {
+        if (!canReceive(type)) {
             throw new UnsupportedTransferException(this + " cannot receive on type " + type);
-        }
-        else {
+        } else {
             return rxController.getPriority();
         }
     }
@@ -118,25 +129,26 @@ public class MultiblockRadioController {
 
         return hasEncoder && hasTransmitter;
     }
+
     public boolean canReceive(@Nonnull TransferType type) {
         boolean hasDecoder = decoders.get(type) != null && !decoders.get(type).isInvalid(); //invalid check redundant
         boolean hasReceiver = rxController != null && !rxController.isInvalid() && rxController.getActivated();
 
         return hasDecoder && hasReceiver;
     }
+
     public ITransferHandler getTransmitHandler(@Nonnull TransferType type) {
-       if(canTransmit(type)) {
-           return encoders.get(type).getHandler();
-       }
-       else {
-           throw new UnsupportedTransferException(this + " cannot transmit " + type);
-       }
-    }
-    public ITransferHandler getReceiveHandler(@Nonnull TransferType type) {
-        if(canReceive(type)) {
-            return decoders.get(type).getHandler();
+        if (canTransmit(type)) {
+            return encoders.get(type).getHandler();
+        } else {
+            throw new UnsupportedTransferException(this + " cannot transmit " + type);
         }
-        else {
+    }
+
+    public ITransferHandler getReceiveHandler(@Nonnull TransferType type) {
+        if (canReceive(type)) {
+            return decoders.get(type).getHandler();
+        } else {
             throw new UnsupportedTransferException(this + " cannot receive " + type);
         }
     }
@@ -151,7 +163,7 @@ public class MultiblockRadioController {
     private boolean validateAddition(BlockPos pos) {
         TileEntity te = tileEntity.getWorld().getTileEntity(pos);
 
-        if(te != null) {
+        if (te != null) {
             if (te instanceof AbstractTileMultiblockNode) {
                 AbstractTileMultiblockNode node = ((AbstractTileMultiblockNode) te);
 
@@ -174,19 +186,17 @@ public class MultiblockRadioController {
                             powerSupply.registerInMultiblock(this);
                             return true;
                         }
-                    }
-                    else if (node instanceof AbstractTileProcessor) {
+                    } else if (node instanceof AbstractTileProcessor) {
                         AbstractTileProcessor processor = (AbstractTileProcessor) node;
                         TransferType transferType = processor.getTransferType();
                         ProcessorType processorType = processor.getProcessorType();
-                        if(processorType == ProcessorType.ENCODER) {
+                        if (processorType == ProcessorType.ENCODER) {
                             if (encoders.get(transferType) == null || encoders.get(transferType).isInvalid()) {
                                 processor.registerInMultiblock(this);
                                 encoders.put(transferType, processor);
                                 return true;
                             }
-                        }
-                        else if(processorType == ProcessorType.DECODER) {
+                        } else if (processorType == ProcessorType.DECODER) {
                             if (decoders.get(transferType) == null || decoders.get(transferType).isInvalid()) {
                                 processor.registerInMultiblock(this);
                                 decoders.put(transferType, processor);
@@ -199,6 +209,7 @@ public class MultiblockRadioController {
         }
         return false; //tileEntity not registered
     }
+
     public void checkForNewNodes(BlockPos around) {
         validateAddition(around.up());
         validateAddition(around.down());
@@ -209,13 +220,14 @@ public class MultiblockRadioController {
     }
 
     public void deregisterAllNodes() {
-        for(AbstractTileMultiblockNode node : getAllNodes()) {
-            if(node != null) {
+        for (AbstractTileMultiblockNode node : getAllNodes()) {
+            if (node != null) {
                 node.deregisterFromMultiblock();
                 removeNode(node);
             }
         }
     }
+
     public void removeNode(AbstractTileMultiblockNode node) {
         if (node == txController) txController = null;
         else if (node == rxController) rxController = null;
@@ -226,8 +238,7 @@ public class MultiblockRadioController {
                 if (encoders.get(processor.getTransferType()) == processor) {
                     encoders.remove(processor.getTransferType());
                 }
-            }
-            else if (processor.getProcessorType() == ProcessorType.DECODER) {
+            } else if (processor.getProcessorType() == ProcessorType.DECODER) {
                 if (decoders.get(processor.getTransferType()) == processor) {
                     decoders.remove(processor.getTransferType());
                 }

@@ -18,7 +18,7 @@ public class GuiIncrementButton extends InteractiveGuiElement {
         if (type == IncrementType.RIGHT)
             UV[0] = 71;
         else
-            UV[0] = 6;
+            UV[0] = 66;
     }
 
     @Override
