@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 public class UpgradeSlotWhitelist {
     public static int findIndexWhereAllowed(ItemStack stack, Map<Integer, UpgradeSlotWhitelist> upgradeSlotWhitelists) {
@@ -52,9 +53,10 @@ public class UpgradeSlotWhitelist {
         private Item item;
 
         private NBTTagCompound nbtTags; //only for tag names, not content
+        private Predicate<ItemStack> otherRequirement;
         private int maxAmount;
 
-        public UpgradeCardEntry(Item item, int maxAmount, NBTTagCompound requiredNbtTags) {
+        public UpgradeCardEntry(Item item, int maxAmount, NBTTagCompound requiredNbtTags, Predicate<ItemStack> otherRequirement) {
             this.item = item;
             this.maxAmount = maxAmount;
             this.nbtTags = requiredNbtTags;
@@ -66,21 +68,29 @@ public class UpgradeSlotWhitelist {
                 nbtTags.setTag(s, null);
             }
         }
+        public UpgradeCardEntry(Item item, int maxAmount, Predicate<ItemStack> otherRequirement) {
+            this(item, maxAmount, null, otherRequirement);
+        }
+        public UpgradeCardEntry(int maxAmount, Predicate<ItemStack> otherRequirement) {
+            this(null, maxAmount, otherRequirement);
+        }
         public UpgradeCardEntry(Item item, int maxAmount) {
-            this(item, maxAmount, (NBTTagCompound) null);
+            this(item, maxAmount, (NBTTagCompound) null, null);
         }
         public UpgradeCardEntry(Item item) {
             this(item, ModConstants.UpgradeCards.DEFAULT_MAX_QUANTITY);
         }
 
         public boolean canInsert(ItemStack stack) {
-            boolean itemsMatch = this.item.equals(stack.getItem());
+            boolean itemsMatch = (!this.requiresItem() || this.item.equals(stack.getItem()));
 
             NBTTagCompound stackNBT = null;
             if(stack.hasTagCompound()) stackNBT = stack.getTagCompound();
             boolean nbtMatches = (!this.requiresNbtTags() || this.matchesNbtTags(stackNBT));
 
-            return itemsMatch && nbtMatches;
+            boolean otherRequirementMatches = (!this.requiresOtherRequirement() || this.matchesOtherRequirement(stack));
+
+            return itemsMatch && nbtMatches && otherRequirementMatches;
         }
 
         public boolean matchesNbtTags(NBTTagCompound stackTags) {
@@ -91,10 +101,15 @@ public class UpgradeSlotWhitelist {
             }
             return true;
         }
+        public boolean matchesOtherRequirement(ItemStack otherStack) {
+            return otherRequirement.test(otherStack);
+        }
 
         public boolean requiresNbtTags() {
             return nbtTags != null;
         }
+        public boolean requiresOtherRequirement() { return otherRequirement != null; }
+        public boolean requiresItem() { return item != null; }
 
         public Item getItem() {
             return item;

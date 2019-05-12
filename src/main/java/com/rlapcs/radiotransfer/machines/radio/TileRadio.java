@@ -11,6 +11,7 @@ public class TileRadio extends AbstractTileMachine {
     public final int MULTIBLOCK_UPDATE_TICKS = 20;
     public final int REGISTER_UPDATE_TICKS = 20;
     private int SEND_RESOURCES_UPDATE_TICKS = 20;
+    private int POWER_CHECK_TICKS = 60;
 
 
     private MultiblockRadioController multiblock;
@@ -59,6 +60,15 @@ public class TileRadio extends AbstractTileMachine {
             }
             if(ticksSinceCreation % SEND_RESOURCES_UPDATE_TICKS == 0) {
                 //sendResources();
+            }
+            if(ticksSinceCreation % POWER_CHECK_TICKS == 0) { //separate into update use more frequently and update visual less frequently
+                if(multiblock.hasSufficientPower(POWER_CHECK_TICKS)) {
+                    if(!multiblock.isPowered()) multiblock.setPowered(true);
+                    multiblock.usePower(POWER_CHECK_TICKS);
+                }
+                else {
+                    multiblock.setPowered(false);
+                }
             }
         }
     }

@@ -95,4 +95,9 @@ public abstract class AbstractContainerMachine<T extends AbstractTileMachine & I
             return ItemStack.EMPTY;
         }
     }
+
+    @Override
+    public boolean canInteractWith(EntityPlayer playerIn) {
+        return tileEntity.canInteractWith(playerIn);
+    }
 }

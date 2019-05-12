@@ -15,6 +15,8 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
+import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
+
 public class MessageAddClientListener implements IMessage{
     private BlockPos tilePos;
     private boolean toAdd;
@@ -53,26 +55,22 @@ public class MessageAddClientListener implements IMessage{
             EntityPlayerMP player = ctx.getServerHandler().player;
             World world = player.getEntityWorld();
 
+            /*
             player.sendStatusMessage(new TextComponentString(TextFormatting.AQUA + "Server received request to " +
                     (message.toAdd ? "add" : "remove") + " from clientListeners."), false);
+             */
 
             if (world.isBlockLoaded(message.tilePos)) {
                 TileEntity te = world.getTileEntity(message.tilePos);
                 if(te instanceof ITileClientUpdater) {
                     ITileClientUpdater tile = (ITileClientUpdater) te;
-                    player.sendStatusMessage(new TextComponentString(TextFormatting.GRAY + "Found te to update: " + te), false);
+                    //player.sendStatusMessage(new TextComponentString(TextFormatting.GRAY + "Found te to update: " + te), false);
                     if(message.toAdd) {
-                        player.sendStatusMessage(new TextComponentString("Attempting to add client"), false);
                         tile.addClientListener(player);
                     }
                     else {
-                        player.sendStatusMessage(new TextComponentString("Attempting to remove client"), false);
                         tile.removeClientListener(player);
                     }
-                }
-                else {
-                    player.sendMessage(new TextComponentString(TextFormatting.DARK_RED + "Tileentity on server not an ITileClientUpdater;" +
-                            "(invalid?: " + te.isInvalid()+")"));
                 }
             }
             else {

@@ -28,7 +28,6 @@ public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcess
     public static final int PROGRESS_BAR_HEIGHT = 6;
 
     private GuiList visual;
-    private ItemPacketQueue queue;
     private boolean wasClicking;
     private boolean isScrolling;
     private GuiDraggableSliderButton bar;
@@ -43,6 +42,7 @@ public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcess
     @Override
     public void initGui() {
         super.initGui();
+        sendChatMessage("Gui opened.");
         ModNetworkMessages.INSTANCE.sendToServer(new MessageAddClientListener(tileEntity, true));
         sendChatMessage("Player now tracking" + tileEntity);
         queue = tileEntity.getPacketQueue();
@@ -65,8 +65,8 @@ public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcess
     @Override
     public void onGuiClosed() {
         super.onGuiClosed();
+        sendChatMessage("Gui closed.");
         ModNetworkMessages.INSTANCE.sendToServer(new MessageAddClientListener(tileEntity, false));
-        sendChatMessage("Player no longer tracking " + tileEntity);
     }
 
     @Override
