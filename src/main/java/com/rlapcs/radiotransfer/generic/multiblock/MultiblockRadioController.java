@@ -70,7 +70,7 @@ public class MultiblockRadioController {
         return false;
     }
     public boolean usePower(int ticksSinceLastUpdate) {
-        if(!hasSufficientPower()) return false;
+        if(!hasSufficientPower(ticksSinceLastUpdate)) return false;
 
         int needed = (int)calculatePowerUsagePerTick() * ticksSinceLastUpdate;
         int extracted = powerSupply.extractEnergy(needed, false);
@@ -139,6 +139,13 @@ public class MultiblockRadioController {
         else {
             throw new UnsupportedTransferException(this + " cannot receive " + type);
         }
+    }
+
+    public AbstractTileMultiblockNode getEncoder(@Nonnull TransferType type) {
+        return encoders.get(type);
+    }
+    public AbstractTileMultiblockNode getDecoder(@Nonnull TransferType type) {
+        return decoders.get(type);
     }
 
     private boolean validateAddition(BlockPos pos) {
