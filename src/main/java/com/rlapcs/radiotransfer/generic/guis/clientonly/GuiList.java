@@ -36,7 +36,7 @@ public class GuiList {
         if (!itemList.isEmpty()) {
             for (int i = 0; i < 3; i++) {
                 int index = MathHelper.clamp(start + i, 0, queue.size() - 1);
-                sendDebugMessage(index + " : " + tile.getDumpableData()[0]);
+                //sendDebugMessage(index + " : " + tile.getDumpableData()[index]);
                 (new GuiListItem(i, XY[0], XY[1] + i * 24, itemList.get(MathHelper.clamp(start + i, 0, queue.size() - 1)).getItemStack())).drawItem(mc, mouseX, mouseY, partialTicks, screen, renderer, tile.getDumpableData()[index]);
             }
         }
