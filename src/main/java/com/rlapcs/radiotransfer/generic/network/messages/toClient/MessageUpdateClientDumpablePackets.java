@@ -1,48 +1,57 @@
 package com.rlapcs.radiotransfer.generic.network.messages.toClient;
 
+import com.rlapcs.radiotransfer.machines.processors.abstract_processor.AbstractTileProcessor;
 import com.rlapcs.radiotransfer.machines.processors.material_processor.AbstractTileMaterialProcessor;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 
-public class MessageUpdateClientPacketQueue implements IMessage {
+import java.util.Arrays;
+
+public class MessageUpdateClientDumpablePackets implements IMessage {
     private BlockPos tilePos;
-    private NBTTagCompound packetNbt;
+    private byte dataSize;
+    private boolean[] data;
+
+    public MessageUpdateClientDumpablePackets() {}
+    public MessageUpdateClientDumpablePackets(AbstractTileMaterialProcessor te, boolean[] data) {
+        this.tilePos = te.getPos();
+        this.data = data;
+        this.dataSize = (byte) data.length;
+    }
 
     @Override
     public void fromBytes(ByteBuf buf) {
         tilePos = BlockPos.fromLong(buf.readLong());
-        packetNbt = ByteBufUtils.readTag(buf);
+        dataSize = buf.readByte();
+        data = new boolean[dataSize];
+        for(int i = 0; i < dataSize; i++) {
+            data[i] = buf.readBoolean();
+        }
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeLong(tilePos.toLong());
-        ByteBufUtils.writeTag(buf, packetNbt);
+        buf.writeByte(dataSize);
+        for(int i = 0; i < dataSize; i++) {
+            buf.writeBoolean(data[i]);
+        }
     }
 
-    public MessageUpdateClientPacketQueue() {}
-
-    public MessageUpdateClientPacketQueue(AbstractTileMaterialProcessor te) {
-        tilePos = te.getPos();
-        packetNbt = te.getHandler().serializeNBT();
-    }
-
-    public static class Handler implements IMessageHandler<MessageUpdateClientPacketQueue, IMessage> {
+    public static class Handler implements IMessageHandler<MessageUpdateClientDumpablePackets, IMessage> {
         @Override
-        public IMessage onMessage(MessageUpdateClientPacketQueue message, MessageContext ctx) {
+        public IMessage onMessage(MessageUpdateClientDumpablePackets message, MessageContext ctx) {
             // Always use a construct like this to actually handle your message. This ensures that
             // your 'handle' code is run on the main Minecraft thread. 'onMessage' itself
             // is called on the networking thread so it is not safe to do a lot of things
@@ -53,7 +62,7 @@ public class MessageUpdateClientPacketQueue implements IMessage {
             return null;
         }
 
-        private void handle(MessageUpdateClientPacketQueue message, MessageContext ctx) {
+        private void handle(MessageUpdateClientDumpablePackets message, MessageContext ctx) {
             if(ctx.side == Side.CLIENT) {
                 Minecraft mc = Minecraft.getMinecraft();
                 WorldClient world = mc.world;
@@ -63,11 +72,13 @@ public class MessageUpdateClientPacketQueue implements IMessage {
                     TileEntity te = world.getTileEntity(message.tilePos);
                     if (te instanceof AbstractTileMaterialProcessor) {
                         AbstractTileMaterialProcessor tile = (AbstractTileMaterialProcessor) te;
-                        tile.getHandler().deserializeNBT(message.packetNbt);
-
+                        tile.setDumpableData(message.data);
                         //debug
                         player.sendMessage(new TextComponentString(
-                                TextFormatting.LIGHT_PURPLE + "Updated packet queue for " + TextFormatting.RESET + te));
+                                TextFormatting.LIGHT_PURPLE + "Updated dumpable data for " + TextFormatting.RESET + te));
+                        player.sendMessage(new TextComponentString(
+                                TextFormatting.GRAY + Arrays.toString(message.data)
+                        ));
                     }
                 }
                 else {

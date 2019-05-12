@@ -5,7 +5,9 @@ import com.rlapcs.radiotransfer.generic.capability.ItemPacketQueue;
 import com.rlapcs.radiotransfer.generic.network.messages.toClient.MessageUpdateClientPacketQueue;
 import com.rlapcs.radiotransfer.generic.tileEntities.IProgressBarProvider;
 import com.rlapcs.radiotransfer.generic.tileEntities.ITileClientUpdater;
+import com.rlapcs.radiotransfer.machines.processors.ProcessorType;
 import com.rlapcs.radiotransfer.machines.processors.abstract_processor.AbstractTileProcessor;
+import com.rlapcs.radiotransfer.machines.processors.material_processor.AbstractTileMaterialProcessor;
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import com.rlapcs.radiotransfer.server.radio.TransferType;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -19,7 +21,7 @@ import java.util.List;
 import static com.rlapcs.radiotransfer.util.Debug.sendToAllPlayers;
 
 
-public abstract class AbstractTileItemProcessor extends AbstractTileProcessor<ItemPacketQueue> implements IProgressBarProvider, ITileClientUpdater {
+public abstract class AbstractTileItemProcessor extends AbstractTileMaterialProcessor<ItemPacketQueue> implements IProgressBarProvider {
     public static final int SPEED_UPGRADE_SLOT_INDEX = 0;
 
     public static final int INVENTORY_SIZE = 17;
@@ -33,55 +35,33 @@ public abstract class AbstractTileItemProcessor extends AbstractTileProcessor<It
 
     protected ItemPacketQueue packetQueue;
     protected int processTimeElapsed;
-    public List<EntityPlayerMP> clientListeners; //stores on server the clients with the GUI open
 
     public AbstractTileItemProcessor() {
         super(INVENTORY_SIZE);
 
         processTimeElapsed = 0;
         upgradeSlotWhitelists.put(SPEED_UPGRADE_SLOT_INDEX, ModConstants.UpgradeCards.SPEED_UPGRADE_WHITELIST);
-        clientListeners = new ArrayList<>();
 
         packetQueue = new ItemPacketQueue() {
             @Override
-            protected void onContentsChanged() {
+            public void onContentsChanged() {
                 super.onContentsChanged();
                 AbstractTileItemProcessor.this.markDirty();
 
                 if(!AbstractTileItemProcessor.this.world.isRemote) {
-                    AbstractTileItemProcessor.this.doClientUpdate();
+                    AbstractTileItemProcessor.this.doClientPacketQueueUpdate();
+                    if(getProcessorType() == ProcessorType.ENCODER) {
+                        sendToAllPlayers("Contents changed! Doing client update for " + this, world);
+                        AbstractTileItemProcessor.this.doClientDumpableUpdate();
+                    }
+                    else {
+                        ((AbstractTileMaterialProcessor) AbstractTileItemProcessor.this.getController().getEncoder(AbstractTileItemProcessor.this.getTransferType())).doClientDumpableUpdate();
+                    }
                 }
             }
         };
-    }
-    //client updates
-    @Override
-    public void doClientUpdate() {
-        clientListeners.forEach(p -> {
-            ModNetworkMessages.INSTANCE.sendTo(new MessageUpdateClientPacketQueue(this), p);
-        });
-    }
-    @Override
-    public boolean addClientListener(EntityPlayerMP player) {
-        if(!world.isRemote) {
-            if(!clientListeners.contains(player)) {
-                //sendToAllPlayers(TextFormatting.GREEN + "Adding player " + player + " from tracking list for " + this, world);
-                clientListeners.add(player);
-                return true;
-            }
-        }
-        return false;
-    }
-    @Override
-    public boolean removeClientListener(EntityPlayerMP player) {
-        if(!world.isRemote) {
-            if(clientListeners.contains(player)) {
-                //sendToAllPlayers(TextFormatting.RED + "Removing player " + player + " from tracking list for " + this, world);
-                clientListeners.remove(player);
-                return true;
-            }
-        }
-        return false;
+
+        dumpableData = new boolean[packetQueue.size()];
     }
 
     //ProgressBar updates

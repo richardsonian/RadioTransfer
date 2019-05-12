@@ -42,6 +42,7 @@ public class MultiblockRadioController {
 
         registeredToNetwork = false;
         multiblockValid = false;
+        isPowered = false;
     }
 
     public boolean isRegisteredToNetwork() {
@@ -153,10 +154,10 @@ public class MultiblockRadioController {
         }
     }
 
-    public AbstractTileMultiblockNode getEncoder(@Nonnull TransferType type) {
+    public AbstractTileProcessor getEncoder(@Nonnull TransferType type) {
         return encoders.get(type);
     }
-    public AbstractTileMultiblockNode getDecoder(@Nonnull TransferType type) {
+    public AbstractTileProcessor getDecoder(@Nonnull TransferType type) {
         return decoders.get(type);
     }
 

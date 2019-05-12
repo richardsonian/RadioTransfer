@@ -1,5 +1,6 @@
 package com.rlapcs.radiotransfer.registries;
 
+import com.rlapcs.radiotransfer.generic.network.messages.toClient.MessageUpdateClientDumpablePackets;
 import com.rlapcs.radiotransfer.generic.network.messages.toClient.MessageUpdateClientMultiblockNodeRegistered;
 import com.rlapcs.radiotransfer.generic.network.messages.toClient.MessageUpdateClientPacketQueue;
 import com.rlapcs.radiotransfer.generic.network.messages.toServer.*;
@@ -19,6 +20,7 @@ public class ModNetworkMessages {
         INSTANCE.registerMessage(MessageAddClientListener.Handler.class, MessageAddClientListener.class, nextID(), Side.SERVER);
 
         INSTANCE.registerMessage(MessageUpdateClientMultiblockNodeRegistered.Handler.class, MessageUpdateClientMultiblockNodeRegistered.class, nextID(), Side.CLIENT);
+        INSTANCE.registerMessage(MessageUpdateClientDumpablePackets.Handler.class, MessageUpdateClientDumpablePackets.class, nextID(), Side.CLIENT);
     }
 
     private static int packetId = 0;

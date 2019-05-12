@@ -5,6 +5,7 @@ import com.rlapcs.radiotransfer.generic.capability.ItemPacketQueue;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.AbstractGuiMachine;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.GuiList;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.sliders.GuiDraggableSliderButton;
+import com.rlapcs.radiotransfer.machines.processors.material_processor.AbstractGuiMaterialProcessor;
 import com.rlapcs.radiotransfer.registries.ModItems;
 import com.rlapcs.radiotransfer.generic.network.messages.toServer.MessageAddClientListener;
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
@@ -16,7 +17,7 @@ import org.lwjgl.input.Mouse;
 
 import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
 
-public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcessor> extends AbstractGuiMachine<T> {
+public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcessor> extends AbstractGuiMaterialProcessor<T> {
     private static final int WIDTH = 188;
     private static final int HEIGHT = 197;
 
@@ -42,8 +43,6 @@ public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcess
     @Override
     public void initGui() {
         super.initGui();
-        sendChatMessage("Gui opened.");
-        ModNetworkMessages.INSTANCE.sendToServer(new MessageAddClientListener(tileEntity, true));
         /*queue = new ItemPacketQueue();
         queue.add(new ItemStack(ModItems.redgem, 64)).getDisplayName();
         queue.add(new ItemStack(ModItems.demoitem, 64)).getDisplayName();
@@ -58,13 +57,6 @@ public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcess
         queue.add(new ItemStack(Items.APPLE, 64)).getDisplayName();*/
         visual = new GuiList(tileEntity.getHandler(), LIST_POS[0], LIST_POS[1], guiLeft, guiTop);
         bar = visual.getBar();
-    }
-
-    @Override
-    public void onGuiClosed() {
-        super.onGuiClosed();
-        sendChatMessage("Gui closed.");
-        ModNetworkMessages.INSTANCE.sendToServer(new MessageAddClientListener(tileEntity, false));
     }
 
     @Override
@@ -105,8 +97,8 @@ public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcess
         scrollVal = up ? Math.log(Math.abs(scroll) + 1) : -Math.log(Math.abs(scroll) + 1);
         scrollPos = (bar.getY() - 24) / 59d;
 
-        sendDebugMessage(tileEntity.isRegisteredInMultiblock() + " : " + tileEntity.getController());
-        visual.drawList(Minecraft.getMinecraft(), mouseX, mouseY, partialTicks, this, this.itemRender, scrollPos, tileEntity.isRegisteredInMultiblock() && tileEntity.getController().canReceive(tileEntity.getTransferType()));
+        //sendDebugMessage(tileEntity.isRegisteredInMultiblock() + " : " + tileEntity.getController());
+        //visual.drawList(Minecraft.getMinecraft(), mouseX, mouseY, partialTicks, this, this.itemRender, scrollPos, tileEntity.isRegisteredInMultiblock() && tileEntity.getController().canReceive(tileEntity.getTransferType()));
         bar.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, isScrolling, scrollVal / (double) tileEntity.getHandler().size());
     }
 

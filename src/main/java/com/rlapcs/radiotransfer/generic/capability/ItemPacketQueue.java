@@ -1,5 +1,6 @@
 package com.rlapcs.radiotransfer.generic.capability;
 
+import com.sun.xml.internal.bind.v2.runtime.reflect.Lister;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -15,7 +16,7 @@ import java.util.List;
 
 import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
 
-public class ItemPacketQueue implements INBTSerializable<NBTTagCompound>, ITransferHandler, Iterable<ItemPacketQueue.PacketBuffer> {
+public class ItemPacketQueue implements IMaterialTransferHandler<ItemStack, ItemPacketQueue.PacketBuffer>, Iterable<ItemPacketQueue.PacketBuffer> {
     public static final int MAX_QUANTITY = 999;
     public static final int MAX_BUFFERS = 15;
 
@@ -84,14 +85,21 @@ public class ItemPacketQueue implements INBTSerializable<NBTTagCompound>, ITrans
         return true;
     }
 
+    @Override
+    public boolean canReceiveDump(PacketBuffer packet) {
+        return canAddAny(packet.getItemStack());
+    }
+
+    @Override
     public int size() {
         return packetBuffers.size();
     }
-
+    @Override
     public Iterator<PacketBuffer> iterator() {
         return packetBuffers.iterator();
     }
 
+    @Override
     public ItemStack peekNextPacket(int maxAmount) {
         for (PacketBuffer b : packetBuffers) {
             if (b != null && !b.isEmpty()) {
@@ -107,7 +115,7 @@ public class ItemPacketQueue implements INBTSerializable<NBTTagCompound>, ITrans
         }
         return ItemStack.EMPTY;
     }
-
+    @Override
     public ItemStack getNextPacket(int maxAmount) {
         for (PacketBuffer b : packetBuffers) {
             if (b != null && !b.isEmpty()) {
@@ -125,7 +133,7 @@ public class ItemPacketQueue implements INBTSerializable<NBTTagCompound>, ITrans
         }
         return ItemStack.EMPTY;
     }
-
+    @Override
     public boolean canAddAll(ItemStack stack, int maxAmount) {
         if (stack.isEmpty()) return false;
         if (maxAmount <= 0) throw new InvalidParameterException("maxAmount must be 1 or greater.");
@@ -149,7 +157,7 @@ public class ItemPacketQueue implements INBTSerializable<NBTTagCompound>, ITrans
         //if cant fit in new buffers
         return false;
     }
-
+    @Override
     public boolean canAddAny(ItemStack stack) {
         if (stack.isEmpty()) return false;
 
@@ -168,11 +176,11 @@ public class ItemPacketQueue implements INBTSerializable<NBTTagCompound>, ITrans
         //if cant fit in anywhere
         return false;
     }
-
+    @Override
     public ItemStack add(ItemStack stack) {
         return add(stack, Integer.MAX_VALUE);
     }
-
+    @Override
     public ItemStack add(ItemStack stack, int maxAmount) {
         if (stack.isEmpty()) return ItemStack.EMPTY;
         if (maxAmount <= 0)
@@ -206,21 +214,26 @@ public class ItemPacketQueue implements INBTSerializable<NBTTagCompound>, ITrans
         return stack;
     }
 
+    @Override
     public void move(int fromIndex, int toIndex) {
         packetBuffers.add(toIndex, packetBuffers.remove(fromIndex));
         onContentsChanged();
     }
 
     public List<PacketBuffer> getAsList() {
-        return packetBuffers;
+        List<PacketBuffer> out = new ArrayList<>();
+        packetBuffers.forEach(pb -> out.add(pb.copy()));
+        return out;
     }
 
-    protected void onContentsChanged() {
+    @Override
+    public void onContentsChanged() {
         sendDebugMessage(this.toString());
         sendDebugMessage("isEmpty?: " + this.isEmpty());
     } //should be overridden to mark tileEntity dirty
 
-    protected void onLoad() {
+    @Override
+    public void onLoad() {
     }
 
     @Override
@@ -260,6 +273,10 @@ public class ItemPacketQueue implements INBTSerializable<NBTTagCompound>, ITrans
 
         public int getQuantity() {
             return quantity;
+        }
+
+        public PacketBuffer copy() {
+            return new PacketBuffer(item, quantity);
         }
 
         @Override
