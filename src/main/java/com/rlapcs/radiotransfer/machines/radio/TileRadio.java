@@ -59,7 +59,7 @@ public class TileRadio extends AbstractTileMachine {
                 multiblock.registerToNetwork();
             }
             if(ticksSinceCreation % SEND_RESOURCES_UPDATE_TICKS == 0) {
-                //sendResources();
+                sendResources();
             }
             /*
             if(ticksSinceCreation % POWER_CHECK_TICKS == 0) { //separate into update use more frequently and update visual less frequently

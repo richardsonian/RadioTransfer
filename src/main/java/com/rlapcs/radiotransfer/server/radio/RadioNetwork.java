@@ -54,9 +54,9 @@ public enum RadioNetwork {
         Set<MultiblockRadioController> radiosCopy = (Set<MultiblockRadioController>) radios.clone();
         radiosCopy.remove(radio); //remove self from the queue
 
-        //remove any on a different frequency or that are invalid
+        //remove any on a different frequency, that cant receive, or that are invalid
         int txFreq = radio.getTransmitFrequency(type);
-        radiosCopy.removeIf((r)->r.getTransmitFrequency(type)!=txFreq || radio.getTileEntity().isInvalid()); //also test activation here?
+        radiosCopy.removeIf((r)-> !r.canReceive(type) || r.getReceiveFrequency(type)!=txFreq || radio.getTileEntity().isInvalid()); //also test activation here?
 
         // Make a new PriorityQueue with ordering relative to the transmitter
         PriorityQueue<MultiblockRadioController> pq = new PriorityQueue<>(1, (r1, r2)-> {
