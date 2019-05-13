@@ -21,7 +21,7 @@ public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcess
     private static final int WIDTH = 188;
     private static final int HEIGHT = 197;
 
-    private static final int[] LIST_POS = {115, 28};
+    private static final int[] LIST_POS = {115, 27};
 
     public static final int PROGRESS_BAR_U = 8;
     public static final int PROGRESS_BAR_V = 15;

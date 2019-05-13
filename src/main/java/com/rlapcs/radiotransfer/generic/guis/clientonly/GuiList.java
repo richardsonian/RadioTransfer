@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GuiList {
+    private static final int NUM_ITEMS = 4;
+
     private Minecraft mc;
     private GuiScreen screen;
     private ItemPacketQueue queue;
@@ -26,18 +28,17 @@ public class GuiList {
         this.screen = screen;
         this.queue = queue;
         items = new ArrayList<>();
-        for (int i = 0; i < 3; i++)
-            items.add(new GuiListItem(i, guiLeft + x, guiTop + y + i * 24));
-        bar = new GuiDraggableSliderButton(queue.size(), 174, 26, guiLeft, guiTop, 24, 83);
+        for (int i = 0; i < NUM_ITEMS; i++)
+            items.add(new GuiListItem(i, guiLeft + x, guiTop + y + i * 18));
+        bar = new GuiDraggableSliderButton(queue.size(), 174, 24, guiLeft, guiTop, 24, 82);
     }
 
     public void drawList(int mouseX, int mouseY, float partialTicks, RenderItem renderer, double ratio, AbstractTileMaterialProcessor tile) {
         int start = MathHelper.clamp((int) ((queue.size() - 3) * ratio), 0, queue.size() - 3);
         List<ItemPacketQueue.PacketBuffer> itemList = queue.getAsList();
         //sendDebugMessage("bar: " + bar.getY());
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         if (!itemList.isEmpty()) {
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < NUM_ITEMS; i++) {
                 int index = MathHelper.clamp(start + i, 0, queue.size() - 1);
                 items.get(i).drawItem(mc, mouseX, mouseY, partialTicks, screen, renderer, itemList.get(index).getItemStack(), index, tile);
             }
