@@ -66,7 +66,7 @@ public class MessageActivateTileController implements IMessage {
                     //debug
                     playerEntity.sendStatusMessage(new TextComponentString(String.format("%s Tile Entity at (%d, %d, %d) is now %s", TextFormatting.GREEN,
                             message.tilePos.getX(), message.tilePos.getY(), message.tilePos.getZ(),
-                            ((TileTxController) te).getActivated() ? "Activated" : "Deactivated")), false);
+                            ((AbstractTileController) te).getActivated() ? "Activated" : "Deactivated")), false);
                 }
             }
         }

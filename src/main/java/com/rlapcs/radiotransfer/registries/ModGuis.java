@@ -7,6 +7,9 @@ import com.rlapcs.radiotransfer.machines.controllers.rx_controller.TileRxControl
 import com.rlapcs.radiotransfer.machines.controllers.tx_controller.ContainerTxController;
 import com.rlapcs.radiotransfer.machines.controllers.tx_controller.GuiTxController;
 import com.rlapcs.radiotransfer.machines.controllers.tx_controller.TileTxController;
+import com.rlapcs.radiotransfer.machines.processors.item_processors.item_decoder.ContainerItemDecoder;
+import com.rlapcs.radiotransfer.machines.processors.item_processors.item_decoder.GuiItemDecoder;
+import com.rlapcs.radiotransfer.machines.processors.item_processors.item_decoder.TileItemDecoder;
 import com.rlapcs.radiotransfer.machines.processors.item_processors.item_encoder.ContainerItemEncoder;
 import com.rlapcs.radiotransfer.machines.processors.item_processors.item_encoder.GuiItemEncoder;
 import com.rlapcs.radiotransfer.machines.processors.item_processors.item_encoder.TileItemEncoder;
@@ -22,7 +25,7 @@ public class ModGuis {
     public static final GuiEntry tx_controller = new GuiEntry(TileTxController.class, GuiTxController.class, ContainerTxController.class);
     public static final GuiEntry rx_controller = new GuiEntry(TileRxController.class, GuiRxController.class, ContainerRxController.class);
     public static final GuiEntry item_encoder = new GuiEntry(TileItemEncoder.class, GuiItemEncoder.class, ContainerItemEncoder.class);
-
+    public static final GuiEntry item_decoder = new GuiEntry(TileItemDecoder.class, GuiItemDecoder.class, ContainerItemDecoder.class);
     /* end gui entry list */
 
 
