@@ -4,6 +4,7 @@ import com.rlapcs.radiotransfer.ModConstants;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.InteractiveGuiElement;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.buttons.GuiDumpButton;
 import com.rlapcs.radiotransfer.generic.network.messages.toServer.MessageChangePacketPriority;
+import com.rlapcs.radiotransfer.machines.processors.ProcessorType;
 import com.rlapcs.radiotransfer.machines.processors.material_processor.AbstractTileMaterialProcessor;
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import net.minecraft.client.Minecraft;
@@ -36,22 +37,28 @@ public class GuiListItem extends InteractiveGuiElement {
         boolean hoveringTop = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height / 2;
         boolean hoveringBottom = mouseX >= this.x && mouseY >= this.y + this.height / 2 && mouseX < this.x + this.width && mouseY < this.y + this.height;
         boolean flag = Mouse.isButtonDown(0);
-        boolean dumpable = tile.getDumpableData()[index];
-        float scaleVal = .6875f;
+        double scaleVal = .6875;
         mc.getTextureManager().bindTexture(ModConstants.ICONS);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         screen.drawTexturedModalRect(XY[0], XY[1], UV[0], UV[1], DIMS[0], DIMS[1]);
-        GL11.glScalef(scaleVal, scaleVal, scaleVal);
+        GL11.glScaled(scaleVal, scaleVal, scaleVal);
         renderer.renderItemIntoGUI(itemStack, (int)((XY[0] + 8) / scaleVal), (int)((XY[1] + 2) / scaleVal)); //AndEffect
-        GL11.glScalef(1 / scaleVal,1 / scaleVal,1 / scaleVal);
+        GL11.glScaled(1 / scaleVal,1 / scaleVal,1 / scaleVal);
         screen.drawString(mc.fontRenderer, "×" + itemStack.getCount(), XY[0] + 20, XY[1] + 4, 0xffffff);
-        InteractiveGuiElement dump = new GuiDumpButton(id, XY[0] + DIMS[0] - 29, XY[1] + 2, dumpable);
-        if (this.hovered)
-            dump.drawButton(mc, mouseX, mouseY, partialTicks);
-        if (hoveringTop && !dump.isMouseOver() && flag && !wasClicking && index != 0)
-            ModNetworkMessages.INSTANCE.sendToServer(new MessageChangePacketPriority(tile, index));
-        if (hoveringBottom && !dump.isMouseOver() && flag && !wasClicking && index != tile.getHandler().size() - 1)
-            ModNetworkMessages.INSTANCE.sendToServer(new MessageChangePacketPriority(tile, index + 1));
+        if (tile.getProcessorType() == ProcessorType.ENCODER) {
+            InteractiveGuiElement dump = new GuiDumpButton(id, XY[0] + DIMS[0] - 29, XY[1] + 2, tile.getDumpableData()[index]);
+            if (this.hovered)
+                dump.drawButton(mc, mouseX, mouseY, partialTicks);
+            if (hoveringTop && !dump.isMouseOver() && flag && !wasClicking && index != 0)
+                ModNetworkMessages.INSTANCE.sendToServer(new MessageChangePacketPriority(tile, index));
+            if (hoveringBottom && !dump.isMouseOver() && flag && !wasClicking && index != tile.getHandler().size() - 1)
+                ModNetworkMessages.INSTANCE.sendToServer(new MessageChangePacketPriority(tile, index + 1));
+        } else {
+            if (hoveringTop && flag && !wasClicking && index != 0)
+                ModNetworkMessages.INSTANCE.sendToServer(new MessageChangePacketPriority(tile, index));
+            if (hoveringBottom && flag && !wasClicking && index != tile.getHandler().size() - 1)
+                ModNetworkMessages.INSTANCE.sendToServer(new MessageChangePacketPriority(tile, index + 1));
+        }
         wasClicking = flag;
     }
 
