@@ -23,16 +23,23 @@ public class GuiListItem extends InteractiveGuiElement {
 
     private int[] XY;
     private boolean wasClicking;
+    private int index;
+    private AbstractTileMaterialProcessor tile;
+    private GuiDumpButton dump;
 
-    public GuiListItem(int id, int x, int y) {
+    public GuiListItem(int id, int x, int y, int index, AbstractTileMaterialProcessor tile) {
         super(id, x, y, DIMS[0], DIMS[1]);
         XY = new int[2];
         XY[0] = x;
         XY[1] = y;
         wasClicking = false;
+        this.index = index;
+        this.tile = tile;
+        if (tile.getProcessorType() == ProcessorType.ENCODER)
+            dump = new GuiDumpButton(id, XY[0] + DIMS[0] - 29, XY[1] + 2);
     }
 
-    public void drawItem(Minecraft mc, int mouseX, int mouseY, float partialTicks, GuiScreen screen, RenderItem renderer, ItemStack itemStack, int index, AbstractTileMaterialProcessor tile) {
+    public void drawItem(Minecraft mc, int mouseX, int mouseY, float partialTicks, GuiScreen screen, RenderItem renderer, ItemStack itemStack, int index) {
         this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
         boolean hoveringTop = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height / 2;
         boolean hoveringBottom = mouseX >= this.x && mouseY >= this.y + this.height / 2 && mouseX < this.x + this.width && mouseY < this.y + this.height;
@@ -46,9 +53,8 @@ public class GuiListItem extends InteractiveGuiElement {
         GL11.glScaled(1 / scaleVal,1 / scaleVal,1 / scaleVal);
         screen.drawString(mc.fontRenderer, "×" + itemStack.getCount(), XY[0] + 20, XY[1] + 4, 0xffffff);
         if (tile.getProcessorType() == ProcessorType.ENCODER) {
-            GuiDumpButton dump = new GuiDumpButton(id, XY[0] + DIMS[0] - 29, XY[1] + 2, tile.getDumpableData()[index]);
             if (this.hovered)
-                dump.drawButton(mc, mouseX, mouseY, partialTicks, index, tile.getPos());
+                dump.drawButton(mc, mouseX, mouseY, partialTicks, index, tile.getPos(), tile.getDumpableData()[index]);
             if (hoveringTop && !dump.isMouseOver() && flag && !wasClicking && index != 0)
                 ModNetworkMessages.INSTANCE.sendToServer(new MessageChangePacketPriority(tile, index));
             if (hoveringBottom && !dump.isMouseOver() && flag && !wasClicking && index != tile.getHandler().size() - 1)

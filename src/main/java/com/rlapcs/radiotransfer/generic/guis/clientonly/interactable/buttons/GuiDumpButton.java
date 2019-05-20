@@ -13,16 +13,17 @@ public class GuiDumpButton extends InteractiveGuiElement {
 
     public boolean dumpable, clicking;
 
-    public GuiDumpButton(int id, int x, int y, boolean dumpable) {
+    public GuiDumpButton(int id, int x, int y) {
         super(id, x, y, DIMS[0], DIMS[1]);
-        this.dumpable = dumpable;
-        UV[0] = dumpable ? 17 : 44;
+        clicking = false;
     }
 
-    public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks, int index, BlockPos tilePos) {
+    public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks, int index, BlockPos tilePos, boolean dumpable) {
         super.drawButton(mc, mouseX, mouseY, partialTicks);
+        this.dumpable = dumpable;
+        UV[0] = dumpable ? 17 : 44;
         boolean flag = Mouse.isButtonDown(0);
-        if (this.hovered && flag && !clicking)
+        if (this.hovered && !flag && clicking)
             ModNetworkMessages.INSTANCE.sendToServer(new MessageDumpItemFromQueue(tilePos, index));
         clicking = flag;
     }

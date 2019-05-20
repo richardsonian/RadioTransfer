@@ -55,7 +55,7 @@ public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcess
         queue.add(new ItemStack(Items.FERMENTED_SPIDER_EYE, 64)).getDisplayName();
         queue.add(new ItemStack(Items.ACACIA_BOAT, 64)).getDisplayName();
         queue.add(new ItemStack(Items.APPLE, 64)).getDisplayName();*/
-        visual = new GuiList(Minecraft.getMinecraft(), this, tileEntity.getHandler(), LIST_POS[0], LIST_POS[1], guiLeft, guiTop);
+        visual = new GuiList(Minecraft.getMinecraft(), this, tileEntity.getHandler(), LIST_POS[0], LIST_POS[1], guiLeft, guiTop, tileEntity);
         bar = visual.getBar();
     }
 
@@ -99,8 +99,9 @@ public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcess
 
         //sendDebugMessage(tileEntity.isRegisteredInMultiblock() + " : " + tileEntity.getController());
         if(tileEntity.getHandler() != null && tileEntity.getDumpableData() != null && tileEntity.getHandler().size() == tileEntity.getDumpableData().length) {
-            visual.drawList(mouseX, mouseY, partialTicks, this.itemRender, scrollPos, tileEntity);
-            bar.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, isScrolling, scrollVal / (double) tileEntity.getHandler().size());
+            visual.drawList(mouseX, mouseY, partialTicks, this.itemRender, scrollPos);
+            if (tileEntity.getHandler().size() > 4)
+                bar.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, isScrolling, scrollVal / (double) tileEntity.getHandler().size());
         }
     }
 
