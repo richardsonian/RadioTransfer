@@ -6,30 +6,33 @@
     },
     "model": "radiotransfer:radio.obj",
     "textures": {
-      "#Material": "radiotransfer:blocks/radio",
-      "#Material.001": "radiotransfer:blocks/radio"
+      "#Material": "radiotransfer:blocks/radio/main",
+      "#Material.001": "radiotransfer:blocks/radio/vacuum_tubes",
+      "#Material.002": "radiotransfer:blocks/radio/light"
     }
   },
   "variants": {
-    "normal": {
+    "normal": [{
       "custom": {
         "flip-v": true
       },
       "model": "radiotransfer:radio.obj",
       "textures": {
-        "#Material": "radiotransfer:blocks/radio.mtl",
-        "#Material.001": "radiotransfer:blocks/radio.mtl"
+        "#Material": "radiotransfer:blocks/radio/main",
+        "#Material.001": "radiotransfer:blocks/radio/vacuum_tubes",
+        "#Material.002": "radiotransfer:blocks/radio/light"
       }
-    },
-    "inventory": {
+    }],
+    "inventory": [{
       "custom": {
         "flip-v": true
       },
       "model": "radiotransfer:radio.obj",
       "textures": {
-        "#Material": "radiotransfer:blocks/radio.mtl",
-        "#Material.001": "radiotransfer:blocks/radio.mtl"
+        "#Material": "radiotransfer:blocks/radio/main",
+        "#Material.001": "radiotransfer:blocks/radio/vacuum_tubes",
+        "#Material.002": "radiotransfer:blocks/radio/light"
       }
-    }
+    }]
   }
 }

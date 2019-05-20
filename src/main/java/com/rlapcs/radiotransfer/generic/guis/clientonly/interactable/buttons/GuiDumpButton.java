@@ -5,12 +5,13 @@ import com.rlapcs.radiotransfer.generic.network.messages.toServer.MessageDumpIte
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.BlockPos;
+import org.lwjgl.input.Mouse;
 
 public class GuiDumpButton extends InteractiveGuiElement {
     private static final int[] UV = {17, 15};
     private static final int[] DIMS = {27, 11};
 
-    public boolean dumpable;
+    public boolean dumpable, clicking;
 
     public GuiDumpButton(int id, int x, int y, boolean dumpable) {
         super(id, x, y, DIMS[0], DIMS[1]);
@@ -20,7 +21,10 @@ public class GuiDumpButton extends InteractiveGuiElement {
 
     public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks, int index, BlockPos tilePos) {
         super.drawButton(mc, mouseX, mouseY, partialTicks);
-        ModNetworkMessages.INSTANCE.sendToServer(new MessageDumpItemFromQueue(tilePos, index));
+        boolean flag = Mouse.isButtonDown(0);
+        if (this.hovered && flag && !clicking)
+            ModNetworkMessages.INSTANCE.sendToServer(new MessageDumpItemFromQueue(tilePos, index));
+        clicking = flag;
     }
 
     @Override
