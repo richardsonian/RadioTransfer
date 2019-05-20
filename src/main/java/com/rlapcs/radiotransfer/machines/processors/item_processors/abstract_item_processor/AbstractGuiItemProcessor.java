@@ -43,18 +43,18 @@ public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcess
     @Override
     public void initGui() {
         super.initGui();
-        /*queue = new ItemPacketQueue();
-        queue.add(new ItemStack(ModItems.redgem, 64)).getDisplayName();
-        queue.add(new ItemStack(ModItems.demoitem, 64)).getDisplayName();
-        queue.add(new ItemStack(Items.DIAMOND, 64)).getDisplayName();
-        queue.add(new ItemStack(Items.GOLD_INGOT, 64)).getDisplayName();
-        queue.add(new ItemStack(Items.GOLD_NUGGET, 64)).getDisplayName();
-        queue.add(new ItemStack(Items.GOLDEN_APPLE, 64)).getDisplayName();
-        queue.add(new ItemStack(Items.GHAST_TEAR, 64)).getDisplayName();
-        queue.add(new ItemStack(Items.FEATHER, 64)).getDisplayName();
-        queue.add(new ItemStack(Items.FERMENTED_SPIDER_EYE, 64)).getDisplayName();
-        queue.add(new ItemStack(Items.ACACIA_BOAT, 64)).getDisplayName();
-        queue.add(new ItemStack(Items.APPLE, 64)).getDisplayName();*/
+        /*ItemPacketQueue queues = new ItemPacketQueue();
+        queues.add(new ItemStack(ModItems.redgem, 64)).getDisplayName();
+        queues.add(new ItemStack(ModItems.demoitem, 64)).getDisplayName();
+        queues.add(new ItemStack(Items.DIAMOND, 64)).getDisplayName();
+        queues.add(new ItemStack(Items.GOLD_INGOT, 64)).getDisplayName();
+        queues.add(new ItemStack(Items.GOLD_NUGGET, 64)).getDisplayName();
+        queues.add(new ItemStack(Items.GOLDEN_APPLE, 64)).getDisplayName();
+        queues.add(new ItemStack(Items.GHAST_TEAR, 64)).getDisplayName();
+        queues.add(new ItemStack(Items.FEATHER, 64)).getDisplayName();
+        queues.add(new ItemStack(Items.FERMENTED_SPIDER_EYE, 64)).getDisplayName();
+        queues.add(new ItemStack(Items.ACACIA_BOAT, 64)).getDisplayName();
+        queues.add(new ItemStack(Items.APPLE, 64)).getDisplayName();*/
         visual = new GuiList(Minecraft.getMinecraft(), this, tileEntity.getHandler(), LIST_POS[0], LIST_POS[1], guiLeft, guiTop, tileEntity);
         bar = visual.getBar();
     }

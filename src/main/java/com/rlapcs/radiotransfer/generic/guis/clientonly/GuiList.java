@@ -8,7 +8,6 @@ import com.rlapcs.radiotransfer.machines.processors.material_processor.AbstractT
 import com.rlapcs.radiotransfer.util.Debug;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.util.math.MathHelper;
 
