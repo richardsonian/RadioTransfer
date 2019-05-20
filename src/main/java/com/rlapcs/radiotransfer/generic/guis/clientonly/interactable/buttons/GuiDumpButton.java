@@ -1,7 +1,6 @@
 package com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.buttons;
 
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.InteractiveGuiElement;
-import com.rlapcs.radiotransfer.generic.network.messages.toServer.MessageChangePacketPriority;
 import com.rlapcs.radiotransfer.generic.network.messages.toServer.MessageDumpItemFromQueue;
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import net.minecraft.client.Minecraft;

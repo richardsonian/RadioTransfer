@@ -2,24 +2,13 @@ package com.rlapcs.radiotransfer.machines.processors.item_processors.abstract_it
 
 import com.rlapcs.radiotransfer.ModConstants;
 import com.rlapcs.radiotransfer.generic.capability.ItemPacketQueue;
-import com.rlapcs.radiotransfer.generic.multiblock.MultiblockRadioController;
-import com.rlapcs.radiotransfer.generic.network.messages.toClient.MessageUpdateClientPacketQueue;
 import com.rlapcs.radiotransfer.generic.tileEntities.IProgressBarProvider;
-import com.rlapcs.radiotransfer.generic.tileEntities.ITileClientUpdater;
 import com.rlapcs.radiotransfer.machines.processors.ProcessorType;
-import com.rlapcs.radiotransfer.machines.processors.abstract_processor.AbstractTileProcessor;
 import com.rlapcs.radiotransfer.machines.processors.material_processor.AbstractTileMaterialProcessor;
-import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import com.rlapcs.radiotransfer.server.radio.TransferType;
-import net.minecraft.entity.player.EntityPlayerMP;
+import com.rlapcs.radiotransfer.util.Debug;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.TextFormatting;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.rlapcs.radiotransfer.util.Debug.sendToAllPlayers;
 
 
 public abstract class AbstractTileItemProcessor extends AbstractTileMaterialProcessor<ItemPacketQueue> implements IProgressBarProvider {
@@ -51,12 +40,16 @@ public abstract class AbstractTileItemProcessor extends AbstractTileMaterialProc
 
                 if(!AbstractTileItemProcessor.this.world.isRemote) {
                     AbstractTileItemProcessor.this.doClientPacketQueueUpdate();
+
+                    //dumpable data update
                     if(getProcessorType() == ProcessorType.ENCODER) {
                         AbstractTileItemProcessor.this.doClientDumpableUpdate();
+                        Debug.sendToAllPlayers("Updated encoder dumpable from self", world);
                     }
                     else {
                         AbstractTileMaterialProcessor encoder = ((AbstractTileMaterialProcessor) AbstractTileItemProcessor.this.getController().getEncoder(AbstractTileItemProcessor.this.getTransferType()));
                         if(encoder != null) encoder.doClientDumpableUpdate();
+                        Debug.sendToAllPlayers("Updated encoder dumpable from decoder", world);
                     }
                 }
             }

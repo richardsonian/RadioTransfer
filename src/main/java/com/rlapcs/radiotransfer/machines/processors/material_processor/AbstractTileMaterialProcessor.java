@@ -1,19 +1,15 @@
 package com.rlapcs.radiotransfer.machines.processors.material_processor;
 
 import com.rlapcs.radiotransfer.generic.capability.IMaterialTransferHandler;
-import com.rlapcs.radiotransfer.generic.capability.ITransferHandler;
 import com.rlapcs.radiotransfer.generic.network.messages.toClient.MessageUpdateClientDumpablePackets;
 import com.rlapcs.radiotransfer.generic.network.messages.toClient.MessageUpdateClientPacketQueue;
 import com.rlapcs.radiotransfer.generic.tileEntities.ITileClientUpdater;
 import com.rlapcs.radiotransfer.machines.processors.ProcessorType;
 import com.rlapcs.radiotransfer.machines.processors.abstract_processor.AbstractTileProcessor;
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.text.TextComponentString;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public abstract class AbstractTileMaterialProcessor<T extends IMaterialTransferHandler> extends AbstractTileProcessor<T> implements ITileClientUpdater {
@@ -36,6 +32,21 @@ public abstract class AbstractTileMaterialProcessor<T extends IMaterialTransferH
     @Override
     public List<EntityPlayerMP> getClientListeners() {
         return clientListeners;
+    }
+
+    public boolean dump(int index) {
+        if(getProcessorType() == ProcessorType.ENCODER && registeredInMultiblock) {
+            AbstractTileProcessor decoderUncast = this.getController().getDecoder(this.getTransferType());
+            if(decoderUncast instanceof AbstractTileMaterialProcessor && decoderUncast.getProcessorType() == ProcessorType.DECODER) {
+                AbstractTileMaterialProcessor decoder = (AbstractTileMaterialProcessor) decoderUncast;
+
+                if(decoder.getHandler().canReceiveDump(this.getHandler().peekIndex(index))) {
+                    this.getHandler().add(decoder.getHandler().add(this.getHandler().getIndex(index)));
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public boolean[] getDumpableData() {

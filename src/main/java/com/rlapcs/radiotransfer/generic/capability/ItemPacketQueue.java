@@ -87,6 +87,21 @@ public class ItemPacketQueue implements IMaterialTransferHandler<ItemStack, Item
     public boolean canReceiveDump(PacketBuffer packet) {
         return canAddAny(packet.getItemStack());
     }
+    @Override
+    public PacketBuffer getIndex(int index) {
+        if(!validateIndex(index)) return PacketBuffer.EMPTY;
+
+        PacketBuffer packet = packetBuffers.remove(index);
+        onContentsChanged();
+
+        return packet;
+    }
+
+    @Override
+    public PacketBuffer peekIndex(int index) {
+        if(!validateIndex(index)) return PacketBuffer.EMPTY;
+        return packetBuffers.get(index);
+    }
 
     @Override
     public int size() {
@@ -245,7 +260,7 @@ public class ItemPacketQueue implements IMaterialTransferHandler<ItemStack, Item
         return s;
     }
 
-    public static class PacketBuffer {
+    public static class PacketBuffer implements IMaterialTransferHandler.Packet<ItemStack> {
         public static final PacketBuffer EMPTY = new PacketBuffer(ItemStack.EMPTY, 0);
 
         private ItemStack item;
@@ -255,6 +270,11 @@ public class ItemPacketQueue implements IMaterialTransferHandler<ItemStack, Item
             this.item = item.copy();
             this.item.setCount(1);
             this.quantity = quantity;
+        }
+
+        @Override
+        public ItemStack getMaterial() {
+            return getItemStack();
         }
 
         private PacketBuffer(ItemStack stack) {

@@ -1,11 +1,9 @@
 package com.rlapcs.radiotransfer.generic.guis.clientonly.interactable;
 
 import com.rlapcs.radiotransfer.ModConstants;
-import com.rlapcs.radiotransfer.RadioTransfer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
 
 public abstract class InteractiveGuiElement extends GuiButton {
     public InteractiveGuiElement(int id, int x, int y, int iconWidth, int iconHeight) {
