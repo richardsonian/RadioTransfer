@@ -6,8 +6,9 @@
     },
     "model": "radiotransfer:radio.obj",
     "textures": {
-      "#Material": "radiotransfer:blocks/radio.png",
-      "#Material.001": "radiotransfer:blocks/radio.png"
+      "#Material": "radiotransfer:blocks/radio/main",
+      "#Material.001": "radiotransfer:blocks/radio/vacuum_tubes",
+      "#Material.002": "radiotransfer:blocks/radio/light"
     }
   },
   "variants": {
@@ -17,8 +18,9 @@
       },
       "model": "radiotransfer:radio.obj",
       "textures": {
-        "#Material": "radiotransfer:blocks/radio.png",
-        "#Material.001": "radiotransfer:blocks/radio.png"
+        "#Material": "radiotransfer:blocks/radio/main",
+        "#Material.001": "radiotransfer:blocks/radio/vacuum_tubes",
+        "#Material.002": "radiotransfer:blocks/radio/light"
       }
     }],
     "inventory": [{
@@ -27,8 +29,9 @@
       },
       "model": "radiotransfer:radio.obj",
       "textures": {
-        "#Material": "radiotransfer:blocks/radio.png",
-        "#Material.001": "radiotransfer:blocks/radio.png"
+        "#Material": "radiotransfer:blocks/radio/main",
+        "#Material.001": "radiotransfer:blocks/radio/vacuum_tubes",
+        "#Material.002": "radiotransfer:blocks/radio/light"
       }
     }]
   }
