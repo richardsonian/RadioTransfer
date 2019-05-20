@@ -6,30 +6,30 @@
     },
     "model": "radiotransfer:radio.obj",
     "textures": {
-      "#Material": "radiotransfer:blocks/radio",
-      "#Material.001": "radiotransfer:blocks/radio"
+      "#Material": "radiotransfer:blocks/radio.png",
+      "#Material.001": "radiotransfer:blocks/radio.png"
     }
   },
   "variants": {
-    "normal": {
+    "normal": [{
       "custom": {
         "flip-v": true
       },
       "model": "radiotransfer:radio.obj",
       "textures": {
-        "#Material": "radiotransfer:blocks/radio.mtl",
-        "#Material.001": "radiotransfer:blocks/radio.mtl"
+        "#Material": "radiotransfer:blocks/radio.png",
+        "#Material.001": "radiotransfer:blocks/radio.png"
       }
-    },
-    "inventory": {
+    }],
+    "inventory": [{
       "custom": {
         "flip-v": true
       },
       "model": "radiotransfer:radio.obj",
       "textures": {
-        "#Material": "radiotransfer:blocks/radio.mtl",
-        "#Material.001": "radiotransfer:blocks/radio.mtl"
+        "#Material": "radiotransfer:blocks/radio.png",
+        "#Material.001": "radiotransfer:blocks/radio.png"
       }
-    }
+    }]
   }
 }
