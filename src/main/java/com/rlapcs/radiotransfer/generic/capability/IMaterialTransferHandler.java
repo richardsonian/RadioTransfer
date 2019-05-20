@@ -5,7 +5,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.List;
 
-public interface IMaterialTransferHandler<MATERIAL, PACKET> extends ITransferHandler, INBTSerializable<NBTTagCompound> {
+public interface IMaterialTransferHandler<MATERIAL, PACKET extends IMaterialTransferHandler.Packet<MATERIAL>> extends ITransferHandler, INBTSerializable<NBTTagCompound> {
     boolean canReceiveDump(PACKET packet);
 
     /*Removes the index if valid */
@@ -32,7 +32,7 @@ public interface IMaterialTransferHandler<MATERIAL, PACKET> extends ITransferHan
         return (index > 0) && (index < size());
     }
 
-    public static interface Packet<MATERIAL> {
+    interface Packet<MATERIAL> {
         MATERIAL getMaterial();
         boolean isEmpty();
         int getQuantity();

@@ -1,5 +1,6 @@
 package com.rlapcs.radiotransfer.machines.processors.material_processor;
 
+import com.rlapcs.radiotransfer.generic.capability.IMaterialTransferHandler.Packet;
 import com.rlapcs.radiotransfer.generic.capability.IMaterialTransferHandler;
 import com.rlapcs.radiotransfer.generic.network.messages.toClient.MessageUpdateClientDumpablePackets;
 import com.rlapcs.radiotransfer.generic.network.messages.toClient.MessageUpdateClientPacketQueue;
@@ -41,7 +42,7 @@ public abstract class AbstractTileMaterialProcessor<T extends IMaterialTransferH
                 AbstractTileMaterialProcessor decoder = (AbstractTileMaterialProcessor) decoderUncast;
 
                 if(decoder.getHandler().canReceiveDump(this.getHandler().peekIndex(index))) {
-                    this.getHandler().add(decoder.getHandler().add(this.getHandler().getIndex(index)));
+                    this.getHandler().add(decoder.getHandler().add(this.getHandler().getIndex(index).getMaterial()));
                     return true;
                 }
             }
@@ -82,7 +83,7 @@ public abstract class AbstractTileMaterialProcessor<T extends IMaterialTransferH
             }
 
             IMaterialTransferHandler decoderHandler = (IMaterialTransferHandler) decoderUncast.getHandler();
-            List ourPackets = getHandler().getAsList();
+            List<Packet> ourPackets = getHandler().getAsList();
             for (int i = 0; i < size; i++) {
                 if(decoderHandler.canReceiveDump(ourPackets.get(i))) {
                     data[i] = true;
