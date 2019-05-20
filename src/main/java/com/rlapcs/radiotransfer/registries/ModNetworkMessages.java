@@ -22,6 +22,7 @@ public class ModNetworkMessages {
         INSTANCE.registerMessage(MessageUpdateClientMultiblockNodeRegistered.Handler.class, MessageUpdateClientMultiblockNodeRegistered.class, nextID(), Side.CLIENT);
         INSTANCE.registerMessage(MessageUpdateClientDumpablePackets.Handler.class, MessageUpdateClientDumpablePackets.class, nextID(), Side.CLIENT);
         INSTANCE.registerMessage(MessageChangePacketPriority.Handler.class, MessageChangePacketPriority.class, nextID(), Side.SERVER);
+        INSTANCE.registerMessage(MessageDumpItemFromQueue.Handler.class, MessageDumpItemFromQueue.class, nextID(), Side.SERVER);
     }
 
     private static int packetId = 0;

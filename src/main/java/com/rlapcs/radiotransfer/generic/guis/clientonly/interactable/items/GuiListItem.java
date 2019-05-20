@@ -46,9 +46,9 @@ public class GuiListItem extends InteractiveGuiElement {
         GL11.glScaled(1 / scaleVal,1 / scaleVal,1 / scaleVal);
         screen.drawString(mc.fontRenderer, "×" + itemStack.getCount(), XY[0] + 20, XY[1] + 4, 0xffffff);
         if (tile.getProcessorType() == ProcessorType.ENCODER) {
-            InteractiveGuiElement dump = new GuiDumpButton(id, XY[0] + DIMS[0] - 29, XY[1] + 2, tile.getDumpableData()[index]);
+            GuiDumpButton dump = new GuiDumpButton(id, XY[0] + DIMS[0] - 29, XY[1] + 2, tile.getDumpableData()[index]);
             if (this.hovered)
-                dump.drawButton(mc, mouseX, mouseY, partialTicks);
+                dump.drawButton(mc, mouseX, mouseY, partialTicks, index, tile.getPos());
             if (hoveringTop && !dump.isMouseOver() && flag && !wasClicking && index != 0)
                 ModNetworkMessages.INSTANCE.sendToServer(new MessageChangePacketPriority(tile, index));
             if (hoveringBottom && !dump.isMouseOver() && flag && !wasClicking && index != tile.getHandler().size() - 1)

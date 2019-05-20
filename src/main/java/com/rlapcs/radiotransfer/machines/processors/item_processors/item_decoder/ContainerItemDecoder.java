@@ -8,8 +8,8 @@ public class ContainerItemDecoder extends AbstractContainerItemProcessor {
         super(playerInventory, te);
 
         //constant overrides
-        SPEED_UPGRADE_SLOT_POS = new int[] {90, 84}; //needs to be changed
-        PROCESSOR_SLOTS_POS = new int[] {6, 24}; //needs to be changed
+        SPEED_UPGRADE_SLOT_POS = new int[] {83, 84};
+        PROCESSOR_SLOTS_POS = new int[] {106, 24}; //needs to be changed
 
         initSlots(playerInventory);
     }
