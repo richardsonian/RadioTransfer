@@ -7,6 +7,10 @@ import java.util.List;
 
 public interface IMaterialTransferHandler<MATERIAL, PACKET> extends ITransferHandler, INBTSerializable<NBTTagCompound> {
     boolean canReceiveDump(PACKET packet);
+
+    /*Removes the index if valid */
+    PACKET getIndex(int index);
+    PACKET peekIndex(int index);
     List<PACKET> getAsList();
 
     MATERIAL add(MATERIAL resources);
@@ -26,5 +30,12 @@ public interface IMaterialTransferHandler<MATERIAL, PACKET> extends ITransferHan
 
     default boolean validateIndex(int index) {
         return (index > 0) && (index < size());
+    }
+
+    public static interface Packet<MATERIAL> {
+        MATERIAL getMaterial();
+        boolean isEmpty();
+        int getQuantity();
+        Packet copy();
     }
 }
