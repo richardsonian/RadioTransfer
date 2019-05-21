@@ -54,6 +54,7 @@ public class MessageUpdateClientMultiblockNodeRegistered implements IMessage {
                     if (te instanceof AbstractTileMultiblockNode) {
                         AbstractTileMultiblockNode node = (AbstractTileMultiblockNode) te;
                         node.setRegisteredInMultiblock(message.target);
+                        player.sendChatMessage(te + " on client now " + (message.target ? "registered" : "deregistered"));
                     }
                 }
             }

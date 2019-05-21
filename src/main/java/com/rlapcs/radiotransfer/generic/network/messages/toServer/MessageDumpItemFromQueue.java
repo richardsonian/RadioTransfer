@@ -53,8 +53,10 @@ public class MessageDumpItemFromQueue implements IMessage {
             if (te != null && te instanceof AbstractTileMaterialProcessor) {
                 AbstractTileMaterialProcessor tile = (AbstractTileMaterialProcessor) te;
                 boolean result = tile.dump(message.index);
-                String msg = (result ? TextFormatting.DARK_GREEN + "(SUCCESS)" : TextFormatting.DARK_RED + "(FAILURE)") + TextFormatting.RESET;
-                Debug.sendToAllPlayers(msg + TextFormatting.GOLD + " dumped index: " + message.index, world);
+
+                //debug
+                String flag = (result ? TextFormatting.DARK_GREEN + "(SUCCESS)" : TextFormatting.DARK_RED + "(FAILURE)") + TextFormatting.RESET;
+                Debug.sendToAllPlayers(flag + TextFormatting.GOLD + " dumped index: " + message.index, world);
             }
         }
     }

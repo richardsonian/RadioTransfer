@@ -5,8 +5,11 @@ import com.rlapcs.radiotransfer.generic.capability.ItemPacketQueue;
 import com.rlapcs.radiotransfer.generic.tileEntities.IProgressBarProvider;
 import com.rlapcs.radiotransfer.machines.processors.ProcessorType;
 import com.rlapcs.radiotransfer.machines.processors.material_processor.AbstractTileMaterialProcessor;
+import com.rlapcs.radiotransfer.registries.ModItems;
 import com.rlapcs.radiotransfer.server.radio.TransferType;
 import com.rlapcs.radiotransfer.util.Debug;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 
@@ -58,6 +61,20 @@ public abstract class AbstractTileItemProcessor extends AbstractTileMaterialProc
         dumpableData = new boolean[packetQueue.size()];
     }
 
+    public void debugFillPacketQueue() {
+        packetQueue.add(new ItemStack(ModItems.redgem, 64));
+        packetQueue.add(new ItemStack(ModItems.demoitem, 64));
+        packetQueue.add(new ItemStack(Items.DIAMOND, 64));
+        packetQueue.add(new ItemStack(Items.GOLD_INGOT, 64));
+        packetQueue.add(new ItemStack(Items.GOLD_NUGGET, 64));
+        packetQueue.add(new ItemStack(Items.GOLDEN_APPLE, 64));
+        packetQueue.add(new ItemStack(Items.GHAST_TEAR, 64));
+        packetQueue.add(new ItemStack(Items.FEATHER, 64));
+        packetQueue.add(new ItemStack(Items.FERMENTED_SPIDER_EYE, 64));
+        packetQueue.add(new ItemStack(Items.ACACIA_BOAT, 64));
+        packetQueue.add(new ItemStack(Items.APPLE, 64));
+    }
+
     //ProgressBar updates
     protected int getItemsPerProcess() {
         return BASE_ITEMS_PER_PROCESS;
@@ -74,8 +91,10 @@ public abstract class AbstractTileItemProcessor extends AbstractTileMaterialProc
     public void update() {
         super.update();
         //run on both client and server
-        if(ticksSinceCreation % PROCESS_UPDATE_TICKS == 0) {
-            doProcessUpdate(world, PROCESS_UPDATE_TICKS);
+        if(registeredInMultiblock) { //& powered
+            if (ticksSinceCreation % PROCESS_UPDATE_TICKS == 0) {
+                doProcessUpdate(world, PROCESS_UPDATE_TICKS);
+            }
         }
     }
 

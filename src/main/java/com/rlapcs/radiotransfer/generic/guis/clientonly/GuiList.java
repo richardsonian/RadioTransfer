@@ -5,7 +5,6 @@ import com.rlapcs.radiotransfer.generic.guis.Coordinate;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.items.GuiListItem;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.sliders.GuiDraggableSliderButton;
 import com.rlapcs.radiotransfer.machines.processors.material_processor.AbstractTileMaterialProcessor;
-import com.rlapcs.radiotransfer.util.Debug;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderItem;
@@ -16,6 +15,7 @@ import java.util.List;
 
 public class GuiList {
     private static final int NUM_ITEMS = 4;
+    private static final Coordinate BAR_REL_COORDS = new Coordinate(59, -3);
 
     private Minecraft mc;
     private GuiScreen screen;
@@ -30,7 +30,7 @@ public class GuiList {
         items = new ArrayList<>();
         for (int i = 0; i < NUM_ITEMS; i++)
             items.add(new GuiListItem(i, guiLeft + x, guiTop + y + i * 18, i, tile));
-        bar = new GuiDraggableSliderButton(queue.size(), 174, 24, guiLeft, guiTop, 24, 82);
+        bar = new GuiDraggableSliderButton(queue.size(), x + BAR_REL_COORDS.x, y + BAR_REL_COORDS.y, guiLeft, guiTop, 24, 82);
     }
 
     public void drawList(int mouseX, int mouseY, float partialTicks, RenderItem renderer, double ratio) {
@@ -39,7 +39,7 @@ public class GuiList {
         //sendDebugMessage("bar: " + bar.getY());
         if (!itemList.isEmpty()) {
             if (itemList.size() <= NUM_ITEMS) {
-                Debug.sendDebugMessage("less");
+                //Debug.sendDebugMessage("less");
                 for (int i = 0; i < queue.size(); i++) {
                     items.get(i).drawItem(mc, mouseX, mouseY, partialTicks, screen, renderer, itemList.get(i).getItemStack(), i);
                 }

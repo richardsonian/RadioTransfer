@@ -7,15 +7,15 @@ import com.rlapcs.radiotransfer.generic.network.messages.toServer.MessageChangeP
 import com.rlapcs.radiotransfer.machines.processors.ProcessorType;
 import com.rlapcs.radiotransfer.machines.processors.material_processor.AbstractTileMaterialProcessor;
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
+import com.rlapcs.radiotransfer.util.Debug;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
-
-import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
 
 public class GuiListItem extends InteractiveGuiElement {
     private static final int[] UV = {0, 0};
@@ -53,12 +53,17 @@ public class GuiListItem extends InteractiveGuiElement {
         GL11.glScaled(1 / scaleVal,1 / scaleVal,1 / scaleVal);
         screen.drawString(mc.fontRenderer, "×" + itemStack.getCount(), XY[0] + 20, XY[1] + 4, 0xffffff);
         if (tile.getProcessorType() == ProcessorType.ENCODER) {
-            if (this.hovered)
-                dump.drawButton(mc, mouseX, mouseY, partialTicks, index, tile.getPos(), tile.getDumpableData()[index]);
-            if (hoveringTop && !dump.isMouseOver() && flag && !wasClicking && index != 0)
-                ModNetworkMessages.INSTANCE.sendToServer(new MessageChangePacketPriority(tile, index));
-            if (hoveringBottom && !dump.isMouseOver() && flag && !wasClicking && index != tile.getHandler().size() - 1)
-                ModNetworkMessages.INSTANCE.sendToServer(new MessageChangePacketPriority(tile, index + 1));
+            if(tile.getDumpableData() != null && tile.getHandler().size() == tile.getDumpableData().length) {
+                if (this.hovered)
+                    dump.drawButton(mc, mouseX, mouseY, partialTicks, index, tile.getPos(), tile.getDumpableData()[index]);
+                if (hoveringTop && !dump.isMouseOver() && flag && !wasClicking && index != 0)
+                    ModNetworkMessages.INSTANCE.sendToServer(new MessageChangePacketPriority(tile, index));
+                if (hoveringBottom && !dump.isMouseOver() && flag && !wasClicking && index != tile.getHandler().size() - 1)
+                    ModNetworkMessages.INSTANCE.sendToServer(new MessageChangePacketPriority(tile, index + 1));
+            }
+            else {
+                Debug.sendDebugMessage(TextFormatting.RED + "PACKET QUEUE DID NOT MATCH DUMP DATA");
+            }
         } else {
             if (hoveringTop && flag && !wasClicking && index != 0)
                 ModNetworkMessages.INSTANCE.sendToServer(new MessageChangePacketPriority(tile, index));

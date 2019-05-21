@@ -4,6 +4,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.ItemHandlerHelper;
 
@@ -244,7 +245,7 @@ public class ItemPacketQueue implements IMaterialTransferHandler<ItemStack, Item
     @Override
     public void onContentsChanged() {
         sendDebugMessage(this.toString());
-        sendDebugMessage("isEmpty?: " + this.isEmpty());
+        //sendDebugMessage("isEmpty?: " + this.isEmpty());
     } //should be overridden to mark tileEntity dirty
 
     @Override
@@ -253,10 +254,11 @@ public class ItemPacketQueue implements IMaterialTransferHandler<ItemStack, Item
 
     @Override
     public String toString() {
-        String s = "--PacketQueue--";
+        String s = TextFormatting.DARK_AQUA + "-------PacketQueue-------" + TextFormatting.RESET;
         for (PacketBuffer b : packetBuffers) {
-            s += "\n" + b;
+            s += String.format("\n%s|%s  - %-25s%s|%s", TextFormatting.DARK_AQUA, TextFormatting.RESET, b, TextFormatting.DARK_AQUA, TextFormatting.RESET);
         }
+        s += "\n" + TextFormatting.DARK_AQUA + "-------------------------";
         return s;
     }
 
@@ -295,13 +297,14 @@ public class ItemPacketQueue implements IMaterialTransferHandler<ItemStack, Item
             return quantity;
         }
 
+        @Override
         public PacketBuffer copy() {
             return new PacketBuffer(item, quantity);
         }
 
         @Override
         public String toString() {
-            return String.format("Packets: %s -- x%d", item.getUnlocalizedName(), quantity);
+            return String.format("%s x%d", item.getUnlocalizedName(), quantity);
         }
     }
 }
