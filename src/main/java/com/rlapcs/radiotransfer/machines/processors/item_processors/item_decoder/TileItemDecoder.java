@@ -19,6 +19,7 @@ public class TileItemDecoder extends AbstractTileItemProcessor {
         boolean hasPackets = !packetQueue.isEmpty();
         boolean hasSpace = ItemUtils.canMergeAnyIntoInventory(packetQueue.peekNextPacket(ItemPacketQueue.MAX_QUANTITY), itemStackHandler, getNonUpgradeInventorySlots());
 
+        //Debug.sendToAllPlayers(String.format("Decoder hasPackets(%b), hasSpace(%b)", hasPackets, hasSpace), world);
         return hasPackets && hasSpace;
     }
     @Override
