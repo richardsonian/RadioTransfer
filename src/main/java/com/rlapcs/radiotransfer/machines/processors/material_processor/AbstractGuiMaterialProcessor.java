@@ -1,7 +1,7 @@
 package com.rlapcs.radiotransfer.machines.processors.material_processor;
 
 import com.rlapcs.radiotransfer.generic.guis.clientonly.AbstractGuiMachine;
-import com.rlapcs.radiotransfer.generic.network.messages.toServer.MessageAddClientListener;
+import com.rlapcs.radiotransfer.network.messages.toServer.MessageAddClientListener;
 import com.rlapcs.radiotransfer.machines.processors.abstract_processor.AbstractContainerProcessor;
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import net.minecraft.util.ResourceLocation;

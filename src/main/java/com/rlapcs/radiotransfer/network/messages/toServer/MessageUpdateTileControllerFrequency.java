@@ -1,4 +1,4 @@
-package com.rlapcs.radiotransfer.generic.network.messages.toServer;
+package com.rlapcs.radiotransfer.network.messages.toServer;
 
 import com.rlapcs.radiotransfer.machines.controllers.abstract_controller.AbstractTileController;
 import com.rlapcs.radiotransfer.machines.controllers.tx_controller.TileTxController;
@@ -14,33 +14,32 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class MessageActivateTileController implements IMessage {
+public class MessageUpdateTileControllerFrequency implements IMessage{
     private BlockPos tilePos;
-    private boolean target;
+    private boolean toIncrement;
 
     @Override
     public void fromBytes(ByteBuf buf) {
         tilePos = BlockPos.fromLong(buf.readLong());
-        target = buf.readBoolean();
+        toIncrement = buf.readBoolean();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeLong(tilePos.toLong());
-        buf.writeBoolean(target);
+        buf.writeBoolean(toIncrement);
     }
 
-    public MessageActivateTileController() {
-    }
+    public MessageUpdateTileControllerFrequency() {}
 
-    public MessageActivateTileController(TileEntity te, boolean target) {
+    public MessageUpdateTileControllerFrequency(TileEntity te, boolean toIncrement) {
         tilePos = te.getPos();
-        this.target = target;
+        this.toIncrement = toIncrement;
     }
 
-    public static class Handler implements IMessageHandler<MessageActivateTileController, IMessage> {
+    public static class Handler implements IMessageHandler<MessageUpdateTileControllerFrequency, IMessage> {
         @Override
-        public IMessage onMessage(MessageActivateTileController message, MessageContext ctx) {
+        public IMessage onMessage(MessageUpdateTileControllerFrequency message, MessageContext ctx) {
             // Always use a construct like this to actually handle your message. This ensures that
             // your 'handle' code is run on the main Minecraft thread. 'onMessage' itself
             // is called on the networking thread so it is not safe to do a lot of things
@@ -51,7 +50,7 @@ public class MessageActivateTileController implements IMessage {
             return null;
         }
 
-        private void handle(MessageActivateTileController message, MessageContext ctx) {
+        private void handle(MessageUpdateTileControllerFrequency message, MessageContext ctx) {
             // This code is run on the server side. So you can do server-side calculations here
             EntityPlayerMP playerEntity = ctx.getServerHandler().player;
             World world = playerEntity.getEntityWorld();
@@ -60,13 +59,12 @@ public class MessageActivateTileController implements IMessage {
             // trying to overload a server by randomly loading chunks
             if (world.isBlockLoaded(message.tilePos)) {
                 TileEntity te = world.getTileEntity(message.tilePos);
-                if (te instanceof AbstractTileController) {
-                    ((AbstractTileController) te).setActivated(message.target);
+                if(te instanceof AbstractTileController) {
+                    ((AbstractTileController) te).changeFrequency(message.toIncrement);
 
                     //debug
-                    playerEntity.sendStatusMessage(new TextComponentString(String.format("%s Tile Entity at (%d, %d, %d) is now %s", TextFormatting.GREEN,
-                            message.tilePos.getX(), message.tilePos.getY(), message.tilePos.getZ(),
-                            ((AbstractTileController) te).getActivated() ? "Activated" : "Deactivated")), false);
+                    playerEntity.sendStatusMessage(new TextComponentString(String.format("%s Tile Entity at (%d, %d, %d) is now on frequency %s", TextFormatting.GREEN,
+                            message.tilePos.getX(), message.tilePos.getY(), message.tilePos.getZ(), ((TileTxController) te).getFrequency()) ), false);
                 }
             }
         }

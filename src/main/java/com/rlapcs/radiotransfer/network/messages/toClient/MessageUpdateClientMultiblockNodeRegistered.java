@@ -1,4 +1,4 @@
-package com.rlapcs.radiotransfer.generic.network.messages.toClient;
+package com.rlapcs.radiotransfer.network.messages.toClient;
 
 import com.rlapcs.radiotransfer.generic.multiblock.tileEntities.AbstractTileMultiblockNode;
 import io.netty.buffer.ByteBuf;

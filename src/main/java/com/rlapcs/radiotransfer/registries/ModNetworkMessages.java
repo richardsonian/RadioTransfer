@@ -1,9 +1,9 @@
 package com.rlapcs.radiotransfer.registries;
 
-import com.rlapcs.radiotransfer.generic.network.messages.toClient.MessageUpdateClientDumpablePackets;
-import com.rlapcs.radiotransfer.generic.network.messages.toClient.MessageUpdateClientMultiblockNodeRegistered;
-import com.rlapcs.radiotransfer.generic.network.messages.toClient.MessageUpdateClientPacketQueue;
-import com.rlapcs.radiotransfer.generic.network.messages.toServer.*;
+import com.rlapcs.radiotransfer.network.messages.toClient.MessageUpdateClientDumpablePackets;
+import com.rlapcs.radiotransfer.network.messages.toClient.MessageUpdateClientMultiblockNodeRegistered;
+import com.rlapcs.radiotransfer.network.messages.toClient.MessageUpdateClientPacketQueue;
+import com.rlapcs.radiotransfer.network.messages.toServer.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;

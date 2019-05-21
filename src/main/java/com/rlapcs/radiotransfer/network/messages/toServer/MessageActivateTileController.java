@@ -1,7 +1,6 @@
-package com.rlapcs.radiotransfer.generic.network.messages.toServer;
+package com.rlapcs.radiotransfer.network.messages.toServer;
 
 import com.rlapcs.radiotransfer.machines.controllers.abstract_controller.AbstractTileController;
-import com.rlapcs.radiotransfer.machines.controllers.tx_controller.TileTxController;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
@@ -14,32 +13,33 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class MessageUpdateTileControllerFrequency implements IMessage{
+public class MessageActivateTileController implements IMessage {
     private BlockPos tilePos;
-    private boolean toIncrement;
+    private boolean target;
 
     @Override
     public void fromBytes(ByteBuf buf) {
         tilePos = BlockPos.fromLong(buf.readLong());
-        toIncrement = buf.readBoolean();
+        target = buf.readBoolean();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeLong(tilePos.toLong());
-        buf.writeBoolean(toIncrement);
+        buf.writeBoolean(target);
     }
 
-    public MessageUpdateTileControllerFrequency() {}
+    public MessageActivateTileController() {
+    }
 
-    public MessageUpdateTileControllerFrequency(TileEntity te, boolean toIncrement) {
+    public MessageActivateTileController(TileEntity te, boolean target) {
         tilePos = te.getPos();
-        this.toIncrement = toIncrement;
+        this.target = target;
     }
 
-    public static class Handler implements IMessageHandler<MessageUpdateTileControllerFrequency, IMessage> {
+    public static class Handler implements IMessageHandler<MessageActivateTileController, IMessage> {
         @Override
-        public IMessage onMessage(MessageUpdateTileControllerFrequency message, MessageContext ctx) {
+        public IMessage onMessage(MessageActivateTileController message, MessageContext ctx) {
             // Always use a construct like this to actually handle your message. This ensures that
             // your 'handle' code is run on the main Minecraft thread. 'onMessage' itself
             // is called on the networking thread so it is not safe to do a lot of things
@@ -50,7 +50,7 @@ public class MessageUpdateTileControllerFrequency implements IMessage{
             return null;
         }
 
-        private void handle(MessageUpdateTileControllerFrequency message, MessageContext ctx) {
+        private void handle(MessageActivateTileController message, MessageContext ctx) {
             // This code is run on the server side. So you can do server-side calculations here
             EntityPlayerMP playerEntity = ctx.getServerHandler().player;
             World world = playerEntity.getEntityWorld();
@@ -59,12 +59,13 @@ public class MessageUpdateTileControllerFrequency implements IMessage{
             // trying to overload a server by randomly loading chunks
             if (world.isBlockLoaded(message.tilePos)) {
                 TileEntity te = world.getTileEntity(message.tilePos);
-                if(te instanceof AbstractTileController) {
-                    ((AbstractTileController) te).changeFrequency(message.toIncrement);
+                if (te instanceof AbstractTileController) {
+                    ((AbstractTileController) te).setActivated(message.target);
 
                     //debug
-                    playerEntity.sendStatusMessage(new TextComponentString(String.format("%s Tile Entity at (%d, %d, %d) is now on frequency %s", TextFormatting.GREEN,
-                            message.tilePos.getX(), message.tilePos.getY(), message.tilePos.getZ(), ((TileTxController) te).getFrequency()) ), false);
+                    playerEntity.sendStatusMessage(new TextComponentString(String.format("%s Tile Entity at (%d, %d, %d) is now %s", TextFormatting.GREEN,
+                            message.tilePos.getX(), message.tilePos.getY(), message.tilePos.getZ(),
+                            ((AbstractTileController) te).getActivated() ? "Activated" : "Deactivated")), false);
                 }
             }
         }
