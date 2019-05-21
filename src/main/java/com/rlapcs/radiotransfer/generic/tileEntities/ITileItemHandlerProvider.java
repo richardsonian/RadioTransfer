@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.stream.IntStream;
 
 public interface ITileItemHandlerProvider {
+    String NBT_TAG_NAME = "items";
 
     ItemStackHandler getItemStackHandler();
     Map<Integer, UpgradeSlotWhitelist> getUpgradeSlotWhitelists();
@@ -23,12 +24,12 @@ public interface ITileItemHandlerProvider {
     }
 
     default void deserializeInventoryNBT(NBTTagCompound compound) {
-        if (compound.hasKey("items")) {
-            getItemStackHandler().deserializeNBT((NBTTagCompound) compound.getTag("items"));
+        if (compound.hasKey(NBT_TAG_NAME)) {
+            getItemStackHandler().deserializeNBT((NBTTagCompound) compound.getTag(NBT_TAG_NAME));
         }
     }
     default NBTTagCompound serializeInventoryNBT(NBTTagCompound compound) {
-        compound.setTag("items", getItemStackHandler().serializeNBT());
+        compound.setTag(NBT_TAG_NAME, getItemStackHandler().serializeNBT());
         return compound;
     }
 

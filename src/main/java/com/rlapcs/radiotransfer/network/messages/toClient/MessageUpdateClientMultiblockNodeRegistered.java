@@ -7,6 +7,7 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -54,7 +55,7 @@ public class MessageUpdateClientMultiblockNodeRegistered implements IMessage {
                     if (te instanceof AbstractTileMultiblockNode) {
                         AbstractTileMultiblockNode node = (AbstractTileMultiblockNode) te;
                         node.setRegisteredInMultiblock(message.target);
-                        player.sendChatMessage(te + " on client now " + (message.target ? "registered" : "deregistered"));
+                        player.sendChatMessage(TextFormatting.DARK_GREEN + te.toString() + " on client now " + (message.target ? "registered" : "deregistered"));
                     }
                 }
             }

@@ -15,6 +15,7 @@ public abstract class AbstractGuiMaterialProcessor<T extends AbstractTileMateria
     public void initGui() {
         super.initGui();
         sendChatMessage("Gui opened.");
+        sendChatMessage("Client registered? " + tileEntity.isRegisteredInMultiblock());
         ModNetworkMessages.INSTANCE.sendToServer(new MessageAddClientListener(tileEntity, true));
     }
 
