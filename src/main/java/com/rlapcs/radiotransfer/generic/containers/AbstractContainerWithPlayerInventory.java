@@ -1,5 +1,6 @@
 package com.rlapcs.radiotransfer.generic.containers;
 
+import com.rlapcs.radiotransfer.generic.guis.Coordinate;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
@@ -11,8 +12,8 @@ public abstract class AbstractContainerWithPlayerInventory<T extends TileEntity>
     protected int nextContainerSlotId = 0; //keeps track of the next CONTAINER slot index; incremented when you call addSlotToContainer()
 
     //Constants for slot drawing with some default vals-- override these in the constructor before calling initSlots()
-    protected int[] PLAYER_INVENTORY_POS;
-    protected int[] HOTBAR_POS;
+    protected Coordinate PLAYER_INVENTORY_POS;
+    protected Coordinate HOTBAR_POS;
     protected int SLOT_SPACING = 2;
     protected int SLOT_SIZE = 18;
 
@@ -48,8 +49,8 @@ public abstract class AbstractContainerWithPlayerInventory<T extends TileEntity>
         HOTBAR_START_INDEX = nextContainerSlotId;
         //sendDebugMessage("HOTBAR START: " + HOTBAR_START_INDEX);
         for (int col = 0; col < numHotbarSlots; col++) {
-            int x = HOTBAR_POS[0] + col * (SLOT_SIZE + SLOT_SPACING);
-            int y = HOTBAR_POS[1];
+            int x = HOTBAR_POS.x + col * (SLOT_SIZE + SLOT_SPACING);
+            int y = HOTBAR_POS.y;
             int index = col; //index within inventory
 
             this.addSlotToContainer(new Slot(playerInventory, index, x, y));
@@ -62,8 +63,8 @@ public abstract class AbstractContainerWithPlayerInventory<T extends TileEntity>
         //sendDebugMessage("PLAYER_INV START: " + PLAYER_INVENTORY_START_INDEX);
         for (int row = 0; row < playerInvRows; ++row) {
             for (int col = 0; col < playerInvCols; ++col) {
-                int x = PLAYER_INVENTORY_POS[0] + col * (SLOT_SIZE + SLOT_SPACING);
-                int y = PLAYER_INVENTORY_POS[1] + row * (SLOT_SIZE + SLOT_SPACING);
+                int x = PLAYER_INVENTORY_POS.x + col * (SLOT_SIZE + SLOT_SPACING);
+                int y = PLAYER_INVENTORY_POS.y + row * (SLOT_SIZE + SLOT_SPACING);
                 int index = numHotbarSlots + col + (row * playerInvCols);
 
                 this.addSlotToContainer(new Slot(playerInventory, index, x, y));

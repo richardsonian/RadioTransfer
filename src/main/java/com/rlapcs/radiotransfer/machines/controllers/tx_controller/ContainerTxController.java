@@ -1,16 +1,15 @@
 package com.rlapcs.radiotransfer.machines.controllers.tx_controller;
 
+import com.rlapcs.radiotransfer.generic.guis.Coordinate;
 import com.rlapcs.radiotransfer.machines.controllers.abstract_controller.AbstractContainerController;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerTxController extends AbstractContainerController {
-    protected int[] STACK_UPGRADE_SLOT_POS = {106, 48};
-    protected int[] SPEED_UPGRADE_SLOT_POS = {126, 48};
+    protected Coordinate STACK_UPGRADE_SLOT_POS = new Coordinate(106, 48);
+    protected Coordinate SPEED_UPGRADE_SLOT_POS = new Coordinate(126, 48);
 
 
     public ContainerTxController(IInventory playerInventory, TileTxController te) {
@@ -26,9 +25,9 @@ public class ContainerTxController extends AbstractContainerController {
         IItemHandler itemHandler = this.tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 
         // Stack upgrade
-        this.addSlotToContainer(new SlotItemHandler(itemHandler, TileTxController.STACK_UPGRADE_SLOT_INDEX, STACK_UPGRADE_SLOT_POS[0], STACK_UPGRADE_SLOT_POS[1]));
+        this.addSlotToContainer(new SlotItemHandler(itemHandler, TileTxController.STACK_UPGRADE_SLOT_INDEX, STACK_UPGRADE_SLOT_POS.x, STACK_UPGRADE_SLOT_POS.y));
         // Speed upgrade
-        this.addSlotToContainer(new SlotItemHandler(itemHandler, TileTxController.SPEED_UPGRADE_SLOT_INDEX, SPEED_UPGRADE_SLOT_POS[0], SPEED_UPGRADE_SLOT_POS[1]));
+        this.addSlotToContainer(new SlotItemHandler(itemHandler, TileTxController.SPEED_UPGRADE_SLOT_INDEX, SPEED_UPGRADE_SLOT_POS.x, SPEED_UPGRADE_SLOT_POS.y));
 
         TILE_ENTITY_END_INDEX = nextContainerSlotId;
     }

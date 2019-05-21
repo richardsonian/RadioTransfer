@@ -1,6 +1,7 @@
 package com.rlapcs.radiotransfer.machines.processors.abstract_processor;
 
 import com.rlapcs.radiotransfer.generic.containers.AbstractContainerMachine;
+import com.rlapcs.radiotransfer.generic.guis.Coordinate;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 
@@ -10,8 +11,8 @@ public abstract class AbstractContainerProcessor extends AbstractContainerMachin
         super(playerInventory, te);
 
         //constant overrides
-        PLAYER_INVENTORY_POS = new int[] {6, 112};
-        HOTBAR_POS = new int[] {6, 174};
+        PLAYER_INVENTORY_POS = new Coordinate(6, 112);
+        HOTBAR_POS = new Coordinate(6, 174);
     }
 
     @Override

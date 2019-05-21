@@ -1,6 +1,7 @@
 package com.rlapcs.radiotransfer.machines.processors.item_processors.item_decoder;
 
 import com.rlapcs.radiotransfer.RadioTransfer;
+import com.rlapcs.radiotransfer.generic.guis.Coordinate;
 import com.rlapcs.radiotransfer.machines.processors.item_processors.abstract_item_processor.AbstractGuiItemProcessor;
 import net.minecraft.util.ResourceLocation;
 
@@ -9,10 +10,8 @@ public class GuiItemDecoder extends AbstractGuiItemProcessor<TileItemDecoder> {
 
     public GuiItemDecoder(TileItemDecoder tileEntity, ContainerItemDecoder container) {
         super(tileEntity, container, background);
-    }
 
-    @Override
-    protected int[] getProgressBarCoords() {
-        return new int[] {86, 56};
+        LIST_POS = new Coordinate(8, 27);
+        PROGRESS_BAR_POS = new Coordinate(86, 56);
     }
 }

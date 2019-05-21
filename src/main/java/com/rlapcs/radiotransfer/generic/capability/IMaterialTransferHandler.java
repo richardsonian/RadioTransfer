@@ -29,7 +29,7 @@ public interface IMaterialTransferHandler<MATERIAL, PACKET extends IMaterialTran
     void deserializeNBT(NBTTagCompound nbt);
 
     default boolean validateIndex(int index) {
-        return (index > 0) && (index < size());
+        return (index >= 0) && (index < size());
     }
 
     interface Packet<MATERIAL> {

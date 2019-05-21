@@ -1,6 +1,7 @@
 package com.rlapcs.radiotransfer.machines.controllers.abstract_controller;
 
 import com.rlapcs.radiotransfer.generic.containers.AbstractContainerMachine;
+import com.rlapcs.radiotransfer.generic.guis.Coordinate;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -10,14 +11,14 @@ import net.minecraftforge.items.SlotItemHandler;
 import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
 
 public abstract class AbstractContainerController extends AbstractContainerMachine<AbstractTileController> {
-    protected int[] ENCRYPTION_SLOT_POS = {126, 28};
+    protected Coordinate ENCRYPTION_SLOT_POS = new Coordinate(126, 28);
 
     public AbstractContainerController(IInventory playerInventory, AbstractTileController te) {
         super(playerInventory, te);
 
         //constant overrides
-        PLAYER_INVENTORY_POS = new int[] {6, 74};
-        HOTBAR_POS = new int[] {6, 136};
+        PLAYER_INVENTORY_POS = new Coordinate(6, 74);
+        HOTBAR_POS = new Coordinate(6, 136);
     }
 
 
@@ -28,7 +29,7 @@ public abstract class AbstractContainerController extends AbstractContainerMachi
         TILE_ENTITY_START_INDEX = nextContainerSlotId; //one time for all subclasses
         sendDebugMessage("Encryption card slot within Container: " + nextContainerSlotId);
         // Encryption card
-        this.addSlotToContainer(new SlotItemHandler(itemHandler, AbstractTileController.ENCRYPTION_CARD_SLOT_INDEX, ENCRYPTION_SLOT_POS[0], ENCRYPTION_SLOT_POS[1]));
+        this.addSlotToContainer(new SlotItemHandler(itemHandler, AbstractTileController.ENCRYPTION_CARD_SLOT_INDEX, ENCRYPTION_SLOT_POS.x, ENCRYPTION_SLOT_POS.y));
 
         TILE_ENTITY_END_INDEX = nextContainerSlotId;
     }
