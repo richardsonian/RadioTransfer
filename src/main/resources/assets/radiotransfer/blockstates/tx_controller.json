@@ -10,23 +10,11 @@
     }
   },
   "variants": {
-    "normal": [{
-      "custom": {
-        "flip-v": true
-      },
-      "model": "radiotransfer:controller.obj",
-      "textures": {
-        "#Material.006": "radiotransfer:blocks/tx_controller"
-      }
-    }],
-    "inventory": [{
-      "custom": {
-        "flip-v": true
-      },
-      "model": "radiotransfer:controller.obj",
-      "textures": {
-        "#Material.006": "radiotransfer:blocks/tx_controller"
-      }
-    }]
+    "facing=north": { "y": 0 },
+    "facing=south": { "y": 180 },
+    "facing=west": { "y": 270 },
+    "facing=east": { "y": 90 },
+    "normal": [{}],
+    "inventory": [{}]
   }
 }

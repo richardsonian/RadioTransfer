@@ -1,35 +1,11 @@
 package com.rlapcs.radiotransfer.machines.controllers.abstract_controller;
 
-import com.rlapcs.radiotransfer.generic.blocks.IModelBlock;
-import com.rlapcs.radiotransfer.generic.multiblock.blocks.AbstractBlockMultiblockNode;
-import com.rlapcs.radiotransfer.generic.multiblock.blocks.AbstractBlockMultiblockNodeWithGui;
+import com.rlapcs.radiotransfer.generic.blocks.AbstractModeledMachineWithGui;
 import com.rlapcs.radiotransfer.generic.multiblock.tileEntities.AbstractTileMultiblockNode;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-public abstract class AbstractBlockController extends AbstractBlockMultiblockNodeWithGui implements IModelBlock {
+public abstract class AbstractBlockController extends AbstractModeledMachineWithGui {
     public AbstractBlockController(Class<? extends AbstractTileMultiblockNode> tileEntityClass) {
         super(Material.IRON, tileEntityClass);
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess worldIn, BlockPos pos, EnumFacing side) {
-        return false;
-    }
-
-    @Override
-    public boolean isBlockNormalCube(IBlockState blockState) {
-        return false;
-    }
-
-    @Override
-    public boolean isOpaqueCube(IBlockState blockState) {
-        return false;
     }
 }

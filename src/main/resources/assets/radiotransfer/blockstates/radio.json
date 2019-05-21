@@ -12,27 +12,11 @@
     }
   },
   "variants": {
-    "normal": [{
-      "custom": {
-        "flip-v": true
-      },
-      "model": "radiotransfer:radio.obj",
-      "textures": {
-        "#Material": "radiotransfer:blocks/radio/main",
-        "#Material.001": "radiotransfer:blocks/radio/vacuum_tubes",
-        "#Material.002": "radiotransfer:blocks/radio/light"
-      }
-    }],
-    "inventory": [{
-      "custom": {
-        "flip-v": true
-      },
-      "model": "radiotransfer:radio.obj",
-      "textures": {
-        "#Material": "radiotransfer:blocks/radio/main",
-        "#Material.001": "radiotransfer:blocks/radio/vacuum_tubes",
-        "#Material.002": "radiotransfer:blocks/radio/light"
-      }
-    }]
+    "facing=north": { "y": 0 },
+    "facing=south": { "y": 180 },
+    "facing=west": { "y": 270 },
+    "facing=east": { "y": 90 },
+    "normal": [{}],
+    "inventory": [{}]
   }
 }
