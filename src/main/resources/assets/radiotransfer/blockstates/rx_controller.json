@@ -1,10 +1,32 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "radiotransfer:rx_controller"
+    "custom": {
+      "flip-v": true
+    },
+    "model": "radiotransfer:controller.obj",
+    "textures": {
+      "#Material.006": "radiotransfer:blocks/rx_controller"
+    }
   },
   "variants": {
-    "normal": [{}],
-    "inventory": [{}]
+    "normal": [{
+      "custom": {
+        "flip-v": true
+      },
+      "model": "radiotransfer:controller.obj",
+      "textures": {
+        "#Material.006": "radiotransfer:blocks/rx_controller"
+      }
+    }],
+    "inventory": [{
+      "custom": {
+        "flip-v": true
+      },
+      "model": "radiotransfer:controller.obj",
+      "textures": {
+        "#Material.006": "radiotransfer:blocks/rx_controller"
+      }
+    }]
   }
 }
