@@ -8,8 +8,6 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
-import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
-
 public abstract class AbstractContainerController extends AbstractContainerMachine<AbstractTileController> {
     protected Coordinate ENCRYPTION_SLOT_POS = new Coordinate(126, 28);
 
@@ -27,7 +25,6 @@ public abstract class AbstractContainerController extends AbstractContainerMachi
         IItemHandler itemHandler = this.tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 
         TILE_ENTITY_START_INDEX = nextContainerSlotId; //one time for all subclasses
-        sendDebugMessage("Encryption card slot within Container: " + nextContainerSlotId);
         // Encryption card
         this.addSlotToContainer(new SlotItemHandler(itemHandler, AbstractTileController.ENCRYPTION_CARD_SLOT_INDEX, ENCRYPTION_SLOT_POS.x, ENCRYPTION_SLOT_POS.y));
 
