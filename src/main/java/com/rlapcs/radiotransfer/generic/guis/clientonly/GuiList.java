@@ -1,7 +1,7 @@
 package com.rlapcs.radiotransfer.generic.guis.clientonly;
 
 import com.rlapcs.radiotransfer.generic.capability.ItemPacketQueue;
-import com.rlapcs.radiotransfer.generic.guis.Coordinate;
+import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateXY;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.items.GuiListItem;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.sliders.GuiDraggableSliderButton;
 import com.rlapcs.radiotransfer.machines.processors.material_processor.AbstractTileMaterialProcessor;
@@ -15,7 +15,7 @@ import java.util.List;
 
 public class GuiList {
     private static final int NUM_ITEMS = 4;
-    private static final Coordinate BAR_REL_COORDS = new Coordinate(59, -3);
+    private static final CoordinateXY BAR_REL_COORDS = new CoordinateXY(59, -3);
 
     private Minecraft mc;
     private GuiScreen screen;

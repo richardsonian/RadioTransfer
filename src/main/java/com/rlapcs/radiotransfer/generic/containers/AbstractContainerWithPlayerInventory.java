@@ -1,6 +1,6 @@
 package com.rlapcs.radiotransfer.generic.containers;
 
-import com.rlapcs.radiotransfer.generic.guis.Coordinate;
+import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateXY;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
@@ -12,8 +12,8 @@ public abstract class AbstractContainerWithPlayerInventory<T extends TileEntity>
     protected int nextContainerSlotId = 0; //keeps track of the next CONTAINER slot index; incremented when you call addSlotToContainer()
 
     //Constants for slot drawing with some default vals-- override these in the constructor before calling initSlots()
-    protected Coordinate PLAYER_INVENTORY_POS;
-    protected Coordinate HOTBAR_POS;
+    protected CoordinateXY PLAYER_INVENTORY_POS;
+    protected CoordinateXY HOTBAR_POS;
     protected int SLOT_SPACING = 2;
     protected int SLOT_SIZE = 18;
 

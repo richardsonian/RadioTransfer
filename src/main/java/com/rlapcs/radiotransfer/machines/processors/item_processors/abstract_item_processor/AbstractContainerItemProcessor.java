@@ -1,6 +1,6 @@
 package com.rlapcs.radiotransfer.machines.processors.item_processors.abstract_item_processor;
 
-import com.rlapcs.radiotransfer.generic.guis.Coordinate;
+import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateXY;
 import com.rlapcs.radiotransfer.machines.processors.abstract_processor.AbstractContainerProcessor;
 import net.minecraft.inventory.IInventory;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -8,8 +8,8 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
 public abstract class AbstractContainerItemProcessor extends AbstractContainerProcessor {
-    protected Coordinate PROCESSOR_SLOTS_POS;
-    protected Coordinate SPEED_UPGRADE_SLOT_POS;
+    protected CoordinateXY PROCESSOR_SLOTS_POS;
+    protected CoordinateXY SPEED_UPGRADE_SLOT_POS;
 
     public AbstractContainerItemProcessor(IInventory playerInventory, AbstractTileItemProcessor te) {
         super(playerInventory, te);
