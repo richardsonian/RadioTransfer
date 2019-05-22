@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "rcr",
+    "cbc",
+    "rcr"
+  ],
+  "key": {
+    "r": {
+      "item": "radiotransfer:baked_resistor"
+    },
+    "c": {
+      "item": "radiotransfer:baked_capacitor"
+    },
+    "b": {
+      "item": "radiotransfer:blank_circuit_board"
+    }
+  },
+  "result": {
+    "item": "radiotransfer:circuit_board",
+    "count": 1
+  }
+}

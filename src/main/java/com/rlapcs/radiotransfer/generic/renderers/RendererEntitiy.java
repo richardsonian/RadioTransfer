@@ -1,6 +1,6 @@
 package com.rlapcs.radiotransfer.generic.renderers;
 
-import com.rlapcs.radiotransfer.generic.items.ItemDemoItem;
+import com.rlapcs.radiotransfer.items.ItemDemoItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.item.EntityItem;
