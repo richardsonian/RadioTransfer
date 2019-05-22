@@ -1,7 +1,6 @@
 package com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.buttons;
 
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.InteractiveGuiElement;
-import com.rlapcs.radiotransfer.util.Debug;
 
 public class GuiIncrementButton extends InteractiveGuiElement {
     public enum IncrementType {

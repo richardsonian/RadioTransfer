@@ -1,10 +1,22 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "radiotransfer:item_encoder"
+    "custom": {
+      "flip-v": true
+    },
+    "model": "radiotransfer:item_encoder.obj",
+    "textures": {
+      "#Material": "radiotransfer:blocks/base"
+    }
   },
   "variants": {
+    "facing=north": { "y": 0 },
+    "facing=south": { "y": 180 },
+    "facing=west": { "y": 270 },
+    "facing=east": { "y": 90 },
     "normal": [{}],
-    "inventory": [{}]
+    "inventory": [{
+      "scale" : [0.33333, 0.33333, 0.33333]
+    }]
   }
 }
