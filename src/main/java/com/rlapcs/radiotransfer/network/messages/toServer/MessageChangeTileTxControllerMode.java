@@ -1,4 +1,4 @@
-package com.rlapcs.radiotransfer.generic.network.messages.toServer;
+package com.rlapcs.radiotransfer.network.messages.toServer;
 
 import com.rlapcs.radiotransfer.machines.controllers.tx_controller.TileTxController;
 import com.rlapcs.radiotransfer.server.radio.TxMode;

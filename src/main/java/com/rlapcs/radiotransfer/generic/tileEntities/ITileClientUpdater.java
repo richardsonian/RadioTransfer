@@ -1,9 +1,6 @@
 package com.rlapcs.radiotransfer.generic.tileEntities;
 
-import com.rlapcs.radiotransfer.generic.network.messages.toClient.MessageUpdateClientPacketQueue;
-import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 import java.util.List;
 

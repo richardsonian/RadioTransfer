@@ -256,7 +256,7 @@ public class ItemPacketQueue implements IMaterialTransferHandler<ItemStack, Item
     public String toString() {
         String s = TextFormatting.DARK_AQUA + "-------PacketQueue-------" + TextFormatting.RESET;
         for (PacketBuffer b : packetBuffers) {
-            s += String.format("\n%s|%s  - %-25s%s|%s", TextFormatting.DARK_AQUA, TextFormatting.RESET, b, TextFormatting.DARK_AQUA, TextFormatting.RESET);
+            s += String.format("\n%s|%s  - %-25s", TextFormatting.DARK_AQUA, TextFormatting.RESET, b);
         }
         s += "\n" + TextFormatting.DARK_AQUA + "-------------------------";
         return s;

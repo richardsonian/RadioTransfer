@@ -1,4 +1,4 @@
-package com.rlapcs.radiotransfer.generic.network.messages.toServer;
+package com.rlapcs.radiotransfer.network.messages.toServer;
 
 import com.rlapcs.radiotransfer.machines.processors.material_processor.AbstractTileMaterialProcessor;
 import com.rlapcs.radiotransfer.util.Debug;

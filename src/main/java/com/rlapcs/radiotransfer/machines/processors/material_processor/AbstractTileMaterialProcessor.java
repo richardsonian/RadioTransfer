@@ -2,8 +2,8 @@ package com.rlapcs.radiotransfer.machines.processors.material_processor;
 
 import com.rlapcs.radiotransfer.generic.capability.IMaterialTransferHandler;
 import com.rlapcs.radiotransfer.generic.capability.IMaterialTransferHandler.Packet;
-import com.rlapcs.radiotransfer.generic.network.messages.toClient.MessageUpdateClientDumpablePackets;
-import com.rlapcs.radiotransfer.generic.network.messages.toClient.MessageUpdateClientPacketQueue;
+import com.rlapcs.radiotransfer.network.messages.toClient.MessageUpdateClientDumpablePackets;
+import com.rlapcs.radiotransfer.network.messages.toClient.MessageUpdateClientPacketQueue;
 import com.rlapcs.radiotransfer.generic.tileEntities.ITileClientUpdater;
 import com.rlapcs.radiotransfer.machines.processors.ProcessorType;
 import com.rlapcs.radiotransfer.machines.processors.abstract_processor.AbstractTileProcessor;

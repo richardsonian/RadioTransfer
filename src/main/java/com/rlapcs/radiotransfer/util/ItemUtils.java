@@ -5,10 +5,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.security.InvalidParameterException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
@@ -63,7 +60,9 @@ public class ItemUtils {
         for(int slot : allowedSlots) {
             if(slot < 0 || slot >= inventory.getSlots()) throw new IndexOutOfBoundsException("Slot " + slot + " in allowedSlots out of bounds");
             ItemStack inventoryStack = inventory.getStackInSlot(slot);
-            if(ItemHandlerHelper.canItemStacksStack(inventoryStack, stack) && inventory.isItemValid(slot, stack)) {
+
+            if(inventoryStack.isEmpty()) return true;
+            else if(ItemHandlerHelper.canItemStacksStack(inventoryStack, stack) && inventory.isItemValid(slot, stack)) {
                 if(inventoryStack.getCount() < inventory.getSlotLimit(slot) && inventoryStack.getCount() < inventoryStack.getMaxStackSize()) {
                     return true;
                 }

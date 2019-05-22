@@ -3,7 +3,7 @@ package com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.items;
 import com.rlapcs.radiotransfer.ModConstants;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.InteractiveGuiElement;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.buttons.GuiDumpButton;
-import com.rlapcs.radiotransfer.generic.network.messages.toServer.MessageChangePacketPriority;
+import com.rlapcs.radiotransfer.network.messages.toServer.MessageChangePacketPriority;
 import com.rlapcs.radiotransfer.machines.processors.ProcessorType;
 import com.rlapcs.radiotransfer.machines.processors.material_processor.AbstractTileMaterialProcessor;
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;

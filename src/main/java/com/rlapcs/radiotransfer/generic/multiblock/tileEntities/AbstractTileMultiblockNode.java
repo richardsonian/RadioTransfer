@@ -1,16 +1,15 @@
 package com.rlapcs.radiotransfer.generic.multiblock.tileEntities;
 
 import com.rlapcs.radiotransfer.generic.multiblock.MultiblockRadioController;
-import com.rlapcs.radiotransfer.generic.network.messages.toClient.MessageUpdateClientMultiblockNodeRegistered;
+import com.rlapcs.radiotransfer.network.messages.toClient.MessageUpdateClientMultiblockNodeRegistered;
 import com.rlapcs.radiotransfer.generic.tileEntities.AbstractTileMachine;
 import com.rlapcs.radiotransfer.machines.radio.TileRadio;
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,14 +53,11 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
     }
     protected void onRegisterInMultiblock() {}
     protected void onDeregisterInMultiblock() {}
-
-    /**
-     * Sets the registered state without performing any logic
-     * @param target What to set it to
-     */
+    /*Sets the registered state without performing any logic */
     public void setRegisteredInMultiblock(boolean target) {
         registeredInMultiblock = target;
     }
+
     public void updateClientsRegisteredState(boolean target) {
         int dimension = this.world.provider.getDimension();
         ModNetworkMessages.INSTANCE.sendToAllTracking(new MessageUpdateClientMultiblockNodeRegistered(this, target), new NetworkRegistry.TargetPoint(
@@ -69,6 +65,26 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
         ));
     }
 
+    //make sure client has latest registration info when they load the te
+    @Override
+    public NBTTagCompound getUpdateTag() {
+        NBTTagCompound tag = super.getUpdateTag();
+        if(!world.isRemote) { //assure server side
+            tag.setBoolean("registeredInMultiblock", registeredInMultiblock);
+        }
+        return tag;
+    }
+    @Override
+    public void handleUpdateTag(NBTTagCompound tag) {
+        super.handleUpdateTag(tag);
+        if(world.isRemote) { //assure client side
+            if(tag.hasKey("registeredInMultiblock")) {
+                setRegisteredInMultiblock(tag.getBoolean("registeredInMultiblock"));
+            }
+        }
+    }
+
+    //invalidate
     @Override
     public void invalidate() {
         super.invalidate();
@@ -76,7 +92,6 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
             this.deregisterFromMultiblock();
         }
     }
-
     /**
      * Called when the chunk this TileEntity is on is Unloaded.
      */

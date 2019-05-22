@@ -1,7 +1,7 @@
 package com.rlapcs.radiotransfer.machines.controllers.abstract_controller;
 
 import com.rlapcs.radiotransfer.generic.containers.AbstractContainerMachine;
-import com.rlapcs.radiotransfer.generic.guis.Coordinate;
+import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateXY;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -9,14 +9,14 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
 public abstract class AbstractContainerController extends AbstractContainerMachine<AbstractTileController> {
-    protected Coordinate ENCRYPTION_SLOT_POS = new Coordinate(126, 28);
+    protected CoordinateXY ENCRYPTION_SLOT_POS = new CoordinateXY(126, 28);
 
     public AbstractContainerController(IInventory playerInventory, AbstractTileController te) {
         super(playerInventory, te);
 
         //constant overrides
-        PLAYER_INVENTORY_POS = new Coordinate(6, 74);
-        HOTBAR_POS = new Coordinate(6, 136);
+        PLAYER_INVENTORY_POS = new CoordinateXY(6, 74);
+        HOTBAR_POS = new CoordinateXY(6, 136);
     }
 
 

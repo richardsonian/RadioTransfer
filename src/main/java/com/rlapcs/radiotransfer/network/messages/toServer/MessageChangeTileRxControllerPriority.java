@@ -1,4 +1,4 @@
-package com.rlapcs.radiotransfer.generic.network.messages.toServer;
+package com.rlapcs.radiotransfer.network.messages.toServer;
 
 import com.rlapcs.radiotransfer.machines.controllers.rx_controller.TileRxController;
 import io.netty.buffer.ByteBuf;
