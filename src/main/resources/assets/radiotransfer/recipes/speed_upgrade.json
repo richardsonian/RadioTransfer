@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    " r ",
+    "rcr",
+    " r "
+  ],
+  "key":
+  {
+    "r":
+    {
+      "item": "minecraft:redstone"
+    },
+    "c":
+    {
+      "item": "radiotransfer:baked_capacitor"
+    }
+  },
+  "result":
+  {
+    "item": "radiotransfer:speed_upgrade",
+    "count": 1
+  }
+}

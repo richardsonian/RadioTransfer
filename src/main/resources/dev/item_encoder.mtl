@@ -1,29 +1,27 @@
-# Blender MTL File: 'radio.blend'
+# Blender MTL File: 'item_encoder.blend'
 # Material Count: 3
 
 newmtl Material
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
-Kd 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
 Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd main.png
 
 newmtl Material.001
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.454867 0.144206
+Kd 0.640000 0.640000 0.640000
 Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd vacuum_tubes.png
 
-newmtl Material.002
+newmtl Material.003
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000

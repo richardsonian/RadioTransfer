@@ -1,6 +1,13 @@
 # items
-item.radiotransfer.demoitem.name=Demo Item
-item.radiotransfer.redgem.name=Red Gem
+item.radiotransfer.speed_upgrade.name=Speed
+item.radiotransfer.unbaked_resistor.name=Unbaked Resistor
+item.radiotransfer.baked_resistor.name=Baked Resistor
+item.radiotransfer.unbaked_capacitor.name=Unbaked Capacitor
+item.radiotransfer.baked_capacitor.name=Baked Capacitor
+item.radiotransfer.glass_fiber.name=Glass Fiber
+item.radiotransfer.vacuum_tube.name=Vacuum Tube
+item.radiotransfer.blank_circuit_board.name=Blank Circuit Board
+item.radiotransfer.circuit_board.name=Circuit Board
 
 # ~~~ blocks ~~~ #
 

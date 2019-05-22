@@ -2,6 +2,7 @@ package com.rlapcs.radiotransfer;
 
 import com.rlapcs.radiotransfer.generic.other.UpgradeSlotWhitelist;
 import com.rlapcs.radiotransfer.generic.other.UpgradeSlotWhitelist.UpgradeCardEntry;
+import com.rlapcs.radiotransfer.registries.ModItems;
 import net.minecraft.init.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -23,8 +24,7 @@ public class ModConstants {
         //speed
         public static final int SPEED_UPGRADE_MAX_QUANTITY = 16;
         public static final UpgradeSlotWhitelist SPEED_UPGRADE_WHITELIST = new UpgradeSlotWhitelist(
-                new UpgradeCardEntry(Items.WHEAT, SPEED_UPGRADE_MAX_QUANTITY),
-                new UpgradeCardEntry(Items.CARROT, SPEED_UPGRADE_MAX_QUANTITY)
+                new UpgradeCardEntry(ModItems.speed_upgrade, SPEED_UPGRADE_MAX_QUANTITY)
         );
 
 

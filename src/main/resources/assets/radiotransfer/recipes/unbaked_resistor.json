@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    "   ",
+    "ici",
+    "   "
+  ],
+  "key":
+  {
+    "i":
+    {
+      "item": "minecraft:iron_ingot"
+    },
+    "c":
+    {
+      "item": "minecraft:clay"
+    }
+  },
+  "result":
+  {
+    "item": "radiotransfer:unbaked_resistor",
+    "count": 4
+  }
+}

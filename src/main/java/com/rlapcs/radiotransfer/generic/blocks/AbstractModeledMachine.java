@@ -53,7 +53,6 @@ public abstract class AbstractModeledMachine extends AbstractBlockMachine {
 
     @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
-        Debug.sendDebugMessage("Place");
         worldIn.setBlockState(pos, getDefaultState().withProperty(FACING, placer.getHorizontalFacing()));
     }
 

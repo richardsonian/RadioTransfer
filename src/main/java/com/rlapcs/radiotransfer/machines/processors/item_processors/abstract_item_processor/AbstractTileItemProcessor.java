@@ -62,8 +62,6 @@ public abstract class AbstractTileItemProcessor extends AbstractTileMaterialProc
     }
 
     public void debugFillPacketQueue() {
-        packetQueue.add(new ItemStack(ModItems.redgem, 64));
-        packetQueue.add(new ItemStack(ModItems.demoitem, 64));
         packetQueue.add(new ItemStack(Items.DIAMOND, 64));
         packetQueue.add(new ItemStack(Items.GOLD_INGOT, 64));
         packetQueue.add(new ItemStack(Items.GOLD_NUGGET, 64));

@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "v v",
+    "ici",
+    "iri"
+  ],
+  "key": {
+    "v": {
+      "item": "radiotransfer:vacuum_tube"
+    },
+    "i": {
+      "item": "minecraft:iron_block"
+    },
+    "c": {
+      "item": "radiotransfer:circuit_board"
+    },
+    "r": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "item": "radiotransfer:radio",
+    "count": 1
+  }
+}

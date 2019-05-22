@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " g ",
+    "gGg",
+    " c "
+  ],
+  "key": {
+    "g": {
+      "item": "minecraft:glass"
+    },
+    "G": {
+      "item": "minecraft:gold_ingot"
+    },
+    "c": {
+      "type": "forge:ore_dict",
+      "ore": "ingot_copper"
+    },
+  },
+  "result": {
+    "item": "radiotransfer:vacuum_tube",
+    "count": 2
+  }
+}

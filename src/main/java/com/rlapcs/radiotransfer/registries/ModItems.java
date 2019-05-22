@@ -1,11 +1,13 @@
 package com.rlapcs.radiotransfer.registries;
 
 import com.rlapcs.radiotransfer.RadioTransfer;
-import com.rlapcs.radiotransfer.generic.items.ItemDemoItem;
+import com.rlapcs.radiotransfer.items.ItemDemoItem;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -24,8 +26,15 @@ public class ModItems {
         Example:
         public static final ItemClass item_name = null;
      */
-    public static final Item redgem = null;
-    public static final ItemDemoItem demoitem = null;
+    public static final Item speed_upgrade = null;
+    public static final Item unbaked_resistor = null;
+    public static final Item baked_resistor = null;
+    public static final Item unbaked_capacitor = null;
+    public static final Item baked_capacitor = null;
+    public static final Item vacuum_tube = null;
+    public static final Item glass_fiber = null;
+    public static final Item blank_circuit_board = null;
+    public static final Item circuit_board = null;
 
 
     /**
@@ -36,8 +45,60 @@ public class ModItems {
         List<Item> items = new ArrayList<>();
 
         /* Add one instance of each item here */
-        items.add(new Item().setRegistryName("redgem").setUnlocalizedName(RadioTransfer.MODID + ".redgem").setCreativeTab(CreativeTabs.MISC));
-        items.add(new ItemDemoItem());
+
+        // Speed upgrade
+        items.add(new Item()
+                .setRegistryName("speed_upgrade")
+                .setUnlocalizedName(RadioTransfer.MODID + ".speed_upgrade")
+                .setCreativeTab(CreativeTabs.MISC));
+
+        // Unbaked resistor
+        items.add(new Item()
+                .setRegistryName("unbaked_resistor")
+                .setUnlocalizedName(RadioTransfer.MODID + ".unbaked_resistor")
+                .setCreativeTab(CreativeTabs.MISC));
+
+        // Baked resistor
+        items.add(new Item()
+                .setRegistryName("baked_resistor")
+                .setUnlocalizedName(RadioTransfer.MODID + ".baked_resistor")
+                .setCreativeTab(CreativeTabs.MISC));
+
+        // Unbaked capacitor
+        items.add(new Item()
+                .setRegistryName("unbaked_capacitor")
+                .setUnlocalizedName(RadioTransfer.MODID + ".unbaked_capacitor")
+                .setCreativeTab(CreativeTabs.MISC));
+
+        // Baked capacitor
+        items.add(new Item()
+                .setRegistryName("baked_capacitor")
+                .setUnlocalizedName(RadioTransfer.MODID + ".baked_capacitor")
+                .setCreativeTab(CreativeTabs.MISC));
+
+        // Vacuum tube
+        items.add(new Item()
+                .setRegistryName("vacuum_tube")
+                .setUnlocalizedName(RadioTransfer.MODID + ".vacuum_tube")
+                .setCreativeTab(CreativeTabs.MISC));
+
+        // Glass fiber
+        items.add(new Item()
+                .setRegistryName("glass_fiber")
+                .setUnlocalizedName(RadioTransfer.MODID + ".glass_fiber")
+                .setCreativeTab(CreativeTabs.MISC));
+
+        // Blank circuit board
+        items.add(new Item()
+                .setRegistryName("blank_circuit_board")
+                .setUnlocalizedName(RadioTransfer.MODID + ".blank_circuit_board")
+                .setCreativeTab(CreativeTabs.MISC));
+
+        // Circuit board
+        items.add(new Item()
+                .setRegistryName("circuit_board")
+                .setUnlocalizedName(RadioTransfer.MODID + ".circuit_board")
+                .setCreativeTab(CreativeTabs.MISC));
         /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
         return items;
     }
@@ -55,8 +116,12 @@ public class ModItems {
             -or-
             ModelLoader.setCustomModelResourceLocation(anon_item, 0, new ModelResourceLocation(anon_item.getRegistryName(), "inventory"));
          */
-        demoitem.initModel();
-        ModelLoader.setCustomModelResourceLocation(redgem, 0, new ModelResourceLocation(redgem.getRegistryName(), "inventory"));
+        for (Item i : getAllItems()) {
+            ModelLoader.setCustomModelResourceLocation(i, 0, new ModelResourceLocation(i.getRegistryName(), "inventory"));
+        }
+
+        GameRegistry.addSmelting(unbaked_resistor, new ItemStack(baked_resistor, 1), 1.5f);
+        GameRegistry.addSmelting(unbaked_capacitor, new ItemStack(baked_capacitor, 1), 1.5f);
     }
 
     /**
