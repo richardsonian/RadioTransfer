@@ -171,7 +171,7 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
         return controller;
     }
 
-    public abstract double getPowerUsagePerTick();
+    public abstract int getPowerUsagePerTick();
 
     @Override
     public void update() {

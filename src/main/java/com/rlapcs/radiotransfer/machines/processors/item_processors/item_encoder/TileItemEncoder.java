@@ -6,7 +6,7 @@ import com.rlapcs.radiotransfer.util.ItemUtils;
 import net.minecraft.item.ItemStack;
 
 public class TileItemEncoder extends AbstractTileItemProcessor {
-    public static final double POWER_USAGE = 10;
+    public static final int POWER_USAGE = 10;
 
     public TileItemEncoder() {
         super();
@@ -32,7 +32,7 @@ public class TileItemEncoder extends AbstractTileItemProcessor {
     }
 
     @Override
-    public double getPowerUsagePerTick() {
+    public int getPowerUsagePerTick() {
         return POWER_USAGE;
     }
     @Override

@@ -13,6 +13,7 @@ import com.rlapcs.radiotransfer.server.radio.RadioNetwork;
 import com.rlapcs.radiotransfer.server.radio.TxMode;
 import com.rlapcs.radiotransfer.server.radio.UnsupportedTransferException;
 import com.rlapcs.radiotransfer.server.radio.TransferType;
+import com.rlapcs.radiotransfer.util.Debug;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 
@@ -60,17 +61,19 @@ public class MultiblockRadioController {
         registeredToNetwork = false;
     }
 
-    public double calculatePowerUsagePerTick() {
-        double sum = 0;
+    public int calculatePowerUsagePerTick() {
+        int sum = 0;
         for (AbstractTileMultiblockNode node : getAllNodes()) {
-            sum += node.getPowerUsagePerTick();
+            if(node != null && !node.isInvalid()) {
+                sum += node.getPowerUsagePerTick();
+            }
         }
         return sum;
     }
 
     public boolean hasSufficientPower(int ticksSinceLastUpdate) {
         if (powerSupply != null && !powerSupply.isInvalid()) {
-            int needed = (int) calculatePowerUsagePerTick() * ticksSinceLastUpdate;
+            int needed = calculatePowerUsagePerTick() * ticksSinceLastUpdate;
             int extracted = powerSupply.extractEnergy(needed, true);
             return extracted >= needed;
         }
@@ -80,8 +83,9 @@ public class MultiblockRadioController {
     public boolean usePower(int ticksSinceLastUpdate) {
         if(!hasSufficientPower(ticksSinceLastUpdate)) return false;
 
-        int needed = (int) calculatePowerUsagePerTick() * ticksSinceLastUpdate;
+        int needed = calculatePowerUsagePerTick() * ticksSinceLastUpdate;
         int extracted = powerSupply.extractEnergy(needed, false);
+        Debug.sendToAllPlayers(tileEntity + " extracting " + extracted + "FE of power.", tileEntity.getWorld());
         return extracted >= needed;
     }
 

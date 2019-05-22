@@ -1,17 +1,17 @@
 package com.rlapcs.radiotransfer.machines.radio;
 
-import com.rlapcs.radiotransfer.generic.capability.ITransferHandler;
 import com.rlapcs.radiotransfer.generic.multiblock.MultiblockRadioController;
 import com.rlapcs.radiotransfer.generic.tileEntities.AbstractTileMachine;
-import com.rlapcs.radiotransfer.machines.controllers.tx_controller.TileTxController;
 import com.rlapcs.radiotransfer.server.radio.RadioNetwork;
 import com.rlapcs.radiotransfer.server.radio.TransferType;
+import com.rlapcs.radiotransfer.util.Debug;
+import net.minecraft.util.text.TextFormatting;
 
 public class TileRadio extends AbstractTileMachine {
     public final int MULTIBLOCK_UPDATE_TICKS = 20;
     public final int REGISTER_UPDATE_TICKS = 20;
-    private int SEND_RESOURCES_UPDATE_TICKS = 20;
-    private int POWER_CHECK_TICKS = 60;
+    private final int SEND_RESOURCES_UPDATE_TICKS = 20;
+    private static final int POWER_CHECK_TICKS = 40;
 
 
     private MultiblockRadioController multiblock;
@@ -61,17 +61,18 @@ public class TileRadio extends AbstractTileMachine {
             if(ticksSinceCreation % SEND_RESOURCES_UPDATE_TICKS == 0) {
                 sendResources();
             }
-            /*
             if(ticksSinceCreation % POWER_CHECK_TICKS == 0) { //separate into update use more frequently and update visual less frequently
+                //use power from nodes
                 if(multiblock.hasSufficientPower(POWER_CHECK_TICKS)) {
                     if(!multiblock.isPowered()) multiblock.setPowered(true);
                     multiblock.usePower(POWER_CHECK_TICKS);
                 }
                 else {
                     multiblock.setPowered(false);
+                    multiblock
+                    Debug.sendToAllPlayers(TextFormatting.DARK_RED + this.toString() + " unpowered.", world);
                 }
             }
-            */
         }
     }
 

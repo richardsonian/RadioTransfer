@@ -2,24 +2,25 @@ package com.rlapcs.radiotransfer.machines.processors.material_processor;
 
 import com.rlapcs.radiotransfer.generic.capability.IMaterialTransferHandler;
 import com.rlapcs.radiotransfer.generic.capability.IMaterialTransferHandler.Packet;
-import com.rlapcs.radiotransfer.network.messages.toClient.MessageUpdateClientDumpablePackets;
-import com.rlapcs.radiotransfer.network.messages.toClient.MessageUpdateClientPacketQueue;
 import com.rlapcs.radiotransfer.generic.tileEntities.ITileClientUpdater;
 import com.rlapcs.radiotransfer.machines.processors.ProcessorType;
 import com.rlapcs.radiotransfer.machines.processors.abstract_processor.AbstractTileProcessor;
+import com.rlapcs.radiotransfer.network.messages.toClient.MessageUpdateClientDumpablePackets;
+import com.rlapcs.radiotransfer.network.messages.toClient.MessageUpdateClientPacketQueue;
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import net.minecraft.entity.player.EntityPlayerMP;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public abstract class AbstractTileMaterialProcessor<T extends IMaterialTransferHandler> extends AbstractTileProcessor<T> implements ITileClientUpdater {
-    protected List<EntityPlayerMP> clientListeners; //stores on server the clients with the GUI open
+    protected Set<EntityPlayerMP> clientListeners; //stores on server the clients with the GUI open
     protected boolean[] dumpableData;
 
     public AbstractTileMaterialProcessor(int itemStackHandlerSize) {
         super(itemStackHandlerSize);
-        clientListeners = new ArrayList<>();
+        clientListeners = new HashSet<>();
 
         //must init dumpable data in subclass after creating MaterialTransferHandler (like dumpableData = new boolean[packetQueue.size()];) also do this in NBT read
     }
@@ -31,7 +32,7 @@ public abstract class AbstractTileMaterialProcessor<T extends IMaterialTransferH
     }
 
     @Override
-    public List<EntityPlayerMP> getClientListeners() {
+    public Set<EntityPlayerMP> getClientListeners() {
         return clientListeners;
     }
 

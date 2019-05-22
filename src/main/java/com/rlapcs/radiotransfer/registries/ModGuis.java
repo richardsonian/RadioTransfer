@@ -7,6 +7,9 @@ import com.rlapcs.radiotransfer.machines.controllers.rx_controller.TileRxControl
 import com.rlapcs.radiotransfer.machines.controllers.tx_controller.ContainerTxController;
 import com.rlapcs.radiotransfer.machines.controllers.tx_controller.GuiTxController;
 import com.rlapcs.radiotransfer.machines.controllers.tx_controller.TileTxController;
+import com.rlapcs.radiotransfer.machines.power_supply.ContainerPowerSupply;
+import com.rlapcs.radiotransfer.machines.power_supply.GuiPowerSupply;
+import com.rlapcs.radiotransfer.machines.power_supply.TilePowerSupply;
 import com.rlapcs.radiotransfer.machines.processors.item_processors.item_decoder.ContainerItemDecoder;
 import com.rlapcs.radiotransfer.machines.processors.item_processors.item_decoder.GuiItemDecoder;
 import com.rlapcs.radiotransfer.machines.processors.item_processors.item_decoder.TileItemDecoder;
@@ -26,6 +29,7 @@ public class ModGuis {
     public static final GuiEntry rx_controller = new GuiEntry(TileRxController.class, GuiRxController.class, ContainerRxController.class);
     public static final GuiEntry item_encoder = new GuiEntry(TileItemEncoder.class, GuiItemEncoder.class, ContainerItemEncoder.class);
     public static final GuiEntry item_decoder = new GuiEntry(TileItemDecoder.class, GuiItemDecoder.class, ContainerItemDecoder.class);
+    public static final GuiEntry power_supply = new GuiEntry(TilePowerSupply.class, GuiPowerSupply.class, ContainerPowerSupply.class);
     /* end gui entry list */
 
 
