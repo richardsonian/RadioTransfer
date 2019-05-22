@@ -7,7 +7,9 @@ import com.rlapcs.radiotransfer.network.messages.toClient.MessageUpdateClientTil
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -48,6 +50,22 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
         displayEnergy = energyStorage.getEnergyStored();
         cachedPowerUsage = 0;
         cachedPowerGain = 0;
+    }
+
+    @Override
+    public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+        if(capability == CapabilityEnergy.ENERGY) {
+            return true;
+        }
+        return super.hasCapability(capability, facing);
+    }
+
+    @Override
+    public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+        if(capability == CapabilityEnergy.ENERGY) {
+            return CapabilityEnergy.ENERGY.cast(energyStorage);
+        }
+        return super.getCapability(capability, facing);
     }
 
     public int extractEnergy(int amount, boolean simulate) {
@@ -110,8 +128,9 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
     }
 
     public void updateClientPowerData() {
+        //need to change power input
         clientListeners.forEach((p) -> ModNetworkMessages.INSTANCE.sendToAll(new MessageUpdateClientTilePowerData(this, energyStorage.getEnergyStored(),
-                getMaxPowerPerTickFromItem(), controller.calculatePowerUsagePerTick())));
+                getMaxPowerPerTickFromItem(), controller.getEffectivePowerUsagePerTick())));
     }
 
     @Override
@@ -122,7 +141,19 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
     //CLIENT ONLY Getters and setters for cached energy transfer
     public void updateClientVisualPower(int ticksSinceLastUpdate) {
         int effectiveRate = (cachedPowerGain - cachedPowerUsage);
-        displayEnergy += effectiveRate * ticksSinceLastUpdate;
+        if(effectiveRate < 0 && displayEnergy <= 0) {
+            cachedPowerGain = 0;
+            cachedPowerUsage = 0;
+            displayEnergy = 0;
+        }
+        else if(effectiveRate > 0 && displayEnergy >= energyStorage.getMaxEnergyStored()) {
+            cachedPowerGain = 0;
+            cachedPowerUsage = 0;
+            displayEnergy = energyStorage.getMaxEnergyStored();
+        }
+        else {
+            displayEnergy += effectiveRate * ticksSinceLastUpdate;
+        }
     }
 
     public int getDisplayEnergy() { return displayEnergy;}

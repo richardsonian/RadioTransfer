@@ -16,6 +16,7 @@ import com.rlapcs.radiotransfer.server.radio.TransferType;
 import com.rlapcs.radiotransfer.util.Debug;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.energy.CapabilityEnergy;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -61,7 +62,7 @@ public class MultiblockRadioController {
         registeredToNetwork = false;
     }
 
-    public int calculatePowerUsagePerTick() {
+    public int calculateRequiredPowerPerTick() {
         int sum = 0;
         for (AbstractTileMultiblockNode node : getAllNodes()) {
             if(node != null && !node.isInvalid()) {
@@ -71,9 +72,14 @@ public class MultiblockRadioController {
         return sum;
     }
 
+    public int getEffectivePowerUsagePerTick() {
+        if(isPowered) return calculateRequiredPowerPerTick();
+        else return 0;
+    }
+
     public boolean hasSufficientPower(int ticksSinceLastUpdate) {
         if (powerSupply != null && !powerSupply.isInvalid()) {
-            int needed = calculatePowerUsagePerTick() * ticksSinceLastUpdate;
+            int needed = calculateRequiredPowerPerTick() * ticksSinceLastUpdate;
             int extracted = powerSupply.extractEnergy(needed, true);
             return extracted >= needed;
         }
@@ -83,7 +89,7 @@ public class MultiblockRadioController {
     public boolean usePower(int ticksSinceLastUpdate) {
         if(!hasSufficientPower(ticksSinceLastUpdate)) return false;
 
-        int needed = calculatePowerUsagePerTick() * ticksSinceLastUpdate;
+        int needed = calculateRequiredPowerPerTick() * ticksSinceLastUpdate;
         int extracted = powerSupply.extractEnergy(needed, false);
         Debug.sendToAllPlayers(tileEntity + " extracting " + extracted + "FE of power.", tileEntity.getWorld());
         return extracted >= needed;
@@ -95,6 +101,10 @@ public class MultiblockRadioController {
 
     public void setPowered(boolean target) {
         isPowered = target;
+        if(powerSupply != null && powerSupply.hasCapability(CapabilityEnergy.ENERGY, null)) {
+            if (!isPowered)
+                powerSupply.getCapability(CapabilityEnergy.ENERGY, null).extractEnergy(Integer.MAX_VALUE, true);
+        }
     }
 
     public int getTransmitFrequency(@Nonnull TransferType type) {

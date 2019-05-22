@@ -69,7 +69,6 @@ public class TileRadio extends AbstractTileMachine {
                 }
                 else {
                     multiblock.setPowered(false);
-                    //set power to 0 here
                     Debug.sendToAllPlayers(TextFormatting.DARK_RED + this.toString() + " unpowered.", world);
                 }
             }
