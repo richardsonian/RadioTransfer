@@ -1,9 +1,18 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "radiotransfer:power_supply"
+    "custom": {
+      "flip-v": true
+    },
+    "model": "radiotransfer:power_supply.obj",
+    "textures": {
+    }
   },
   "variants": {
+    "facing=north": { "y": 0 },
+    "facing=south": { "y": 180 },
+    "facing=west": { "y": 270 },
+    "facing=east": { "y": 90 },
     "normal": [{}],
     "inventory": [{}]
   }
