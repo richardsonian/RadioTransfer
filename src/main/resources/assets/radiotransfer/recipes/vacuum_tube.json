@@ -15,7 +15,7 @@
     "c": {
       "type": "forge:ore_dict",
       "ore": "ingot_copper"
-    },
+    }
   },
   "result": {
     "item": "radiotransfer:vacuum_tube",
