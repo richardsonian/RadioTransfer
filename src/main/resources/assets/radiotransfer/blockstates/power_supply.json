@@ -6,6 +6,7 @@
     },
     "model": "radiotransfer:power_supply.obj",
     "textures": {
+      "#Material": "radiotransfer:blocks/power_supply"
     }
   },
   "variants": {
