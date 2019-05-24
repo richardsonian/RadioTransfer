@@ -18,6 +18,7 @@ We've made branches at each of our milestones so you can see the major progressi
 - __Demo__: Learning how to write minecraft mods. Added a block, a few items, and a gui/inventory for the block. Wrote a lot of framework for the rest of the mod.
 - __singleBlockFunctionalDemo__: The core functionality of the mod working! Two blocks that can wirelessly transmit items with frequency and priority selection.
 - __multiblockDemo__: a demo with placeholder textures and no functionality of a master/slave system for recognition of multiblock structures.
+- __working-for-pick-no-power__: Everthing working that we wanted to accomplish in our stretch stretch goal! See the "stretch goal" release for more info.
 
 ## For Mr. Poles to play (aka for n00bs)
 1. Make a new single player world with creative mode
