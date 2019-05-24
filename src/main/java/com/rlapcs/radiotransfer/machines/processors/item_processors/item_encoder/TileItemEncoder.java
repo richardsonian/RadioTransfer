@@ -14,13 +14,15 @@ public class TileItemEncoder extends AbstractTileItemProcessor {
 
     @Override
     public boolean canDoProcess() {
+        boolean superCheck = super.canDoProcess();
         boolean hasItems = !ItemUtils.isInventoryEmpty(itemStackHandler, getNonUpgradeInventorySlots());
         boolean hasSpace = ItemUtils.getFirstIndexInInventoryWhich(itemStackHandler, getNonUpgradeInventorySlots(), (stack) -> packetQueue.canAddAny(stack)) != -1;
-        return hasItems && hasSpace;
+        return superCheck && hasItems && hasSpace;
     }
 
     @Override
     public void doProcess() {
+        //super.doProcess();
         int index = ItemUtils.getFirstIndexInInventoryWhich(itemStackHandler, getNonUpgradeInventorySlots(), (stack) -> packetQueue.canAddAny(stack));
         if(index != -1) {
             ItemStack stack = itemStackHandler.getStackInSlot(index);

@@ -5,7 +5,6 @@ import com.rlapcs.radiotransfer.generic.capability.ItemPacketQueue;
 import com.rlapcs.radiotransfer.generic.tileEntities.IProgressBarProvider;
 import com.rlapcs.radiotransfer.machines.processors.ProcessorType;
 import com.rlapcs.radiotransfer.machines.processors.material_processor.AbstractTileMaterialProcessor;
-import com.rlapcs.radiotransfer.registries.ModItems;
 import com.rlapcs.radiotransfer.server.radio.TransferType;
 import com.rlapcs.radiotransfer.util.Debug;
 import net.minecraft.init.Items;
@@ -86,13 +85,19 @@ public abstract class AbstractTileItemProcessor extends AbstractTileMaterialProc
     }
 
     @Override
+    public boolean canDoProcess() {
+        return isRegisteredInMultiblock(); //&& isPowered();
+    }
+
+    @Override
+    public abstract void doProcess();
+
+    @Override
     public void update() {
         super.update();
         //run on both client and server
-        if(registeredInMultiblock) { //& powered
-            if (ticksSinceCreation % PROCESS_UPDATE_TICKS == 0) {
-                doProcessUpdate(world, PROCESS_UPDATE_TICKS);
-            }
+        if (ticksSinceCreation % PROCESS_UPDATE_TICKS == 0) {
+            doProcessUpdate(world, PROCESS_UPDATE_TICKS);
         }
     }
 
