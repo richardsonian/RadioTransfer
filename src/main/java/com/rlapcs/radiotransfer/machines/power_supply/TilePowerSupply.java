@@ -1,23 +1,26 @@
 package com.rlapcs.radiotransfer.machines.power_supply;
 
 import com.rlapcs.radiotransfer.ModConstants;
+import com.rlapcs.radiotransfer.generic.capability.MachinePowerHandler;
 import com.rlapcs.radiotransfer.generic.multiblock.tileEntities.AbstractTileMultiblockNodeWithInventory;
 import com.rlapcs.radiotransfer.generic.tileEntities.ITileClientUpdater;
+import com.rlapcs.radiotransfer.generic.tileEntities.ITilePowerBarProvider;
 import com.rlapcs.radiotransfer.network.messages.toClient.MessageUpdateClientTilePowerData;
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
+import com.rlapcs.radiotransfer.util.Debug;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory implements ITileClientUpdater {
+public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory implements ITileClientUpdater, ITilePowerBarProvider {
     public static final int INVENTORY_SIZE = 1;
     public static final int ENERGY_CAPACITY = 10000; //FE
     public static final int MAX_ENERGY_TRANSFER = 100; //FE/t
@@ -30,11 +33,11 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
 
     //for client
     protected int displayEnergy;
-    protected int cachedPowerUsage;
-    protected int cachedPowerGain;
+    protected double cachedEnergyUsage;
+    protected double cachedEnergyGain;
 
     //for server
-    protected EnergyStorage energyStorage;
+    protected MachinePowerHandler energyStorage;
     protected Set<EntityPlayerMP> clientListeners;
 
     public TilePowerSupply() {
@@ -42,14 +45,14 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
 
         upgradeSlotWhitelists.put(POWER_ITEM_INDEX, ModConstants.UpgradeCards.POWER_ITEM_WHITELIST); //"upgrade card" lol
 
-        energyStorage = new EnergyStorage(ENERGY_CAPACITY);
+        energyStorage = new MachinePowerHandler(ENERGY_CAPACITY, MAX_ENERGY_TRANSFER, POWER_CLIENT_UDPATE_TICKS, this);
         clientListeners = new HashSet<>();
-        energyStorage.receiveEnergy(5000, false);
+        //energyStorage.receiveEnergy(5000, false);
 
         //client
         displayEnergy = energyStorage.getEnergyStored();
-        cachedPowerUsage = 0;
-        cachedPowerGain = 0;
+        cachedEnergyUsage = 0;
+        cachedEnergyGain = 0;
     }
 
     @Override
@@ -85,23 +88,11 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
             }
         }
     }
-    public int getMaxPowerPerTickFromItem() {
-        ItemStack powerItem = itemStackHandler.getStackInSlot(POWER_ITEM_INDEX);
-        if(powerItem != null && !powerItem.isEmpty()) {
-            if (powerItem.hasCapability(CapabilityEnergy.ENERGY, null)) {
-                IEnergyStorage itemEnergyStorage = powerItem.getCapability(CapabilityEnergy.ENERGY, null);
-                return itemEnergyStorage.extractEnergy(MAX_ENERGY_TRANSFER, true);
-            }
-        }
-        return 0;
-    }
 
     @Override
     public int getPowerUsagePerTick() {
         return 0;
     }
-
-
 
     @Override
     public void update() {
@@ -128,9 +119,10 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
     }
 
     public void updateClientPowerData() {
+        Debug.sendToAllPlayers(TextFormatting.GRAY + "Sending power update to clients with receiverate: " + energyStorage.getReceiveRate() + " and extractrate: " + energyStorage.getExtractRate(), world);
         //need to change power input
         clientListeners.forEach((p) -> ModNetworkMessages.INSTANCE.sendToAll(new MessageUpdateClientTilePowerData(this, energyStorage.getEnergyStored(),
-                getMaxPowerPerTickFromItem(), controller.getEffectivePowerUsagePerTick())));
+                energyStorage.getReceiveRate(), energyStorage.getExtractRate())));
     }
 
     @Override
@@ -139,37 +131,24 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
     }
 
     //CLIENT ONLY Getters and setters for cached energy transfer
-    public void updateClientVisualPower(int ticksSinceLastUpdate) {
-        int effectiveRate = (cachedPowerGain - cachedPowerUsage);
-        if(effectiveRate < 0 && displayEnergy <= 0) {
-            cachedPowerGain = 0;
-            cachedPowerUsage = 0;
-            displayEnergy = 0;
-        }
-        else if(effectiveRate > 0 && displayEnergy >= energyStorage.getMaxEnergyStored()) {
-            cachedPowerGain = 0;
-            cachedPowerUsage = 0;
-            displayEnergy = energyStorage.getMaxEnergyStored();
-        }
-        else {
-            displayEnergy += effectiveRate * ticksSinceLastUpdate;
-        }
-    }
-
     public int getDisplayEnergy() { return displayEnergy;}
     public void setDisplayEnergy(int target) { displayEnergy = target;}
-    public double getDisplayEnergyAsFraction() {return ((double) displayEnergy / (double) energyStorage.getMaxEnergyStored());}
+    public double getCachedEnergyUsage() {
+        return cachedEnergyUsage;
+    }
+    public double getCachedEnergyGain() {
+        return cachedEnergyGain;
+    }
+    public void setCachedEnergyUsage(double target) {
+        cachedEnergyUsage = target;
+    }
+    public void setCachedEnergyGain(double target) {
+        cachedEnergyGain = target;
+    }
 
-    public int getCachedPowerUsage() {
-        return cachedPowerUsage;
-    }
-    public void setCachedPowerUsage(int cachedPowerUsage) {
-        this.cachedPowerUsage = cachedPowerUsage;
-    }
-    public int getCachedPowerGain() {
-        return cachedPowerGain;
-    }
-    public void setCachedPowerGain(int cachedPowerGain) {
-        this.cachedPowerGain = cachedPowerGain;
+    //internal only
+    @Override
+    public MachinePowerHandler getEnergyStorage() {
+        return energyStorage;
     }
 }
