@@ -27,7 +27,7 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
 
     public static final int POWER_ITEM_INDEX = 0;
 
-    public static final int POWER_ITEM_UPDATE_TICKS = 40;
+    public static final int POWER_ITEM_UPDATE_TICKS = 20;
     public static final int POWER_VISUAL_UPDATE_TICKS = 2;
     public static final int POWER_CLIENT_UDPATE_TICKS = 20;
 
