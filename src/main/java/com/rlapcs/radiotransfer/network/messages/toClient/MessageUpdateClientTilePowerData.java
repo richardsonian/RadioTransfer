@@ -1,6 +1,6 @@
 package com.rlapcs.radiotransfer.network.messages.toClient;
 
-import com.rlapcs.radiotransfer.machines.power_supply.TilePowerSupply;
+import com.rlapcs.radiotransfer.generic.tileEntities.ITilePowerBarProvider;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -18,11 +18,13 @@ import net.minecraftforge.fml.relauncher.Side;
 public class MessageUpdateClientTilePowerData implements IMessage {
     private BlockPos tilePos;
     private int energy;
-    private int gainRate;
-    private int lossRate;
+    private double gainRate;
+    private double lossRate;
 
     public MessageUpdateClientTilePowerData() {}
-    public MessageUpdateClientTilePowerData(TilePowerSupply te, int energy, int gainRate, int lossRate) {
+    public MessageUpdateClientTilePowerData(TileEntity te, int energy, double gainRate, double lossRate) {
+        if(!(te instanceof ITilePowerBarProvider)) throw new IllegalArgumentException("TE must implement ITilePowerBarProvider");
+
         this.tilePos = te.getPos();
 
         this.energy = energy;
@@ -34,16 +36,16 @@ public class MessageUpdateClientTilePowerData implements IMessage {
     public void toBytes(ByteBuf buf) {
         buf.writeLong(tilePos.toLong());
         buf.writeInt(energy);
-        buf.writeInt(gainRate);
-        buf.writeInt(lossRate);
+        buf.writeDouble(gainRate);
+        buf.writeDouble(lossRate);
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
         tilePos = BlockPos.fromLong(buf.readLong());
         energy = buf.readInt();
-        gainRate = buf.readInt();
-        lossRate = buf.readInt();
+        gainRate = buf.readDouble();
+        lossRate = buf.readDouble();
     }
 
     public static class Handler implements IMessageHandler<MessageUpdateClientTilePowerData, IMessage> {
@@ -64,15 +66,15 @@ public class MessageUpdateClientTilePowerData implements IMessage {
                 if(world.isBlockLoaded(message.tilePos)) {
                     TileEntity te = world.getTileEntity(message.tilePos);
 
-                    if(te instanceof TilePowerSupply) {
-                        TilePowerSupply tile = (TilePowerSupply) te;
+                    if(te instanceof ITilePowerBarProvider) {
+                        ITilePowerBarProvider tile = (ITilePowerBarProvider) te;
 
-                        tile.setCachedPowerGain(message.gainRate);
-                        tile.setCachedPowerUsage(message.lossRate);
+                        tile.setCachedEnergyGain(message.gainRate);
+                        tile.setCachedEnergyUsage(message.lossRate);
                         tile.setDisplayEnergy(message.energy);
 
                         //debug
-                        player.sendMessage(new TextComponentString(TextFormatting.BLUE + String.format("(E:%d, +%d, -%d", message.energy, message.gainRate, message.lossRate) + "Updated client power data for" + TextFormatting.RESET + tile));
+                        player.sendMessage(new TextComponentString(TextFormatting.BLUE + String.format("(%dFE, +%f, -%f", message.energy, message.gainRate, message.lossRate) + "Updated client power data for" + TextFormatting.RESET + tile));
                     }
                 }
             }

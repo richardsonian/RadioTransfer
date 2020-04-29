@@ -10,8 +10,7 @@
       "item": "radiotransfer:glass_fiber"
     },
     "c": {
-      "type": "forge:ore_dict",
-      "ore": "ingot_copper"
+      "item": "minecraft:iron_ingot"
     }
   },
   "result": {

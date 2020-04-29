@@ -99,6 +99,10 @@ public class MultiblockRadioController {
         return isPowered;
     }
 
+    /**
+     * Side effect!! if set from to false, will empty remaining power.
+     * @param target
+     */
     public void setPowered(boolean target) {
         isPowered = target;
         if(powerSupply != null && powerSupply.hasCapability(CapabilityEnergy.ENERGY, null)) {

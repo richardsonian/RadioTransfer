@@ -85,6 +85,10 @@ public abstract class AbstractTileMachine extends TileEntity implements ITickabl
         ticksSinceCreation++;
     }
 
+    public long getTicksSinceCreation() {
+        return ticksSinceCreation;
+    }
+
     @Override
     public String toString() {
         return String.format("%s at [%d, %d, %d] @%d", this.getClass().getSimpleName(), pos.getX(), pos.getY(), pos.getZ(), this.hashCode());
