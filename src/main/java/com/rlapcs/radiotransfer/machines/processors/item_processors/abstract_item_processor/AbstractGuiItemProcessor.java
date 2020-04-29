@@ -11,6 +11,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Mouse;
 
+import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
+
 public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcessor> extends AbstractGuiMaterialProcessor<T> {
     private static final int WIDTH = 188;
     private static final int HEIGHT = 197;
@@ -21,24 +23,16 @@ public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcess
     public static final CoordinateUV PROGRESS_BAR_UV= new CoordinateUV(8, 15);
     public static final DimensionWidthHeight PROGRESS_BAR_DIMS = new DimensionWidthHeight(9, 6);
 
-    private AbstractGuiList visual;
+    protected AbstractGuiList visual;
     private boolean wasClicking;
     private boolean isScrolling;
-    private GuiDraggableSliderButton bar;
+    protected GuiDraggableSliderButton bar;
     private double scrollPos, scrollVal;
 
     public AbstractGuiItemProcessor(T tileEntity, AbstractContainerItemProcessor container, ResourceLocation texture) {
         super(tileEntity, container, WIDTH, HEIGHT, texture);
         scrollPos = 0;
         scrollVal = 0;
-    }
-
-    @Override
-    public void initGui() {
-        super.initGui();
-
-        visual = new AbstractGuiList(Minecraft.getMinecraft(), this, tileEntity.getHandler(), LIST_POS.x, LIST_POS.y, guiLeft, guiTop, tileEntity);
-        bar = visual.getBar();
     }
 
     @Override
@@ -70,7 +64,6 @@ public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcess
         scrollVal = up ? Math.log(Math.abs(scroll) + 1) : -Math.log(Math.abs(scroll) + 1);
         scrollPos = (bar.getY() - 24) / 59d;
 
-        //sendDebugMessage(tileEntity.isRegisteredInMultiblock() + " : " + tileEntity.getController());
         if(tileEntity.getHandler() != null) {
             visual.drawList(mouseX, mouseY, partialTicks, this.itemRender, scrollPos);
             if (tileEntity.getHandler().size() > 4)
