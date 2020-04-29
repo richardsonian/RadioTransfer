@@ -1,7 +1,7 @@
 package com.rlapcs.radiotransfer.machines.processors.item_processors.abstract_item_processor;
 
 import com.rlapcs.radiotransfer.RadioTransfer;
-import com.rlapcs.radiotransfer.generic.guis.clientonly.GuiList;
+import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.lists.AbstractGuiList;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.sliders.GuiDraggableSliderButton;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateUV;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateXY;
@@ -21,7 +21,7 @@ public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcess
     public static final CoordinateUV PROGRESS_BAR_UV= new CoordinateUV(8, 15);
     public static final DimensionWidthHeight PROGRESS_BAR_DIMS = new DimensionWidthHeight(9, 6);
 
-    private GuiList visual;
+    private AbstractGuiList visual;
     private boolean wasClicking;
     private boolean isScrolling;
     private GuiDraggableSliderButton bar;
@@ -37,7 +37,7 @@ public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcess
     public void initGui() {
         super.initGui();
 
-        visual = new GuiList(Minecraft.getMinecraft(), this, tileEntity.getHandler(), LIST_POS.x, LIST_POS.y, guiLeft, guiTop, tileEntity);
+        visual = new AbstractGuiList(Minecraft.getMinecraft(), this, tileEntity.getHandler(), LIST_POS.x, LIST_POS.y, guiLeft, guiTop, tileEntity);
         bar = visual.getBar();
     }
 

@@ -1,8 +1,8 @@
-package com.rlapcs.radiotransfer.generic.guis.clientonly;
+package com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.lists;
 
 import com.rlapcs.radiotransfer.generic.capability.ItemPacketQueue;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateXY;
-import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.items.GuiListItem;
+import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.items.AbstractGuiListItem;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.sliders.GuiDraggableSliderButton;
 import com.rlapcs.radiotransfer.machines.processors.material_processor.AbstractTileMaterialProcessor;
 import net.minecraft.client.Minecraft;
@@ -13,23 +13,23 @@ import net.minecraft.util.math.MathHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuiList {
-    private static final int NUM_ITEMS = 4;
+public abstract class AbstractGuiList {
+    protected static final int NUM_ITEMS = 4;
     private static final CoordinateXY BAR_REL_COORDS = new CoordinateXY(59, -3);
 
     private Minecraft mc;
     private GuiScreen screen;
     private ItemPacketQueue queue;
     private GuiDraggableSliderButton bar;
-    private List<GuiListItem> items;
+    protected List<AbstractGuiListItem> items;
 
-    public GuiList(Minecraft mc, GuiScreen screen, ItemPacketQueue queue, int x, int y, int guiLeft, int guiTop, AbstractTileMaterialProcessor tile) {
+    public AbstractGuiList(Minecraft mc, GuiScreen screen, ItemPacketQueue queue, int x, int y, int guiLeft, int guiTop) {
         this.mc = mc;
         this.screen = screen;
         this.queue = queue;
         items = new ArrayList<>();
-        for (int i = 0; i < NUM_ITEMS; i++)
-            items.add(new GuiListItem(i, guiLeft + x, guiTop + y + i * 18, i, tile));
+        /* for (int i = 0; i < NUM_ITEMS; i++) ADD TO SUBCLASSES
+            items.add(new AbstractGuiListItem(i, guiLeft + x, guiTop + y + i * 18, i, tile)); */
         bar = new GuiDraggableSliderButton(queue.size(), x + BAR_REL_COORDS.x, y + BAR_REL_COORDS.y, guiLeft, guiTop, 24, 82);
     }
 
