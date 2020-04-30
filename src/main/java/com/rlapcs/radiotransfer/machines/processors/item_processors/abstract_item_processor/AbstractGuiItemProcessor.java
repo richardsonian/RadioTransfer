@@ -19,14 +19,13 @@ public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcess
 
     protected CoordinateXY LIST_POS;
     protected CoordinateXY PROGRESS_BAR_POS;
+    protected AbstractGuiList visual;
 
     public static final CoordinateUV PROGRESS_BAR_UV= new CoordinateUV(8, 15);
     public static final DimensionWidthHeight PROGRESS_BAR_DIMS = new DimensionWidthHeight(9, 6);
 
     public AbstractGuiItemProcessor(T tileEntity, AbstractContainerItemProcessor container, ResourceLocation texture) {
         super(tileEntity, container, WIDTH, HEIGHT, texture);
-        scrollPos = 0;
-        scrollVal = 0;
     }
 
     @Override
@@ -45,8 +44,6 @@ public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcess
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
         drawList();
-        visual.drawList(mouseX, mouseY, partialTicks, this.itemRender, scrollPos);
-        if (tileEntity.getHandler().size() > 4)
-            bar.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, isScrolling, scrollVal / (double) tileEntity.getHandler().size());
+        visual.drawList(mouseX, mouseY, partialTicks, this.itemRender);
     }
 }

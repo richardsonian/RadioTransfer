@@ -9,50 +9,69 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.util.math.MathHelper;
+import org.lwjgl.input.Mouse;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractGuiList {
+public abstract class AbstractGuiList<T> {
     protected static final int NUM_ITEMS = 4;
     private static final CoordinateXY BAR_REL_COORDS = new CoordinateXY(59, -3);
 
     private Minecraft mc;
     private GuiScreen screen;
-    private ItemPacketQueue queue;
+    private List<T> itemList;
     private GuiDraggableSliderButton bar;
     protected List<AbstractGuiListItem> items;
 
-    public AbstractGuiList(Minecraft mc, GuiScreen screen, ItemPacketQueue queue, int x, int y, int guiLeft, int guiTop) {
+    protected boolean wasClicking;
+    protected boolean isScrolling;
+    protected double scrollPos, scrollVal;
+
+    public AbstractGuiList(Minecraft mc, GuiScreen screen, List<T> itemList, int x, int y, int guiLeft, int guiTop) {
         this.mc = mc;
         this.screen = screen;
-        this.queue = queue;
+        this.itemList = itemList;
         items = new ArrayList<>();
+        scrollPos = 0;
+        scrollVal = 0;
         /* for (int i = 0; i < NUM_ITEMS; i++) ADD TO SUBCLASSES
             items.add(new AbstractGuiListItem(i, guiLeft + x, guiTop + y + i * 18, i, tile)); */
-        bar = new GuiDraggableSliderButton(queue.size(), x + BAR_REL_COORDS.x, y + BAR_REL_COORDS.y, guiLeft, guiTop, 24, 82);
+        bar = new GuiDraggableSliderButton(itemList.size(), x + BAR_REL_COORDS.x, y + BAR_REL_COORDS.y, guiLeft, guiTop, 24, 82);
     }
 
-    public void drawList(int mouseX, int mouseY, float partialTicks, RenderItem renderer, double ratio) {
-        int start = MathHelper.clamp((int) ((queue.size() - 3) * ratio), 0, queue.size() - 3);
-        List<ItemPacketQueue.PacketBuffer> itemList = queue.getAsList();
+    public void drawList(int mouseX, int mouseY, float partialTicks, RenderItem renderer) {
+        boolean flag = Mouse.isButtonDown(0);
+
+        if (!wasClicking && flag && bar.isMouseOver())
+            isScrolling = true;
+        else if (!flag)
+            isScrolling = false;
+
+        wasClicking = flag;
+
+        int scroll = Mouse.getEventDWheel();
+        boolean up = scroll > 0;
+        scrollVal = up ? Math.log(Math.abs(scroll) + 1) : -Math.log(Math.abs(scroll) + 1);
+        scrollPos = (bar.getY() - 24) / 59d;
+
+        int start = MathHelper.clamp((int) ((itemList.size() - 3) * scrollPos), 0, itemList.size() - 3);
         //sendDebugMessage("bar: " + bar.getY());
         if (!itemList.isEmpty()) {
             if (itemList.size() <= NUM_ITEMS) {
                 //Debug.sendDebugMessage("less");
-                for (int i = 0; i < queue.size(); i++) {
-                    items.get(i).drawItem(mc, mouseX, mouseY, partialTicks, screen, renderer, itemList.get(i).getItemStack(), i);
+                for (int i = 0; i < itemList.size(); i++) {
+                    items.get(i).drawItem(mc, mouseX, mouseY, partialTicks, screen, renderer, itemList.get(i), i);
                 }
             } else {
                 for (int i = 0; i < NUM_ITEMS; i++) {
-                    int index = MathHelper.clamp(start + i, 0, queue.size() - 1);
+                    int index = MathHelper.clamp(start + i, 0, itemList.size() - 1);
                     items.get(i).drawItem(mc, mouseX, mouseY, partialTicks, screen, renderer, itemList.get(index).getItemStack(), index);
                 }
             }
         }
-    }
 
-    public GuiDraggableSliderButton getBar() {
-        return bar;
+        if (itemList.size() > 4)
+            bar.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, isScrolling, scrollVal / (double) itemList.size());
     }
 }

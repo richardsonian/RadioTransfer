@@ -44,21 +44,11 @@ public abstract class AbstractGuiListItem extends InteractiveGuiElement {
         this.tile = tile;
     }
 
-    public void drawItem(Minecraft mc, int mouseX, int mouseY, float partialTicks, GuiScreen screen, RenderItem renderer, ItemStack itemStack, int index) {
+    public void drawItem(Minecraft mc, int mouseX, int mouseY, float partialTicks, GuiScreen screen, RenderItem renderer, int index) {
         this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
         hoveringTop = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height / 2;
         hoveringBottom = mouseX >= this.x && mouseY >= this.y + this.height / 2 && mouseX < this.x + this.width && mouseY < this.y + this.height;
         flag = Mouse.isButtonDown(0);
-    }
-
-    protected void renderWithItemStack(Minecraft mc, GuiScreen screen, RenderItem renderer, ItemStack itemStack) {
-        double scaleVal = .6875;
-        mc.getTextureManager().bindTexture(ModConstants.ICONS);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        screen.drawTexturedModalRect(XY[0], XY[1], UV[0], UV[1], DIMS[0], DIMS[1]);
-        GL11.glScaled(scaleVal, scaleVal, scaleVal);
-        renderer.renderItemIntoGUI(itemStack, (int)((XY[0] + 3) / scaleVal), (int)((XY[1] + 2) / scaleVal));
-        GL11.glScaled(1 / scaleVal,1 / scaleVal,1 / scaleVal);
     }
 
     public int[] getPos() {
