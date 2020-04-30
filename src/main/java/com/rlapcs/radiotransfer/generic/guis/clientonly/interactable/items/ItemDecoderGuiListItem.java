@@ -19,10 +19,11 @@ public class ItemDecoderGuiListItem extends AbstractItemProcessorGuiListItem {
     @Override
     public void drawItem(Minecraft mc, int mouseX, int mouseY, float partialTicks, GuiScreen screen, RenderItem renderer, ItemStack itemStack, int index) {
         super.drawItem(mc, mouseX, mouseY, partialTicks, screen, renderer, itemStack, index);
+        AbstractTileMaterialProcessor ctile = (AbstractTileMaterialProcessor) tile;
         if (hoveringTop && flag && !wasClicking && index != 0)
-            ModNetworkMessages.INSTANCE.sendToServer(new MessageChangePacketPriority(tile, index));
-        if (hoveringBottom && flag && !wasClicking && index != tile.getHandler().size() - 1)
-            ModNetworkMessages.INSTANCE.sendToServer(new MessageChangePacketPriority(tile, index + 1));
+            ModNetworkMessages.INSTANCE.sendToServer(new MessageChangePacketPriority(ctile, index));
+        if (hoveringBottom && flag && !wasClicking && index != ctile.getHandler().size() - 1)
+            ModNetworkMessages.INSTANCE.sendToServer(new MessageChangePacketPriority(ctile, index + 1));
 
         wasClicking = flag;
     }

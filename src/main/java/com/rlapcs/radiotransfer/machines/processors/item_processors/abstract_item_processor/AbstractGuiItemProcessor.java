@@ -23,12 +23,6 @@ public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcess
     public static final CoordinateUV PROGRESS_BAR_UV= new CoordinateUV(8, 15);
     public static final DimensionWidthHeight PROGRESS_BAR_DIMS = new DimensionWidthHeight(9, 6);
 
-    protected AbstractGuiList visual;
-    private boolean wasClicking;
-    private boolean isScrolling;
-    protected GuiDraggableSliderButton bar;
-    private double scrollPos, scrollVal;
-
     public AbstractGuiItemProcessor(T tileEntity, AbstractContainerItemProcessor container, ResourceLocation texture) {
         super(tileEntity, container, WIDTH, HEIGHT, texture);
         scrollPos = 0;
@@ -50,24 +44,9 @@ public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcess
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
-        boolean flag = Mouse.isButtonDown(0);
-
-        if (!wasClicking && flag && bar.isMouseOver())
-            isScrolling = true;
-        else if (!flag)
-            isScrolling = false;
-
-        wasClicking = flag;
-
-        int scroll = Mouse.getEventDWheel();
-        boolean up = scroll > 0;
-        scrollVal = up ? Math.log(Math.abs(scroll) + 1) : -Math.log(Math.abs(scroll) + 1);
-        scrollPos = (bar.getY() - 24) / 59d;
-
-        if(tileEntity.getHandler() != null) {
-            visual.drawList(mouseX, mouseY, partialTicks, this.itemRender, scrollPos);
-            if (tileEntity.getHandler().size() > 4)
-                bar.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, isScrolling, scrollVal / (double) tileEntity.getHandler().size());
-        }
+        drawList();
+        visual.drawList(mouseX, mouseY, partialTicks, this.itemRender, scrollPos);
+        if (tileEntity.getHandler().size() > 4)
+            bar.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, isScrolling, scrollVal / (double) tileEntity.getHandler().size());
     }
 }
