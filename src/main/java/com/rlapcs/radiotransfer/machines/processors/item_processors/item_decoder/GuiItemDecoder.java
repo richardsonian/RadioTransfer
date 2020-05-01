@@ -9,10 +9,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiItemDecoder extends AbstractGuiItemProcessor<TileItemDecoder> {
-    public static final ResourceLocation background = new ResourceLocation(RadioTransfer.MODID, "textures/gui/item_decoder.png");
-
     public GuiItemDecoder(TileItemDecoder tileEntity, ContainerItemDecoder container) {
-        super(tileEntity, container, background);
+        super(tileEntity, container);
+        texture = new ResourceLocation(RadioTransfer.MODID, "textures/gui/item_decoder.png");
 
         LIST_POS = new CoordinateXY(8, 27);
         PROGRESS_BAR_POS = new CoordinateXY(86, 56);

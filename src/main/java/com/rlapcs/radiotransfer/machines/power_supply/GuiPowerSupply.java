@@ -19,20 +19,14 @@ import java.io.IOException;
 
 public class GuiPowerSupply extends AbstractGuiMachine<TilePowerSupply> {
     public static final int WIDTH = 188;
-    public static final int HEIGHT = 158;
+    public static final int HEIGHT = 197;
 
     private static final CoordinateXY LIST_POS = new CoordinateXY(0,0);
 
     protected AbstractGuiList visual;
-    private boolean wasClicking;
-    private boolean isScrolling;
-    protected GuiDraggableSliderButton bar;
-    private double scrollPos, scrollVal;
-
-    public static final ResourceLocation background = new ResourceLocation(RadioTransfer.MODID, "textures/gui/power_supply.png");
-
     public GuiPowerSupply(TilePowerSupply tileEntity, ContainerPowerSupply container) {
-        super(tileEntity, container, WIDTH, HEIGHT, background);
+        super(tileEntity, container, WIDTH, HEIGHT);
+        texture = new ResourceLocation(RadioTransfer.MODID, "textures/gui/power_supply.png");
     }
 
     @Override
@@ -45,7 +39,7 @@ public class GuiPowerSupply extends AbstractGuiMachine<TilePowerSupply> {
         super.initGui();
         ModNetworkMessages.INSTANCE.sendToServer(new MessageAddClientListener(tileEntity, true));
 
-        // ADD ITEMS TO visual AND MAKE BAR FROM IT
+        // ADD ITEMS TO visual
     }
 
     @Override
@@ -63,7 +57,6 @@ public class GuiPowerSupply extends AbstractGuiMachine<TilePowerSupply> {
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
         drawList();
-        // DRAW visual AND CHECK IF bar NEEDS TO BE DRAWN (>4 ITEMS)
     }
 
     @Override

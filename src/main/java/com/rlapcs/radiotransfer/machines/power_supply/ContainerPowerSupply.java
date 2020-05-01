@@ -14,8 +14,8 @@ public class ContainerPowerSupply extends AbstractContainerMachine<TilePowerSupp
         super(playerInventory, te);
 
         //constant overrides
-        PLAYER_INVENTORY_POS = new CoordinateXY(6, 74);
-        HOTBAR_POS = new CoordinateXY(6, 136);
+        PLAYER_INVENTORY_POS = new CoordinateXY(6, 112);
+        HOTBAR_POS = new CoordinateXY(6, 174);
 
         initSlots(playerInventory);
     }

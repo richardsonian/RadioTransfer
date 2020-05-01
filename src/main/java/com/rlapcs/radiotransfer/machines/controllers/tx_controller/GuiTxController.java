@@ -11,11 +11,9 @@ import net.minecraft.util.ResourceLocation;
 import java.awt.*;
 
 public class GuiTxController extends AbstractGuiController<TileTxController> {
-
-    public static final ResourceLocation background = new ResourceLocation(RadioTransfer.MODID, "textures/gui/tx_controller.png");
-
     public GuiTxController(TileTxController tileEntity, ContainerTxController container) {
-        super(tileEntity, container, background);
+        super(tileEntity, container);
+        texture = new ResourceLocation(RadioTransfer.MODID, "textures/gui/tx_controller.png");
     }
 
     @Override

@@ -10,11 +10,9 @@ import net.minecraft.util.ResourceLocation;
 import java.awt.*;
 
 public class GuiRxController extends AbstractGuiController<TileRxController> {
-
-    public static final ResourceLocation background = new ResourceLocation(RadioTransfer.MODID, "textures/gui/rx_controller.png");
-
     public GuiRxController(TileRxController tileEntity, ContainerRxController container) {
-        super(tileEntity, container, background);
+        super(tileEntity, container);
+        texture = new ResourceLocation(RadioTransfer.MODID, "textures/gui/rx_controller.png");
     }
 
     @Override

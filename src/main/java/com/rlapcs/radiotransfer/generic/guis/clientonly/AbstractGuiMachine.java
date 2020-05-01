@@ -16,21 +16,18 @@ public abstract class AbstractGuiMachine<T extends TileEntity> extends GuiContai
 
     private static int nextButtonID;
 
-    public AbstractGuiMachine(T tileEntity, Container container, int width, int height, ResourceLocation texture) {
+    public AbstractGuiMachine(T tileEntity, Container container, int width, int height) {
         super(container);
 
         this.tileEntity = tileEntity;
 
         xSize = width;
         ySize = height;
-
-        this.texture = texture;
     }
 
     @Override
     public void initGui() {
         super.initGui();
-        //add buttons here
     }
 
     protected void drawList() {
@@ -42,6 +39,7 @@ public abstract class AbstractGuiMachine<T extends TileEntity> extends GuiContai
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+        drawRect(0, 0, width, height, 0x70000000);
         mc.getTextureManager().bindTexture(texture);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
