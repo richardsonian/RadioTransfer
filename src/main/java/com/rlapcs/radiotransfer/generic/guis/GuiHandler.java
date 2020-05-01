@@ -20,7 +20,7 @@ public class GuiHandler implements IGuiHandler {
 
         for(GuiEntry entry : ModGuis.getAllGuiEntries()) {
             if(entry.getGuiID() == ID) {
-                return entry.getNewContainer(player.inventory, entry.castToTileEntityType(te));
+                return entry.getNewContainer(player.inventory, entry.castToTileEntityType(te)); //is null if there is no container
             }
         }
 
@@ -81,6 +81,7 @@ public class GuiHandler implements IGuiHandler {
             if(!tileEntityClass.isInstance(te)) {
                 throw new RuntimeException("Tile entity provided to container in Gui Handler is not of type " + tileEntityClass.getName());
             }
+            if(containerClass==null) return null; //Tag on fix to return null to server if there's no container class
             try {
                 return containerClass.getConstructor(IInventory.class, tileEntityClass).newInstance(inventory, te);
             } catch(NoSuchMethodException e) {
