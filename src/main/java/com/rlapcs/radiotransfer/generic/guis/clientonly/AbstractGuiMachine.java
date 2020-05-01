@@ -30,9 +30,6 @@ public abstract class AbstractGuiMachine<T extends TileEntity> extends GuiContai
         super.initGui();
     }
 
-    protected void drawList() {
-    }
-
     protected static int getNextButtonID() {
         return nextButtonID++;
     }

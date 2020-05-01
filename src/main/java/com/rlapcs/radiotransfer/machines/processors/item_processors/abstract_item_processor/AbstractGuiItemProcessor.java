@@ -43,7 +43,6 @@ public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcess
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
-        drawList();
         visual.drawList(mouseX, mouseY, partialTicks, this.itemRender);
     }
 }

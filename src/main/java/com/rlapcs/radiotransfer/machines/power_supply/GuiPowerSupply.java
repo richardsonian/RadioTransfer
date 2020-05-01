@@ -2,6 +2,7 @@ package com.rlapcs.radiotransfer.machines.power_supply;
 
 import com.rlapcs.radiotransfer.RadioTransfer;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.AbstractGuiMachine;
+import com.rlapcs.radiotransfer.generic.guis.clientonly.GuiPowerBar;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.lists.AbstractGuiList;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.sliders.GuiDraggableSliderButton;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateUV;
@@ -24,6 +25,8 @@ public class GuiPowerSupply extends AbstractGuiMachine<TilePowerSupply> {
     private static final CoordinateXY LIST_POS = new CoordinateXY(0,0);
 
     protected AbstractGuiList visual;
+    private GuiPowerBar powerBar;
+
     public GuiPowerSupply(TilePowerSupply tileEntity, ContainerPowerSupply container) {
         super(tileEntity, container, WIDTH, HEIGHT);
         texture = new ResourceLocation(RadioTransfer.MODID, "textures/gui/power_supply.png");
@@ -39,6 +42,7 @@ public class GuiPowerSupply extends AbstractGuiMachine<TilePowerSupply> {
         super.initGui();
         ModNetworkMessages.INSTANCE.sendToServer(new MessageAddClientListener(tileEntity, true));
 
+        powerBar = new GuiPowerBar(162, 25, tileEntity.getEnergyStorage(), mc,this);
         // ADD ITEMS TO visual
     }
 
@@ -56,13 +60,13 @@ public class GuiPowerSupply extends AbstractGuiMachine<TilePowerSupply> {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
-        drawList();
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
+        powerBar.draw();
         String power = tileEntity.getDisplayEnergy() + "FE";
         fontRenderer.drawString(power,  22,  30, Color.white.getRGB());
     }
