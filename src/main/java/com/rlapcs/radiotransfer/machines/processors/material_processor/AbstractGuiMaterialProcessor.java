@@ -7,8 +7,8 @@ import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import net.minecraft.util.ResourceLocation;
 
 public abstract class AbstractGuiMaterialProcessor<T extends AbstractTileMaterialProcessor> extends AbstractGuiMachine<T> {
-    public AbstractGuiMaterialProcessor(T tileEntity, AbstractContainerProcessor container, int width, int height, ResourceLocation texture) {
-        super(tileEntity, container, width, height, texture);
+    public AbstractGuiMaterialProcessor(T tileEntity, AbstractContainerProcessor container, int width, int height) {
+        super(tileEntity, container, width, height);
     }
 
     @Override

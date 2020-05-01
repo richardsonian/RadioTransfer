@@ -37,8 +37,8 @@ public abstract class AbstractGuiController<T extends AbstractTileController> ex
     protected static int ACTIVATE_OFF_X = 166;
     protected static int ACTIVATE_OFF_Y = 43;
 
-    public AbstractGuiController(T tileEntity, AbstractContainerController container, ResourceLocation background) {
-        super(tileEntity, container, WIDTH, HEIGHT, background);
+    public AbstractGuiController(T tileEntity, AbstractContainerController container) {
+        super(tileEntity, container, WIDTH, HEIGHT);
     }
 
     @Override

@@ -24,8 +24,8 @@ public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcess
     public static final CoordinateUV PROGRESS_BAR_UV= new CoordinateUV(8, 15);
     public static final DimensionWidthHeight PROGRESS_BAR_DIMS = new DimensionWidthHeight(9, 6);
 
-    public AbstractGuiItemProcessor(T tileEntity, AbstractContainerItemProcessor container, ResourceLocation texture) {
-        super(tileEntity, container, WIDTH, HEIGHT, texture);
+    public AbstractGuiItemProcessor(T tileEntity, AbstractContainerItemProcessor container) {
+        super(tileEntity, container, WIDTH, HEIGHT);
     }
 
     @Override
