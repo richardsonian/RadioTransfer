@@ -2,6 +2,7 @@ package com.rlapcs.radiotransfer.generic.blocks;
 
 import com.rlapcs.radiotransfer.RadioTransfer;
 import com.rlapcs.radiotransfer.registries.ModGuis;
+import com.rlapcs.radiotransfer.util.Debug;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,7 +26,7 @@ public abstract class AbstractModeledMachineWithGui extends AbstractModeledMachi
             return false;
 
         playerIn.openGui(RadioTransfer.instance, ModGuis.getGuiIDFromTileEntityClass(tileEntityClass), worldIn, pos.getX(), pos.getY(), pos.getZ());
-
+        //Debug.sendToAllPlayers("Block opening GUI ID: " + ModGuis.getGuiIDFromTileEntityClass(tileEntityClass), worldIn);
         return true;
     }
 }

@@ -2,6 +2,7 @@ package com.rlapcs.radiotransfer.generic.guis;
 
 import com.rlapcs.radiotransfer.registries.*;
 
+import com.rlapcs.radiotransfer.util.Debug;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
@@ -18,9 +19,10 @@ public class GuiHandler implements IGuiHandler {
         BlockPos pos = new BlockPos(x, y, z);
         TileEntity te = world.getTileEntity(pos);
 
+        //Debug.sendDebugMessage("Getting server GuiElement for " + te);
         for(GuiEntry entry : ModGuis.getAllGuiEntries()) {
             if(entry.getGuiID() == ID) {
-                return entry.getNewContainer(player.inventory, entry.castToTileEntityType(te)); //is null if there is no container
+                return entry.getNewContainer(player.inventory, entry.castToTileEntityType(te));
             }
         }
 
@@ -32,6 +34,7 @@ public class GuiHandler implements IGuiHandler {
         BlockPos pos = new BlockPos(x, y, z);
         TileEntity te = world.getTileEntity(pos);
 
+        //Debug.sendDebugMessage("Getting client GuiElement for " + te);
         for(GuiEntry entry : ModGuis.getAllGuiEntries()) {
             if(entry.getGuiID() == ID) {
                 return entry.getNewGuiScreen(entry.castToTileEntityType(te), entry.getNewContainer(player.inventory, entry.castToTileEntityType(te)));
@@ -43,7 +46,7 @@ public class GuiHandler implements IGuiHandler {
     public static class GuiEntry {
         private static int NEXT_GUI_ID;
 
-        private int GUI_ID;
+        private int GUI_ID; //one indexed
         private Class<? extends TileEntity> tileEntityClass;
         private Class<? extends GuiScreen> guiClass;
         private Class<? extends Container> containerClass;
@@ -81,7 +84,12 @@ public class GuiHandler implements IGuiHandler {
             if(!tileEntityClass.isInstance(te)) {
                 throw new RuntimeException("Tile entity provided to container in Gui Handler is not of type " + tileEntityClass.getName());
             }
-            if(containerClass==null) return null; //Tag on fix to return null to server if there's no container class
+            /* No longer needed, GuiScreens will be opened by client
+            if(containerClass==null) {
+                Debug.sendDebugMessage("Container Class is null in gui entry" + GUI_ID);
+                return null; //Tag on fix to return null to server if there's no container class
+            }
+            */
             try {
                 return containerClass.getConstructor(IInventory.class, tileEntityClass).newInstance(inventory, te);
             } catch(NoSuchMethodException e) {
@@ -105,11 +113,18 @@ public class GuiHandler implements IGuiHandler {
             if(!tileEntityClass.isInstance(te)) {
                 throw new RuntimeException("Tile entity provided to container in Gui Handler in " + this + " is not of type " + tileEntityClass.getName());
             }
-            if(!containerClass.isInstance(container)) {
+            if(/*(containerClass != null) && */!containerClass.isInstance(container)) { //hotfix for guiless container (removed)
                 throw new RuntimeException("Container provided to container in Gui Handler in " + this + " is not of type " + containerClass.getName());
             }
             try {
+                /* No longer needed
+                if(container == null) { //hotfix for guiscreens
+                    Debug.sendDebugMessage("Container is null in gui entry, constructing guiscreen " + GUI_ID + " without it.");
+                    return guiClass.getConstructor(tileEntityClass).newInstance(te);
+                }
+                else*/
                 return guiClass.getConstructor(tileEntityClass, containerClass).newInstance(te, container);
+
             } catch(NoSuchMethodException e) {
                 //redundant with ReflectiveOperationException
                 e.printStackTrace();

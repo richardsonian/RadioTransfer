@@ -46,6 +46,6 @@ public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcess
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
 
-        visual.drawList(mouseX, mouseY, partialTicks, this.itemRender); //Crashes because VISUAL is null (why?)
+        visual.drawList(mouseX, mouseY, partialTicks, this.itemRender);
     }
 }
