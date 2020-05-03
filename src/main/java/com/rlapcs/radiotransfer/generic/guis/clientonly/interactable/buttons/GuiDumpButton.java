@@ -33,4 +33,8 @@ public class GuiDumpButton extends InteractiveGuiElement {
     protected CoordinateUV getUV() {
         return new CoordinateUV(UV[0], UV[1]); //hotfix (sorry, too lazy to refactor this class to CoordinateUV system rn)
     }
+
+    public boolean isHighlighted() {
+        return this.hovered;
+    }
 }

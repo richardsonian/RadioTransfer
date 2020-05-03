@@ -21,5 +21,14 @@ public class ItemDecoderGuiListItem extends AbstractItemProcessorGuiListItem {
     @Override
     public void drawItem(Minecraft mc, int mouseX, int mouseY, float partialTicks, GuiScreen screen, RenderItem renderer, int index) {
         super.drawItem(mc, mouseX, mouseY, partialTicks, screen, renderer, index);
+
+        //Check for reordering click and sync with server (by changing server, we will automatically get an update
+        TileItemDecoder ctile = (TileItemDecoder) tile;
+        if (hoveringTop && flag && !wasClicking && index != 0)
+            ModNetworkMessages.INSTANCE.sendToServer(new MessageChangePacketPriority(ctile, index));
+        if (hoveringBottom && flag && !wasClicking && index != ctile.getHandler().size() - 1)
+            ModNetworkMessages.INSTANCE.sendToServer(new MessageChangePacketPriority(ctile, index + 1));
+
+        wasClicking = flag;
     }
 }

@@ -37,6 +37,12 @@ public class ItemEncoderGuiListItem extends AbstractItemProcessorGuiListItem {
             Debug.sendDebugMessage(TextFormatting.RED + "PACKET QUEUE DID NOT MATCH DUMP DATA");
         }
 
+        //Check for reordering click and sync with server (by changing server, we will automatically get an update
+        if (hoveringTop && flag && !wasClicking && index != 0 && !dumpButton.isHighlighted())
+            ModNetworkMessages.INSTANCE.sendToServer(new MessageChangePacketPriority(ctile, index));
+        if (hoveringBottom && flag && !wasClicking && index != ctile.getHandler().size() - 1 && !dumpButton.isHighlighted())
+            ModNetworkMessages.INSTANCE.sendToServer(new MessageChangePacketPriority(ctile, index + 1));
+
         wasClicking = flag;
     }
 }

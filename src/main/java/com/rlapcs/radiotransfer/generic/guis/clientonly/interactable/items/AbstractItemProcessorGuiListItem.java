@@ -45,15 +45,6 @@ public abstract class AbstractItemProcessorGuiListItem extends AbstractGuiListIt
 
         //draw item quantity
         screen.drawString(mc.fontRenderer, "×" + this.itemStack.getCount(), this.x + ITEM_QUANTITY_REL_POS.x, this.y + ITEM_QUANTITY_REL_POS.y, 0xffffff);
-
-        //Check for reordering click and sync with server (by changing server, we will automatically get an update
-        AbstractTileMaterialProcessor ctile = (AbstractTileMaterialProcessor) tile;
-        if (hoveringTop && flag && !wasClicking && index != 0)
-            ModNetworkMessages.INSTANCE.sendToServer(new MessageChangePacketPriority(ctile, index));
-        if (hoveringBottom && flag && !wasClicking && index != ctile.getHandler().size() - 1)
-            ModNetworkMessages.INSTANCE.sendToServer(new MessageChangePacketPriority(ctile, index + 1));
-
-        wasClicking = flag;//is it dangerous to do this more than once?
     }
 
     @Override
