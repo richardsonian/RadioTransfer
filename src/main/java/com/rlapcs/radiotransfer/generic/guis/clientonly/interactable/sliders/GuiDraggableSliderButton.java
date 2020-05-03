@@ -19,8 +19,7 @@ public class GuiDraggableSliderButton extends InteractiveGuiElement {
     public GuiDraggableSliderButton(int id, int x, int y, int guiLeft, int guiTop, int min, int max) {
         super(id, x, y, DIMS.x, DIMS.y);
 
-        this.pos.x = guiLeft + x;
-        this.pos.y = guiTop + y;
+        pos = new CoordinateXY(guiLeft + x, guiTop + y);
         this.min = min;
         this.max = max;
         this.guiLeft = guiLeft;

@@ -8,6 +8,8 @@ import com.rlapcs.radiotransfer.machines.processors.item_processors.abstract_ite
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 
+import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
+
 public class GuiItemDecoder extends AbstractGuiItemProcessor<TileItemDecoder> {
     public GuiItemDecoder(TileItemDecoder tileEntity, ContainerItemDecoder container) {
         super(tileEntity, container);
