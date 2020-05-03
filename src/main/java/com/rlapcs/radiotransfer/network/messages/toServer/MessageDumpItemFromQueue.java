@@ -47,7 +47,7 @@ public class MessageDumpItemFromQueue implements IMessage {
         private void handle(MessageDumpItemFromQueue message, MessageContext ctx) {
             EntityPlayerMP playerEntity = ctx.getServerHandler().player;
             World world = playerEntity.getEntityWorld();
-            Debug.sendToAllPlayers(TextFormatting.GOLD + "Received dump message", world);
+            Debug.sendToAllPlayers(TextFormatting.GOLD + "Received dumpButton message", world);
 
             TileEntity te = world.getTileEntity(message.tilePos);
             if (te != null && te instanceof AbstractTileMaterialProcessor) {

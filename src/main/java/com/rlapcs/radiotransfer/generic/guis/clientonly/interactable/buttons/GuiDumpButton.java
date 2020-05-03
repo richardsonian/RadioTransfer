@@ -1,6 +1,7 @@
 package com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.buttons;
 
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.InteractiveGuiElement;
+import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateUV;
 import com.rlapcs.radiotransfer.network.messages.toServer.MessageDumpItemFromQueue;
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import net.minecraft.client.Minecraft;
@@ -29,7 +30,7 @@ public class GuiDumpButton extends InteractiveGuiElement {
     }
 
     @Override
-    protected int[] getUV() {
-        return UV;
+    protected CoordinateUV getUV() {
+        return new CoordinateUV(UV[0], UV[1]); //hotfix (sorry, too lazy to refactor this class to CoordinateUV system rn)
     }
 }

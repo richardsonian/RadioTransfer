@@ -1,5 +1,6 @@
 package com.rlapcs.radiotransfer.generic.capability;
 
+import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.lists.IGuiListContent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -15,7 +16,7 @@ import java.util.List;
 
 import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
 
-public class ItemPacketQueue implements IMaterialTransferHandler<ItemStack, ItemPacketQueue.PacketBuffer>, Iterable<ItemPacketQueue.PacketBuffer> {
+public class ItemPacketQueue implements IMaterialTransferHandler<ItemStack, ItemPacketQueue.PacketBuffer>, Iterable<ItemPacketQueue.PacketBuffer>, IGuiListContent {
     public static final int MAX_QUANTITY = 999;
     public static final int MAX_BUFFERS = 15;
 

@@ -1,6 +1,7 @@
 package com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.buttons;
 
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.InteractiveGuiElement;
+import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateUV;
 
 public class GuiIncrementButton extends InteractiveGuiElement {
     public enum IncrementType {
@@ -22,7 +23,7 @@ public class GuiIncrementButton extends InteractiveGuiElement {
     }
 
     @Override
-    protected int[] getUV() {
-        return UV;
+    protected CoordinateUV getUV() {
+        return new CoordinateUV(UV[0], UV[1]); //hotfix (sorry, too lazy to refactor this class to CoordinateUV system rn)
     }
 }

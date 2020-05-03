@@ -1,10 +1,8 @@
 package com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.lists;
 
-import com.rlapcs.radiotransfer.generic.capability.ItemPacketQueue;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateXY;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.items.AbstractGuiListItem;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.sliders.GuiDraggableSliderButton;
-import com.rlapcs.radiotransfer.machines.processors.material_processor.AbstractTileMaterialProcessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.RenderItem;
@@ -14,36 +12,34 @@ import org.lwjgl.input.Mouse;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractGuiList<T> {
-    protected static final int NUM_ITEMS = 4;
-    private static final CoordinateXY BAR_REL_COORDS = new CoordinateXY(59, -3);
-
-    private Minecraft mc;
-    private GuiScreen screen;
-    private List<T> itemList;
-    private GuiDraggableSliderButton bar;
-    protected List<AbstractGuiListItem> items;
+public abstract class AbstractGuiList {
+    protected Minecraft mc;
+    protected GuiScreen screen;
+    protected GuiDraggableSliderButton scrollBar;
+    protected IGuiListContent listContent;
+    protected List<AbstractGuiListItem> listItems;
 
     protected boolean wasClicking;
     protected boolean isScrolling;
     protected double scrollPos, scrollVal;
 
-    public AbstractGuiList(Minecraft mc, GuiScreen screen, List<T> itemList, int x, int y, int guiLeft, int guiTop) {
+    public AbstractGuiList(Minecraft mc, GuiScreen screen, IGuiListContent listContent, int x, int y, int guiLeft, int guiTop) {
         this.mc = mc;
         this.screen = screen;
-        this.itemList = itemList;
-        items = new ArrayList<>();
+        this.listContent = listContent;
+
+        listItems = new ArrayList<>();
         scrollPos = 0;
         scrollVal = 0;
-        /* for (int i = 0; i < NUM_ITEMS; i++) ADD TO SUBCLASSES
-            items.add(new AbstractGuiListItem(i, guiLeft + x, guiTop + y + i * 18, i, tile)); */
-        bar = new GuiDraggableSliderButton(itemList.size(), x + BAR_REL_COORDS.x, y + BAR_REL_COORDS.y, guiLeft, guiTop, 24, 82);
+
+        scrollBar = new GuiDraggableSliderButton(listContent.size(), x + getBarRelCoords().x, y + getBarRelCoords().y, guiLeft, guiTop, 24, 82); //magic numbers?
     }
 
     public void drawList(int mouseX, int mouseY, float partialTicks, RenderItem renderer) {
+        //establish clicking, scrolling, and mouse pos
         boolean flag = Mouse.isButtonDown(0);
 
-        if (!wasClicking && flag && bar.isMouseOver())
+        if (!wasClicking && flag && scrollBar.isMouseOver())
             isScrolling = true;
         else if (!flag)
             isScrolling = false;
@@ -53,25 +49,34 @@ public abstract class AbstractGuiList<T> {
         int scroll = Mouse.getEventDWheel();
         boolean up = scroll > 0;
         scrollVal = up ? Math.log(Math.abs(scroll) + 1) : -Math.log(Math.abs(scroll) + 1);
-        scrollPos = (bar.getY() - 24) / 59d;
+        scrollPos = (scrollBar.getY() - 24) / 59d; //what are these magic numbers?
 
-        int start = MathHelper.clamp((int) ((itemList.size() - 3) * scrollPos), 0, itemList.size() - 3);
-        //sendDebugMessage("bar: " + bar.getY());
-        if (!itemList.isEmpty()) {
-            if (itemList.size() <= NUM_ITEMS) {
+        int start = MathHelper.clamp((int) ((listContent.size() - 3) * scrollPos), 0, listContent.size() - 3); //what are these magic numbers?
+        //sendDebugMessage("scrollBar: " + scrollBar.getY());
+
+        /* Render Items */
+        if (listContent.size() > 0) {
+            if (listContent.size() <= getNumItems()) {
                 //Debug.sendDebugMessage("less");
-                for (int i = 0; i < itemList.size(); i++) {
-                    items.get(i).drawItem(mc, mouseX, mouseY, partialTicks, screen, renderer, itemList.get(i), i);
+                for (int i = 0; i < listContent.size(); i++) {
+                    updateListItem(i, i);
+                    listItems.get(i).drawItem(mc, mouseX, mouseY, partialTicks, screen, renderer, i);
                 }
             } else {
-                for (int i = 0; i < NUM_ITEMS; i++) {
-                    int index = MathHelper.clamp(start + i, 0, itemList.size() - 1);
-                    items.get(i).drawItem(mc, mouseX, mouseY, partialTicks, screen, renderer, itemList.get(index).getItemStack(), index);
+                for (int i = 0; i < getNumItems(); i++) {
+                    int index = MathHelper.clamp(start + i, 0, listContent.size() - 1);
+                    updateListItem(i, index);
+                    listItems.get(i).drawItem(mc, mouseX, mouseY, partialTicks, screen, renderer, index);
                 }
             }
         }
 
-        if (itemList.size() > 4)
-            bar.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, isScrolling, scrollVal / (double) itemList.size());
+        if (listContent.size() > 4)
+            scrollBar.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, isScrolling, scrollVal / (double) listContent.size());
     }
+
+    protected abstract void updateListItem(int listIndex, int contentIndex);
+
+    protected abstract CoordinateXY getBarRelCoords();
+    protected abstract int getNumItems();
 }

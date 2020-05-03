@@ -2,38 +2,38 @@ package com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.sliders;
 
 import com.rlapcs.radiotransfer.ModConstants;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.InteractiveGuiElement;
+import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateUV;
+import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateXY;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.MathHelper;
 
 public class GuiDraggableSliderButton extends InteractiveGuiElement {
-    private static final int[] UV = {0, 15};
-    private static final int[] DIMS = {8, 15};
+    private static final CoordinateUV UV = new CoordinateUV(0, 15);
+    private static final CoordinateXY DIMS = new CoordinateXY(8, 15);
 
-    private static int[] XY, minMax;
-
-    private int guiLeft, guiTop, mouseOffset;
+    private CoordinateXY pos;
+    private int guiLeft, guiTop, mouseOffset, min, max;
     private boolean wasDragging;
 
     public GuiDraggableSliderButton(int id, int x, int y, int guiLeft, int guiTop, int min, int max) {
-        super(id, x, y, DIMS[0], DIMS[1]);
-        XY = new int[2];
-        minMax = new int[2];
-        XY[0] = guiLeft + x;
-        XY[1] = guiTop + y;
-        minMax[0] = min;
-        minMax[1] = max;
+        super(id, x, y, DIMS.x, DIMS.y);
+
+        this.pos.x = guiLeft + x;
+        this.pos.y = guiTop + y;
+        this.min = min;
+        this.max = max;
         this.guiLeft = guiLeft;
         this.guiTop = guiTop;
-        wasDragging = false;
+        this.wasDragging = false;
     }
 
     public int getY() {
-        return XY[1] - guiTop;
+        return pos.y - guiTop;
     }
 
     @Override
-    protected int[] getUV() {
+    protected CoordinateUV getUV() {
         return UV;
     }
 
@@ -63,19 +63,19 @@ public class GuiDraggableSliderButton extends InteractiveGuiElement {
             //if (dragging)
             //    XY[1] = MathHelper.clamp(mouseY, guiTop + minMax[0] + mouseOffset, guiTop + minMax[1] + mouseOffset);
             if (!wasDragging && dragging)
-                mouseOffset = mouseY - XY[1];
+                mouseOffset = mouseY - pos.y;
             if (dragging)
-                XY[1] = mouseY - mouseOffset;
+                pos.y = mouseY - mouseOffset;
             else if (!wasDragging)
                 mouseOffset = 0;
             //sendDebugMessage(wasDragging + " " + dragging + " " + mouseOffset + "");
             //XY[1] = 2 * XY[1] - mouseY;
             boolean up = scroll > 0;
             int scrollChange = up ? (int) Math.ceil(Math.abs(scroll)) : - (int) Math.ceil(Math.abs(scroll));
-            XY[1] = MathHelper.clamp(XY[1] - scrollChange, guiTop + minMax[0], guiTop + minMax[1]);
-            this.drawTexturedModalRect(XY[0], XY[1], getUV()[0], getUV()[1], this.width, this.height);
+            pos.y = MathHelper.clamp(pos.y - scrollChange, guiTop + min, guiTop + max);
+            this.drawTexturedModalRect(pos.x, pos.y, getUV().u, getUV().v, this.width, this.height);
             wasDragging = dragging;
-            this.hovered = mouseX >= XY[0] && mouseY >= XY[1] && mouseX < XY[0] + this.width && mouseY < XY[1] + this.height;
+            this.hovered = mouseX >= pos.x && mouseY >= pos.y && mouseX < pos.x + this.width && mouseY < pos.y + this.height;
         }
     }
 }
