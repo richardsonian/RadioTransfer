@@ -31,6 +31,6 @@ public class BlockRadio extends AbstractModeledMachine {
             TileEntity te = worldIn.getTileEntity(pos);
             Minecraft.getMinecraft().displayGuiScreen(new GuiRadio((TileRadio) te));
         }
-        return false; //Don't do anything if on server
+        return true; //Return that something was activated
     }
 }
