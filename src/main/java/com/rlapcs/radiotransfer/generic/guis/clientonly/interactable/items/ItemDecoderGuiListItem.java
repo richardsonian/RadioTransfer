@@ -24,10 +24,18 @@ public class ItemDecoderGuiListItem extends AbstractItemProcessorGuiListItem {
 
         //Check for reordering click and sync with server (by changing server, we will automatically get an update
         TileItemDecoder ctile = (TileItemDecoder) tile;
-        if (hoveringTop && flag && !wasClicking && index != 0)
-            ModNetworkMessages.INSTANCE.sendToServer(new MessageChangePacketPriority(ctile, index));
-        if (hoveringBottom && flag && !wasClicking && index != ctile.getHandler().size() - 1)
-            ModNetworkMessages.INSTANCE.sendToServer(new MessageChangePacketPriority(ctile, index + 1));
+        if (hoveringTop && index != 0) {
+            if (flag && !wasClicking)
+                ModNetworkMessages.INSTANCE.sendToServer(new MessageChangePacketPriority(ctile, index));
+            else
+                topIndicator.draw(this.x, this.y - 3, mc, screen);
+        }
+        if (hoveringBottom && index != ctile.getHandler().size() - 1) {
+            if (flag && !wasClicking)
+                ModNetworkMessages.INSTANCE.sendToServer(new MessageChangePacketPriority(ctile, index + 1));
+            else
+                bottomIndicator.draw(this.x, this.y + this.height - 1, mc, screen);
+        }
 
         wasClicking = flag;
     }

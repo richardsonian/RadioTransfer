@@ -38,10 +38,18 @@ public class ItemEncoderGuiListItem extends AbstractItemProcessorGuiListItem {
         }
 
         //Check for reordering click and sync with server (by changing server, we will automatically get an update
-        if (hoveringTop && flag && !wasClicking && index != 0 && !dumpButton.isHighlighted())
-            ModNetworkMessages.INSTANCE.sendToServer(new MessageChangePacketPriority(ctile, index));
-        if (hoveringBottom && flag && !wasClicking && index != ctile.getHandler().size() - 1 && !dumpButton.isHighlighted())
-            ModNetworkMessages.INSTANCE.sendToServer(new MessageChangePacketPriority(ctile, index + 1));
+        if (hoveringTop && index != 0 && !dumpButton.isHighlighted()) {
+            if (flag && !wasClicking)
+                ModNetworkMessages.INSTANCE.sendToServer(new MessageChangePacketPriority(ctile, index));
+            else
+                topIndicator.draw(this.x, this.y - 3, mc, screen);
+        }
+        if (hoveringBottom && index != ctile.getHandler().size() - 1 && !dumpButton.isHighlighted()) {
+            if (flag && !wasClicking)
+                ModNetworkMessages.INSTANCE.sendToServer(new MessageChangePacketPriority(ctile, index + 1));
+            else
+                bottomIndicator.draw(this.x, this.y + this.height - 1, mc, screen);
+        }
 
         wasClicking = flag;
     }

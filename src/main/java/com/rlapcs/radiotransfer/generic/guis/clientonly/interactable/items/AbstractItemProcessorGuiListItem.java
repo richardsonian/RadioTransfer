@@ -24,9 +24,13 @@ public abstract class AbstractItemProcessorGuiListItem extends AbstractGuiListIt
 
     //instance variables
     private ItemStack itemStack;
+    protected AbstractGuiListItem.GuiPriorityChangeIndicator topIndicator;
+    protected AbstractGuiListItem.GuiPriorityChangeIndicator bottomIndicator;
 
     public AbstractItemProcessorGuiListItem(int id, int index, CoordinateXY pos, AbstractTileMachine tile) {
         super(id, index, pos, DIMS, tile);
+        topIndicator = new AbstractGuiListItem.GuiPriorityChangeIndicator(true);
+        bottomIndicator = new AbstractGuiListItem.GuiPriorityChangeIndicator(false);
     }
 
     @Override

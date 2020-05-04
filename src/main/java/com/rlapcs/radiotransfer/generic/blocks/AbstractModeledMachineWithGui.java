@@ -12,6 +12,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
+
 public abstract class AbstractModeledMachineWithGui extends AbstractModeledMachine {
     public AbstractModeledMachineWithGui(Material material, Class<? extends TileEntity> tileEntityClass) {
         super(material, tileEntityClass);
@@ -25,6 +27,7 @@ public abstract class AbstractModeledMachineWithGui extends AbstractModeledMachi
         if (!tileEntityClass.isInstance(te))
             return false;
 
+        sendDebugMessage("blockactivated: " + tileEntityClass.getName());
         playerIn.openGui(RadioTransfer.instance, ModGuis.getGuiIDFromTileEntityClass(tileEntityClass), worldIn, pos.getX(), pos.getY(), pos.getZ());
         //Debug.sendToAllPlayers("Block opening GUI ID: " + ModGuis.getGuiIDFromTileEntityClass(tileEntityClass), worldIn);
         return true;

@@ -53,4 +53,18 @@ public abstract class AbstractGuiListItem extends InteractiveGuiElement {
     public CoordinateXY getPos() {
         return new CoordinateXY(this.x, this.y);
     }
+
+    protected class GuiPriorityChangeIndicator {
+        private CoordinateUV UV;
+
+        GuiPriorityChangeIndicator(boolean isTop) {
+            this.UV = new CoordinateUV(0, isTop ? 45 : 49);
+        }
+
+        void draw(int x, int y, Minecraft mc, GuiScreen screen) {
+            mc.getTextureManager().bindTexture(ModConstants.ICONS);
+            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+            screen.drawTexturedModalRect(x, y, UV.u, UV.v, 59, 4);
+        }
+    }
 }
