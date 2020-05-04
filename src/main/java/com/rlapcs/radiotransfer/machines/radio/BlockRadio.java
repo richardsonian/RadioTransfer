@@ -24,13 +24,13 @@ public class BlockRadio extends AbstractModeledMachine {
         setCreativeTab(CreativeTabs.MISC);
     }
 
+    /* Display Container-less GUI (Client only)*/
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         if(worldIn.isRemote) { //ONLY on client
             TileEntity te = worldIn.getTileEntity(pos);
             Minecraft.getMinecraft().displayGuiScreen(new GuiRadio((TileRadio) te));
         }
-
-        return false; //didn't do anything
+        return false; //Don't do anything if on server
     }
 }
