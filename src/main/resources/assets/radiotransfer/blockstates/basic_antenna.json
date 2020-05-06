@@ -1,37 +1,5 @@
 {
   "forge_marker": 1,
-  "display": {
-    "gui": {
-      "rotation": [ 30, 225, 0 ],
-      "translation": [ 0, 0, 0],
-      "scale":[ 0.625, 0.625, 0.625 ]
-    },
-    "fixed": {
-      "rotation": [ 0, 0, 0 ],
-      "translation": [ 0, 0, 0],
-      "scale":[ 0.5, 0.5, 0.5 ]
-    },
-    "thirdperson_lefthand": {
-      "rotation": [ 70, 0, 0 ],
-      "translation": [ -0.5, -2, -1.5],
-      "scale": [ 0.4, 0.4, 0.4 ]
-    },
-    "thirdperson_righthand": {
-      "rotation": [ 70, 0, 0 ],
-      "translation": [ -0.5, -2, -1.5],
-      "scale": [ 0.4, 0.4, 0.4 ]
-    },
-    "firstperson_righthand": {
-      "rotation": [ 0, 0, 0 ],
-      "translation": [ 0, 3, 0 ],
-      "scale": [ 0.60, 0.60, 0.60 ]
-    },
-    "firstperson_lefthand": {
-      "rotation": [ 0, 0, 0 ],
-      "translation": [ 0, 3.2, 2 ],
-      "scale": [ 0.60, 0.60, 0.60 ]
-    }
-  },
   "defaults": {
     "custom": {
       "flip-v": true
@@ -49,6 +17,39 @@
     "facing=west": { "y": 270, "x": 270 },
     "facing=east": { "y": 90, "x": 270 },
     "normal": [{}],
-    "inventory": [{}]
+    "inventory" : [{
+        "transform" : {
+          "gui": {
+            "rotation": [ 30, 45, 0 ],
+            "translation": [ 0, 0, 0 ],
+            "scale":[ 0.625, 0.625, 0.625 ]
+          },
+          "fixed": {
+            "rotation": [ 0, 0, 0 ],
+            "translation": [ 0, 0, 0 ],
+            "scale":[ 0.5, 0.5, 0.5 ]
+          },
+          "thirdperson_lefthand": {
+            "rotation": [ 70, 0, 0 ],
+            "translation": [ 0, 0, 0 ],
+            "scale": [ 0.4, 0.4, 0.4 ]
+          },
+          "thirdperson_righthand": {
+            "rotation": [ 70, 0, 0 ],
+            "translation": [ 0, 0, 0 ],
+            "scale": [ 0.4, 0.4, 0.4 ]
+          },
+          "firstperson_righthand": {
+            "rotation": [ 0, 0, 0 ],
+            "translation": [ 0, 0, 0 ],
+            "scale": [ 0.60, 0.60, 0.60 ]
+          },
+          "firstperson_lefthand": {
+            "rotation": [ 0, 0, 0 ],
+            "translation": [ 0, 0, 0 ],
+            "scale": [ 0.60, 0.60, 0.60 ]
+          }
+        }
+    }]
   }
 }
