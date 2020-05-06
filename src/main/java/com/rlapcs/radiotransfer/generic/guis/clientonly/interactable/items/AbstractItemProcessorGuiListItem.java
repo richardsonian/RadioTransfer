@@ -44,7 +44,8 @@ public abstract class AbstractItemProcessorGuiListItem extends AbstractGuiListIt
 
         //Render Item
         GL11.glScaled(ITEM_SCALE, ITEM_SCALE, ITEM_SCALE);
-        renderer.renderItemIntoGUI(this.itemStack, (int)((this.x + ITEM_REL_POS.x) / ITEM_SCALE), (int)((this.y + ITEM_REL_POS.y) / ITEM_SCALE));
+        renderer.renderItemAndEffectIntoGUI(mc.player, this.itemStack, (int)((this.x + ITEM_REL_POS.x) / ITEM_SCALE), (int)((this.y + ITEM_REL_POS.y) / ITEM_SCALE));
+        //enderer.renderItemIntoGUI(this.itemStack, (int)((this.x + ITEM_REL_POS.x) / ITEM_SCALE), (int)((this.y + ITEM_REL_POS.y) / ITEM_SCALE));
         GL11.glScaled(1 / ITEM_SCALE,1 / ITEM_SCALE,1 / ITEM_SCALE);
 
         //draw item quantity

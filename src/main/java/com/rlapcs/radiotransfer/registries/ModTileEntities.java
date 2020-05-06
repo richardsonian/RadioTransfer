@@ -1,6 +1,7 @@
 package com.rlapcs.radiotransfer.registries;
 
 import com.rlapcs.radiotransfer.RadioTransfer;
+import com.rlapcs.radiotransfer.machines.antennas.basic_antenna.TileBasicAntenna;
 import com.rlapcs.radiotransfer.machines.controllers.rx_controller.TileRxController;
 import com.rlapcs.radiotransfer.machines.controllers.tx_controller.TileTxController;
 import com.rlapcs.radiotransfer.machines.processors.item_processors.item_decoder.TileItemDecoder;
@@ -23,6 +24,8 @@ public class ModTileEntities {
         GameRegistry.registerTileEntity(TileItemDecoder.class, getTeResourceLocation(ModBlocks.item_decoder));
 
         GameRegistry.registerTileEntity(TilePowerSupply.class, getTeResourceLocation(ModBlocks.power_supply));
+
+        GameRegistry.registerTileEntity(TileBasicAntenna.class, getTeResourceLocation(ModBlocks.basic_antenna));
     }
 
     private static ResourceLocation getTeResourceLocation(Block block) {

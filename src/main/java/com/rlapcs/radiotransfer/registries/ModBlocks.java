@@ -1,5 +1,6 @@
 package com.rlapcs.radiotransfer.registries;
 
+import com.rlapcs.radiotransfer.machines.antennas.basic_antenna.BlockBasicAntenna;
 import com.rlapcs.radiotransfer.machines.controllers.rx_controller.BlockRxController;
 import com.rlapcs.radiotransfer.machines.controllers.tx_controller.BlockTxController;
 import com.rlapcs.radiotransfer.machines.processors.item_processors.item_decoder.BlockItemDecoder;
@@ -37,6 +38,8 @@ public class ModBlocks {
 
     public static final BlockPowerSupply power_supply = null;
 
+    public static final BlockBasicAntenna basic_antenna = null;
+
     /**
      * Returns a list of instances of blocks that are to be added to the registry.
      * @return The list.
@@ -53,6 +56,7 @@ public class ModBlocks {
         blocks.add(new BlockItemEncoder());
         blocks.add(new BlockItemDecoder());
         blocks.add(new BlockPowerSupply());
+        blocks.add(new BlockBasicAntenna());
         /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
         return blocks;
@@ -79,6 +83,7 @@ public class ModBlocks {
         item_encoder.initModel();
         item_decoder.initModel();
         power_supply.initModel();
+        basic_antenna.initModel();
     }
 
     /**

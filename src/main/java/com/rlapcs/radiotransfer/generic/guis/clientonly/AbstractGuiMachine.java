@@ -20,7 +20,6 @@ public abstract class AbstractGuiMachine<T extends TileEntity> extends GuiContai
         super(container);
 
         this.tileEntity = tileEntity;
-
         xSize = width;
         ySize = height;
     }
