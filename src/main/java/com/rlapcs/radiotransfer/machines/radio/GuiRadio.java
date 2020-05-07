@@ -5,6 +5,7 @@ import com.rlapcs.radiotransfer.machines.antennas.basic_antenna.BlockBasicAntenn
 import com.rlapcs.radiotransfer.machines.processors.item_processors.item_encoder.BlockItemEncoder;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
@@ -23,7 +24,7 @@ import java.util.List;
 
 import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
 
-public class GuiRadio extends GuiScreen {
+public class GuiRadio extends GuiContainer {
     private ResourceLocation texture;
     private TextureManager textureManager;
     private TileRadio tileEntity;
