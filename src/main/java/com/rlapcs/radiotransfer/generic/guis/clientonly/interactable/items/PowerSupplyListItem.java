@@ -10,6 +10,7 @@ import com.rlapcs.radiotransfer.machines.power_supply.TilePowerSupply;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
@@ -41,11 +42,14 @@ public class PowerSupplyListItem extends AbstractGuiListItem {
 
         //Render Item
         GL11.glScaled(ITEM_SCALE, ITEM_SCALE, ITEM_SCALE);
+        RenderHelper.disableStandardItemLighting();
+        RenderHelper.enableGUIStandardItemLighting();
         renderer.renderItemIntoGUI(this.powerData.getMachineRenderItem(), (int)((this.x + ITEM_REL_POS.x) / ITEM_SCALE), (int)((this.y + ITEM_REL_POS.y) / ITEM_SCALE));
         GL11.glScaled(1 / ITEM_SCALE,1 / ITEM_SCALE,1 / ITEM_SCALE);
 
         //draw power usage
         screen.drawString(mc.fontRenderer, "500 FE", this.x + POWER_TEXT_REL_POS.x, this.y + POWER_TEXT_REL_POS.y, 0xffffff);
+        RenderHelper.enableStandardItemLighting();
 
         wasClicking = flag;
     }

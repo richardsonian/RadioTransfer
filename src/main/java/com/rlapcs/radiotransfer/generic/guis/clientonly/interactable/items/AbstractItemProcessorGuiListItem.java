@@ -10,6 +10,7 @@ import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
@@ -44,12 +45,14 @@ public abstract class AbstractItemProcessorGuiListItem extends AbstractGuiListIt
 
         //Render Item
         GL11.glScaled(ITEM_SCALE, ITEM_SCALE, ITEM_SCALE);
+        RenderHelper.disableStandardItemLighting();
+        RenderHelper.enableGUIStandardItemLighting();
         renderer.renderItemAndEffectIntoGUI(mc.player, this.itemStack, (int)((this.x + ITEM_REL_POS.x) / ITEM_SCALE), (int)((this.y + ITEM_REL_POS.y) / ITEM_SCALE));
-        //enderer.renderItemIntoGUI(this.itemStack, (int)((this.x + ITEM_REL_POS.x) / ITEM_SCALE), (int)((this.y + ITEM_REL_POS.y) / ITEM_SCALE));
         GL11.glScaled(1 / ITEM_SCALE,1 / ITEM_SCALE,1 / ITEM_SCALE);
 
         //draw item quantity
         screen.drawString(mc.fontRenderer, "×" + this.itemStack.getCount(), this.x + ITEM_QUANTITY_REL_POS.x, this.y + ITEM_QUANTITY_REL_POS.y, 0xffffff);
+        RenderHelper.enableStandardItemLighting();
     }
 
     @Override

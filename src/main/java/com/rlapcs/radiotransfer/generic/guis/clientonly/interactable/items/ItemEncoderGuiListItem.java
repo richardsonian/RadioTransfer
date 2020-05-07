@@ -10,6 +10,7 @@ import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import com.rlapcs.radiotransfer.util.Debug;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.util.text.TextFormatting;
 
@@ -27,6 +28,8 @@ public class ItemEncoderGuiListItem extends AbstractItemProcessorGuiListItem {
     @Override
     public void drawItem(Minecraft mc, int mouseX, int mouseY, float partialTicks, GuiScreen screen, RenderItem renderer,  int index) {
         super.drawItem(mc, mouseX, mouseY, partialTicks, screen, renderer, index);
+        RenderHelper.disableStandardItemLighting();
+        RenderHelper.enableGUIStandardItemLighting();
 
         TileItemEncoder ctile = (TileItemEncoder) tile;
         if (ctile.getDumpableData() != null && ctile.getHandler().size() == ctile.getDumpableData().length) {
@@ -36,6 +39,7 @@ public class ItemEncoderGuiListItem extends AbstractItemProcessorGuiListItem {
         else {
             Debug.sendDebugMessage(TextFormatting.RED + "PACKET QUEUE DID NOT MATCH DUMP DATA");
         }
+        RenderHelper.enableStandardItemLighting();
 
         //Check for reordering click and sync with server (by changing server, we will automatically get an update
         if (hoveringTop && index != 0 && !dumpButton.isHighlighted()) {
