@@ -1,6 +1,7 @@
 package com.rlapcs.radiotransfer.machines.radio;
 
 import com.rlapcs.radiotransfer.RadioTransfer;
+import com.rlapcs.radiotransfer.generic.guis.clientonly.AbstractGuiMachine;
 import com.rlapcs.radiotransfer.machines.antennas.basic_antenna.BlockBasicAntenna;
 import com.rlapcs.radiotransfer.machines.processors.item_processors.item_encoder.BlockItemEncoder;
 import net.minecraft.block.state.IBlockState;
@@ -24,16 +25,16 @@ import java.util.List;
 
 import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
 
-public class GuiRadio extends GuiContainer {
-    private ResourceLocation texture;
+public class GuiRadio extends AbstractGuiMachine<TileRadio> {
     private TextureManager textureManager;
     private TileRadio tileEntity;
-    private int xSize = 188;
-    private int ySize = 163;
+    private static int xSize = 188;
+    private static int ySize = 163;
     protected int guiLeft;
     protected int guiTop;
 
-    public GuiRadio(TileRadio tileEntity) {
+    public GuiRadio(TileRadio tileEntity, ContainerRadio container) {
+        super(tileEntity, container, xSize, ySize);
         texture = new ResourceLocation(RadioTransfer.MODID, "textures/gui/radio.png");
         this.tileEntity = tileEntity;
         //sendDebugMessage("construct");
@@ -43,8 +44,8 @@ public class GuiRadio extends GuiContainer {
         super.initGui();
         //sendDebugMessage("initgui");
         textureManager = mc.getTextureManager();
-        guiLeft = (this.width - this.xSize) / 2;
-        guiTop = (this.height - this.ySize) / 2;
+        guiLeft = (this.width - xSize) / 2;
+        guiTop = (this.height - ySize) / 2;
     }
 
     @Override
