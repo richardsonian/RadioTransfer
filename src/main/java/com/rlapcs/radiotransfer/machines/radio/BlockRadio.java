@@ -15,7 +15,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class BlockRadio extends AbstractModeledMachine {
+public class BlockRadio extends AbstractModeledMachineWithGui {
     public BlockRadio() {
         super(Material.IRON, TileRadio.class);
 
@@ -24,7 +24,8 @@ public class BlockRadio extends AbstractModeledMachine {
         setCreativeTab(CreativeTabs.MISC);
     }
 
-    /* Display Container-less GUI (Client only)*/
+    /* Display Container-less GUI (Client only) [OLD, no longer in USE]*/
+    /*
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         if(worldIn.isRemote) { //ONLY on client
@@ -33,4 +34,5 @@ public class BlockRadio extends AbstractModeledMachine {
         }
         return true; //Return that something was activated
     }
+    */
 }

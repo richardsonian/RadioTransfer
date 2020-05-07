@@ -2,10 +2,11 @@ package com.rlapcs.radiotransfer.machines.radio;
 
 import com.rlapcs.radiotransfer.generic.multiblock.MultiblockRadioController;
 import com.rlapcs.radiotransfer.generic.tileEntities.AbstractTileMachine;
+import com.rlapcs.radiotransfer.generic.tileEntities.AbstractTileMachineWithInventory;
 import com.rlapcs.radiotransfer.server.radio.RadioNetwork;
 import com.rlapcs.radiotransfer.server.radio.TransferType;
 
-public class TileRadio extends AbstractTileMachine { //power requirements?
+public class TileRadio extends AbstractTileMachineWithInventory { //power requirements?
     public final int MULTIBLOCK_UPDATE_TICKS = 20;
     public final int REGISTER_UPDATE_TICKS = 20;
     private final int SEND_RESOURCES_UPDATE_TICKS = 20;
@@ -15,7 +16,7 @@ public class TileRadio extends AbstractTileMachine { //power requirements?
     private MultiblockRadioController multiblock;
 
     public TileRadio() {
-        super();
+        super(0);
         multiblock = new MultiblockRadioController(this);
     }
 

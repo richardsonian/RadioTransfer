@@ -32,6 +32,7 @@ public class ModGuis {
     public static final GuiEntry item_encoder = new GuiEntry(TileItemEncoder.class, GuiItemEncoder.class, ContainerItemEncoder.class);
     public static final GuiEntry item_decoder = new GuiEntry(TileItemDecoder.class, GuiItemDecoder.class, ContainerItemDecoder.class);
     public static final GuiEntry power_supply = new GuiEntry(TilePowerSupply.class, GuiPowerSupply.class, ContainerPowerSupply.class);
+    public static final GuiEntry radio = new GuiEntry(TileRadio.class, GuiPowerSupply.class, ContainerPowerSupply.class);
     /* end gui entry list */
 
 
