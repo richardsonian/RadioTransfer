@@ -8,6 +8,7 @@ import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.sliders.Gui
 import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateUV;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateXY;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.DimensionWidthHeight;
+import com.rlapcs.radiotransfer.generic.multiblock.MultiblockPowerUsageData;
 import com.rlapcs.radiotransfer.network.messages.toServer.MessageAddClientListener;
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import net.minecraft.client.Minecraft;
@@ -26,6 +27,8 @@ public class GuiPowerSupply extends AbstractGuiMachine<TilePowerSupply> {
 
     protected AbstractGuiList visual;
     private GuiPowerBar powerBar;
+
+    private MultiblockPowerUsageData multiblockPowerData; //you'll have this object, probably through a getter in the tileEntity which will be magically updated for you. 
 
     public GuiPowerSupply(TilePowerSupply tileEntity, ContainerPowerSupply container) {
         super(tileEntity, container, WIDTH, HEIGHT);

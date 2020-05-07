@@ -25,7 +25,8 @@ public class PowerSupplyListItem extends AbstractGuiListItem {
     public static final CoordinateXY POWER_TEXT_REL_POS = new CoordinateXY(15, 4);
 
     //instance variables
-    private ItemStack renderItem; //temp
+    private ItemStack renderItem; //temp, just for compilation
+    private MultiblockPowerUsageData.PowerUsageEntry powerData; //this contains all the info youll need for this listItem
 
     public PowerSupplyListItem(int id, int index, CoordinateXY pos, TilePowerSupply tile) {
         super(id, index, pos, DIMS, tile);
