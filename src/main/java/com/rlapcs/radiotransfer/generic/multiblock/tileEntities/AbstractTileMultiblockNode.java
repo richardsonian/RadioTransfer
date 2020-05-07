@@ -5,6 +5,7 @@ import com.rlapcs.radiotransfer.network.messages.toClient.MessageUpdateClientMul
 import com.rlapcs.radiotransfer.generic.tileEntities.AbstractTileMachine;
 import com.rlapcs.radiotransfer.machines.radio.TileRadio;
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
+import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -13,6 +14,8 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
 
@@ -171,7 +174,60 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
         return controller;
     }
 
-    public abstract int getPowerUsagePerTick();
+    /*~~~~~~~~~~~Power Calculations~~~~~~~~~~*/
+    public abstract int getPowerUsagePerTick(); //will remove
+
+    public abstract int getBasePowerPerTick();
+    public abstract Map<Item, Integer> getUpgradeCardConstantPowerCosts();
+
+    public abstract int getBasePowerPerProcess();
+    public abstract Map<Item, Integer> getUpgradeCardProcessPowerCosts();
+
+    public abstract Map<Item, Integer> getUpgradeCardQuantities();
+    public abstract int getAverageProcessesRate(); //return num processes in last 10 seconds
+
+    public int getPowerPerTick() {
+        return getBasePowerPerTick() + getConstantPowerUpgradeTotalCost();
+    }
+    public int getPowerPerProcess() {
+        return getBasePowerPerProcess() + getProcessPowerUpgradeTotalCost();
+    }
+    public int getAverageProcessPowerPerTick() {
+        return getPowerPerProcess() + getAverageProcessesRate();
+    }
+    public int getConstantPowerUpgradeTotalCost() {
+        int sum = 0;
+        for(Item k : getConstantPowerContributingUpgrades()) {
+            sum += getUpgradeCardConstantPowerCosts().get(k);
+        }
+        return sum;
+    }
+    public int getProcessPowerUpgradeTotalCost() {
+        int sum = 0;
+        for(Item k : getConstantPowerContributingUpgrades()) {
+            sum += getUpgradeCardConstantPowerCosts().get(k);
+        }
+        return sum;
+    }
+    public Set<Item> getConstantPowerContributingUpgrades() {
+        //Find all upgrade cards that do not have a quantity of 0
+        Set<Item> presentUpgrades = getUpgradeCardQuantities().keySet();
+        presentUpgrades.removeIf((k) -> getUpgradeCardQuantities().get(k) == 0);
+        //filter out those that do not have a power cost value
+        presentUpgrades.removeIf((k) -> !getUpgradeCardConstantPowerCosts().containsKey(k));
+
+        return presentUpgrades;
+    }
+    public Set<Item> getProcessPowerContributingUpgrades() {
+        //Find all upgrade cards that do not have a quantity of 0
+        Set<Item> presentUpgrades = getUpgradeCardQuantities().keySet();
+        presentUpgrades.removeIf((k) -> getUpgradeCardQuantities().get(k) == 0);
+        //filter out those that do not have a power cost value
+        presentUpgrades.removeIf((k) -> !getUpgradeCardProcessPowerCosts().containsKey(k));
+
+        return presentUpgrades;
+    }
+
 
     @Override
     public void update() {

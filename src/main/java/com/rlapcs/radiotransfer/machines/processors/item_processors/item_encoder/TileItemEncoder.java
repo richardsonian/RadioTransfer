@@ -3,7 +3,10 @@ package com.rlapcs.radiotransfer.machines.processors.item_processors.item_encode
 import com.rlapcs.radiotransfer.machines.processors.ProcessorType;
 import com.rlapcs.radiotransfer.machines.processors.item_processors.abstract_item_processor.AbstractTileItemProcessor;
 import com.rlapcs.radiotransfer.util.ItemUtils;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+
+import java.util.Map;
 
 public class TileItemEncoder extends AbstractTileItemProcessor {
     public static final int POWER_USAGE = 10;
@@ -39,4 +42,35 @@ public class TileItemEncoder extends AbstractTileItemProcessor {
     }
     @Override
     public ProcessorType getProcessorType() {return ProcessorType.ENCODER;}
+
+    //Power
+    @Override
+    public int getBasePowerPerTick() {
+        return 0;
+    }
+
+    @Override
+    public Map<Item, Integer> getUpgradeCardConstantPowerCosts() {
+        return null;
+    }
+
+    @Override
+    public int getBasePowerPerProcess() {
+        return 0;
+    }
+
+    @Override
+    public Map<Item, Integer> getUpgradeCardProcessPowerCosts() {
+        return null;
+    }
+
+    @Override
+    public Map<Item, Integer> getUpgradeCardQuantities() {
+        return null;
+    }
+
+    @Override
+    public int getAverageProcessesRate() {
+        return 0;
+    }
 }

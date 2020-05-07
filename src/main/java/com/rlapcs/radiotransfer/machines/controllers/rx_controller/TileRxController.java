@@ -2,8 +2,11 @@ package com.rlapcs.radiotransfer.machines.controllers.rx_controller;
 
 import com.rlapcs.radiotransfer.machines.controllers.abstract_controller.AbstractTileController;
 import com.rlapcs.radiotransfer.ModConstants;
+import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
+
+import java.util.Map;
 
 import static com.rlapcs.radiotransfer.server.radio.RadioNetwork.MAX_PRIORITY;
 import static com.rlapcs.radiotransfer.server.radio.RadioNetwork.MIN_PRIORITY;
@@ -47,5 +50,35 @@ public class TileRxController extends AbstractTileController {
         compound.setInteger("priority", priority);
 
         return compound;
+    }
+
+    @Override
+    public int getBasePowerPerTick() {
+        return 0;
+    }
+
+    @Override
+    public Map<Item, Integer> getUpgradeCardConstantPowerCosts() {
+        return null;
+    }
+
+    @Override
+    public int getBasePowerPerProcess() {
+        return 0;
+    }
+
+    @Override
+    public Map<Item, Integer> getUpgradeCardProcessPowerCosts() {
+        return null;
+    }
+
+    @Override
+    public Map<Item, Integer> getUpgradeCardQuantities() {
+        return null;
+    }
+
+    @Override
+    public int getAverageProcessesRate() {
+        return 0;
     }
 }

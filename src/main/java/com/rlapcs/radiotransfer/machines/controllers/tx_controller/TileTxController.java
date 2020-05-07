@@ -1,9 +1,13 @@
 package com.rlapcs.radiotransfer.machines.controllers.tx_controller;
 
+import com.rlapcs.radiotransfer.ModConfig;
 import com.rlapcs.radiotransfer.machines.controllers.abstract_controller.AbstractTileController;
 import com.rlapcs.radiotransfer.server.radio.TxMode;
 import com.rlapcs.radiotransfer.ModConstants;
+import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
+
+import java.util.Map;
 
 public class TileTxController extends AbstractTileController {
     public static final int STACK_UPGRADE_SLOT_INDEX = 1;
@@ -50,5 +54,35 @@ public class TileTxController extends AbstractTileController {
         compound.setBoolean("roundRobin", (mode == TxMode.ROUND_ROBIN));
 
         return compound;
+    }
+
+    @Override
+    public int getBasePowerPerTick() {
+        return ModConfig.power_options.tx_controller.basePowerPerTick;
+    }
+
+    @Override
+    public Map<Item, Integer> getUpgradeCardConstantPowerCosts() {
+        return null;
+    }
+
+    @Override
+    public int getBasePowerPerProcess() {
+        return 0;
+    }
+
+    @Override
+    public Map<Item, Integer> getUpgradeCardProcessPowerCosts() {
+        return null;
+    }
+
+    @Override
+    public Map<Item, Integer> getUpgradeCardQuantities() {
+        return null;
+    }
+
+    @Override
+    public int getAverageProcessesRate() {
+        return 0;
     }
 }

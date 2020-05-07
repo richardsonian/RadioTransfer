@@ -25,7 +25,7 @@ public class PowerSupplyListItem extends AbstractGuiListItem {
     public static final CoordinateXY POWER_TEXT_REL_POS = new CoordinateXY(15, 4);
 
     //instance variables
-    private MultiblockPowerUsageData.PowerUsageEntry powerData;
+    private ItemStack renderItem; //temp
 
     public PowerSupplyListItem(int id, int index, CoordinateXY pos, TilePowerSupply tile) {
         super(id, index, pos, DIMS, tile);
@@ -44,7 +44,7 @@ public class PowerSupplyListItem extends AbstractGuiListItem {
         GL11.glScaled(ITEM_SCALE, ITEM_SCALE, ITEM_SCALE);
         RenderHelper.disableStandardItemLighting();
         RenderHelper.enableGUIStandardItemLighting();
-        renderer.renderItemIntoGUI(this.powerData.getMachineRenderItem(), (int)((this.x + ITEM_REL_POS.x) / ITEM_SCALE), (int)((this.y + ITEM_REL_POS.y) / ITEM_SCALE));
+        renderer.renderItemIntoGUI(this.renderItem, (int)((this.x + ITEM_REL_POS.x) / ITEM_SCALE), (int)((this.y + ITEM_REL_POS.y) / ITEM_SCALE));
         GL11.glScaled(1 / ITEM_SCALE,1 / ITEM_SCALE,1 / ITEM_SCALE);
 
         //draw power usage
@@ -52,10 +52,6 @@ public class PowerSupplyListItem extends AbstractGuiListItem {
         RenderHelper.enableStandardItemLighting();
 
         wasClicking = flag;
-    }
-
-    public void setPowerData(MultiblockPowerUsageData.PowerUsageEntry target) {
-        powerData = target;
     }
 
     @Override

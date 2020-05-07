@@ -9,6 +9,7 @@ import com.rlapcs.radiotransfer.network.messages.toClient.MessageUpdateClientTil
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import com.rlapcs.radiotransfer.util.Debug;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
@@ -18,6 +19,7 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory implements ITileClientUpdater, ITilePowerBarProvider {
@@ -150,5 +152,38 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
     @Override
     public MachinePowerHandler getEnergyStorage() {
         return energyStorage;
+    }
+
+
+    // Multiblock node power stuff
+
+    @Override
+    public int getBasePowerPerTick() {
+        return 0;
+    }
+
+    @Override
+    public Map<Item, Integer> getUpgradeCardConstantPowerCosts() {
+        return null;
+    }
+
+    @Override
+    public int getBasePowerPerProcess() {
+        return 0;
+    }
+
+    @Override
+    public Map<Item, Integer> getUpgradeCardProcessPowerCosts() {
+        return null;
+    }
+
+    @Override
+    public Map<Item, Integer> getUpgradeCardQuantities() {
+        return null;
+    }
+
+    @Override
+    public int getAverageProcessesRate() {
+        return 0;
     }
 }
