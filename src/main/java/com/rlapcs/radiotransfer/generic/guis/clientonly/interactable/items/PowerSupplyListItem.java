@@ -25,7 +25,7 @@ public class PowerSupplyListItem extends AbstractGuiListItem {
     public static final CoordinateXY POWER_TEXT_REL_POS = new CoordinateXY(15, 4);
 
     //instance variables
-    private ItemStack renderItem; //temp, just for compilation
+    private ItemStack renderItem; //temp, just for compilation (Get this from TileEntity Registry, using TE class?)
     private MultiblockPowerUsageData.PowerUsageEntry powerData; //this contains all the info youll need for this listItem
 
     public PowerSupplyListItem(int id, int index, CoordinateXY pos, TilePowerSupply tile) {
