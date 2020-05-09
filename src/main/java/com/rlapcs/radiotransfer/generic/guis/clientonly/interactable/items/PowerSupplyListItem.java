@@ -25,8 +25,7 @@ public class PowerSupplyListItem extends AbstractGuiListItem {
     public static final CoordinateXY POWER_TEXT_REL_POS = new CoordinateXY(15, 4);
 
     //instance variables
-    private ItemStack renderItem; //temp, just for compilation (Get this from TileEntity Registry, using TE class?)
-    private MultiblockPowerUsageData.PowerUsageEntry powerData; //this contains all the info youll need for this listItem
+    private MultiblockPowerUsageData.PowerUsageEntry powerData; //this contains all the info you'll need for this listItem
 
     public PowerSupplyListItem(int id, int index, CoordinateXY pos, TilePowerSupply tile) {
         super(id, index, pos, DIMS, tile);
@@ -45,7 +44,7 @@ public class PowerSupplyListItem extends AbstractGuiListItem {
         GL11.glScaled(ITEM_SCALE, ITEM_SCALE, ITEM_SCALE);
         RenderHelper.disableStandardItemLighting();
         RenderHelper.enableGUIStandardItemLighting();
-        renderer.renderItemIntoGUI(this.renderItem, (int)((this.x + ITEM_REL_POS.x) / ITEM_SCALE), (int)((this.y + ITEM_REL_POS.y) / ITEM_SCALE));
+        renderer.renderItemIntoGUI(this.getRenderItem(), (int)((this.x + ITEM_REL_POS.x) / ITEM_SCALE), (int)((this.y + ITEM_REL_POS.y) / ITEM_SCALE));
         GL11.glScaled(1 / ITEM_SCALE,1 / ITEM_SCALE,1 / ITEM_SCALE);
 
         //draw power usage
@@ -55,8 +54,16 @@ public class PowerSupplyListItem extends AbstractGuiListItem {
         wasClicking = flag;
     }
 
+    private ItemStack getRenderItem() {
+        return powerData.block.getItem(Minecraft.getMinecraft().world, this.tile.getPos(), null);
+    }
+
     @Override
     protected CoordinateUV getUV() {
         return UV;
+    }
+
+    public void setPowerData(MultiblockPowerUsageData.PowerUsageEntry powerData) {
+        this.powerData = powerData;
     }
 }

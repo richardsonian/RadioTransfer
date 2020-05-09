@@ -5,7 +5,8 @@ import com.rlapcs.radiotransfer.generic.capability.MachinePowerHandler;
 import com.rlapcs.radiotransfer.generic.multiblock.tileEntities.AbstractTileMultiblockNodeWithInventory;
 import com.rlapcs.radiotransfer.generic.tileEntities.ITileClientUpdater;
 import com.rlapcs.radiotransfer.generic.tileEntities.ITilePowerBarProvider;
-import com.rlapcs.radiotransfer.network.messages.toClient.MessageUpdateClientTilePowerData;
+import com.rlapcs.radiotransfer.network.messages.toClient.MessageUpdateClientTileMultiblockPowerData;
+import com.rlapcs.radiotransfer.network.messages.toClient.MessageUpdateClientTilePowerBar;
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import com.rlapcs.radiotransfer.util.Debug;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -31,7 +32,8 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
 
     public static final int POWER_ITEM_UPDATE_TICKS = 20;
     public static final int POWER_VISUAL_UPDATE_TICKS = 2;
-    public static final int POWER_CLIENT_UDPATE_TICKS = 20;
+    public static final int POWER_BAR_CLIENT_UPDATE_TICKS = 10;
+    public static final int MULTIBLOCK_POWER_DATA_CLIENT_UPDATE_TICKS = 20;
 
     //for client
     protected int displayEnergy;
@@ -47,9 +49,9 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
 
         upgradeSlotWhitelists.put(POWER_ITEM_INDEX, ModConstants.UpgradeCards.POWER_ITEM_WHITELIST); //"upgrade card" lol
 
-        energyStorage = new MachinePowerHandler(ENERGY_CAPACITY, MAX_ENERGY_TRANSFER, POWER_CLIENT_UDPATE_TICKS, this);
+        energyStorage = new MachinePowerHandler(ENERGY_CAPACITY, MAX_ENERGY_TRANSFER, POWER_BAR_CLIENT_UPDATE_TICKS, this);
         clientListeners = new HashSet<>();
-        //energyStorage.receiveEnergy(5000, false);
+        //energyStorage.receiveEnergy(5000, false); //start with some energy for debug
 
         //client
         displayEnergy = energyStorage.getEnergyStored();
@@ -100,9 +102,12 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
     public void update() {
         super.update();
 
-        if(!world.isRemote) {
-            if (ticksSinceCreation % POWER_CLIENT_UDPATE_TICKS == 0) {
-                updateClientPowerData();
+        if(!world.isRemote) { //server side updates
+            if (ticksSinceCreation % POWER_BAR_CLIENT_UPDATE_TICKS == 0) {
+                updateClientPowerBar();
+            }
+            if (ticksSinceCreation % MULTIBLOCK_POWER_DATA_CLIENT_UPDATE_TICKS == 0) {
+                updateClientMultiblockPowerData();
             }
             if (ticksSinceCreation % POWER_ITEM_UPDATE_TICKS == 0) {
                 getEnergyFromPowerItem(POWER_ITEM_UPDATE_TICKS);
@@ -120,16 +125,21 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
         return clientListeners;
     }
 
-    public void updateClientPowerData() {
+    public void updateClientPowerBar() {
         Debug.sendToAllPlayers(TextFormatting.GRAY + "Sending power update to clients with receiverate: " + energyStorage.getReceiveRate() + " and extractrate: " + energyStorage.getExtractRate(), world);
         //need to change power input
-        clientListeners.forEach((p) -> ModNetworkMessages.INSTANCE.sendToAll(new MessageUpdateClientTilePowerData(this, energyStorage.getEnergyStored(),
+        clientListeners.forEach((p) -> ModNetworkMessages.INSTANCE.sendToAll(new MessageUpdateClientTilePowerBar(this, energyStorage.getEnergyStored(),
                 energyStorage.getReceiveRate(), energyStorage.getExtractRate())));
+    }
+    public void updateClientMultiblockPowerData() {
+        Debug.sendToAllPlayers(TextFormatting.GRAY + "Sending multiblock power update to clients", world);
+        clientListeners.forEach((p) -> ModNetworkMessages.INSTANCE.sendToAll(new MessageUpdateClientTileMultiblockPowerData(this.getController().getTileEntity())));
     }
 
     @Override
     public void doAllClientUpdates() {
-        updateClientPowerData();
+        updateClientPowerBar();
+        updateClientMultiblockPowerData();
     }
 
     //CLIENT ONLY Getters and setters for cached energy transfer
