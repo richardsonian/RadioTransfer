@@ -8,6 +8,15 @@ public class CoordinateXY extends Coordinate{
         this.y = y;
     }
 
+    public CoordinateXY addTo(CoordinateXY coordinateXY) {
+        return new CoordinateXY(x + coordinateXY.x, y + coordinateXY.y);
+    }
+
+    @Override
+    public CoordinateXY scale(int factor) {
+        return new CoordinateXY(x * factor, y * factor);
+    }
+
     @Override
     public int getDimension1() {
         return x;

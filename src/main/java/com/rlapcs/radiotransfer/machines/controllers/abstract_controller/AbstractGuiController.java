@@ -3,6 +3,8 @@ package com.rlapcs.radiotransfer.machines.controllers.abstract_controller;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.AbstractGuiMachine;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.buttons.GuiIncrementButton;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.sliders.GuiToggleSliderButton;
+import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateXY;
+import com.rlapcs.radiotransfer.generic.guis.coordinate.DimensionWidthHeight;
 import com.rlapcs.radiotransfer.network.messages.toServer.MessageActivateTileController;
 import com.rlapcs.radiotransfer.network.messages.toServer.MessageUpdateTileControllerFrequency;
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
@@ -12,9 +14,6 @@ import net.minecraft.util.ResourceLocation;
 import java.awt.*;
 
 public abstract class AbstractGuiController<T extends AbstractTileController> extends AbstractGuiMachine<T> {
-    public static final int WIDTH = 188;
-    public static final int HEIGHT = 158;
-
     protected static int FREQUENCY_INCREMENT_ID = getNextButtonID();
     protected static int FREQUENCY_INCREMENT_X = 73;
     protected static int FREQUENCY_INCREMENT_Y = 30;
@@ -38,7 +37,8 @@ public abstract class AbstractGuiController<T extends AbstractTileController> ex
     protected static int ACTIVATE_OFF_Y = 43;
 
     public AbstractGuiController(T tileEntity, AbstractContainerController container) {
-        super(tileEntity, container, WIDTH, HEIGHT);
+        super(tileEntity, container);
+        size = new DimensionWidthHeight(188, 158);
     }
 
     @Override

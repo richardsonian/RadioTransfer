@@ -9,6 +9,11 @@ public class DimensionWidthHeight extends Coordinate {
     }
 
     @Override
+    public DimensionWidthHeight scale(int factor) {
+        return new DimensionWidthHeight(width * factor, height * factor);
+    }
+
+    @Override
     public int getDimension1() {
         return width;
     }
