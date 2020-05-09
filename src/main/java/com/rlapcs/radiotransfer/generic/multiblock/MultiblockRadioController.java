@@ -284,6 +284,17 @@ public class MultiblockRadioController {
         return list;
     }
 
+    public List<BlockPos> getMultiblockPositions() {
+        List<AbstractTileMultiblockNode> nodes = this.getAllNodes();
+        List<BlockPos> positions = new ArrayList<>();
+        positions.add(this.getTileEntity().getPos()); //Add Radio Pos
+        //Add node positions
+        for (AbstractTileMultiblockNode node : nodes) {
+            positions.add(node.getPos());
+        }
+        return positions;
+    }
+
     public TileRadio getTileEntity() {
         return tileEntity;
     }
