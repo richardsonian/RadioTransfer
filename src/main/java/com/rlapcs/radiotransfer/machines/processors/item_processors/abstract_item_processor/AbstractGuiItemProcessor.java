@@ -16,9 +16,6 @@ import org.lwjgl.input.Mouse;
 import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
 
 public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcessor> extends AbstractGuiMaterialProcessor<T> {
-    private static final int WIDTH = 188;
-    private static final int HEIGHT = 197;
-
     protected CoordinateXY LIST_POS;
     protected CoordinateXY PROGRESS_BAR_POS;
     protected AbstractItemProcessorList visual;
@@ -27,7 +24,8 @@ public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcess
     public static final DimensionWidthHeight PROGRESS_BAR_DIMS = new DimensionWidthHeight(9, 6);
 
     public AbstractGuiItemProcessor(T tileEntity, AbstractContainerItemProcessor container) {
-        super(tileEntity, container, WIDTH, HEIGHT);
+        super(tileEntity, container);
+        size = new DimensionWidthHeight(188, 197);
     }
 
     @Override

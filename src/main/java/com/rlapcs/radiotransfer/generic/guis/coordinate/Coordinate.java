@@ -7,6 +7,8 @@ public abstract class Coordinate {
     public abstract String getDimension1Name();
     public abstract String getDimension2Name();
 
+    public abstract Coordinate scale(int factor);
+
     @Override
     public String toString() {
         return String.format("(%s:%d, %s:%d)", getDimension1Name(), getDimension1(), getDimension2Name(), getDimension2());

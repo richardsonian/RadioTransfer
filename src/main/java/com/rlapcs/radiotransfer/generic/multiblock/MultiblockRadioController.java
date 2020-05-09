@@ -309,7 +309,8 @@ public class MultiblockRadioController {
         positions.add(this.getTileEntity().getPos()); //Add Radio Pos
         //Add node positions
         for (AbstractTileMultiblockNode node : nodes) {
-            positions.add(node.getPos());
+            if (node != null)
+                positions.add(node.getPos());
         }
         return positions;
     }

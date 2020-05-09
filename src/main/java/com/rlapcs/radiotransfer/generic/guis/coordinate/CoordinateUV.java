@@ -9,6 +9,11 @@ public class CoordinateUV extends Coordinate {
     }
 
     @Override
+    public CoordinateUV scale(int factor) {
+        return new CoordinateUV(u * factor, v * factor);
+    }
+
+    @Override
     public int getDimension1() {
         return u;
     }

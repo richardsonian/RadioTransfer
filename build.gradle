@@ -35,6 +35,7 @@ minecraft {
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 }
 repositories {
+    maven { url = "http://maven.tterrag.com" }
     /*
     maven {
         name = "ChickenBones Maven"
@@ -60,6 +61,7 @@ repositories {
 
 
 dependencies {
+    deobfCompile "com.enderio.core:EnderCore:${endercore_version}"
     /*
     def jei_version = "4.9.2.195"
 
