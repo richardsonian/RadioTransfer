@@ -32,14 +32,11 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
     public static final int POWER_ITEM_INDEX = 0;
 
     public static final int POWER_ITEM_UPDATE_TICKS = 20;
-    public static final int POWER_VISUAL_UPDATE_TICKS = 2;
     public static final int POWER_BAR_CLIENT_UPDATE_TICKS = 10;
     public static final int MULTIBLOCK_POWER_DATA_CLIENT_UPDATE_TICKS = 20;
 
     //for client
     protected int displayEnergy;
-    protected double cachedEnergyUsage;
-    protected double cachedEnergyGain;
     protected MultiblockPowerUsageData cachedPowerUsageData;
 
     //for server
@@ -51,14 +48,12 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
 
         upgradeSlotWhitelists.put(POWER_ITEM_INDEX, ModConstants.UpgradeCards.POWER_ITEM_WHITELIST); //"upgrade card" lol
 
-        energyStorage = new MachinePowerHandler(ENERGY_CAPACITY, MAX_ENERGY_TRANSFER, POWER_BAR_CLIENT_UPDATE_TICKS, this);
+        energyStorage = new MachinePowerHandler(ENERGY_CAPACITY, MAX_ENERGY_TRANSFER, this);
         clientListeners = new HashSet<>();
         //energyStorage.receiveEnergy(5000, false); //start with some energy for debug
 
         //client
-        displayEnergy = energyStorage.getEnergyStored();
-        cachedEnergyUsage = 0;
-        cachedEnergyGain = 0;
+        displayEnergy = 0;
         cachedPowerUsageData = new MultiblockPowerUsageData();
     }
 
@@ -117,9 +112,6 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
             }
         }
         else { //client side
-            if(ticksSinceCreation % POWER_VISUAL_UPDATE_TICKS == 0) {
-                updateClientVisualPower(POWER_VISUAL_UPDATE_TICKS);
-            }
         }
     }
 
@@ -129,10 +121,9 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
     }
 
     public void updateClientPowerBar() {
-        Debug.sendToAllPlayers(TextFormatting.GRAY + "Sending power update to clients with receiverate: " + energyStorage.getReceiveRate() + " and extractrate: " + energyStorage.getExtractRate(), world);
+        Debug.sendToAllPlayers(TextFormatting.GRAY + "Sending power bar to clients with power: " + energyStorage.getEnergyStored(), world);
         //need to change power input
-        clientListeners.forEach((p) -> ModNetworkMessages.INSTANCE.sendToAll(new MessageUpdateClientTilePowerBar(this, energyStorage.getEnergyStored(),
-                energyStorage.getReceiveRate(), energyStorage.getExtractRate())));
+        clientListeners.forEach((p) -> ModNetworkMessages.INSTANCE.sendToAll(new MessageUpdateClientTilePowerBar(this, energyStorage.getEnergyStored())));
     }
     public void updateClientMultiblockPowerData() {
         Debug.sendToAllPlayers(TextFormatting.GRAY + "Sending multiblock power update to clients", world);
@@ -145,34 +136,18 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
         updateClientMultiblockPowerData();
     }
 
-    //CLIENT ONLY Getters and setters for cached energy transfer
+    //CLIENT ONLY Getters and setters for cached energy data
     public int getDisplayEnergy() { return displayEnergy;}
     public void setDisplayEnergy(int target) { displayEnergy = target;}
-    public double getCachedEnergyUsage() {
-        return cachedEnergyUsage;
-    }
-    public double getCachedEnergyGain() {
-        return cachedEnergyGain;
-    }
-    public void setCachedEnergyUsage(double target) {
-        cachedEnergyUsage = target;
-    }
-    public void setCachedEnergyGain(double target) {
-        cachedEnergyGain = target;
-    }
     public MultiblockPowerUsageData getCachedPowerUsageData() {
         return cachedPowerUsageData;
     }
-
-    //internal only
     @Override
-    public MachinePowerHandler getEnergyStorage() {
-        return energyStorage;
-    }
-
+    public int getMaxEngergy() {
+        return ENERGY_CAPACITY;
+    } //might have to fix this once implemented into config
 
     // Multiblock node power stuff
-
     @Override
     public int getBasePowerPerTick() {
         return 0;

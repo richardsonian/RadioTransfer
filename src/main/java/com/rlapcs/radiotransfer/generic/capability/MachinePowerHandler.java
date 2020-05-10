@@ -12,48 +12,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MachinePowerHandler implements IEnergyStorage, INBTSerializable<NBTTagCompound> {
-    private class TransferRecording {
-        private int energy;
-        private long ticks;
-        private TransferRecording(int energy, long ticks) {
-            this.energy = energy;
-            this.ticks = ticks;
-        }
-        private TransferRecording subtract(TransferRecording other) {
-            return new TransferRecording(this.energy - other.energy, this.ticks - other.ticks);
-        }
-    }
-
     //init values
     private AbstractTileMachine owner;
-    private int updateFrequency;
     private int maxEnergy;
     private int maxReceive;
     private int maxExtract;
 
     //data
     private int energyStored;
-    private List<TransferRecording> transferHistory;
 
 
-    public MachinePowerHandler(int startEnergy, int maxEnergy, int maxReceive, int maxExtract, int updateFrequency, AbstractTileMachine owner) {
+    public MachinePowerHandler(int startEnergy, int maxEnergy, int maxReceive, int maxExtract, AbstractTileMachine owner) {
         this.energyStored = MathHelper.clamp(startEnergy, 0, maxEnergy);
         this.maxEnergy = maxEnergy;
         this.maxReceive = maxReceive;
         this.maxExtract = maxExtract;
-        this.updateFrequency = updateFrequency;
         this.owner = owner;
-
-        this.transferHistory = new ArrayList<>();
     }
-    public MachinePowerHandler(int maxEnergy, int maxReceive, int maxExtract, int updateFrequency, AbstractTileMachine owner) {
-        this(0, maxEnergy, maxReceive, maxExtract, updateFrequency, owner);
+    public MachinePowerHandler(int maxEnergy, int maxReceive, int maxExtract, AbstractTileMachine owner) {
+        this(0, maxEnergy, maxReceive, maxExtract, owner);
     }
-    public MachinePowerHandler(int maxEnergy, int maxTransfer, int updateFrequency, AbstractTileMachine owner) {
-        this(maxEnergy, maxTransfer, maxTransfer, updateFrequency, owner);
+    public MachinePowerHandler(int maxEnergy, int maxTransfer, AbstractTileMachine owner) {
+        this(maxEnergy, maxTransfer, maxTransfer, owner);
     }
-    public MachinePowerHandler(int maxEnergy, int updateFrequency, AbstractTileMachine owner) {
-        this(maxEnergy, maxEnergy, updateFrequency, owner);
+    public MachinePowerHandler(int maxEnergy, AbstractTileMachine owner) {
+        this(maxEnergy, maxEnergy, owner);
     }
 
     @Override
@@ -86,7 +69,6 @@ public class MachinePowerHandler implements IEnergyStorage, INBTSerializable<NBT
         int energyReceived = Math.min(maxEnergy - energyStored, Math.min(this.maxReceive, maxReceive));
         if (!simulate) {
             energyStored += energyReceived;
-            addTransferRecording(energyReceived);
             onContentsChanged();
         }
 
@@ -108,7 +90,6 @@ public class MachinePowerHandler implements IEnergyStorage, INBTSerializable<NBT
         int energyExtracted = Math.min(energyStored, Math.min(this.maxExtract, maxExtract));
         if (!simulate) {
             energyStored -= energyExtracted;
-            addTransferRecording((-1) * energyExtracted);
             onContentsChanged();
         }
 
@@ -154,47 +135,4 @@ public class MachinePowerHandler implements IEnergyStorage, INBTSerializable<NBT
     }
 
     protected void onContentsChanged() {}
-
-    private void addTransferRecording(int energyTransfered) {
-        transferHistory.add(new TransferRecording(energyTransfered, owner.getTicksSinceCreation()));
-        trimTransferHistory();
-    }
-    /* only save TransferRecordings from the last number of ticks of the update frequency */
-    private void trimTransferHistory() {
-        transferHistory.removeIf(r -> owner.getTicksSinceCreation() - r.ticks > updateFrequency);
-    }
-
-    private int[] getEnergyHistory() {
-        trimTransferHistory();
-        int[] arr = new int[transferHistory.size()];
-        for(int i = 0; i < transferHistory.size(); i++) {
-            arr[i] = transferHistory.get(i).energy;
-        }
-        return arr;
-    }
-    public double getReceiveRate() {
-        int sum = 0;
-        for(int e : getEnergyHistory()) {
-            if(e > 0) {
-                sum += e;
-            }
-        }
-        Debug.sendToAllPlayers(TextFormatting.DARK_PURPLE + "Total received over last " + updateFrequency + " ticks: " + sum, owner.getWorld());
-        return ((double) sum) / updateFrequency;
-    }
-    public double getExtractRate() {
-        int sum = 0;
-        for(int e : getEnergyHistory()) {
-            if(e < 0) {
-                sum += e;
-            }
-        }
-        sum = Math.abs(sum);
-        Debug.sendToAllPlayers(TextFormatting.DARK_PURPLE + "Total extracted over last " + updateFrequency + " ticks: " + sum, owner.getWorld());
-        return ((double) sum) / updateFrequency;
-    }
-    public double getTransferRate() {
-        return getReceiveRate() - getExtractRate();
-    }
-
 }

@@ -18,34 +18,25 @@ import net.minecraftforge.fml.relauncher.Side;
 public class MessageUpdateClientTilePowerBar implements IMessage {
     private BlockPos tilePos;
     private int energy;
-    private double gainRate;
-    private double lossRate;
 
     public MessageUpdateClientTilePowerBar() {}
-    public MessageUpdateClientTilePowerBar(TileEntity te, int energy, double gainRate, double lossRate) {
+    public MessageUpdateClientTilePowerBar(TileEntity te, int energy) {
         if(!(te instanceof ITilePowerBarProvider)) throw new IllegalArgumentException("TE must implement ITilePowerBarProvider");
 
         this.tilePos = te.getPos();
-
         this.energy = energy;
-        this.gainRate = gainRate;
-        this.lossRate = lossRate;
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeLong(tilePos.toLong());
         buf.writeInt(energy);
-        buf.writeDouble(gainRate);
-        buf.writeDouble(lossRate);
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
         tilePos = BlockPos.fromLong(buf.readLong());
         energy = buf.readInt();
-        gainRate = buf.readDouble();
-        lossRate = buf.readDouble();
     }
 
     public static class Handler implements IMessageHandler<MessageUpdateClientTilePowerBar, IMessage> {
@@ -68,13 +59,10 @@ public class MessageUpdateClientTilePowerBar implements IMessage {
 
                     if(te instanceof ITilePowerBarProvider) {
                         ITilePowerBarProvider tile = (ITilePowerBarProvider) te;
-
-                        tile.setCachedEnergyGain(message.gainRate);
-                        tile.setCachedEnergyUsage(message.lossRate);
                         tile.setDisplayEnergy(message.energy);
 
                         //debug
-                        player.sendMessage(new TextComponentString(TextFormatting.BLUE + String.format("(%dFE, +%f, -%f", message.energy, message.gainRate, message.lossRate) + "Updated client power bar for" + TextFormatting.RESET + tile));
+                        player.sendMessage(new TextComponentString(TextFormatting.BLUE + "[" + tile.getDisplayEnergy() + "FE]" + "Updated client power bar for" + TextFormatting.RESET + tile));
                     }
                 }
             }
