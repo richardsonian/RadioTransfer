@@ -40,9 +40,8 @@ public class GuiPowerSupply extends AbstractGuiMachine<TilePowerSupply> {
         super.initGui();
         ModNetworkMessages.INSTANCE.sendToServer(new MessageAddClientListener(tileEntity, true));
         sendDebugMessage("init power gui");
-        sendDebugMessage("co" + tileEntity.getController());
 
-        list = new PowerSupplyList(mc, this, tileEntity.getController().getPowerUsageData(), LIST_POS.x, LIST_POS.y, pos.x, pos.y, tileEntity);
+        list = new PowerSupplyList(mc, this, tileEntity.getCachedPowerUsageData(), LIST_POS.x, LIST_POS.y, pos.x, pos.y, tileEntity);
         powerBar = new GuiPowerBar(162, 25, tileEntity.getEnergyStorage(), mc,this);
     }
 

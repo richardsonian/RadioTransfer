@@ -2,6 +2,7 @@ package com.rlapcs.radiotransfer.machines.power_supply;
 
 import com.rlapcs.radiotransfer.ModConstants;
 import com.rlapcs.radiotransfer.generic.capability.MachinePowerHandler;
+import com.rlapcs.radiotransfer.generic.multiblock.MultiblockPowerUsageData;
 import com.rlapcs.radiotransfer.generic.multiblock.tileEntities.AbstractTileMultiblockNodeWithInventory;
 import com.rlapcs.radiotransfer.generic.tileEntities.ITileClientUpdater;
 import com.rlapcs.radiotransfer.generic.tileEntities.ITilePowerBarProvider;
@@ -39,6 +40,7 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
     protected int displayEnergy;
     protected double cachedEnergyUsage;
     protected double cachedEnergyGain;
+    protected MultiblockPowerUsageData cachedPowerUsageData;
 
     //for server
     protected MachinePowerHandler energyStorage;
@@ -57,6 +59,7 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
         displayEnergy = energyStorage.getEnergyStored();
         cachedEnergyUsage = 0;
         cachedEnergyGain = 0;
+        cachedPowerUsageData = new MultiblockPowerUsageData();
     }
 
     @Override
@@ -133,7 +136,7 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
     }
     public void updateClientMultiblockPowerData() {
         Debug.sendToAllPlayers(TextFormatting.GRAY + "Sending multiblock power update to clients", world);
-        clientListeners.forEach((p) -> ModNetworkMessages.INSTANCE.sendToAll(new MessageUpdateClientTileMultiblockPowerData(this.getController().getTileEntity())));
+        clientListeners.forEach((p) -> ModNetworkMessages.INSTANCE.sendToAll(new MessageUpdateClientTileMultiblockPowerData(this)));
     }
 
     @Override
@@ -156,6 +159,9 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
     }
     public void setCachedEnergyGain(double target) {
         cachedEnergyGain = target;
+    }
+    public MultiblockPowerUsageData getCachedPowerUsageData() {
+        return cachedPowerUsageData;
     }
 
     //internal only

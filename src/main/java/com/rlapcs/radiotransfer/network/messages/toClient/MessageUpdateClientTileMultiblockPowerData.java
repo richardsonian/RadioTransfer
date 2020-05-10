@@ -2,6 +2,7 @@ package com.rlapcs.radiotransfer.network.messages.toClient;
 
 import com.rlapcs.radiotransfer.generic.multiblock.MultiblockPowerUsageData;
 import com.rlapcs.radiotransfer.generic.tileEntities.ITilePowerBarProvider;
+import com.rlapcs.radiotransfer.machines.power_supply.TilePowerSupply;
 import com.rlapcs.radiotransfer.machines.radio.TileRadio;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
@@ -24,9 +25,9 @@ public class MessageUpdateClientTileMultiblockPowerData implements IMessage {
     private NBTTagCompound powerDataNBT;
 
     public MessageUpdateClientTileMultiblockPowerData() {}
-    public MessageUpdateClientTileMultiblockPowerData(TileRadio te) {
+    public MessageUpdateClientTileMultiblockPowerData(TilePowerSupply te) {
         this.tilePos = te.getPos();
-        this.powerDataNBT = te.getMultiblockController().getPowerUsageData().serializeNBT();
+        this.powerDataNBT = te.getController().getPowerUsageData().serializeNBT();
     }
 
     @Override
@@ -59,10 +60,10 @@ public class MessageUpdateClientTileMultiblockPowerData implements IMessage {
                 if(world.isBlockLoaded(message.tilePos)) {
                     TileEntity te = world.getTileEntity(message.tilePos);
 
-                    if(te instanceof TileRadio) {
-                        TileRadio tile = (TileRadio) te;
+                    if(te instanceof TilePowerSupply) {
+                        TilePowerSupply tile = (TilePowerSupply) te;
 
-                        tile.getMultiblockController().getPowerUsageData().deserializeNBT(message.powerDataNBT);
+                        tile.getCachedPowerUsageData().deserializeNBT(message.powerDataNBT);
 
                         //debug
                         player.sendMessage(new TextComponentString(TextFormatting.YELLOW + "Updated client power data for " + TextFormatting.RESET + tile));
