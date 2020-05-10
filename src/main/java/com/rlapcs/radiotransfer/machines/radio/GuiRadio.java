@@ -43,6 +43,7 @@ public class GuiRadio extends AbstractGuiMachine {
 
     private boolean isClosed;
     private List<BlockPos> coords;
+    private BlockPos selectedBlock;
 
     public GuiRadio(TileRadio tileEntity, ContainerRadio container) {
         super(tileEntity, container);
@@ -53,7 +54,8 @@ public class GuiRadio extends AbstractGuiMachine {
     public void initGui() {
         super.initGui();
         coords = ((TileRadio) tileEntity).getMultiblockController().getMultiblockPositions();
-        multiblockViewer = new GuiEmbedded3DBlockViewer(new NNList<>(coords));
+        selectedBlock = coords.get(0);
+        multiblockViewer = new GuiEmbedded3DBlockViewer(new NNList<>(coords), selectedBlock);
         isClosed = true;
     }
 
@@ -67,18 +69,13 @@ public class GuiRadio extends AbstractGuiMachine {
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         if (isClosed) {
             coords = ((TileRadio) tileEntity).getMultiblockController().getMultiblockPositions();
-            multiblockViewer.updateBlocksInList(new NNList<>(coords));
+            multiblockViewer.updateBlocksInList(new NNList<>(coords), selectedBlock);
             isClosed = false;
             sendDebugMessage("screen opened");
         }
         super.drawScreen(mouseX, mouseY, partialTicks);
-        multiblockViewer.draw(mouseX, mouseY, partialTicks, new CoordinateXY(VIEWER_POS.x + pos.x, this.height - (VIEWER_POS.y + VIEWER_SIZE.height + pos.y)), VIEWER_SIZE);
-    }
-
-    @Override
-    public void handleMouseInput() throws IOException {
-        super.handleMouseInput();
-        multiblockViewer.handleMouseInput();
+        selectedBlock = multiblockViewer.draw(mouseX, mouseY, partialTicks, new CoordinateXY(VIEWER_POS.x + pos.x, this.height - (VIEWER_POS.y + VIEWER_SIZE.height + pos.y)), VIEWER_SIZE);
+        drawText();
     }
 
     private void drawText() {

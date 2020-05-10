@@ -1,14 +1,17 @@
 package com.rlapcs.radiotransfer.generic.renderers;
 
 import com.enderio.core.client.render.BoundingBox;
+import com.enderio.core.client.render.ColorUtil;
 import com.enderio.core.client.render.RenderUtil;
 import com.enderio.core.common.util.NNList;
 import com.enderio.core.common.util.NullHelper;
 import com.enderio.core.common.vecmath.*;
 import com.enderio.core.common.vecmath.Vector3d;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.block.model.IBakedModel;
@@ -49,8 +52,11 @@ public class RendererMultiblock {
     //public static final TextureSupplier selectedFaceIcon = TextureRegistry.registerTexture("blocks/overlays/selected_face");
 
     private boolean dragging = false;
+    private boolean pressed = false;
     private double pitch = 0;
     private double yaw = 0;
+    private double transY = 0;
+    private double transX = 0;
     private double distance;
     private long initTime;
 
@@ -67,17 +73,22 @@ public class RendererMultiblock {
     NNList<BlockPos> blocks = new NNList<BlockPos>();
     private @Nonnull NNList<BlockPos> neighbours = new NNList<BlockPos>();
 
-    private TileEntity selection;
+    private BlockPos highlighted;
+    private BlockPos selected;
 
-    private boolean renderNeighbours = true;
+    private boolean renderNeighbours = false;
     private boolean inNeigButBounds = false;
 
-    public RendererMultiblock(@Nonnull final NNList<BlockPos> blocks) {
+    public RendererMultiblock(@Nonnull final NNList<BlockPos> blocks, BlockPos selected) {
+        blocks.add(blocks.get(0).south());
+        blocks.add(blocks.get(0).east());
+        blocks.add(blocks.get(0).east(2));
+        blocks.add(blocks.get(0).west());
+        blocks.add(blocks.get(0).west(2));
         this.blocks.addAll(blocks);
-        this.blocks.add(blocks.get(0).east());
-        this.blocks.add(blocks.get(0).west());
 
         //sendDebugMessage(blocks.toString());
+        this.selected = selected;
 
         Vector3d c;
         Vector3d size;
@@ -95,7 +106,7 @@ public class RendererMultiblock {
             size = new Vector3d(max);
             size.sub(min);
             size.scale(0.5);
-            c = new Vector3d(min.x + size.x, min.y + size.y, min.z + size.z);
+            c = new Vector3d(min.x + size.x + 0.5, min.y + size.y + 0.5, min.z + size.z + 0.5);
             size.scale(2);
         }
 
@@ -130,9 +141,9 @@ public class RendererMultiblock {
         initTime = System.currentTimeMillis();
     }
 
-    public void handleMouseInput() {
+    public void handleMouseInput(Vector3d transform) {
 
-        if (Mouse.getEventButton() == 0) {
+        if (Mouse.getEventButton() == 1 || Mouse.getEventButton() == 3) {
             dragging = Mouse.getEventButtonState();
         }
 
@@ -142,7 +153,10 @@ public class RendererMultiblock {
             double dy = (Mouse.getEventDY() / (double) mc.displayHeight);
             if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
                 distance -= dy * 15;
-            } else {
+            } /*else if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+                transX += dx * 100;
+                transY += dy * 100;
+            } */else {
                 yaw -= 4 * dx * 180;
                 pitch += 2 * dy * 180;
                 pitch = (float) VecmathUtil.clamp(pitch, -80, 80);
@@ -150,7 +164,7 @@ public class RendererMultiblock {
         }
 
         distance -= Mouse.getEventDWheel() * 0.01;
-        distance = VecmathUtil.clamp(distance, 0.01, 200);
+        distance = VecmathUtil.clamp(distance, 1.5, 100);
 
         long elapsed = System.currentTimeMillis() - initTime;
 
@@ -162,7 +176,17 @@ public class RendererMultiblock {
         if (camera.getRayForPixel(x, y, start, end)) {
             end.scale(distance * 2);
             end.add(start);
-            updateSelection(start, end);
+            updateSelection(start, end, transform);
+        }
+
+        if (!Mouse.getEventButtonState() && camera.isValid() && elapsed > 500) {
+            if (Mouse.getEventButton() == 0 && highlighted != null && !pressed) {
+                pressed = true;
+                selected = highlighted;
+                origin.set(new Vector3d(selected.getX() + 0.5, selected.getY() + 0.5, selected.getZ() + 0.5));
+            }
+        } else {
+            pressed = false;
         }
 
         // Mouse pressed on configurable side
@@ -179,7 +203,7 @@ public class RendererMultiblock {
     }
 
     @SuppressWarnings("unchecked")
-    private void updateSelection(@Nonnull final Vector3d start, @Nonnull final Vector3d end) {
+    private void updateSelection(@Nonnull final Vector3d start, @Nonnull final Vector3d end, Vector3d transform) {
         start.add(origin);
         end.add(origin);
         final List<RayTraceResult> hits = new ArrayList<RayTraceResult>();
@@ -197,16 +221,12 @@ public class RendererMultiblock {
             }
         });
 
-        selection = null;
         RayTraceResult hit = getClosestHit(new Vec3d(start.x, start.y, start.z), hits);
         if (hit != null) {
-            TileEntity te = world.getTileEntity(hit.getBlockPos());
-            selection = te;
-            //if (te instanceof IIoConfigurable) {
-            //    EnumFacing face = hit.sideHit;
-            //    selection = new SelectedFace<E>((E) te, face);
-            //}
-        }
+            highlighted = hit.getBlockPos();
+            drawHighlight(hit.getBlockPos(), transform, 0xFFFFFF90);
+        } else
+            highlighted = null;
     }
 
     public static RayTraceResult getClosestHit(@Nonnull Vec3d origin, @Nonnull Collection<RayTraceResult> candidates) {
@@ -225,16 +245,17 @@ public class RendererMultiblock {
         return closest;
     }
 
-    public void drawScreen(int par1, int par2, float partialTick, @Nonnull Rectangle vp) {
+    public BlockPos drawScreen(int mouseX, int mouseY, float partialTick, @Nonnull Rectangle vp) {
 
-        if (!updateCamera(partialTick, vp.x, vp.y, vp.width, vp.height)) return;
+        if (!updateCamera(partialTick, vp.x, vp.y, vp.width, vp.height)) return selected;
 
         applyCamera(partialTick);
-        //TravelController.setSelectionEnabled(false);
-        renderScene();
-        //TravelController.setSelectionEnabled(true);
+        Vector3d transform = renderScene();
+        handleMouseInput(transform);
+        drawHighlight(selected, transform, 0xC29429FF);
         //renderSelection();
         //renderOverlay(par1, par2);
+        return selected;
     }
 
     /*private void renderSelection() {
@@ -333,7 +354,7 @@ public class RendererMultiblock {
         return mode.getLocalisedName();
     }*/
 
-    private void renderScene() {
+    private Vector3d renderScene() {
 
         GlStateManager.enableCull();
         GlStateManager.enableRescaleNormal();
@@ -393,6 +414,7 @@ public class RendererMultiblock {
         }
         ForgeHooksClient.setRenderPass(-1);
         setGlStateForPass(0, false);
+        return trans;
     }
 
     private void doTileEntityRenderPass(@Nonnull NNList<BlockPos> blocks, final int pass) {
@@ -494,7 +516,7 @@ public class RendererMultiblock {
         } else {
             GlStateManager.enableBlend();
             GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-            GlStateManager.depthMask(false);
+            GlStateManager.depthMask(true); // false for og setup
 
         }
 
@@ -506,7 +528,7 @@ public class RendererMultiblock {
         }
         camera.setViewport(vpx, vpy, vpw, vph);
         camera.setProjectionMatrixAsPerspective(30, 0.05, 50, vpw, vph);
-        eye.set(0, 0, distance);
+        eye.set(transX, transY, distance);
         pitchRot.makeRotationX(Math.toRadians(pitch));
         yawRot.makeRotationY(Math.toRadians(yaw));
         pitchRot.transform(eye);
@@ -530,6 +552,22 @@ public class RendererMultiblock {
             RenderUtil.loadMatrix(cameraViewMatrix);
         }
         GL11.glTranslatef(-(float) eye.x, -(float) eye.y, -(float) eye.z);
+    }
+
+    private void drawHighlight(BlockPos blockpos, Vector3d transform, int color) {
+        GlStateManager.enableBlend();
+        GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+        GlStateManager.glLineWidth(2.0F);
+        GlStateManager.disableTexture2D();
+        GlStateManager.depthMask(false);
+        IBlockState iblockstate = this.world.getBlockState(blockpos);
+        Vector4f colorSet = ColorUtil.toFloat4(color);
+
+        RenderGlobal.drawSelectionBoundingBox(iblockstate.getSelectedBoundingBox(this.world, blockpos).grow(0.002D).offset(transform.x, transform.y, transform.z), colorSet.w, colorSet.x, colorSet.y, colorSet.z);
+
+        GlStateManager.depthMask(true);
+        GlStateManager.enableTexture2D();
+        GlStateManager.disableBlend();
     }
 
     /*public static class SelectedFace<E extends TileEntity & IIoConfigurable> {

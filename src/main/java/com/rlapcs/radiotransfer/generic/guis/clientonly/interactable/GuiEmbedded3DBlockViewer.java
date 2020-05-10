@@ -16,24 +16,20 @@ public class GuiEmbedded3DBlockViewer implements IGui {
     private CoordinateXY pos;
     private DimensionWidthHeight size;
 
-    public GuiEmbedded3DBlockViewer(NNList<BlockPos> posCoords) {
-        viewer = new RendererMultiblock(posCoords);
+    public GuiEmbedded3DBlockViewer(NNList<BlockPos> posCoords, BlockPos selected) {
+        viewer = new RendererMultiblock(posCoords, selected);
         viewer.init();
     }
 
-    public void draw(int mouseX, int mouseY, float partialTicks, CoordinateXY pos, DimensionWidthHeight size) {
+    public BlockPos draw(int mouseX, int mouseY, float partialTicks, CoordinateXY pos, DimensionWidthHeight size) {
         ScaledResolution scaledResolution = new ScaledResolution(Minecraft.getMinecraft());
         this.pos = pos.scale(scaledResolution.getScaleFactor());
         this.size = size.scale(scaledResolution.getScaleFactor());
-        viewer.drawScreen(mouseX, mouseY, partialTicks, new Rectangle(this.pos.x, this.pos.y, this.size.width, this.size.height));
+        return viewer.drawScreen(mouseX, mouseY, partialTicks, new Rectangle(this.pos.x, this.pos.y, this.size.width, this.size.height));
     }
 
-    public void handleMouseInput() {
-        viewer.handleMouseInput();
-    }
-
-    public void updateBlocksInList(NNList<BlockPos> posCoords) {
-        viewer = new RendererMultiblock(posCoords);
+    public void updateBlocksInList(NNList<BlockPos> posCoords, BlockPos selected) {
+        viewer = new RendererMultiblock(posCoords, selected);
         viewer.init();
     }
 
