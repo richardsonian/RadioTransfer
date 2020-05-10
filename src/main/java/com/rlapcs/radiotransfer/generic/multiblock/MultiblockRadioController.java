@@ -38,6 +38,8 @@ public class MultiblockRadioController {
     private EnumMap<TransferType, AbstractTileProcessor> encoders;
     private EnumMap<TransferType, AbstractTileProcessor> decoders;
 
+    private MultiblockPowerUsageData powerUsageData;
+
     public MultiblockRadioController(TileRadio te) {
         tileEntity = te;
         encoders = new EnumMap<>(TransferType.class);
@@ -46,6 +48,8 @@ public class MultiblockRadioController {
         registeredToNetwork = false;
         multiblockValid = false;
         isPowered = false;
+
+        powerUsageData = new MultiblockPowerUsageData();
     }
 
     public boolean isRegisteredToNetwork() {
@@ -61,6 +65,21 @@ public class MultiblockRadioController {
         RadioNetwork.INSTANCE.deregister(this);
         registeredToNetwork = false;
     }
+
+    //for server
+    public MultiblockPowerUsageData getPowerUsageData() {
+        return powerUsageData;
+    }
+    public void updatePowerUsageData() {
+        powerUsageData.updateAll(getAllNodes());
+    }
+
+    //for client
+    public void setPowerUsageData(MultiblockPowerUsageData newData) {
+        powerUsageData = newData;
+    }
+
+
 
     public int calculateRequiredPowerPerTick() {
         int sum = 0;

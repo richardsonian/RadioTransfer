@@ -3,7 +3,7 @@ package com.rlapcs.radiotransfer.registries;
 import com.rlapcs.radiotransfer.network.messages.toClient.MessageUpdateClientDumpablePackets;
 import com.rlapcs.radiotransfer.network.messages.toClient.MessageUpdateClientMultiblockNodeRegistered;
 import com.rlapcs.radiotransfer.network.messages.toClient.MessageUpdateClientPacketQueue;
-import com.rlapcs.radiotransfer.network.messages.toClient.MessageUpdateClientTilePowerData;
+import com.rlapcs.radiotransfer.network.messages.toClient.MessageUpdateClientTilePowerBar;
 import com.rlapcs.radiotransfer.network.messages.toServer.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
@@ -24,7 +24,7 @@ public class ModNetworkMessages {
         INSTANCE.registerMessage(MessageUpdateClientDumpablePackets.Handler.class, MessageUpdateClientDumpablePackets.class, nextID(), Side.CLIENT);
         INSTANCE.registerMessage(MessageChangePacketPriority.Handler.class, MessageChangePacketPriority.class, nextID(), Side.SERVER);
         INSTANCE.registerMessage(MessageDumpItemFromQueue.Handler.class, MessageDumpItemFromQueue.class, nextID(), Side.SERVER);
-        INSTANCE.registerMessage(MessageUpdateClientTilePowerData.Handler.class, MessageUpdateClientTilePowerData.class, nextID(), Side.CLIENT);
+        INSTANCE.registerMessage(MessageUpdateClientTilePowerBar.Handler.class, MessageUpdateClientTilePowerBar.class, nextID(), Side.CLIENT);
     }
 
     private static int packetId = 0;

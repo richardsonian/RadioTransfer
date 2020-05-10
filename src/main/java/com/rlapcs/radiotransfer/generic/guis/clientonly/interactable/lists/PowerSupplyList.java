@@ -24,8 +24,8 @@ public class PowerSupplyList extends AbstractGuiList {
 
     @Override
     protected void updateListItem(int listIndex, int contentIndex) {
-        /*fill in*/
-        //((MultiblockPowerUsageData) listContent).get
+        MultiblockPowerUsageData.PowerUsageEntry content = ((MultiblockPowerUsageData) listContent).getSortedEntries().get(contentIndex);
+        ((PowerSupplyListItem) listItems.get(listIndex)).setPowerData(content);
     }
 
     @Override

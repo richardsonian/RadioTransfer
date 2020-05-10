@@ -25,8 +25,6 @@ public class GuiPowerSupply extends AbstractGuiMachine<TilePowerSupply> {
     protected AbstractGuiList visual;
     private GuiPowerBar powerBar;
 
-    private MultiblockPowerUsageData multiblockPowerData; //you'll have this object, probably through a getter in the tileEntity which will be magically updated for you.
-
     public GuiPowerSupply(TilePowerSupply tileEntity, ContainerPowerSupply container) {
         super(tileEntity, container);
         size = new DimensionWidthHeight(188, 197);

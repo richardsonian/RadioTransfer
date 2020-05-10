@@ -1,19 +1,30 @@
 package com.rlapcs.radiotransfer.generic.multiblock;
 
+import com.rlapcs.radiotransfer.ModConfig;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.lists.IGuiListContent;
 import com.rlapcs.radiotransfer.generic.multiblock.tileEntities.AbstractTileMultiblockNode;
+import com.rlapcs.radiotransfer.registries.ModBlocks;
+import com.rlapcs.radiotransfer.util.NBTUtils;
+import net.minecraft.block.Block;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTUtil;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+/**
+ * This class is so incredibly memory and network inefficient but I don't care
+ */
 public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializable<NBTTagCompound> {
     private Set<PowerUsageEntry> entries;
 
@@ -25,6 +36,12 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
     @Override
     public int size() {
         return entries.size();
+    }
+
+    public List<PowerUsageEntry> getSortedEntries() {
+        List<PowerUsageEntry> outList = new ArrayList<>(entries);
+        outList.sort(null); //sort by natural ordering (see PowerUsageEntry#compareTo())
+        return outList;
     }
 
     //For Server
@@ -54,20 +71,30 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
     }
 
     //For Server
-    public void updateNode() {
-
+    public void updateAll(List<AbstractTileMultiblockNode> nodes) {
+        entries = new HashSet<>();
+        entries.add(getRadioEntry());
+        for(AbstractTileMultiblockNode n : nodes) {
+            if(n != null) {
+                entries.add(new PowerUsageEntry(n));
+            }
+        }
     }
-    public void updateAll() {
-        
-    }
+    private PowerUsageEntry getRadioEntry() {
+        PowerUsageEntry radio = new PowerUsageEntry();
+        radio.block = ModBlocks.radio;
+        radio.basePowerPerTick = ModConfig.power_options.radio.basePowerPerTick;
+        radio.totalPowerPerTick = radio.basePowerPerTick;
 
+        return radio;
+    }
 /*~~~~~~~~~~~~~~~~~ENTRY SUBCLASS~~~~~~~~~~~~~~~~~~~~~~*/
 
     /**
      * Contains all the power usage data for one multiblock node
      */
-    public static class PowerUsageEntry implements INBTSerializable<NBTTagCompound> {
-        public Class<? extends AbstractTileMultiblockNode> nodeClass;
+    public static class PowerUsageEntry implements INBTSerializable<NBTTagCompound>, Comparable<PowerUsageEntry> {
+        public Block block;
 
         public Instant lastUpdated;
 
@@ -86,7 +113,6 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
         public PowerUsageEntry(){}
         public PowerUsageEntry(AbstractTileMultiblockNode te) {
             this.update(te);
-            lastUpdated = Instant.now();
         }
         public PowerUsageEntry(NBTTagCompound nbt){
             this();
@@ -94,7 +120,8 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
         }
 
         public void update(AbstractTileMultiblockNode te) {
-            nodeClass = te.getClass();
+           String blockname = TileEntity.getKey(te.getClass()).toString();
+           block = Block.getBlockFromName(blockname);
 
             //Grab all the constant power values
             basePowerPerTick = te.getBasePowerPerTick();
@@ -112,13 +139,17 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
 
             //internal calculations
             totalPowerPerTick = effectivePowerPerTick + effectivePowerPerProcess;
+
+            lastUpdated = Instant.now();
         }
 
         @Override
         public NBTTagCompound serializeNBT() {
             NBTTagCompound nbt = new NBTTagCompound();
 
-            nbt.setString("nodeClass", nodeClass.getName());
+            nbt.setTag("lastUpdated", NBTUtils.serializeInstant(lastUpdated));
+
+            nbt.setString("block", block.getRegistryName().toString());
             //Constant Power Data
             nbt.setInteger("basePowerPerTick", basePowerPerTick);
             nbt.setInteger("effectivePowerPerTick", effectivePowerPerTick);
@@ -148,13 +179,12 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
 
         @Override
         public void deserializeNBT(NBTTagCompound nbt) {
-            if(nbt.hasKey("nodeClass")) {
-                try {
-                    nodeClass = (Class<? extends AbstractTileMultiblockNode>) Class.forName(nbt.getString("nodeClass"));
-                }
-                catch(Exception e) {
-                    e.printStackTrace();
-                }
+            if(nbt.hasKey("lastUpdated")) {
+                lastUpdated = NBTUtils.deserializeInstant(nbt.getCompoundTag("lastUpdated"));
+            }
+
+            if(nbt.hasKey("block")) {
+                block = Block.getBlockFromName(nbt.getString("block"));
             }
             //Constant Power Data
             if(nbt.hasKey("basePowerPerTick")) {
@@ -196,6 +226,11 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
 
             //calculations
             totalPowerPerTick = effectivePowerPerTick + effectivePowerPerProcess;
+        }
+
+        @Override
+        public int compareTo(PowerUsageEntry o) {
+            return this.totalPowerPerTick - o.totalPowerPerTick;
         }
 
         /**
