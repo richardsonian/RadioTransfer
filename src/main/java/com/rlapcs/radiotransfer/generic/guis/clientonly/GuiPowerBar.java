@@ -1,17 +1,12 @@
 package com.rlapcs.radiotransfer.generic.guis.clientonly;
 
 import com.rlapcs.radiotransfer.ModConstants;
-import com.rlapcs.radiotransfer.RadioTransfer;
 import com.rlapcs.radiotransfer.generic.capability.MachinePowerHandler;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateXY;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-
-import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
 
 public class GuiPowerBar {
     private CoordinateXY pos;
@@ -23,10 +18,11 @@ public class GuiPowerBar {
         pos = new CoordinateXY(x, y);
         this.mc = mc;
         this.gui = gui;
+        this.powerHandler = powerHandler;
     }
 
     public void draw() {
-        double stored = 0.6;
+        double stored = (double) powerHandler.getEnergyStored() / (double) powerHandler.getMaxEnergyStored();
         int barHeight = MathHelper.clamp((int) (71 * stored), 0, 71);
 
         int green = 0x357F42;

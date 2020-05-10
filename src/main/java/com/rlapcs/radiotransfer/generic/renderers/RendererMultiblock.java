@@ -58,6 +58,7 @@ public class RendererMultiblock {
     private double transY = 0;
     private double transX = 0;
     private double distance;
+    private double maxDistance;
     private long initTime;
 
     private @Nonnull Minecraft mc = Minecraft.getMinecraft();
@@ -118,6 +119,7 @@ public class RendererMultiblock {
         yaw = 180 - mc.player.rotationYaw;
 
         distance = Math.max(Math.max(size.x, size.y), size.z) + 4;
+        maxDistance = distance * 2;
 
         blocks.apply(new NNList.Callback<BlockPos>() {
 
@@ -163,8 +165,8 @@ public class RendererMultiblock {
             }
         }
 
-        distance -= Mouse.getEventDWheel() * 0.01;
-        distance = VecmathUtil.clamp(distance, 1.5, 100);
+        distance -= Mouse.getEventDWheel() * 0.005;
+        distance = VecmathUtil.clamp(distance, 2, maxDistance);
 
         long elapsed = System.currentTimeMillis() - initTime;
 
