@@ -24,10 +24,15 @@ import java.util.EnumMap;
 import java.util.List;
 
 public class MultiblockRadioController {
+    //~~~~~~~~~~~~~~~~~~Instance Variables~~~~~~~~~~~~~~~~~~//
+
+    //Multiblock Data
     private boolean registeredToNetwork;
     private boolean multiblockValid;
     private boolean isPowered;
+    private MultiblockPowerUsageData powerUsageData;
 
+    //Multiblock Nodes
     private TileRadio tileEntity;
 
     private TileTxController txController;
@@ -37,8 +42,7 @@ public class MultiblockRadioController {
 
     private EnumMap<TransferType, AbstractTileProcessor> encoders;
     private EnumMap<TransferType, AbstractTileProcessor> decoders;
-
-    private MultiblockPowerUsageData powerUsageData;
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
     public MultiblockRadioController(TileRadio te) {
         tileEntity = te;
@@ -52,34 +56,38 @@ public class MultiblockRadioController {
         powerUsageData = new MultiblockPowerUsageData();
     }
 
+    //##################################################################################################//
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~RADIO NETWORK REGISTRY~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //##################################################################################################//
+
     public boolean isRegisteredToNetwork() {
         return registeredToNetwork;
     }
-
+    //server only
     public void registerToNetwork() {
         RadioNetwork.INSTANCE.register(this);
         registeredToNetwork = true;
     }
-
+    //server only
     public void deregisterFromNetwork() {
         RadioNetwork.INSTANCE.deregister(this);
         registeredToNetwork = false;
     }
 
-    //for server
+    //##################################################################################################//
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~POWER LOGIC~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //##################################################################################################//
+
+    //---------PowerUsageData Methods-------------//
+
+    //server only [use cached data in TilePowerSupply on client]
     public MultiblockPowerUsageData getPowerUsageData() {
         return powerUsageData;
     }
+    //server only
     public void updatePowerUsageData() {
         powerUsageData.updateAll(getAllNodes());
     }
-
-    //for client
-    public void setPowerUsageData(MultiblockPowerUsageData newData) {
-        powerUsageData = newData;
-    }
-
-
 
     public int calculateRequiredPowerPerTick() {
         int sum = 0;
@@ -91,6 +99,7 @@ public class MultiblockRadioController {
         return sum;
     }
 
+    //-----------Power Logic Methods---------------//
     public int getEffectivePowerUsagePerTick() {
         if(isPowered) return calculateRequiredPowerPerTick();
         else return 0;
@@ -130,6 +139,9 @@ public class MultiblockRadioController {
         }
     }
 
+    //##################################################################################################//
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~TRANSMISSION AND RECEIVING~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //##################################################################################################//
     public int getTransmitFrequency(@Nonnull TransferType type) {
         if (!canTransmit(type)) {
             throw new UnsupportedTransferException(this + " cannot transmit on type " + type);
@@ -176,6 +188,10 @@ public class MultiblockRadioController {
         return hasDecoder && hasReceiver;
     }
 
+    //##################################################################################################//
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~NODE GETTERS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //##################################################################################################//
+
     public ITransferHandler getTransmitHandler(@Nonnull TransferType type) {
         if (canTransmit(type)) {
             return encoders.get(type).getHandler();
@@ -199,6 +215,24 @@ public class MultiblockRadioController {
         return decoders.get(type);
     }
 
+    /**
+     * LIST MAY RETURN SOME NULLS
+     * @return List of all nodes
+     */
+    private List<AbstractTileMultiblockNode> getAllNodes() {
+        List<AbstractTileMultiblockNode> list = new ArrayList<>();
+
+        list.add(txController);
+        list.add(rxController);
+        list.add(powerSupply);
+        list.addAll(encoders.values());
+        list.addAll(decoders.values());
+
+        return list;
+    }
+    //##################################################################################################//
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~MULTIBLOCK DETECTION~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //##################################################################################################//
     private boolean validateAddition(BlockPos pos) {
         TileEntity te = tileEntity.getWorld().getTileEntity(pos);
 
@@ -291,18 +325,9 @@ public class MultiblockRadioController {
         }
     }
 
-    private List<AbstractTileMultiblockNode> getAllNodes() {
-        List<AbstractTileMultiblockNode> list = new ArrayList<>();
-
-        list.add(txController);
-        list.add(rxController);
-        list.add(powerSupply);
-        list.addAll(encoders.values());
-        list.addAll(decoders.values());
-
-        return list;
-    }
-
+    //##################################################################################################//
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~MISC~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //##################################################################################################//
     public List<BlockPos> getMultiblockPositions() {
         List<AbstractTileMultiblockNode> nodes = this.getAllNodes();
         List<BlockPos> positions = new ArrayList<>();

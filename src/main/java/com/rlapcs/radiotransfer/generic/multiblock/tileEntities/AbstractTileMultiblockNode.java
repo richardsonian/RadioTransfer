@@ -20,15 +20,22 @@ import java.util.Set;
 import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
 
 public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
+    //~~~~~~~~~~~~~~~~~~Constants~~~~~~~~~~~~~~~~~~~~//
     public static final int MULTIBLOCK_UPDATE_TICKS = 20;
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
+    //~~~~~~~~~~~~~~Instance Variables~~~~~~~~~~~~~~~//
     protected boolean registeredInMultiblock;
     protected MultiblockRadioController controller;
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
     public AbstractTileMultiblockNode() {
         registeredInMultiblock = false;
     }
 
+    //##################################################################################################//
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~MULTIBLOCK REGISTRY~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //##################################################################################################//
     public void registerInMultiblock(MultiblockRadioController controller) {
         if(!registeredInMultiblock) {
             this.controller = controller;
@@ -56,7 +63,9 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
     }
     protected void onRegisterInMultiblock() {}
     protected void onDeregisterInMultiblock() {}
-    /*Sets the registered state without performing any logic */
+    /**
+     * Sets the registered state without performing any logic
+     */
     public void setRegisteredInMultiblock(boolean target) {
         registeredInMultiblock = target;
     }
@@ -68,44 +77,12 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
         ));
     }
 
-    //make sure client has latest registration info when they load the te
-    @Override
-    public NBTTagCompound getUpdateTag() {
-        NBTTagCompound tag = super.getUpdateTag();
-        if(!world.isRemote) { //assure server side
-            tag.setBoolean("registeredInMultiblock", registeredInMultiblock);
-        }
-        return tag;
+    public MultiblockRadioController getController() {
+        return controller;
     }
-    @Override
-    public void handleUpdateTag(NBTTagCompound tag) {
-        super.handleUpdateTag(tag);
-        if(world.isRemote) { //assure client side
-            if(tag.hasKey("registeredInMultiblock")) {
-                setRegisteredInMultiblock(tag.getBoolean("registeredInMultiblock"));
-            }
-        }
-    }
-
-    //invalidate
-    @Override
-    public void invalidate() {
-        super.invalidate();
-        if(!world.isRemote) {
-            this.deregisterFromMultiblock();
-        }
-    }
-    /**
-     * Called when the chunk this TileEntity is on is Unloaded.
-     */
-    @Override
-    public void onChunkUnload() {
-        super.onChunkUnload();
-        if(!world.isRemote) {
-            this.deregisterFromMultiblock();
-        }
-    }
-
+    //##################################################################################################//
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~MULTIBLOCK DETECTION~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //##################################################################################################//
     private boolean isAdjacentToController() {
         BlockPos[] neighbors = {pos.up(), pos.down(), pos.north(), pos.south(), pos.east(), pos.west()};
 
@@ -170,22 +147,21 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
         }
     }
 
-    public MultiblockRadioController getController() {
-        return controller;
-    }
-
-    /*~~~~~~~~~~~Power Calculations~~~~~~~~~~*/
+    //##################################################################################################//
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Power Calculations~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //##################################################################################################//
     public abstract int getPowerUsagePerTick(); //will remove
 
+    //~~~~~~~~~~Abstract Methods to be overridden by individual machines~~~~~~~~~~~~~~~~~~~~~//
     public abstract int getBasePowerPerTick();
     public abstract Map<Item, Integer> getUpgradeCardConstantPowerCosts();
-
     public abstract int getBasePowerPerProcess();
     public abstract Map<Item, Integer> getUpgradeCardProcessPowerCosts();
-
     public abstract Map<Item, Integer> getUpgradeCardQuantities();
     public abstract int getAverageProcessesRate(); //return num processes in last 10 seconds
 
+    //~~~~~~~~~~~~~~~~~~~~~~~Universal Calculations for Power Data~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //- Move some of this to MultiblockPowerData object, so it can be calculated on call instead of sending over network?
     public int getPowerPerTick() {
         return getBasePowerPerTick() + getConstantPowerUpgradeTotalCost();
     }
@@ -227,8 +203,58 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
 
         return presentUpgrades;
     }
+    //~~~~~~~~~~~~~~~~~~~~~Power Using Methods~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    /**
+     * Use power for one process
+     * @return Whether there was enough power for process or not
+     */
+    public boolean useProcessPower() {
+        int power = getPowerPerProcess();
+        boolean wasSufficentPower = getController().useProcessPower();
+        return wasSufficentPower;
+    }
 
+    //##################################################################################################//
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~TileEntity Data Caching~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //##################################################################################################//
+    @Override
+    public NBTTagCompound getUpdateTag() {
+        NBTTagCompound tag = super.getUpdateTag();
+        if(!world.isRemote) { //assure server side
+            tag.setBoolean("registeredInMultiblock", registeredInMultiblock); //make sure client has latest registration info when they load the te
+        }
+        return tag;
+    }
+    @Override
+    public void handleUpdateTag(NBTTagCompound tag) {
+        super.handleUpdateTag(tag);
+        if(world.isRemote) { //assure client side
+            if(tag.hasKey("registeredInMultiblock")) {
+                setRegisteredInMultiblock(tag.getBoolean("registeredInMultiblock")); //make sure client has latest registration info when they load the te
+            }
+        }
+    }
+    @Override
+    public void invalidate() {
+        super.invalidate();
+        if(!world.isRemote) {
+            this.deregisterFromMultiblock(); //Deregister TE from multiblock when block broken
+        }
+    }
+    /**
+     * Called when the chunk this TileEntity is on is Unloaded.
+     */
+    @Override
+    public void onChunkUnload() {
+        super.onChunkUnload();
+        if(!world.isRemote) {
+            this.deregisterFromMultiblock();
+        }
+    }
 
+    //##################################################################################################//
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~MISC~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //##################################################################################################//
     @Override
     public void update() {
         super.update();
