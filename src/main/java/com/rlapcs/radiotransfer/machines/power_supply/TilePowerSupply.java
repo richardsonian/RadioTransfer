@@ -141,6 +141,10 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
     }
     public void updateClientMultiblockPowerData() {
         Debug.sendToAllPlayers(TextFormatting.GRAY + "Sending multiblock power update to clients", world);
+
+        //Tell controller to update data
+        this.getController().updatePowerUsageData();
+        //Send message
         clientListeners.forEach((p) -> ModNetworkMessages.INSTANCE.sendToAll(new MessageUpdateClientTileMultiblockPowerData(this)));
     }
 
