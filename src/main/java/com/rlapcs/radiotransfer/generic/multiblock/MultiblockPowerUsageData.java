@@ -233,6 +233,11 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
             return this.totalPowerPerTick - o.totalPowerPerTick;
         }
 
+        //~~~~~~~~~~~~ToString Methods~~~~~~~~~~~~~~~~~~~//
+        public String getTitle() {
+            return block.getLocalizedName();
+        }
+
         /**
          * Contains the power usage info for a specific type of upgrade card
         */
@@ -282,6 +287,15 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
                 }
 
                 this.total = this.quantity * this.cost;
+            }
+
+            /**
+             * Get String representation of this card
+             * @return String of format "×3 = +18"
+             */
+            @Override
+            public String toString() {
+                return String.format("x%d = +%d", quantity, total);
             }
         }
     }
