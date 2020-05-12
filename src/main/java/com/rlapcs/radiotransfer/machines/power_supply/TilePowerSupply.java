@@ -114,6 +114,20 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
         else { //client side
         }
     }
+    @Override
+    public void readFromNBT(NBTTagCompound compound) {
+        super.readFromNBT(compound);
+        if(compound.hasKey("energyStorage")) {
+            energyStorage.deserializeNBT(compound.getCompoundTag("energyStorage"));
+        }
+    }
+
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+        super.writeToNBT(compound);
+        compound.setTag("energyStorage", energyStorage.serializeNBT());
+        return compound;
+    }
 
     @Override
     public Set<EntityPlayerMP> getClientListeners() {
