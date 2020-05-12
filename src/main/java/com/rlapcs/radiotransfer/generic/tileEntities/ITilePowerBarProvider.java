@@ -7,5 +7,5 @@ public interface ITilePowerBarProvider {
     //client methods
     int getDisplayEnergy();
     void setDisplayEnergy(int target);
-    int getMaxEngergy();
+    int getMaxEnergy();
 }

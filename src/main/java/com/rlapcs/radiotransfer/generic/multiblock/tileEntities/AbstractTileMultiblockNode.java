@@ -210,8 +210,8 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
      */
     public boolean useProcessPower() {
         int power = getPowerPerProcess();
-        boolean wasSufficentPower = getController().useProcessPower();
-        return wasSufficentPower;
+        //boolean wasSufficentPower = getController().
+        return false;
     }
 
     //##################################################################################################//
