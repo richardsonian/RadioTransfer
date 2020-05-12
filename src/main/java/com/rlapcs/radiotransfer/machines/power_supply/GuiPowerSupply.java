@@ -27,6 +27,7 @@ public class GuiPowerSupply extends AbstractGuiMachine<TilePowerSupply> {
     private PowerSupplyList list;
 
     private final CoordinateXY LIST_POS = new CoordinateXY(7, 24);
+    private final CoordinateXY POWER_BAR_POS = new CoordinateXY(162, 25);
     //private DimensionWidthHeight LIST_SIZE = new DimensionWidthHeight(80, 75);
 
     public GuiPowerSupply(TilePowerSupply tileEntity, ContainerPowerSupply container) {
@@ -39,10 +40,9 @@ public class GuiPowerSupply extends AbstractGuiMachine<TilePowerSupply> {
     public void initGui() {
         super.initGui();
         ModNetworkMessages.INSTANCE.sendToServer(new MessageAddClientListener(tileEntity, true));
-        sendDebugMessage("init power gui");
-
         list = new PowerSupplyList(mc, this, tileEntity.getCachedPowerUsageData(), LIST_POS.x, LIST_POS.y, pos.x, pos.y, tileEntity);
-        powerBar = new GuiPowerBar(162, 25, tileEntity.getEnergyStorage(), mc,this);
+        powerBar = new GuiPowerBar(POWER_BAR_POS.addTo(pos), tileEntity, this);
+        sendDebugMessage("init power gui");
     }
 
     @Override
@@ -62,7 +62,7 @@ public class GuiPowerSupply extends AbstractGuiMachine<TilePowerSupply> {
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-        String power = tileEntity.getDisplayEnergy() + "FE";
-        fontRenderer.drawString(power,  22,  30, Color.white.getRGB());
+        //String power = tileEntity.getDisplayEnergy() + "FE";
+        //fontRenderer.drawString(power,  22,  30, Color.white.getRGB());
     }
 }

@@ -143,7 +143,7 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
         return cachedPowerUsageData;
     }
     @Override
-    public int getMaxEngergy() {
+    public int getMaxEnergy() {
         return ENERGY_CAPACITY;
     } //might have to fix this once implemented into config
 
