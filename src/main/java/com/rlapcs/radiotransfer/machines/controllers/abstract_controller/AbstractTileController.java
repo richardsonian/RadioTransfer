@@ -13,7 +13,6 @@ public abstract class AbstractTileController extends AbstractTileMultiblockNodeW
     public static final int ENCRYPTION_CARD_SLOT_INDEX = 0;
 
     protected static final int ABSTRACT_INVENTORY_SIZE = 1;
-    protected static final int BASE_POWER_USAGE = 10;
 
     protected boolean activated;
     protected int frequency;
@@ -25,11 +24,6 @@ public abstract class AbstractTileController extends AbstractTileMultiblockNodeW
 
         frequency = RadioNetwork.MIN_FREQUENCY;
         activated = false;
-    }
-
-    @Override
-    public int getPowerUsagePerTick() {
-        return BASE_POWER_USAGE;
     }
 
     public void setActivated(boolean target) {

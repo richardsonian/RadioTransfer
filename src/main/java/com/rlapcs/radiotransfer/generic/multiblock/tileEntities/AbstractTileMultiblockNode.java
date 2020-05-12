@@ -25,12 +25,17 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
     //~~~~~~~~~~~~~~Instance Variables~~~~~~~~~~~~~~~//
+    //server
     protected boolean registeredInMultiblock;
     protected MultiblockRadioController controller;
+
+    //client
+    protected boolean cachedPowered; //or should this be
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
     public AbstractTileMultiblockNode() {
         registeredInMultiblock = false;
+        cachedPowered = false;
     }
 
     //##################################################################################################//
@@ -150,7 +155,6 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
     //##################################################################################################//
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Power Calculations~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     //##################################################################################################//
-    public abstract int getPowerUsagePerTick(); //will remove
 
     //~~~~~~~~~~Abstract Methods to be overridden by individual machines~~~~~~~~~~~~~~~~~~~~~//
     public abstract int getBasePowerPerTick();

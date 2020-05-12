@@ -10,11 +10,6 @@ public class TileBasicAntenna extends AbstractTileMultiblockNode{
     }
 
     @Override
-    public int getPowerUsagePerTick() {
-        return 0;
-    }
-
-    @Override
     public int getBasePowerPerTick() {
         return 0;
     }

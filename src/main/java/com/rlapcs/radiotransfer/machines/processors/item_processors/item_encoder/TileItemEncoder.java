@@ -37,10 +37,6 @@ public class TileItemEncoder extends AbstractTileItemProcessor {
     }
 
     @Override
-    public int getPowerUsagePerTick() {
-        return POWER_USAGE;
-    }
-    @Override
     public ProcessorType getProcessorType() {return ProcessorType.ENCODER;}
 
     //Power

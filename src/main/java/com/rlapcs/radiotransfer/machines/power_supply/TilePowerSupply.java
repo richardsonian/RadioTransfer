@@ -13,6 +13,7 @@ import com.rlapcs.radiotransfer.util.Debug;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
@@ -89,11 +90,6 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
                 }
             }
         }
-    }
-
-    @Override
-    public int getPowerUsagePerTick() {
-        return 0;
     }
 
     @Override
