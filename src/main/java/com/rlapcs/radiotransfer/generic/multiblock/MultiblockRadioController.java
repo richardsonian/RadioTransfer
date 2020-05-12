@@ -89,23 +89,20 @@ public class MultiblockRadioController {
         powerUsageData.updateAll(getAllNodes());
     }
 
+    //-----------Power Logic Methods---------------//
+
+    //vvv Constant Power vvv
+    //These are called in TileRadio, in TileEntity#update() cycle
     public int calculateRequiredPowerPerTick() {
         int sum = 0;
         for (AbstractTileMultiblockNode node : getAllNodes()) {
             if(node != null && !node.isInvalid()) {
-                sum += node.getPowerUsagePerTick();
+                sum += node.getPowerPerTick();
             }
         }
         return sum;
     }
-
-    //-----------Power Logic Methods---------------//
-    public int getEffectivePowerUsagePerTick() {
-        if(isPowered) return calculateRequiredPowerPerTick();
-        else return 0;
-    }
-
-    public boolean hasSufficientPower(int ticksSinceLastUpdate) {
+    public boolean hasSufficientConstantPower(int ticksSinceLastUpdate) {
         if (powerSupply != null && !powerSupply.isInvalid()) {
             int needed = calculateRequiredPowerPerTick() * ticksSinceLastUpdate;
             int extracted = powerSupply.extractEnergy(needed, true);
@@ -113,22 +110,46 @@ public class MultiblockRadioController {
         }
         return false;
     }
-
-    public boolean usePower(int ticksSinceLastUpdate) {
-        if(!hasSufficientPower(ticksSinceLastUpdate)) return false;
+    public boolean useConstantPower(int ticksSinceLastUpdate) {
+        if(!hasSufficientConstantPower(ticksSinceLastUpdate)) return false;
 
         int needed = calculateRequiredPowerPerTick() * ticksSinceLastUpdate;
         int extracted = powerSupply.extractEnergy(needed, false);
-        Debug.sendToAllPlayers(tileEntity + " extracting " + extracted + "FE of power.", tileEntity.getWorld());
-        return extracted >= needed;
+        //Debug.sendToAllPlayers(tileEntity + " extracting " + extracted + "FE of power.", tileEntity.getWorld());
+        return extracted >= needed; //whether enough power was taken
     }
 
+    //vvv Process Power vvv
+
+    //If this returns false, the caller should call setPowered() to false
+    public boolean hasPowerForProcess(int processPower) {
+        if(powerSupply != null && !powerSupply.isInvalid()) {
+            int extracted = powerSupply.extractEnergy(processPower, true);
+            return extracted >= processPower;
+        }
+        return false;
+    }
+
+    //returns whether successful
+    public boolean useProcessPower(int processPower) {
+        if(!hasPowerForProcess(processPower)) return false;
+
+        int extracted = powerSupply.extractEnergy(processPower, false);
+        return extracted >= processPower;
+    }
+    public boolean useProcessPower(AbstractTileMultiblockNode node) {
+        return useProcessPower(node.getPowerPerProcess());
+    }
+
+    //~~~~~~~~~~~~~~~~~Powered State~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //These are updated in TileRadio, in TileEntity#update() cycle
     public boolean isPowered() {
         return isPowered;
     }
-
     /**
      * Side effect!! if set from to false, will empty remaining power.
+     * This fixes the scenario where the PSU has a reserve of less than the power required for the next cycle.
+     * If set to false, the last bit of power will be emptied
      * @param target
      */
     public void setPowered(boolean target) {
