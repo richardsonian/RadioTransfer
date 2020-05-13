@@ -1,6 +1,9 @@
 package com.rlapcs.radiotransfer.registries;
 
 import com.rlapcs.radiotransfer.RadioTransfer;
+import com.rlapcs.radiotransfer.items.ICustomItemModel;
+import com.rlapcs.radiotransfer.items.ItemEncryptionCard;
+import com.rlapcs.radiotransfer.items.ItemFilterCard;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -25,7 +28,15 @@ public class ModItems {
         Example:
         public static final ItemClass item_name = null;
      */
+
+    //upgrade cards
     public static final Item speed_upgrade = null;
+    public static final Item stack_upgrade = null;
+    public static final Item stack_downgrade = null;
+    public static final ItemEncryptionCard encryption_card = null;
+    public static final ItemFilterCard filter_card = null;
+
+    //crafting resources
     public static final Item unbaked_resistor = null;
     public static final Item baked_resistor = null;
     public static final Item unbaked_capacitor = null;
@@ -43,62 +54,30 @@ public class ModItems {
     public static List<Item> getInstancesForRegistry() {
         List<Item> items = new ArrayList<>();
 
-        /* Add one instance of each item here */
+        //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+        //~~~~~~~~Add one instance of each item here~~~~~~~~//
+        //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
-        // Speed upgrade
-        items.add(new Item()
-                .setRegistryName("speed_upgrade")
-                .setUnlocalizedName(RadioTransfer.MODID + ".speed_upgrade")
-                .setCreativeTab(CreativeTabs.MISC));
+        //~~~~~~~~~~~~~~~~~Upgrade Cards~~~~~~~~~~~~~~~~~~~~//
+        items.add(newBasicItem("speed_upgrade"));
+        items.add(newBasicItem("stack_upgrade"));
+        items.add(newBasicItem("stack_downgrade"));
+        items.add(new ItemEncryptionCard());
+        items.add(new ItemFilterCard());
 
-        // Unbaked resistor
-        items.add(new Item()
-                .setRegistryName("unbaked_resistor")
-                .setUnlocalizedName(RadioTransfer.MODID + ".unbaked_resistor")
-                .setCreativeTab(CreativeTabs.MISC));
+        //~~~~~~~~~~~~~~~~Crafting resources~~~~~~~~~~~~~~~//
+        items.add(newBasicItem("unbaked_resistor"));
+        items.add(newBasicItem("baked_resistor"));
+        items.add(newBasicItem("unbaked_capacitor"));
+        items.add(newBasicItem("baked_capacitor"));
+        items.add(newBasicItem("vacuum_tube"));
+        items.add(newBasicItem("glass_fiber"));
+        items.add(newBasicItem("blank_circuit_board"));
+        items.add(newBasicItem("circuit_board"));
 
-        // Baked resistor
-        items.add(new Item()
-                .setRegistryName("baked_resistor")
-                .setUnlocalizedName(RadioTransfer.MODID + ".baked_resistor")
-                .setCreativeTab(CreativeTabs.MISC));
-
-        // Unbaked capacitor
-        items.add(new Item()
-                .setRegistryName("unbaked_capacitor")
-                .setUnlocalizedName(RadioTransfer.MODID + ".unbaked_capacitor")
-                .setCreativeTab(CreativeTabs.MISC));
-
-        // Baked capacitor
-        items.add(new Item()
-                .setRegistryName("baked_capacitor")
-                .setUnlocalizedName(RadioTransfer.MODID + ".baked_capacitor")
-                .setCreativeTab(CreativeTabs.MISC));
-
-        // Vacuum tube
-        items.add(new Item()
-                .setRegistryName("vacuum_tube")
-                .setUnlocalizedName(RadioTransfer.MODID + ".vacuum_tube")
-                .setCreativeTab(CreativeTabs.MISC));
-
-        // Glass fiber
-        items.add(new Item()
-                .setRegistryName("glass_fiber")
-                .setUnlocalizedName(RadioTransfer.MODID + ".glass_fiber")
-                .setCreativeTab(CreativeTabs.MISC));
-
-        // Blank circuit board
-        items.add(new Item()
-                .setRegistryName("blank_circuit_board")
-                .setUnlocalizedName(RadioTransfer.MODID + ".blank_circuit_board")
-                .setCreativeTab(CreativeTabs.MISC));
-
-        // Circuit board
-        items.add(new Item()
-                .setRegistryName("circuit_board")
-                .setUnlocalizedName(RadioTransfer.MODID + ".circuit_board")
-                .setCreativeTab(CreativeTabs.MISC));
-        /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+        //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+        //~~~~~~~~~~~~~END ITEM INSTANCES~~~~~~~~~~~~~~~~~~~//
+        //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
         return items;
     }
 
@@ -116,9 +95,16 @@ public class ModItems {
             ModelLoader.setCustomModelResourceLocation(anon_item, 0, new ModelResourceLocation(anon_item.getRegistryName(), "inventory"));
          */
         for (Item i : getAllItems()) {
-            ModelLoader.setCustomModelResourceLocation(i, 0, new ModelResourceLocation(i.getRegistryName(), "inventory"));
+            if(i instanceof ICustomItemModel) {
+                ((ICustomItemModel) i).initModel();
+            }
+            else {
+                ModelLoader.setCustomModelResourceLocation(i, 0, new ModelResourceLocation(i.getRegistryName(), "inventory"));
+            }
         }
 
+        //Add Smelting recipes
+        //Is there a better place for this?
         GameRegistry.addSmelting(unbaked_resistor, new ItemStack(baked_resistor, 1), 1.5f);
         GameRegistry.addSmelting(unbaked_capacitor, new ItemStack(baked_capacitor, 1), 1.5f);
     }
@@ -148,5 +134,21 @@ public class ModItems {
             }
         }
         return items;
+    }
+
+    /**
+     * Creates a simple item that doesn't need its own class
+     * @param name The registry name for the item, ex "demo_item"
+     * @param tab The creative tab for the item
+     * @return An instance of the item
+     */
+    private static Item newBasicItem(String name, CreativeTabs tab) {
+        return new Item()
+                .setRegistryName(name)
+                .setUnlocalizedName(RadioTransfer.MODID + "." + name)
+                .setCreativeTab(tab);
+    }
+    private static Item newBasicItem(String name) {
+        return newBasicItem(name, CreativeTabs.MISC);
     }
 }

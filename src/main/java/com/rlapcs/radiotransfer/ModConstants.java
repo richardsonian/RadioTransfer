@@ -18,7 +18,7 @@ public class ModConstants {
         //encryption
         public static final int ENCRYPTION_CARD_MAX_QUANTITY = 1;
         public static final UpgradeSlotWhitelist ENCRYPTION_CARD_WHITELIST = new UpgradeSlotWhitelist(
-                new UpgradeCardEntry(Items.IRON_INGOT, ENCRYPTION_CARD_MAX_QUANTITY, "linkedPlayer")
+                new UpgradeCardEntry(ModItems.encryption_card, ENCRYPTION_CARD_MAX_QUANTITY, "linkedPlayer")
         );
 
         //speed
@@ -32,14 +32,14 @@ public class ModConstants {
         public static final int STACK_UPGRADE_MAX_QUANTITY = 4;
         public static final int STACK_DOWNGRADE_MAX_QUANTITY = 1;
         public static final UpgradeSlotWhitelist STACK_UPGRADE_WHITELIST = new UpgradeSlotWhitelist(
-                new UpgradeCardEntry(Items.DIAMOND, STACK_UPGRADE_MAX_QUANTITY),
-                new UpgradeCardEntry(Items.REDSTONE, STACK_DOWNGRADE_MAX_QUANTITY)
+                new UpgradeCardEntry(ModItems.stack_upgrade, STACK_UPGRADE_MAX_QUANTITY),
+                new UpgradeCardEntry(ModItems.stack_downgrade, STACK_DOWNGRADE_MAX_QUANTITY)
         );
 
         //filter
         public static final int FILTER_CARD_MAX_QUANTITY = 1;
         public static final UpgradeSlotWhitelist FILTER_CARD_WHITELIST = new UpgradeSlotWhitelist(
-                new UpgradeCardEntry(Items.BOOK, FILTER_CARD_MAX_QUANTITY)
+                new UpgradeCardEntry(ModItems.filter_card, FILTER_CARD_MAX_QUANTITY)
         );
 
 
