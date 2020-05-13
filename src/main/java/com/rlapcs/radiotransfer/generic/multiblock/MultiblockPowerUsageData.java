@@ -10,9 +10,9 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTUtil;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 
@@ -83,7 +83,7 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
     private PowerUsageEntry getRadioEntry() {
         PowerUsageEntry radio = new PowerUsageEntry();
         radio.block = ModBlocks.radio;
-        radio.basePowerPerTick = ModConfig.power_options.radio.basePowerPerTick;
+        radio.basePowerPerTick = ModConfig.power_options.radio.powerPerTick;
         radio.totalPowerPerTick = radio.basePowerPerTick;
 
         return radio;
@@ -105,10 +105,10 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
         public int basePowerPerProcess;
         public Set<UpgradeCardPowerEntry> upgradeCardProcessCosts;
         public int effectivePowerPerProcess;
-        public int processRate;
-        public int averageProcessPowerPerTick;
+        public double processRate;
+        public double averageProcessPowerPerTick;
 
-        public int totalPowerPerTick;
+        public double totalPowerPerTick;
 
         public PowerUsageEntry(){}
         public PowerUsageEntry(AbstractTileMultiblockNode te) {
@@ -138,7 +138,7 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
             averageProcessPowerPerTick = te.getAverageProcessPowerPerTick(); //unnecessary
 
             //internal calculations
-            totalPowerPerTick = effectivePowerPerTick + effectivePowerPerProcess;
+            totalPowerPerTick = effectivePowerPerTick + averageProcessPowerPerTick;
 
             lastUpdated = Instant.now();
         }
@@ -151,13 +151,13 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
 
             nbt.setString("block", block.getRegistryName().toString());
             //Constant Power Data
-            nbt.setInteger("basePowerPerTick", basePowerPerTick);
+            nbt.setInteger("powerPerTick", basePowerPerTick);
             nbt.setInteger("effectivePowerPerTick", effectivePowerPerTick);
             //Process Power Data
             nbt.setInteger("basePowerPerProcess", basePowerPerProcess);
             nbt.setInteger("effectivePowerPerProcess", effectivePowerPerProcess);
-            nbt.setInteger("processRate", processRate);
-            nbt.setInteger("averageProcessPowerPerTick", averageProcessPowerPerTick);
+            nbt.setDouble("processRate", processRate);
+            nbt.setDouble("averageProcessPowerPerTick", averageProcessPowerPerTick);
 
 
             //Upgrade Card Constant Costs
@@ -187,8 +187,8 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
                 block = Block.getBlockFromName(nbt.getString("block"));
             }
             //Constant Power Data
-            if(nbt.hasKey("basePowerPerTick")) {
-                basePowerPerTick = nbt.getInteger("basePowerPerTick");
+            if(nbt.hasKey("powerPerTick")) {
+                basePowerPerTick = nbt.getInteger("powerPerTick");
             }
             if(nbt.hasKey("effectivePowerPerTick")) {
                 effectivePowerPerTick = nbt.getInteger("effectivePowerPerTick");
@@ -201,10 +201,10 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
                 effectivePowerPerProcess = nbt.getInteger("effectivePowerPerProcess");
             }
             if(nbt.hasKey("processRate")) {
-                processRate = nbt.getInteger("processRate");
+                processRate = nbt.getDouble("processRate");
             }
             if(nbt.hasKey("averageProcessPowerPerTick")) {
-                averageProcessPowerPerTick = nbt.getInteger("averageProcessPowerPerTick");
+                averageProcessPowerPerTick = nbt.getDouble("averageProcessPowerPerTick");
             }
 
             //Upgrade Card Constant Costs
@@ -230,7 +230,7 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
 
         @Override
         public int compareTo(PowerUsageEntry o) {
-            return this.totalPowerPerTick - o.totalPowerPerTick;
+            return Double.compare(this.totalPowerPerTick, o.totalPowerPerTick);
         }
 
         //~~~~~~~~~~~~ToString Methods~~~~~~~~~~~~~~~~~~~//
