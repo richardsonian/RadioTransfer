@@ -13,26 +13,15 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 
 
-public abstract class AbstractTileItemProcessor extends AbstractTileMaterialProcessor<ItemPacketQueue> implements IProgressBarProvider {
-    public static final int SPEED_UPGRADE_SLOT_INDEX = 0;
+public abstract class AbstractTileItemProcessor extends AbstractTileMaterialProcessor<ItemPacketQueue> {
+    public static final int INVENTORY_SIZE = 16 + ABSTRACT_MATERIAL_PROCESSOR_INVENTORY_SIZE;
 
-    public static final int INVENTORY_SIZE = 17;
-
-    public static final int PROCESS_UPDATE_TICKS = 2;
-
-    public static final int BASE_PROCESS_TIME = 30;
-    public static final double PROCESS_TIME_MULTIPLIER = 0.75;
-    public static final double MIN_PROCESS_TIME = 6;
     public static final int BASE_ITEMS_PER_PROCESS = 1;
 
     protected ItemPacketQueue packetQueue;
-    protected int processTimeElapsed;
 
     public AbstractTileItemProcessor() {
         super(INVENTORY_SIZE);
-
-        processTimeElapsed = 0;
-        upgradeSlotWhitelists.put(SPEED_UPGRADE_SLOT_INDEX, ModConstants.UpgradeCards.SPEED_UPGRADE_WHITELIST);
 
         packetQueue = new ItemPacketQueue() {
             @Override
@@ -77,30 +66,6 @@ public abstract class AbstractTileItemProcessor extends AbstractTileMaterialProc
         return BASE_ITEMS_PER_PROCESS;
     }
 
-    @Override
-    public int getProcessTime() {
-        int numUpgrades = itemStackHandler.getStackInSlot(SPEED_UPGRADE_SLOT_INDEX).getCount();
-        int processTime = (int) (BASE_PROCESS_TIME * Math.pow(PROCESS_TIME_MULTIPLIER, numUpgrades));
-        return (int) MathHelper.clamp(processTime, MIN_PROCESS_TIME, BASE_PROCESS_TIME);
-    }
-
-    @Override
-    public boolean canDoProcess() {
-        return isRegisteredInMultiblock(); //&& isPowered();
-    }
-
-    @Override
-    public abstract void doProcess();
-
-    @Override
-    public void update() {
-        super.update();
-        //run on both client and server
-        if (ticksSinceCreation % PROCESS_UPDATE_TICKS == 0) {
-            doProcessUpdate(world, PROCESS_UPDATE_TICKS);
-        }
-    }
-
     //NBT handling
     @Override
     public void readFromNBT(NBTTagCompound compound) {
@@ -126,14 +91,6 @@ public abstract class AbstractTileItemProcessor extends AbstractTileMaterialProc
     @Override
     public ItemPacketQueue getHandler() {
         return packetQueue;
-    }
-    @Override
-    public int getProcessTimeElapsed() {
-        return processTimeElapsed;
-    }
-    @Override
-    public void setProcessTimeElapsed(int target) {
-        this.processTimeElapsed = target;
     }
     @Override
     public TransferType getTransferType() {

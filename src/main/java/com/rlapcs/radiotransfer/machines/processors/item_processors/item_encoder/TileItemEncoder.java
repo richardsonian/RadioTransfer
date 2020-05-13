@@ -1,19 +1,28 @@
 package com.rlapcs.radiotransfer.machines.processors.item_processors.item_encoder;
 
+import com.rlapcs.radiotransfer.ModConfig;
 import com.rlapcs.radiotransfer.machines.processors.ProcessorType;
 import com.rlapcs.radiotransfer.machines.processors.item_processors.abstract_item_processor.AbstractTileItemProcessor;
+import com.rlapcs.radiotransfer.registries.ModItems;
 import com.rlapcs.radiotransfer.util.ItemUtils;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 public class TileItemEncoder extends AbstractTileItemProcessor {
-    public static final int POWER_USAGE = 10;
-
     public TileItemEncoder() {
         super();
     }
+
+    @Override
+    public ProcessorType getProcessorType() {return ProcessorType.ENCODER;}
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~Process Logic~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
     @Override
     public boolean canDoProcess() {
@@ -36,37 +45,52 @@ public class TileItemEncoder extends AbstractTileItemProcessor {
         }
     }
 
-    @Override
-    public ProcessorType getProcessorType() {return ProcessorType.ENCODER;}
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //~~~~~~~~~~~~~~~~~~~~~~~~POWER USAGE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
-    //Power
+    //~~~~~~~~~~~~~~~~~~~~Base Power Values~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     @Override
     public int getBasePowerPerTick() {
-        return 0;
+        return ModConfig.power_options.item_encoder.basePowerPerTick;
     }
-
-    @Override
-    public Map<Item, Integer> getUpgradeCardConstantPowerCosts() {
-        return null;
-    }
-
     @Override
     public int getBasePowerPerProcess() {
-        return 0;
+        return ModConfig.power_options.item_encoder.basePowerPerTick;
     }
 
-    @Override
-    public Map<Item, Integer> getUpgradeCardProcessPowerCosts() {
-        return null;
-    }
-
+    //~~~~~~~~~~~~~~~~~~~Calculations~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     @Override
     public Map<Item, Integer> getUpgradeCardQuantities() {
-        return null;
+        Map<Item, Integer> out = new HashMap<>();
+        out.put(ModItems.speed_upgrade, itemStackHandler.getStackInSlot(SPEED_UPGRADE_SLOT_INDEX).getCount());
+        return out;
     }
 
+    //Average process rate calculated in AbstractTileMaterialProcessor
+    
+    //~~~~~~~~~~~~~~~~~~~~~~Upgrade Costs~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //Constant
+    private static final Map<Item, Integer> upgradeConstantPowerCosts;
+    static {
+        Map <Item, Integer> tempMap = new HashMap<>();
+        tempMap.put(ModItems.speed_upgrade, ModConfig.power_options.item_encoder.speedUpgradeCostPerTick);
+        upgradeConstantPowerCosts = Collections.unmodifiableMap(tempMap);
+    }
     @Override
-    public int getAverageProcessesRate() {
-        return 0;
+    public Map<Item, Integer> getUpgradeCardConstantPowerCosts() {
+        return upgradeConstantPowerCosts;
+    }
+
+    //Process
+    private static final Map<Item, Integer> upgradeProcessPowerCosts;
+    static {
+        Map <Item, Integer> tempMap = new HashMap<>();
+        tempMap.put(ModItems.speed_upgrade, ModConfig.power_options.item_encoder.speedUpgradeCostPerProcess);
+        upgradeProcessPowerCosts = Collections.unmodifiableMap(tempMap);
+    }
+    @Override
+    public Map<Item, Integer> getUpgradeCardProcessPowerCosts() {
+        return upgradeProcessPowerCosts;
     }
 }

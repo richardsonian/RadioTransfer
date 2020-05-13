@@ -1,22 +1,28 @@
 package com.rlapcs.radiotransfer.machines.processors.item_processors.item_decoder;
 
+import com.rlapcs.radiotransfer.ModConfig;
 import com.rlapcs.radiotransfer.generic.capability.ItemPacketQueue;
 import com.rlapcs.radiotransfer.machines.processors.ProcessorType;
 import com.rlapcs.radiotransfer.machines.processors.item_processors.abstract_item_processor.AbstractTileItemProcessor;
-import com.rlapcs.radiotransfer.util.Debug;
+import com.rlapcs.radiotransfer.registries.ModItems;
 import com.rlapcs.radiotransfer.util.ItemUtils;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 public class TileItemDecoder extends AbstractTileItemProcessor {
-    public static final int POWER_USAGE = 10;
-
     public TileItemDecoder() {
         super();
     }
+    @Override
+    public ProcessorType getProcessorType() {return ProcessorType.DECODER;}
 
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~Process Logic~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     @Override
     public boolean canDoProcess() {
         boolean superCheck = super.canDoProcess();
@@ -32,40 +38,55 @@ public class TileItemDecoder extends AbstractTileItemProcessor {
         ItemStack toProcess = packetQueue.getNextPacket(getItemsPerProcess());
         ItemStack remainder = ItemUtils.mergeStackIntoInventory(toProcess, itemStackHandler, getNonUpgradeInventorySlots());
         packetQueue.add(remainder);
-        Debug.sendToAllPlayers("Processing packet " + toProcess + " into items in " + this, world);
+        //Debug.sendToAllPlayers("Processing packet " + toProcess + " into items in " + this, world);
     }
 
-    @Override
-    public ProcessorType getProcessorType() {return ProcessorType.DECODER;}
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //~~~~~~~~~~~~~~~~~~~~~~~~POWER USAGE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
-    //Power
+    //~~~~~~~~~~~~~~~~~~~~Base Power Values~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     @Override
     public int getBasePowerPerTick() {
-        return 0;
+        return ModConfig.power_options.item_decoder.basePowerPerTick;
     }
-
-    @Override
-    public Map<Item, Integer> getUpgradeCardConstantPowerCosts() {
-        return null;
-    }
-
     @Override
     public int getBasePowerPerProcess() {
-        return 0;
+        return ModConfig.power_options.item_decoder.basePowerPerTick;
     }
 
-    @Override
-    public Map<Item, Integer> getUpgradeCardProcessPowerCosts() {
-        return null;
-    }
-
+    //~~~~~~~~~~~~~~~~~~~Calculations~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     @Override
     public Map<Item, Integer> getUpgradeCardQuantities() {
-        return null;
+        Map<Item, Integer> out = new HashMap<>();
+        out.put(ModItems.speed_upgrade, itemStackHandler.getStackInSlot(SPEED_UPGRADE_SLOT_INDEX).getCount());
+        return out;
     }
 
+    //Average process rate calculated in AbstractTileMaterialProcessor
+
+    //~~~~~~~~~~~~~~~~~~~~~~Upgrade Costs~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //Constant
+    private static final Map<Item, Integer> upgradeConstantPowerCosts;
+    static {
+        Map <Item, Integer> tempMap = new HashMap<>();
+        tempMap.put(ModItems.speed_upgrade, ModConfig.power_options.item_decoder.speedUpgradeCostPerTick);
+        upgradeConstantPowerCosts = Collections.unmodifiableMap(tempMap);
+    }
     @Override
-    public int getAverageProcessesRate() {
-        return 0;
+    public Map<Item, Integer> getUpgradeCardConstantPowerCosts() {
+        return upgradeConstantPowerCosts;
+    }
+
+    //Process
+    private static final Map<Item, Integer> upgradeProcessPowerCosts;
+    static {
+        Map <Item, Integer> tempMap = new HashMap<>();
+        tempMap.put(ModItems.speed_upgrade, ModConfig.power_options.item_decoder.speedUpgradeCostPerProcess);
+        upgradeProcessPowerCosts = Collections.unmodifiableMap(tempMap);
+    }
+    @Override
+    public Map<Item, Integer> getUpgradeCardProcessPowerCosts() {
+        return upgradeProcessPowerCosts;
     }
 }
