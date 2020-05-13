@@ -1,5 +1,6 @@
 package com.rlapcs.radiotransfer.generic.multiblock;
 
+import com.rlapcs.radiotransfer.ModConfig;
 import com.rlapcs.radiotransfer.generic.capability.ITransferHandler;
 import com.rlapcs.radiotransfer.generic.multiblock.tileEntities.AbstractTileMultiblockNode;
 import com.rlapcs.radiotransfer.machines.controllers.rx_controller.TileRxController;
@@ -100,6 +101,7 @@ public class MultiblockRadioController {
                 sum += node.getPowerPerTick();
             }
         }
+        sum += ModConfig.power_options.radio.powerPerTick; //add radio cost
         return sum;
     }
     public boolean hasSufficientConstantPower(int ticksSinceLastUpdate) {
@@ -136,9 +138,6 @@ public class MultiblockRadioController {
 
         int extracted = powerSupply.extractEnergy(processPower, false);
         return extracted >= processPower;
-    }
-    public boolean useProcessPower(AbstractTileMultiblockNode node) {
-        return useProcessPower(node.getPowerPerProcess());
     }
 
     //~~~~~~~~~~~~~~~~~Powered State~~~~~~~~~~~~~~~~~~~~~~~~~~//

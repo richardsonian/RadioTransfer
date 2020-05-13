@@ -12,16 +12,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
 
 public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
     //~~~~~~~~~~~~~~~~~~Constants~~~~~~~~~~~~~~~~~~~~//
     public static final int MULTIBLOCK_UPDATE_TICKS = 20;
+    public static final int AVERAGE_PROCESS_CALC_TICKS = 40; //only needed in nodes which complete processes
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
     //~~~~~~~~~~~~~~Instance Variables~~~~~~~~~~~~~~~//
@@ -162,7 +160,13 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
     public abstract int getBasePowerPerProcess();
     public abstract Map<Item, Integer> getUpgradeCardProcessPowerCosts();
     public abstract Map<Item, Integer> getUpgradeCardQuantities();
-    public abstract int getAverageProcessesRate(); //return num processes in last 10 seconds
+    /**
+     * Return average processes per tick over last n ticks, or -1 if this node does not complete processes.
+     * n should reference AbstractTileMultiblockNode#AVERAGE_PROCESS_CALC_TICKS
+     * @return The process rate
+     */
+    public abstract double getAverageProcessesRate();
+
 
     //~~~~~~~~~~~~~~~~~~~~~~~Universal Calculations for Power Data~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     //- Move some of this to MultiblockPowerData object, so it can be calculated on call instead of sending over network?
@@ -172,8 +176,8 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
     public int getPowerPerProcess() {
         return getBasePowerPerProcess() + getProcessPowerUpgradeTotalCost();
     }
-    public int getAverageProcessPowerPerTick() {
-        return getPowerPerProcess() + getAverageProcessesRate();
+    public double getAverageProcessPowerPerTick() {
+        return getPowerPerProcess() * getAverageProcessesRate();
     }
     public int getConstantPowerUpgradeTotalCost() {
         int sum = 0;
@@ -190,6 +194,9 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
         return sum;
     }
     public Set<Item> getConstantPowerContributingUpgrades() {
+        //Return empty set if there is no entry present
+        if(getUpgradeCardQuantities() == null) return new HashSet<>();
+
         //Find all upgrade cards that do not have a quantity of 0
         Set<Item> presentUpgrades = getUpgradeCardQuantities().keySet();
         presentUpgrades.removeIf((k) -> getUpgradeCardQuantities().get(k) == 0);
@@ -199,6 +206,9 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
         return presentUpgrades;
     }
     public Set<Item> getProcessPowerContributingUpgrades() {
+        //Return empty set if there is no entry present
+        if(getUpgradeCardQuantities() == null) return new HashSet<>();
+
         //Find all upgrade cards that do not have a quantity of 0
         Set<Item> presentUpgrades = getUpgradeCardQuantities().keySet();
         presentUpgrades.removeIf((k) -> getUpgradeCardQuantities().get(k) == 0);
@@ -210,11 +220,16 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
     //~~~~~~~~~~~~~~~~~~~~~Power Using Methods~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     /**
      * Use power for one process
+     * If there is not enough power, calls MultiblockRadioController#setPowered(false) [see method doc for side effect]
      * @return Whether there was enough power for process or not
      */
     public boolean useProcessPower() {
-        int power = getPowerPerProcess();
-        //boolean wasSufficentPower = getController().
+        int needed = this.getPowerPerProcess();
+        if(controller.hasPowerForProcess(needed)) {
+            return controller.useProcessPower(needed); //extra check returning this val
+        }
+        //if not enough power for process
+        controller.setPowered(false);
         return false;
     }
 
