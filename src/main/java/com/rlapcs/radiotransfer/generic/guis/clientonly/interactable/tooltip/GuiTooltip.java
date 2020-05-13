@@ -1,11 +1,11 @@
-package com.rlapcs.radiotransfer.generic.guis.clientonly.interactable;
+package com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.tooltip;
 
+import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.AbstractGuiWithVariableSize;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateXY;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.DimensionWidthHeight;
 import org.lwjgl.input.Mouse;
 
 import java.awt.*;
-import java.util.ArrayList;
 
 public class GuiTooltip extends AbstractGuiWithVariableSize {
     private boolean isActive = false;
@@ -17,13 +17,13 @@ public class GuiTooltip extends AbstractGuiWithVariableSize {
 
     public void activate(ITooltipContent content) {
         this.content = content;
-        interpolatedSize = new DimensionWidthHeight(MINIMUM_SIZE, MINIMUM_SIZE);
         isActive = true;
     }
 
     public void deactivate() {
         isActive = false;
         this.content = null;
+        interpolatedSize = new DimensionWidthHeight(MINIMUM_SIZE, MINIMUM_SIZE);
     }
 
     @Override
@@ -38,7 +38,9 @@ public class GuiTooltip extends AbstractGuiWithVariableSize {
     }
 
     private void drawText() {
-        drawString(mc.fontRenderer, content.getFormattedContent(), pos.x + 3, pos.y + 3, Color.white.getRGB());
+        String[] lines = content.getFormattedContent().split("\n");
+        for (int i = 0; i < lines.length; i++)
+            drawString(mc.fontRenderer, lines[i], pos.x + 3, pos.y + i * 12 + 3, Color.white.getRGB());
     }
 
     private DimensionWidthHeight calculateTargetSize() {

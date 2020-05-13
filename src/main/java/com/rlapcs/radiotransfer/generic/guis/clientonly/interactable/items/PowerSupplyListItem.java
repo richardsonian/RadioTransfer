@@ -1,12 +1,9 @@
 package com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.items;
 
 import com.rlapcs.radiotransfer.ModConstants;
-import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.GuiTooltip;
-import com.rlapcs.radiotransfer.generic.guis.coordinate.Coordinate;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateUV;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateXY;
 import com.rlapcs.radiotransfer.generic.multiblock.MultiblockPowerUsageData;
-import com.rlapcs.radiotransfer.generic.tileEntities.AbstractTileMachine;
 import com.rlapcs.radiotransfer.machines.power_supply.GuiPowerSupply;
 import com.rlapcs.radiotransfer.machines.power_supply.TilePowerSupply;
 import net.minecraft.client.Minecraft;
@@ -16,7 +13,6 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
-import scala.collection.immutable.List;
 
 import java.awt.*;
 

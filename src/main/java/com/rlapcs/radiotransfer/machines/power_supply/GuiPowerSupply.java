@@ -3,23 +3,13 @@ package com.rlapcs.radiotransfer.machines.power_supply;
 import com.rlapcs.radiotransfer.RadioTransfer;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.AbstractGuiMachine;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.GuiPowerBar;
-import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.GuiTooltip;
-import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.lists.AbstractGuiList;
+import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.tooltip.GuiTooltip;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.lists.PowerSupplyList;
-import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.sliders.GuiDraggableSliderButton;
-import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateUV;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateXY;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.DimensionWidthHeight;
-import com.rlapcs.radiotransfer.generic.multiblock.MultiblockPowerUsageData;
 import com.rlapcs.radiotransfer.network.messages.toServer.MessageAddClientListener;
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.input.Mouse;
-
-import java.awt.*;
-import java.io.IOException;
 
 import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
 
