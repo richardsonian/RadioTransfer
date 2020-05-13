@@ -16,9 +16,9 @@ public class ModConfig {
     public static class PowerConfig {
         public Radio radio = new Radio();
         public static class Radio {
-            @Config.Comment("Base Constant Power Usage of Radio Block (FE/t)")
+            @Config.Comment("Constant Power Usage of Radio Block (FE/t)")
             @Config.RangeInt(min = 0, max = 1000)
-            public int basePowerPerTick = 10;
+            public int powerPerTick = 10;
         }
         public TXController tx_controller = new TXController();
         public static class TXController {
@@ -29,6 +29,38 @@ public class ModConfig {
             @Config.Comment("Base Power Used Each time a radio transmits a packet (FE)")
             @Config.RangeInt(min = 0, max = 1000)
             public int basePowerPerProcess = 2;
+
+            @Config.Comment("Encryption Card Cost Per Tick (additional FE/t per upgrade)")
+            @Config.RangeInt(min = 0, max = 1000)
+            public int encryptionCardCostPerTick = 0;
+
+            @Config.Comment("Encryption Card Cost Per Process (additional FE per upgrade)")
+            @Config.RangeInt(min = 0, max = 1000)
+            public int encryptionCardCostPerProcess = 2;
+
+            @Config.Comment("Stack Upgrade Cost Per Tick (additional FE/t per upgrade)")
+            @Config.RangeInt(min = 0, max = 1000)
+            public int stackUpgradeCostPerTick = 0;
+
+            @Config.Comment("Stack Upgrade Cost Per Process (additional FE per upgrade)")
+            @Config.RangeInt(min = 0, max = 1000)
+            public int stackUpgradeCostPerProcess = 2;
+
+            @Config.Comment("Stack Downgrade Cost Per Tick (additional FE/t per upgrade)")
+            @Config.RangeInt(min = 0, max = 1000)
+            public int stackDowngradeCostPerTick = 0;
+
+            @Config.Comment("Stack Downgrade Cost Per Process (additional FE per upgrade)")
+            @Config.RangeInt(min = 0, max = 1000)
+            public int stackDowngradeCostPerProcess = 2;
+
+            @Config.Comment("Speed Upgrade Cost Per Tick (additional FE/t per upgrade)")
+            @Config.RangeInt(min = 0, max = 1000)
+            public int speedUpgradeCostPerTick = 0;
+
+            @Config.Comment("Speed Upgrade Cost Per Process (additional FE per upgrade)")
+            @Config.RangeInt(min = 0, max = 1000)
+            public int speedUpgradeCostPerProcess = 2;
         }
         public RXController rx_controller = new RXController();
         public static class RXController {
@@ -39,6 +71,22 @@ public class ModConfig {
             @Config.Comment("Base Power Used Each time a radio receives a packet (FE)")
             @Config.RangeInt(min = 0, max = 1000)
             public int basePowerPerProcess = 2;
+
+            @Config.Comment("Encryption Card Cost Per Tick (additional FE/t per upgrade)")
+            @Config.RangeInt(min = 0, max = 1000)
+            public int encryptionCardCostPerTick = 0;
+
+            @Config.Comment("Encryption Card Cost Per Process (additional FE per upgrade)")
+            @Config.RangeInt(min = 0, max = 1000)
+            public int encryptionCardCostPerProcess = 2;
+
+            @Config.Comment("Filter Card Cost Per Tick (additional FE/t per upgrade)")
+            @Config.RangeInt(min = 0, max = 1000)
+            public int filterCardCostPerTick = 0;
+
+            @Config.Comment("Filter Card Cost Per Process (additional FE per upgrade)")
+            @Config.RangeInt(min = 0, max = 1000)
+            public int filterCardCostPerProcess = 2;
         }
         public ItemEncoder item_encoder = new ItemEncoder();
         public static class ItemEncoder {
@@ -49,6 +97,14 @@ public class ModConfig {
             @Config.Comment("Base Power Used Each time an item encoder processes an item (FE)")
             @Config.RangeInt(min = 0, max = 1000)
             public int basePowerPerProcess = 2;
+
+            @Config.Comment("Speed Upgrade Cost Per Tick (additional FE/t per upgrade)")
+            @Config.RangeInt(min = 0, max = 1000)
+            public int speedUpgradeCostPerTick = 0;
+
+            @Config.Comment("Speed Upgrade Cost Per Process (additional FE per upgrade)")
+            @Config.RangeInt(min = 0, max = 1000)
+            public int speedUpgradeCostPerProcess = 2;
         }
         public ItemDecoder item_decoder = new ItemDecoder();
         public static class ItemDecoder {
@@ -59,6 +115,14 @@ public class ModConfig {
             @Config.Comment("Base Power Used Each time an item decoder processes an item (FE)")
             @Config.RangeInt(min = 0, max = 1000)
             public int basePowerPerProcess = 2;
+
+            @Config.Comment("Speed Upgrade Cost Per Tick (additional FE/t per upgrade)")
+            @Config.RangeInt(min = 0, max = 1000)
+            public int speedUpgradeCostPerTick = 0;
+
+            @Config.Comment("Speed Upgrade Cost Per Process (additional FE per upgrade)")
+            @Config.RangeInt(min = 0, max = 1000)
+            public int speedUpgradeCostPerProcess = 2;
         }
     }
 }
