@@ -21,6 +21,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -131,17 +132,20 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
     }
 
     public void updateClientPowerBar() {
-        Debug.sendToAllPlayers(TextFormatting.GRAY + "Sending power bar to clients with power: " + energyStorage.getEnergyStored(), world);
-        //need to change power input
-        clientListeners.forEach((p) -> ModNetworkMessages.INSTANCE.sendToAll(new MessageUpdateClientTilePowerBar(this, energyStorage.getEnergyStored())));
+        if(!clientListeners.isEmpty()) {
+            Debug.sendToAllPlayers(TextFormatting.GRAY + "Sending power bar to clients with power: " + energyStorage.getEnergyStored(), world);
+            //need to change power input
+            clientListeners.forEach((p) -> ModNetworkMessages.INSTANCE.sendToAll(new MessageUpdateClientTilePowerBar(this, energyStorage.getEnergyStored())));
+        }
     }
     public void updateClientMultiblockPowerData() {
-        Debug.sendToAllPlayers(TextFormatting.GRAY + "Sending multiblock power update to clients", world);
-
-        //Tell controller to update data
-        this.getController().updatePowerUsageData();
-        //Send message
-        clientListeners.forEach((p) -> ModNetworkMessages.INSTANCE.sendToAll(new MessageUpdateClientTileMultiblockPowerData(this)));
+        if(registeredInMultiblock && !clientListeners.isEmpty()) {
+            Debug.sendToAllPlayers(TextFormatting.GRAY + "Sending multiblock power update to clients", world);
+            //Tell controller to update data
+            this.getController().updatePowerUsageData();
+            //Send message
+            clientListeners.forEach((p) -> ModNetworkMessages.INSTANCE.sendToAll(new MessageUpdateClientTileMultiblockPowerData(this)));
+        }
     }
 
     @Override
@@ -161,7 +165,11 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
         return ENERGY_CAPACITY;
     } //might have to fix this once implemented into config
 
-    // Multiblock node power stuff
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //~~~~~~~~~~~~~~~~~~~~~~PSU POWER USAGE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    // No intention for the PSU to require any power to run atm, but these fields are required as an AbstractTileMultiblockNode
+
     @Override
     public int getBasePowerPerTick() {
         return 0;
@@ -169,7 +177,7 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
 
     @Override
     public Map<Item, Integer> getUpgradeCardConstantPowerCosts() {
-        return null;
+        return Collections.emptyMap();
     }
 
     @Override
@@ -179,16 +187,16 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
 
     @Override
     public Map<Item, Integer> getUpgradeCardProcessPowerCosts() {
-        return null;
+        return Collections.emptyMap();
     }
 
     @Override
     public Map<Item, Integer> getUpgradeCardQuantities() {
-        return null;
+        return Collections.emptyMap();
     }
 
     @Override
-    public int getAverageProcessesRate() {
-        return 0;
+    public double getAverageProcessesRate() {
+        return -1; //does not do processes
     }
 }

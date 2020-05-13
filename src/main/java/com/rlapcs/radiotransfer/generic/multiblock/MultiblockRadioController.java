@@ -235,6 +235,9 @@ public class MultiblockRadioController {
         return decoders.get(type);
     }
 
+    public TileTxController getTxController() {return txController;}
+    public TileRxController getRxController() {return rxController;}
+
     /**
      * LIST MAY RETURN SOME NULLS
      * @return List of all nodes

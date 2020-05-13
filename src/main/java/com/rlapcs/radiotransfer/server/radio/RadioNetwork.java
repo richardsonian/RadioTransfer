@@ -125,6 +125,14 @@ public enum RadioNetwork {
         sendDebugMessage("Returning remainder: " + remainder + " items to " + sender);
         senderPacketQueue.add(remainder);
 
-        return ItemStack.areItemStacksEqual(toSend, remainder); //whether something was sent
+        boolean transferSuccessful = ItemStack.areItemStacksEqual(toSend, remainder); //whether something was sent
+
+        //Track processes + power for RX Controller in receiving radio
+        if(transferSuccessful) {
+            receiver.getRxController().incrementProcessesCompletedInCycle(); //Mark that a process was done
+            receiver.getRxController().useProcessPower(); //use power
+        }
+
+        return transferSuccessful;
     }
 }

@@ -2,20 +2,29 @@ package com.rlapcs.radiotransfer.machines.controllers.tx_controller;
 
 import com.rlapcs.radiotransfer.ModConfig;
 import com.rlapcs.radiotransfer.machines.controllers.abstract_controller.AbstractTileController;
+import com.rlapcs.radiotransfer.registries.ModItems;
 import com.rlapcs.radiotransfer.server.radio.TxMode;
 import com.rlapcs.radiotransfer.ModConstants;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 public class TileTxController extends AbstractTileController {
+    //~~~~~~~~~~~~~~~~~~~~~Constants~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+
+    //Slots and inventory
     public static final int STACK_UPGRADE_SLOT_INDEX = 1;
     public static final int SPEED_UPGRADE_SLOT_INDEX = 2;
 
     public static final int INVENTORY_SIZE = ABSTRACT_INVENTORY_SIZE + 2;
 
+    //~~~~~~~~~~~~~~~~Instance Variables~~~~~~~~~~~~~~~~~~~~~~~~~//
     private TxMode mode;
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
     public TileTxController() {
         super(INVENTORY_SIZE);
@@ -56,33 +65,79 @@ public class TileTxController extends AbstractTileController {
         return compound;
     }
 
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //~~~~~~~~~~~~~~~~~~~~~~~~POWER USAGE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+
+    //~~~~~~~~~~~~~~~~~~~~Base Power Values~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     @Override
     public int getBasePowerPerTick() {
         return ModConfig.power_options.tx_controller.basePowerPerTick;
     }
-
-    @Override
-    public Map<Item, Integer> getUpgradeCardConstantPowerCosts() {
-        return null;
-    }
-
     @Override
     public int getBasePowerPerProcess() {
-        return 0;
+        return ModConfig.power_options.tx_controller.basePowerPerTick;
     }
 
-    @Override
-    public Map<Item, Integer> getUpgradeCardProcessPowerCosts() {
-        return null;
-    }
-
+    //~~~~~~~~~~~~~~~~~~~Calculations~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     @Override
     public Map<Item, Integer> getUpgradeCardQuantities() {
-        return null;
+        Map<Item, Integer> out = new HashMap<>();
+        out.put(ModItems.encryption_card, itemStackHandler.getStackInSlot(ENCRYPTION_CARD_SLOT_INDEX).getCount());
+        out.put(ModItems.speed_upgrade, itemStackHandler.getStackInSlot(SPEED_UPGRADE_SLOT_INDEX).getCount());
+
+        //Since stack upgrade/downgrade share the same slot, we have to do some extra logic
+        ItemStack stackUpgrades = itemStackHandler.getStackInSlot(STACK_UPGRADE_SLOT_INDEX);
+        if(stackUpgrades.getItem() == ModItems.stack_upgrade) {
+            out.put(ModItems.stack_upgrade, stackUpgrades.getCount());
+            out.put(ModItems.stack_downgrade, 0);
+        }
+        else if(stackUpgrades.getItem() == ModItems.stack_upgrade) {
+            out.put(ModItems.stack_upgrade, 0);
+            out.put(ModItems.stack_downgrade, stackUpgrades.getCount());
+        }
+        else {
+            out.put(ModItems.stack_upgrade, 0);
+            out.put(ModItems.stack_downgrade, 0);
+        }
+
+        return out;
     }
 
+    //Average process rate in AbstractTileController
+
+    //~~~~~~~~~~~~~~~~~~~~~~Upgrade Costs~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //Constant
+    private static final Map<Item, Integer> upgradeConstantPowerCosts;
+    static {
+        Map <Item, Integer> tempMap = new HashMap<>();
+
+        tempMap.put(ModItems.encryption_card, ModConfig.power_options.tx_controller.encryptionCardCostPerTick);
+        tempMap.put(ModItems.speed_upgrade, ModConfig.power_options.tx_controller.speedUpgradeCostPerTick);
+        tempMap.put(ModItems.stack_upgrade, ModConfig.power_options.tx_controller.stackUpgradeCostPerTick);
+        tempMap.put(ModItems.stack_downgrade, ModConfig.power_options.tx_controller.stackDowngradeCostPerTick);
+
+        upgradeConstantPowerCosts = Collections.unmodifiableMap(tempMap);
+    }
     @Override
-    public int getAverageProcessesRate() {
-        return 0;
+    public Map<Item, Integer> getUpgradeCardConstantPowerCosts() {
+        return upgradeConstantPowerCosts;
+    }
+
+    //Process
+    private static final Map<Item, Integer> upgradeProcessPowerCosts;
+    static {
+        Map <Item, Integer> tempMap = new HashMap<>();
+
+        tempMap.put(ModItems.encryption_card, ModConfig.power_options.tx_controller.encryptionCardCostPerProcess);
+        tempMap.put(ModItems.speed_upgrade, ModConfig.power_options.tx_controller.speedUpgradeCostPerTick);
+        tempMap.put(ModItems.stack_upgrade, ModConfig.power_options.tx_controller.stackUpgradeCostPerProcess);
+        tempMap.put(ModItems.stack_downgrade, ModConfig.power_options.tx_controller.stackDowngradeCostPerProcess);
+
+        upgradeProcessPowerCosts = Collections.unmodifiableMap(tempMap);
+    }
+    @Override
+    public Map<Item, Integer> getUpgradeCardProcessPowerCosts() {
+        return upgradeProcessPowerCosts;
     }
 }

@@ -21,7 +21,11 @@ public class TileRadio extends AbstractTileMachineWithInventory { //power requir
 
     private void sendResources() {
         if(multiblock.canTransmit(TransferType.ITEM)) {
-            RadioNetwork.INSTANCE.sendItems(multiblock, 16, multiblock.getTransmitMode(TransferType.ITEM));
+            boolean success = RadioNetwork.INSTANCE.sendItems(multiblock, 16, multiblock.getTransmitMode(TransferType.ITEM));
+            if(success) {
+                multiblock.getTxController().incrementProcessesCompletedInCycle(); //for marking average process rate
+                multiblock.getTxController().useProcessPower();
+            }
         }
     }
 
