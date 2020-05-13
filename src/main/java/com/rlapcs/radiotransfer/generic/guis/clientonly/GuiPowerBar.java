@@ -1,12 +1,17 @@
 package com.rlapcs.radiotransfer.generic.guis.clientonly;
 
 import com.rlapcs.radiotransfer.ModConstants;
+import com.rlapcs.radiotransfer.RadioTransfer;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateXY;
 import com.rlapcs.radiotransfer.machines.power_supply.TilePowerSupply;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+
+import java.awt.*;
 
 import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
 
@@ -18,6 +23,8 @@ public class GuiPowerBar {
     private double prevStoredEnergy;
     private double interpolatedEnergyValue;
     private long tickAtLastUpdate;
+    private static final Color FULL = Color.decode("#458F52");
+    private static final Color EMPTY = Color.decode("#9D2736");
 
     public GuiPowerBar(CoordinateXY pos, TilePowerSupply tile, GuiScreen gui) {
         this.pos = pos;
@@ -40,25 +47,30 @@ public class GuiPowerBar {
 
         double difference = storedEnergy - prevStoredEnergy;
         double last = interpolatedEnergyValue;
-        interpolatedEnergyValue = prevStoredEnergy + difference / TilePowerSupply.POWER_BAR_CLIENT_UPDATE_TICKS * ticksSinceLastUpdate;
+        //interpolatedEnergyValue = prevStoredEnergy + difference / TilePowerSupply.POWER_BAR_CLIENT_UPDATE_TICKS * ticksSinceLastUpdate;
+        interpolatedEnergyValue += (storedEnergy - interpolatedEnergyValue) / (TilePowerSupply.POWER_BAR_CLIENT_UPDATE_TICKS * 3);
         double interpolation = last + (interpolatedEnergyValue - last) / 4;
         //sendDebugMessage("interp " + interpolatedEnergyValue + " last " + last + " res " + interpolation);
 
-        int barHeight = MathHelper.clamp((int) (71 * interpolation), 0, 71);
-        int green = 0x357F42;
-        int red = 0x8D1726;
+        int barHeight = MathHelper.clamp((int) (71 * interpolatedEnergyValue), 0, 71);
 
-        int r1 = green & 0x0000ff;
-        int g1 = green & 0x00ff00;
-        int b1 = green & 0xff0000;
-        int r2 = red & 0x0000ff;
-        int g2 = red & 0x00ff00;
-        int b2 = red & 0xff0000;
-
+        net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
+        RenderHelper.enableGUIStandardItemLighting();
         Minecraft.getMinecraft().getTextureManager().bindTexture(ModConstants.ICONS);
-        GlStateManager.color((float) (r1 + ((r2 - r1) * interpolation / 256)) / 256, (float) (g1 + ((g2 - g1) * interpolation / 256)) / 256, (float) (b1 + ((b2 - b1) * interpolation / 256)) / 256, 1.0F);
+        float[] rgb = interpolateColorsToRGB((float) interpolation);
+        GlStateManager.color(rgb[0], rgb[1], rgb[2], 1.0f);
         gui.drawTexturedModalRect(pos.x, pos.y + 73 - barHeight, 158, 73 - barHeight, 19, barHeight);
         if (barHeight > 0)
             gui.drawTexturedModalRect(pos.x, pos.y + 71 - barHeight, 158, 0, 19, 2);
+        RenderHelper.enableStandardItemLighting();
+    }
+
+    private float[] interpolateColorsToRGB(float interpolation) {
+        float[] rgb = new float[3];
+        float inverse = 1 - interpolation;
+        rgb[0] = (FULL.getRed() * interpolation + EMPTY.getRed() * inverse) / 255f;
+        rgb[1] = (FULL.getGreen() * interpolation + EMPTY.getGreen() * inverse) / 255f;
+        rgb[2] = (FULL.getBlue() * interpolation + EMPTY.getBlue() * inverse) / 255f;
+        return rgb;
     }
 }

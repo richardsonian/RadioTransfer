@@ -1,11 +1,13 @@
 package com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.items;
 
 import com.rlapcs.radiotransfer.ModConstants;
+import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.GuiTooltip;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.Coordinate;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateUV;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateXY;
 import com.rlapcs.radiotransfer.generic.multiblock.MultiblockPowerUsageData;
 import com.rlapcs.radiotransfer.generic.tileEntities.AbstractTileMachine;
+import com.rlapcs.radiotransfer.machines.power_supply.GuiPowerSupply;
 import com.rlapcs.radiotransfer.machines.power_supply.TilePowerSupply;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -15,6 +17,8 @@ import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 import scala.collection.immutable.List;
+
+import java.awt.*;
 
 public class PowerSupplyListItem extends AbstractGuiListItem {
     /* copied values from AbstractItemProcessorGuiListItem; should change */
@@ -36,19 +40,25 @@ public class PowerSupplyListItem extends AbstractGuiListItem {
         super.drawItem(mc, mouseX, mouseY, partialTicks, screen, renderer, index);
 
         //draw listItem texture
+        RenderHelper.disableStandardItemLighting();
+        RenderHelper.enableGUIStandardItemLighting();
         mc.getTextureManager().bindTexture(ModConstants.ICONS);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         screen.drawTexturedModalRect(this.x, this.y, getUV().u, getUV().v, this.width, this.height);
 
         //Render Item
         GL11.glScaled(ITEM_SCALE, ITEM_SCALE, ITEM_SCALE);
-        RenderHelper.disableStandardItemLighting();
-        RenderHelper.enableGUIStandardItemLighting();
         renderer.renderItemIntoGUI(this.getRenderItem(), (int)((this.x + ITEM_REL_POS.x) / ITEM_SCALE), (int)((this.y + ITEM_REL_POS.y) / ITEM_SCALE));
         GL11.glScaled(1 / ITEM_SCALE,1 / ITEM_SCALE,1 / ITEM_SCALE);
 
         //draw power usage
-        screen.drawString(mc.fontRenderer, "500 FE", this.x + POWER_TEXT_REL_POS.x, this.y + POWER_TEXT_REL_POS.y, 0xffffff);
+        screen.drawString(mc.fontRenderer, "500 FE", this.x + POWER_TEXT_REL_POS.x, this.y + POWER_TEXT_REL_POS.y, Color.white.getRGB());
+
+        if (this.hovered)
+            ((GuiPowerSupply) screen).getTooltip().activate(powerData);
+        else if (wasHovering)
+            ((GuiPowerSupply) screen).getTooltip().deactivate();
+
         RenderHelper.enableStandardItemLighting();
 
         wasClicking = flag;

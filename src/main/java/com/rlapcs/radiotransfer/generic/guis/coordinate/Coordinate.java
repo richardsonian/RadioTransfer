@@ -9,8 +9,19 @@ public abstract class Coordinate {
 
     public abstract Coordinate scale(int factor);
 
+    public Coordinate addTo(Coordinate coordinate) {
+        return new CoordinateXY(getDimension1() + coordinate.getDimension1(), getDimension2() + coordinate.getDimension2());
+    }
+
     @Override
     public String toString() {
-        return String.format("(%s:%d, %s:%d)", getDimension1Name(), getDimension1(), getDimension2Name(), getDimension2());
+        return String.format("(%s: %d, %s: %d)", getDimension1Name(), getDimension1(), getDimension2Name(), getDimension2());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Coordinate))
+            return false;
+        return ((Coordinate) obj).getDimension1() == getDimension1() && ((Coordinate) obj).getDimension2() == getDimension2();
     }
 }

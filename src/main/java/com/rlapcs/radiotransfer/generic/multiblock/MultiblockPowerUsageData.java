@@ -1,6 +1,7 @@
 package com.rlapcs.radiotransfer.generic.multiblock;
 
 import com.rlapcs.radiotransfer.ModConfig;
+import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.ITooltipContent;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.lists.IGuiListContent;
 import com.rlapcs.radiotransfer.generic.multiblock.tileEntities.AbstractTileMultiblockNode;
 import com.rlapcs.radiotransfer.registries.ModBlocks;
@@ -93,7 +94,7 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
     /**
      * Contains all the power usage data for one multiblock node
      */
-    public static class PowerUsageEntry implements INBTSerializable<NBTTagCompound>, Comparable<PowerUsageEntry> {
+    public static class PowerUsageEntry implements INBTSerializable<NBTTagCompound>, Comparable<PowerUsageEntry>, ITooltipContent {
         public Block block;
 
         public Instant lastUpdated;
@@ -226,6 +227,11 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
 
             //calculations
             totalPowerPerTick = effectivePowerPerTick + effectivePowerPerProcess;
+        }
+
+        @Override
+        public String getFormattedContent() {
+            return "test\nof\nthis\nidea, yay!";
         }
 
         @Override
