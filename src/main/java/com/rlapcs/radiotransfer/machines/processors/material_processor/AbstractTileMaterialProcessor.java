@@ -139,7 +139,7 @@ public abstract class AbstractTileMaterialProcessor<T extends IMaterialTransferH
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     @Override
     public boolean canDoProcess() {
-        return isRegisteredInMultiblock() && getController().isPowered();
+        return isRegisteredInMultiblock() /*&& getController().isPowered()*/; //causes null pointer exception on client (referencing controller)
     }
     @Override
     public void doProcess() {

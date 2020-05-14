@@ -4,6 +4,7 @@ import com.rlapcs.radiotransfer.ModConfig;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.lists.IGuiListContent;
 import com.rlapcs.radiotransfer.generic.multiblock.tileEntities.AbstractTileMultiblockNode;
 import com.rlapcs.radiotransfer.registries.ModBlocks;
+import com.rlapcs.radiotransfer.util.Debug;
 import com.rlapcs.radiotransfer.util.NBTUtils;
 import net.minecraft.block.Block;
 import net.minecraft.init.Items;
@@ -13,6 +14,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 
@@ -85,6 +87,8 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
         radio.block = ModBlocks.radio;
         radio.basePowerPerTick = ModConfig.power_options.radio.powerPerTick;
         radio.totalPowerPerTick = radio.basePowerPerTick;
+        radio.upgradeCardConstantCosts = new HashSet<>();
+        radio.upgradeCardProcessCosts = new HashSet<>();
 
         return radio;
     }
@@ -110,7 +114,9 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
 
         public double totalPowerPerTick;
 
-        public PowerUsageEntry(){}
+        public PowerUsageEntry(){
+            lastUpdated = Instant.now();
+        }
         public PowerUsageEntry(AbstractTileMultiblockNode te) {
             this.update(te);
         }
@@ -120,8 +126,8 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
         }
 
         public void update(AbstractTileMultiblockNode te) {
-           String blockname = TileEntity.getKey(te.getClass()).toString();
-           block = Block.getBlockFromName(blockname);
+            //get the block from the TE
+            block = te.getWorld().getBlockState(te.getPos()).getBlock();
 
             //Grab all the constant power values
             basePowerPerTick = te.getBasePowerPerTick();
@@ -149,6 +155,7 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
 
             nbt.setTag("lastUpdated", NBTUtils.serializeInstant(lastUpdated));
 
+            Debug.sendDebugMessage("Serializing Block " + block.getRegistryName().toString());
             nbt.setString("block", block.getRegistryName().toString());
             //Constant Power Data
             nbt.setInteger("powerPerTick", basePowerPerTick);
