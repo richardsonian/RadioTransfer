@@ -39,14 +39,14 @@ public abstract class AbstractItemProcessorGuiListItem extends AbstractGuiListIt
         super.drawItem(mc, mouseX, mouseY, partialTicks, screen, renderer, index);
 
         //draw listItem texture
+        RenderHelper.disableStandardItemLighting();
+        RenderHelper.enableGUIStandardItemLighting();
         mc.getTextureManager().bindTexture(ModConstants.ICONS);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         screen.drawTexturedModalRect(this.x, this.y, getUV().u, getUV().v, this.width, this.height);
 
         //Render Item
         GL11.glScaled(ITEM_SCALE, ITEM_SCALE, ITEM_SCALE);
-        RenderHelper.disableStandardItemLighting();
-        RenderHelper.enableGUIStandardItemLighting();
         renderer.renderItemAndEffectIntoGUI(mc.player, this.itemStack, (int)((this.x + ITEM_REL_POS.x) / ITEM_SCALE), (int)((this.y + ITEM_REL_POS.y) / ITEM_SCALE));
         GL11.glScaled(1 / ITEM_SCALE,1 / ITEM_SCALE,1 / ITEM_SCALE);
 

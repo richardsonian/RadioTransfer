@@ -29,6 +29,7 @@ public abstract class AbstractGuiListItem extends InteractiveGuiElement {
     protected int index;
     protected AbstractTileMachine tile;
 
+    protected boolean wasHovering;
     protected boolean hoveringTop;
     protected boolean hoveringBottom;
     protected boolean flag;
@@ -44,6 +45,7 @@ public abstract class AbstractGuiListItem extends InteractiveGuiElement {
 
     public void drawItem(Minecraft mc, int mouseX, int mouseY, float partialTicks, GuiScreen screen, RenderItem renderer, int index) {
         //Calculates hovered and clicking data
+        wasHovering = hovered;
         this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
         hoveringTop = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height / 2;
         hoveringBottom = mouseX >= this.x && mouseY >= this.y + this.height / 2 && mouseX < this.x + this.width && mouseY < this.y + this.height;

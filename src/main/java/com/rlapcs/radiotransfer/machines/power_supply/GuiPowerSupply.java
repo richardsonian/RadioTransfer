@@ -3,28 +3,20 @@ package com.rlapcs.radiotransfer.machines.power_supply;
 import com.rlapcs.radiotransfer.RadioTransfer;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.AbstractGuiMachine;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.GuiPowerBar;
-import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.lists.AbstractGuiList;
+import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.tooltip.GuiTooltip;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.lists.PowerSupplyList;
-import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.sliders.GuiDraggableSliderButton;
-import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateUV;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateXY;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.DimensionWidthHeight;
-import com.rlapcs.radiotransfer.generic.multiblock.MultiblockPowerUsageData;
 import com.rlapcs.radiotransfer.network.messages.toServer.MessageAddClientListener;
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.input.Mouse;
-
-import java.awt.*;
-import java.io.IOException;
 
 import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
 
 public class GuiPowerSupply extends AbstractGuiMachine<TilePowerSupply> {
     private GuiPowerBar powerBar;
     private PowerSupplyList list;
+    private GuiTooltip tooltip;
 
     private final CoordinateXY LIST_POS = new CoordinateXY(7, 24);
     private final CoordinateXY POWER_BAR_POS = new CoordinateXY(162, 25);
@@ -41,7 +33,7 @@ public class GuiPowerSupply extends AbstractGuiMachine<TilePowerSupply> {
         super.initGui();
         ModNetworkMessages.INSTANCE.sendToServer(new MessageAddClientListener(tileEntity, true));
         list = new PowerSupplyList(mc, this, tileEntity.getCachedPowerUsageData(), LIST_POS.x, LIST_POS.y, pos.x, pos.y, tileEntity);
-        powerBar = new GuiPowerBar(POWER_BAR_POS.addTo(pos), tileEntity, this);
+        powerBar = new GuiPowerBar((CoordinateXY) POWER_BAR_POS.addTo(pos), tileEntity, this);
         sendDebugMessage("init power gui");
     }
 
@@ -54,9 +46,9 @@ public class GuiPowerSupply extends AbstractGuiMachine<TilePowerSupply> {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
-
         list.drawList(mouseX, mouseY, partialTicks, mc.getRenderItem());
         powerBar.draw();
+        tooltip.draw();
     }
 
     @Override
@@ -64,5 +56,9 @@ public class GuiPowerSupply extends AbstractGuiMachine<TilePowerSupply> {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
         //String power = tileEntity.getDisplayEnergy() + "FE";
         //fontRenderer.drawString(power,  22,  30, Color.white.getRGB());
+    }
+
+    public GuiTooltip getTooltip() {
+        return tooltip;
     }
 }

@@ -12,6 +12,8 @@ import org.lwjgl.input.Mouse;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
+
 public abstract class AbstractGuiList {
     protected Minecraft mc;
     protected GuiScreen screen;
@@ -56,6 +58,7 @@ public abstract class AbstractGuiList {
 
         /* Render Items */
         if (listContent.size() > 0) {
+            sendDebugMessage("drawlisto");
             if (listContent.size() <= getNumItems()) {
                 //Debug.sendDebugMessage("less");
                 for (int i = 0; i < listContent.size(); i++) {
