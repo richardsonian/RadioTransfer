@@ -42,9 +42,13 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
     }
 
     public List<PowerUsageEntry> getSortedEntries() {
+        /*
         List<PowerUsageEntry> outList = new ArrayList<>(entries);
         outList.sort(null); //sort by natural ordering (see PowerUsageEntry#compareTo())
         return outList;
+         */
+        //Removing this feature temporarily
+        return new ArrayList<>(entries);
     }
 
     //For Server
