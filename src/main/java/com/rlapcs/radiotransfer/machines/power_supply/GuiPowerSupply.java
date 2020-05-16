@@ -10,6 +10,7 @@ import com.rlapcs.radiotransfer.generic.guis.coordinate.DimensionWidthHeight;
 import com.rlapcs.radiotransfer.network.messages.toServer.MessageAddClientListener;
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.input.Mouse;
 
 import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
 
@@ -26,6 +27,7 @@ public class GuiPowerSupply extends AbstractGuiMachine<TilePowerSupply> {
         super(tileEntity, container);
         size = new DimensionWidthHeight(188, 197);
         texture = new ResourceLocation(RadioTransfer.MODID, "textures/gui/power_supply.png");
+        tooltip = new GuiTooltip(new CoordinateXY(Mouse.getX(), Mouse.getY()), new DimensionWidthHeight(4, 4));
     }
 
     @Override
@@ -34,7 +36,7 @@ public class GuiPowerSupply extends AbstractGuiMachine<TilePowerSupply> {
         ModNetworkMessages.INSTANCE.sendToServer(new MessageAddClientListener(tileEntity, true));
         list = new PowerSupplyList(mc, this, tileEntity.getCachedPowerUsageData(), LIST_POS.x, LIST_POS.y, pos.x, pos.y, tileEntity);
         powerBar = new GuiPowerBar((CoordinateXY) POWER_BAR_POS.addTo(pos), tileEntity, this);
-        sendDebugMessage("init power gui");
+        //sendDebugMessage("init power gui");
     }
 
     @Override

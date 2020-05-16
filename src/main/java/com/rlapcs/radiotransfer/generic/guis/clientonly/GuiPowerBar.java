@@ -55,7 +55,7 @@ public class GuiPowerBar {
 
         int barHeight = MathHelper.clamp((int) ((size.height - 2) * interpolatedEnergyValue), 0, 71);
 
-        net.minecraft.client.renderer.RenderHelper.disableStandardItemLighting();
+        RenderHelper.disableStandardItemLighting();
         RenderHelper.enableGUIStandardItemLighting();
         Minecraft.getMinecraft().getTextureManager().bindTexture(ModConstants.ICONS);
         float[] rgb = interpolateColorsToRGB((float) interpolation);
@@ -67,7 +67,7 @@ public class GuiPowerBar {
 
         wasHovering = isHovering;
         isHovering = Mouse.getX() >= pos.x && Mouse.getY() >= pos.y && Mouse.getX() < pos.x + size.width && Mouse.getY() < pos.y + size.height;
-        if (isHovering)
+        if (isHovering && !wasHovering)
             ((GuiPowerSupply) gui).getTooltip().activate(new TooltipContent(String.format("%d / %d FE", tile.getDisplayEnergy(), tile.getMaxEnergy())));
         else if (wasHovering)
             ((GuiPowerSupply) gui).getTooltip().deactivate();

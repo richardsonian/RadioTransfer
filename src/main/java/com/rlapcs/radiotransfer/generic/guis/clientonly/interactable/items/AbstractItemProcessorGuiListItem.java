@@ -18,7 +18,7 @@ import org.lwjgl.opengl.GL11;
 public abstract class AbstractItemProcessorGuiListItem extends AbstractGuiListItem {
     //these variables are static, as they are the same in all Item Processor GUIs (save memory)
     public static final CoordinateUV UV = new CoordinateUV(0,0); //has getter method to be accessed by superclass if needed
-    public static final CoordinateXY DIMS = new CoordinateXY(66, 15);
+    public static final CoordinateXY DIMS = new CoordinateXY(59, 15);
     public static final CoordinateXY ITEM_REL_POS = new CoordinateXY(3, 2);
     public static final double ITEM_SCALE = .6875;
     public static final CoordinateXY ITEM_QUANTITY_REL_POS = new CoordinateXY(15,4);

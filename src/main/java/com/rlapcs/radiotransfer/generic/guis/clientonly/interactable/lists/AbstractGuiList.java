@@ -58,7 +58,7 @@ public abstract class AbstractGuiList {
 
         /* Render Items */
         if (listContent.size() > 0) {
-            sendDebugMessage("drawlisto");
+            //sendDebugMessage("drawlisto");
             if (listContent.size() <= getNumItems()) {
                 //Debug.sendDebugMessage("less");
                 for (int i = 0; i < listContent.size(); i++) {

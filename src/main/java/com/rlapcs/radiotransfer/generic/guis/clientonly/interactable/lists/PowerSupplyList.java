@@ -13,7 +13,7 @@ import net.minecraft.client.gui.GuiScreen;
 import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
 
 public class PowerSupplyList extends AbstractGuiList {
-    public static final CoordinateXY BAR_REL_COORDS = new CoordinateXY(59, -3); //values copied from processor, tbd
+    public static final CoordinateXY BAR_REL_COORDS = new CoordinateXY(70, -3); //values copied from processor, tbd
     public static final int NUM_ITEMS = 4;//values copied from processor, tbd
     public static final int LIST_ITEM_SPACING = 3;//values copied from processor, tbd
 
@@ -26,7 +26,7 @@ public class PowerSupplyList extends AbstractGuiList {
 
     @Override
     protected void updateListItem(int listIndex, int contentIndex) {
-        sendDebugMessage("updateListItem");
+        //sendDebugMessage("updateListItem");
         MultiblockPowerUsageData.PowerUsageEntry content = ((MultiblockPowerUsageData) listContent).getSortedEntries().get(contentIndex);
         ((PowerSupplyListItem) listItems.get(listIndex)).setPowerData(content);
     }

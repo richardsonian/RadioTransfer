@@ -7,6 +7,8 @@ import org.lwjgl.input.Mouse;
 
 import java.awt.*;
 
+import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
+
 public class GuiTooltip extends AbstractGuiWithVariableSize {
     private boolean isActive = false;
     private ITooltipContent content;
@@ -16,11 +18,13 @@ public class GuiTooltip extends AbstractGuiWithVariableSize {
     }
 
     public void activate(ITooltipContent content) {
+        sendDebugMessage("isworking");
         this.content = content;
         isActive = true;
     }
 
     public void deactivate() {
+        sendDebugMessage("deactivate");
         isActive = false;
         this.content = null;
         interpolatedSize = new DimensionWidthHeight(MINIMUM_SIZE, MINIMUM_SIZE);
@@ -30,6 +34,7 @@ public class GuiTooltip extends AbstractGuiWithVariableSize {
     public void draw() {
         if (isActive) {
             targetSize = calculateTargetSize();
+            sendDebugMessage("is active target size: " + targetSize);
             pos = new CoordinateXY(Mouse.getX(), Mouse.getY());
             super.draw();
             if (isAtTargetSize)

@@ -14,6 +14,11 @@ public class CoordinateXY extends Coordinate{
     }
 
     @Override
+    public Coordinate addTo(Coordinate coordinate) {
+        return new CoordinateXY(x + coordinate.getDimension1(), y + coordinate.getDimension2());
+    }
+
+    @Override
     public int getDimension1() {
         return x;
     }

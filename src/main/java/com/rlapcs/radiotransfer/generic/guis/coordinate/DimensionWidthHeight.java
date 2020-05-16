@@ -14,6 +14,11 @@ public class DimensionWidthHeight extends Coordinate {
     }
 
     @Override
+    public Coordinate addTo(Coordinate coordinate) {
+        return new DimensionWidthHeight(width + coordinate.getDimension1(), height + coordinate.getDimension2());
+    }
+
+    @Override
     public int getDimension1() {
         return width;
     }

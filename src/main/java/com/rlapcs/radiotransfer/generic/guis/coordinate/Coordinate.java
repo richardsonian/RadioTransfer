@@ -9,9 +9,7 @@ public abstract class Coordinate {
 
     public abstract Coordinate scale(int factor);
 
-    public Coordinate addTo(Coordinate coordinate) {
-        return new CoordinateXY(getDimension1() + coordinate.getDimension1(), getDimension2() + coordinate.getDimension2());
-    }
+    public abstract Coordinate addTo(Coordinate coordinate);
 
     @Override
     public String toString() {

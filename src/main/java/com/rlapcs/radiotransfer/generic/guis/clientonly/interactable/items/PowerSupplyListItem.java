@@ -16,10 +16,12 @@ import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 
+import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
+
 public class PowerSupplyListItem extends AbstractGuiListItem {
     /* copied values from AbstractItemProcessorGuiListItem; should change */
-    public static final CoordinateUV UV = new CoordinateUV(0,0); //has getter method to be accessed by superclass if needed
-    public static final CoordinateXY DIMS = new CoordinateXY(66, 15);
+    public static final CoordinateUV UV = new CoordinateUV(0,30); //has getter method to be accessed by superclass if needed
+    public static final CoordinateXY DIMS = new CoordinateXY(70, 15);
     public static final CoordinateXY ITEM_REL_POS = new CoordinateXY(3, 2);
     public static final double ITEM_SCALE = .6875;
     public static final CoordinateXY POWER_TEXT_REL_POS = new CoordinateXY(15, 4);
@@ -48,8 +50,9 @@ public class PowerSupplyListItem extends AbstractGuiListItem {
         GL11.glScaled(1 / ITEM_SCALE,1 / ITEM_SCALE,1 / ITEM_SCALE);
 
         //draw power usage
-        screen.drawString(mc.fontRenderer, "500 FE", this.x + POWER_TEXT_REL_POS.x, this.y + POWER_TEXT_REL_POS.y, Color.white.getRGB());
+        screen.drawString(mc.fontRenderer, powerData.totalPowerPerTick + " FE/t", this.x + POWER_TEXT_REL_POS.x, this.y + POWER_TEXT_REL_POS.y, Color.white.getRGB());
 
+        //sendDebugMessage("hovering: " + hovered);
         if (this.hovered)
             ((GuiPowerSupply) screen).getTooltip().activate(powerData);
         else if (wasHovering)
