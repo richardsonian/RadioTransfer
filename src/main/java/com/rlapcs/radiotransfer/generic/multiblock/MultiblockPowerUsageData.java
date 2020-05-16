@@ -224,7 +224,7 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
                 upgradeCardConstantCosts = new HashSet<>();
                 NBTTagList upgradeCardConstantCostsTag = nbt.getTagList("upgradeCardConstantCosts", Constants.NBT.TAG_COMPOUND);
                 for (int i = 0; i < upgradeCardConstantCostsTag.tagCount(); i++) {
-                    upgradeCardProcessCosts.add(new UpgradeCardPowerEntry(upgradeCardConstantCostsTag.getCompoundTagAt(i))); //inefficient?
+                    upgradeCardConstantCosts.add(new UpgradeCardPowerEntry(upgradeCardConstantCostsTag.getCompoundTagAt(i))); //inefficient?
                 }
             }
             //Upgrade Card Process Costs
