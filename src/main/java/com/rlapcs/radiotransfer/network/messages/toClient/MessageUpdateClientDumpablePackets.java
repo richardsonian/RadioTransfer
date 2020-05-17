@@ -73,11 +73,13 @@ public class MessageUpdateClientDumpablePackets implements IMessage {
                         AbstractTileMaterialProcessor tile = (AbstractTileMaterialProcessor) te;
                         tile.setDumpableData(message.data);
                         //debug
+                        /*
                         player.sendMessage(new TextComponentString(
                                 TextFormatting.LIGHT_PURPLE + "Updated dumpable data for " + TextFormatting.RESET + te));
                         player.sendMessage(new TextComponentString(
                                 TextFormatting.GRAY + Arrays.toString(message.data)
                         ));
+                        */
                     }
                 }
                 else {

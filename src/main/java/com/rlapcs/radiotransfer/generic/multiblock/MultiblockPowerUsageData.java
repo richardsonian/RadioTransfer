@@ -160,7 +160,7 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
 
             nbt.setTag("lastUpdated", NBTUtils.serializeInstant(lastUpdated));
 
-            Debug.sendDebugMessage("Serializing Block " + block.getRegistryName().toString());
+            //Debug.sendDebugMessage("Serializing Block " + block.getRegistryName().toString());
             nbt.setString("block", block.getRegistryName().toString());
             //Constant Power Data
             nbt.setInteger("powerPerTick", basePowerPerTick);

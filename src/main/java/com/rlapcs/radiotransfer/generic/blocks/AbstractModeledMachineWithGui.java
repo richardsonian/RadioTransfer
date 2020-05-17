@@ -27,7 +27,7 @@ public abstract class AbstractModeledMachineWithGui extends AbstractModeledMachi
         if (!tileEntityClass.isInstance(te))
             return false;
 
-        sendDebugMessage("blockactivated: " + tileEntityClass.getName());
+       //sendDebugMessage("blockactivated: " + tileEntityClass.getName());
         playerIn.openGui(RadioTransfer.instance, ModGuis.getGuiIDFromTileEntityClass(tileEntityClass), worldIn, pos.getX(), pos.getY(), pos.getZ());
         //Debug.sendToAllPlayers("Block opening GUI ID: " + ModGuis.getGuiIDFromTileEntityClass(tileEntityClass), worldIn);
         return true;

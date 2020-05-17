@@ -66,7 +66,7 @@ public class MessageUpdateClientTileMultiblockPowerData implements IMessage {
                         tile.getCachedPowerUsageData().deserializeNBT(message.powerDataNBT);
 
                         //debug
-                        player.sendMessage(new TextComponentString(TextFormatting.YELLOW + "Updated client power data for " + TextFormatting.RESET + tile));
+                        //player.sendMessage(new TextComponentString(TextFormatting.YELLOW + "Updated client power data for " + TextFormatting.RESET + tile));
                     }
                 }
             }

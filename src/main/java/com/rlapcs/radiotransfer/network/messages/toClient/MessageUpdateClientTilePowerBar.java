@@ -62,7 +62,7 @@ public class MessageUpdateClientTilePowerBar implements IMessage {
                         tile.setDisplayEnergy(message.energy);
 
                         //debug
-                        player.sendMessage(new TextComponentString(TextFormatting.BLUE + "[" + tile.getDisplayEnergy() + "FE]" + "Updated client power bar for" + TextFormatting.RESET + tile));
+                       //player.sendMessage(new TextComponentString(TextFormatting.BLUE + "[" + tile.getDisplayEnergy() + "FE]" + "Updated client power bar for" + TextFormatting.RESET + tile));
                     }
                 }
             }

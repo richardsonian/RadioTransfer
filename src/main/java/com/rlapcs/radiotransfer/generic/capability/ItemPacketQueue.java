@@ -208,7 +208,7 @@ public class ItemPacketQueue implements IMaterialTransferHandler<ItemStack, Item
             if (ItemHandlerHelper.canItemStacksStack(b.item, staq)) {
                 int count = MathHelper.clamp(staq.getCount(), 0, maxAmount);
                 int numToAdd = MathHelper.clamp(count, 0, MAX_QUANTITY - b.quantity);
-                sendDebugMessage("Adding " + numToAdd + " of " + staq);
+                //sendDebugMessage("Adding " + numToAdd + " of " + staq);
                 b.quantity += numToAdd;
                 staq.shrink(numToAdd);
                 this.onContentsChanged();
@@ -245,7 +245,7 @@ public class ItemPacketQueue implements IMaterialTransferHandler<ItemStack, Item
 
     @Override
     public void onContentsChanged() {
-        sendDebugMessage(this.toString());
+        //sendDebugMessage(this.toString());
         //sendDebugMessage("isEmpty?: " + this.isEmpty());
     } //should be overridden to mark tileEntity dirty
 

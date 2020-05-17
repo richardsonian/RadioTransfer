@@ -14,15 +14,15 @@ public abstract class AbstractGuiMaterialProcessor<T extends AbstractTileMateria
     @Override
     public void initGui() {
         super.initGui();
-        sendChatMessage("Gui opened.");
-        sendChatMessage("Client registered? " + tileEntity.isRegisteredInMultiblock());
+        //sendChatMessage("Gui opened.");
+        //sendChatMessage("Client registered? " + tileEntity.isRegisteredInMultiblock());
         ModNetworkMessages.INSTANCE.sendToServer(new MessageAddClientListener(tileEntity, true));
     }
 
     @Override
     public void onGuiClosed() {
         super.onGuiClosed();
-        sendChatMessage("Gui closed.");
+        //sendChatMessage("Gui closed.");
         ModNetworkMessages.INSTANCE.sendToServer(new MessageAddClientListener(tileEntity, false));
     }
 }

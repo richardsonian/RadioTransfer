@@ -66,8 +66,11 @@ public class MessageUpdateClientPacketQueue implements IMessage {
                         tile.getHandler().deserializeNBT(message.packetNbt);
 
                         //debug
+                        /*
                         player.sendMessage(new TextComponentString(
                                 TextFormatting.LIGHT_PURPLE + "Updated packet queue for " + TextFormatting.RESET + te));
+
+                         */
                     }
                 }
                 else {
