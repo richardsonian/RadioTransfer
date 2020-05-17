@@ -12,12 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MachinePowerHandler implements IEnergyStorage, INBTSerializable<NBTTagCompound> {
-    //init values
-    private AbstractTileMachine owner;
-    private int maxEnergy;
-
-    //data
-    private int energyStored;
+    //instance vars
+    protected AbstractTileMachine owner;
+    protected int maxEnergy;
+    protected int energyStored;
 
 
     public MachinePowerHandler(int startEnergy, int maxEnergy, AbstractTileMachine owner) {
@@ -29,20 +27,27 @@ public class MachinePowerHandler implements IEnergyStorage, INBTSerializable<NBT
         this(0, maxEnergy, owner);
     }
 
-
     @Override
     public NBTTagCompound serializeNBT() {
         NBTTagCompound nbt = new NBTTagCompound();
         nbt.setInteger("energy", energyStored);
+        nbt.setInteger("maxEnergy", maxEnergy);
         return nbt;
     }
 
     @Override
     public void deserializeNBT(NBTTagCompound nbt) {
+        boolean flag = false;
         if(nbt.hasKey("energy")) {
             energyStored = nbt.getInteger("energy");
-            onContentsChanged();
+            flag = true;
         }
+        if(nbt.hasKey("maxEnergy")) {
+            maxEnergy = nbt.getInteger("maxEnergy");
+            flag = true;
+        }
+        if(flag)
+            onContentsChanged();
     }
 
     /**
@@ -108,7 +113,7 @@ public class MachinePowerHandler implements IEnergyStorage, INBTSerializable<NBT
 
     /**
      * Returns if this storage can have energy extracted.
-     * If this is false, then any calls to extractEnergy will return 0.
+     * If this is false, then any calls ever to extractEnergy will return 0.
      */
     @Override
     public boolean canExtract() {
@@ -117,7 +122,7 @@ public class MachinePowerHandler implements IEnergyStorage, INBTSerializable<NBT
 
     /**
      * Used to determine if this storage can receive energy.
-     * If this is false, then any calls to receiveEnergy will return 0.
+     * If this is false, then any calls ever to receiveEnergy will return 0.
      */
     @Override
     public boolean canReceive() {
