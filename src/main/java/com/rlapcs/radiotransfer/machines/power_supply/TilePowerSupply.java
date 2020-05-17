@@ -27,16 +27,19 @@ import java.util.Map;
 import java.util.Set;
 
 public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory implements ITileClientUpdater, ITilePowerBarProvider {
+    //~~~~~~~~~~~~~~~~~~~~~~~CONSTANTS~~~~~~~~~~~~~~~~~~~~~~~~~//
     public static final int INVENTORY_SIZE = 1;
-    public static final int ENERGY_CAPACITY = 10000; //FE
-    public static final int MAX_ENERGY_TRANSFER = 100; //FE/t
-
     public static final int POWER_ITEM_INDEX = 0;
 
     public static final int POWER_ITEM_UPDATE_TICKS = 20;
     public static final int POWER_BAR_CLIENT_UPDATE_TICKS = 10;
     public static final int MULTIBLOCK_POWER_DATA_CLIENT_UPDATE_TICKS = 20;
 
+    //move to config
+    public static final int ENERGY_CAPACITY = 10000; //FE
+    public static final int MAX_ENERGY_TRANSFER = 100; //FE/t
+
+    //~~~~~~~~~~~~~~~~~~INSTANCE VARS~~~~~~~~~~~~~~~~~~~~~~~~~~//
     //for client
     protected int displayEnergy;
     protected MultiblockPowerUsageData cachedPowerUsageData;
@@ -44,21 +47,24 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
     //for server
     protected MachinePowerHandler energyStorage;
     protected Set<EntityPlayerMP> clientListeners;
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
     public TilePowerSupply() {
         super(INVENTORY_SIZE);
 
-        upgradeSlotWhitelists.put(POWER_ITEM_INDEX, ModConstants.UpgradeCards.POWER_ITEM_WHITELIST); //"upgrade card" lol
-
-        energyStorage = new MachinePowerHandler(ENERGY_CAPACITY, MAX_ENERGY_TRANSFER, this);
+        //server
         clientListeners = new HashSet<>();
-        //energyStorage.receiveEnergy(5000, false); //start with some energy for debug
+        upgradeSlotWhitelists.put(POWER_ITEM_INDEX, ModConstants.UpgradeCards.POWER_ITEM_WHITELIST); //"upgrade card" lol
+        energyStorage = new MachinePowerHandler(ENERGY_CAPACITY, MAX_ENERGY_TRANSFER, this);
 
         //client
         displayEnergy = 0;
         cachedPowerUsageData = new MultiblockPowerUsageData();
     }
 
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //~~~~~~~~~~~~~~~~~~~~~~~~POWER CAPABILITY~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
         if(capability == CapabilityEnergy.ENERGY) {
@@ -93,39 +99,9 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
         }
     }
 
-    @Override
-    public void update() {
-        super.update();
-
-        if(!world.isRemote) { //server side updates
-            if (ticksSinceCreation % POWER_BAR_CLIENT_UPDATE_TICKS == 0) {
-                updateClientPowerBar();
-            }
-            if (ticksSinceCreation % MULTIBLOCK_POWER_DATA_CLIENT_UPDATE_TICKS == 0) {
-                updateClientMultiblockPowerData();
-            }
-            if (ticksSinceCreation % POWER_ITEM_UPDATE_TICKS == 0) {
-                getEnergyFromPowerItem(POWER_ITEM_UPDATE_TICKS);
-            }
-        }
-        else { //client side
-        }
-    }
-    @Override
-    public void readFromNBT(NBTTagCompound compound) {
-        super.readFromNBT(compound);
-        if(compound.hasKey("energyStorage")) {
-            energyStorage.deserializeNBT(compound.getCompoundTag("energyStorage"));
-        }
-    }
-
-    @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-        super.writeToNBT(compound);
-        compound.setTag("energyStorage", energyStorage.serializeNBT());
-        return compound;
-    }
-
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~CLIENT UPDATES~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     @Override
     public Set<EntityPlayerMP> getClientListeners() {
         return clientListeners;
@@ -133,14 +109,14 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
 
     public void updateClientPowerBar() {
         if(!clientListeners.isEmpty()) {
-            Debug.sendToAllPlayers(TextFormatting.GRAY + "Sending power bar to clients with power: " + energyStorage.getEnergyStored(), world);
+            //Debug.sendToAllPlayers(TextFormatting.GRAY + "Sending power bar to clients with power: " + energyStorage.getEnergyStored(), world);
             //need to change power input
             clientListeners.forEach((p) -> ModNetworkMessages.INSTANCE.sendToAll(new MessageUpdateClientTilePowerBar(this, energyStorage.getEnergyStored())));
         }
     }
     public void updateClientMultiblockPowerData() {
         if(registeredInMultiblock && !clientListeners.isEmpty()) {
-            Debug.sendToAllPlayers(TextFormatting.GRAY + "Sending multiblock power update to clients", world);
+            //Debug.sendToAllPlayers(TextFormatting.GRAY + "Sending multiblock power update to clients", world);
             //Tell controller to update data
             this.getController().updatePowerUsageData();
             //Send message
@@ -164,7 +140,41 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
     public int getMaxEnergy() {
         return ENERGY_CAPACITY;
     } //might have to fix this once implemented into config
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //~~~~~~~~~~~~~~~~~~~~~~~~TE UPDATE / DATA~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    @Override
+    public void readFromNBT(NBTTagCompound compound) {
+        super.readFromNBT(compound);
+        if(compound.hasKey("energyStorage")) {
+            energyStorage.deserializeNBT(compound.getCompoundTag("energyStorage"));
+        }
+    }
 
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+        super.writeToNBT(compound);
+        compound.setTag("energyStorage", energyStorage.serializeNBT());
+        return compound;
+    }
+    @Override
+    public void update() {
+        super.update();
+
+        if(!world.isRemote) { //server side updates
+            if (ticksSinceCreation % POWER_BAR_CLIENT_UPDATE_TICKS == 0) {
+                updateClientPowerBar();
+            }
+            if (ticksSinceCreation % MULTIBLOCK_POWER_DATA_CLIENT_UPDATE_TICKS == 0) {
+                updateClientMultiblockPowerData();
+            }
+            if (ticksSinceCreation % POWER_ITEM_UPDATE_TICKS == 0) {
+                getEnergyFromPowerItem(POWER_ITEM_UPDATE_TICKS);
+            }
+        }
+        else { //client side
+        }
+    }
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     //~~~~~~~~~~~~~~~~~~~~~~PSU POWER USAGE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//

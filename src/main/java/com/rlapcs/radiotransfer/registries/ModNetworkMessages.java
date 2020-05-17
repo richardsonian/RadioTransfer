@@ -23,6 +23,7 @@ public class ModNetworkMessages {
         INSTANCE.registerMessage(MessageDumpItemFromQueue.Handler.class, MessageDumpItemFromQueue.class, nextID(), Side.SERVER);
         INSTANCE.registerMessage(MessageUpdateClientTilePowerBar.Handler.class, MessageUpdateClientTilePowerBar.class, nextID(), Side.CLIENT);
         INSTANCE.registerMessage(MessageUpdateClientTileMultiblockPowerData.Handler.class, MessageUpdateClientTileMultiblockPowerData.class, nextID(), Side.CLIENT);
+        INSTANCE.registerMessage(MessageUpdateClientTileMultiblockNodePowered.Handler.class, MessageUpdateClientTileMultiblockNodePowered.class, nextID(), Side.CLIENT);
     }
 
     private static int packetId = 0;
