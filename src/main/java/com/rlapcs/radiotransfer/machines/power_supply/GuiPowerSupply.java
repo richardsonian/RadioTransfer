@@ -12,6 +12,8 @@ import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Mouse;
 
+import java.awt.*;
+
 import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
 
 public class GuiPowerSupply extends AbstractGuiMachine<TilePowerSupply> {
@@ -56,8 +58,8 @@ public class GuiPowerSupply extends AbstractGuiMachine<TilePowerSupply> {
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-        //String power = tileEntity.getDisplayEnergy() + "FE";
-        //fontRenderer.drawString(power,  22,  30, Color.white.getRGB());
+        String power = String.format("%d/%dFE", tileEntity.getDisplayEnergy(), tileEntity.getMaxEnergy());
+        fontRenderer.drawString(power,  150,  30, Color.white.getRGB());
     }
 
     public GuiTooltip getTooltip() {
