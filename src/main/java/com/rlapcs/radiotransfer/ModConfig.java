@@ -14,6 +14,12 @@ public class ModConfig {
 
     public static PowerConfig power_options = new PowerConfig();
     public static class PowerConfig {
+        public PowerSupply power_supply = new PowerSupply();
+        public static class PowerSupply {
+            @Config.Comment("Constant Power Usage of Radio Block (FE/t)")
+            @Config.RangeInt(min = 100, max = 1000000)
+            public int energyCapacity = 10000;
+        }
         public Radio radio = new Radio();
         public static class Radio {
             @Config.Comment("Constant Power Usage of Radio Block (FE/t)")

@@ -35,16 +35,13 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
     public static final int POWER_BAR_CLIENT_UPDATE_TICKS = 10;
     public static final int MULTIBLOCK_POWER_DATA_CLIENT_UPDATE_TICKS = 20;
 
-    //move to config
-    public static final int ENERGY_CAPACITY = 10000; //FE
-
     //~~~~~~~~~~~~~~~~~~INSTANCE VARS~~~~~~~~~~~~~~~~~~~~~~~~~~//
     //for client
     protected int displayEnergy;
     protected MultiblockPowerUsageData cachedPowerUsageData;
 
     //for server
-    protected MachinePowerHandler energyStorage;
+    protected PowerSupplyPowerHandler energyStorage;
     protected Set<EntityPlayerMP> clientListeners;
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
@@ -54,7 +51,7 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
         //server
         clientListeners = new HashSet<>();
         upgradeSlotWhitelists.put(POWER_ITEM_INDEX, ModConstants.UpgradeCards.POWER_ITEM_WHITELIST); //"upgrade card" lol
-        energyStorage = new MachinePowerHandler(ENERGY_CAPACITY, this);
+        energyStorage = new PowerSupplyPowerHandler(this);
 
         //client
         displayEnergy = 0;
@@ -66,7 +63,8 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     @Override
     public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-        if(capability == CapabilityEnergy.ENERGY) {
+        EnumFacing powerSide = world.getBlockState(pos).getValue(BlockPowerSupply.FACING).getOpposite(); //Get the side of the model that cables should connect to
+        if(capability == CapabilityEnergy.ENERGY && facing == powerSide) {
             return true;
         }
         return super.hasCapability(capability, facing);
@@ -74,14 +72,11 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
 
     @Override
     public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-        if(capability == CapabilityEnergy.ENERGY) {
+        EnumFacing powerSide = world.getBlockState(pos).getValue(BlockPowerSupply.FACING).getOpposite(); //Get the side of the model that cables should connect to
+        if(capability == CapabilityEnergy.ENERGY && facing == powerSide) {
             return CapabilityEnergy.ENERGY.cast(energyStorage);
         }
         return super.getCapability(capability, facing);
-    }
-
-    public int extractEnergy(int amount, boolean simulate) {
-        return energyStorage.extractEnergy(amount, simulate);
     }
 
     protected void getEnergyFromPowerItem(int ticksSinceLastUpdate) {
@@ -89,13 +84,18 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
         if(powerItem != null && !powerItem.isEmpty()) {
             if(powerItem.hasCapability(CapabilityEnergy.ENERGY, null)) {
                 IEnergyStorage itemEnergyStorage = powerItem.getCapability(CapabilityEnergy.ENERGY, null);
-                if(itemEnergyStorage.canExtract() && energyStorage.canReceive()) {
+                if(itemEnergyStorage.canExtract() && energyStorage.canReceive()) { //can use PSU energy storage capability methods here, b/c receiving
                     int space = energyStorage.getMaxEnergyStored() - energyStorage.getEnergyStored();
                     int extracted = itemEnergyStorage.extractEnergy(space, false);
                     energyStorage.receiveEnergy(extracted, false);
                 }
             }
         }
+    }
+
+    //For multiblock power usage
+    public PowerSupplyPowerHandler getEnergyStorage() {
+        return energyStorage;
     }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
@@ -136,9 +136,14 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
         return cachedPowerUsageData;
     }
     @Override
-    public int getMaxEnergy() {
-        return ENERGY_CAPACITY;
-    } //might have to fix this once implemented into config
+    public int getMaxEnergy() { //This is intended as a client method, but will also work on server
+        return energyStorage.getMaxEnergyStored();
+        /*
+            energyStorage saves maxEnergy on serializeNBT(), and we get that NBT data on the client when loaded.
+            This means that the client energyStorage object will always have the correct maxStorage value, even if the
+            client config differs from the server one. We still need to use packets for display energy, as that can change after tile load.
+        */
+    }
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     //~~~~~~~~~~~~~~~~~~~~~~~~TE UPDATE / DATA~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//

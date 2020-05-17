@@ -17,7 +17,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public abstract class AbstractModeledMachine extends AbstractBlockMachine {
-    protected static final PropertyDirection FACING = PropertyDirection.create("facing");
+    public static final PropertyDirection FACING = PropertyDirection.create("facing");
 
     public AbstractModeledMachine(Material material, Class<? extends TileEntity> tileEntityClass) {
         super(material, tileEntityClass);
