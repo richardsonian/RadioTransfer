@@ -23,18 +23,27 @@ public class TileItemEncoder extends AbstractTileItemProcessor {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     //~~~~~~~~~~~~~~~~~~~~~~~~~~Process Logic~~~~~~~~~~~~~~~~~~~~~~~~~//
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
-
-    @Override
-    public boolean canDoProcess() {
-        boolean superCheck = super.canDoProcess();
+    private boolean hasItemsAndSpace() { //Server and client, as packet queue is sent to clients with network messages
         boolean hasItems = !ItemUtils.isInventoryEmpty(itemStackHandler, getNonUpgradeInventorySlots());
         boolean hasSpace = ItemUtils.getFirstIndexInInventoryWhich(itemStackHandler, getNonUpgradeInventorySlots(), (stack) -> packetQueue.canAddAny(stack)) != -1;
-        return superCheck && hasItems && hasSpace;
+        return hasItems && hasSpace;
+    }
+
+    @Override
+    public boolean canDoProcessServer() {
+        boolean superCheck = super.canDoProcessServer();
+        boolean hasItemsAndSpace = hasItemsAndSpace();
+        return superCheck && hasItemsAndSpace;
+    }
+    @Override
+    public boolean canDoProcessClient() {
+        boolean superCheck = super.canDoProcessClient();
+        boolean hasItemsAndSpace = hasItemsAndSpace();
+        return superCheck && hasItemsAndSpace;
     }
 
     @Override
     public void doProcess() {
-        //super.doProcess();
         int index = ItemUtils.getFirstIndexInInventoryWhich(itemStackHandler, getNonUpgradeInventorySlots(), (stack) -> packetQueue.canAddAny(stack));
         if(index != -1) {
             ItemStack stack = itemStackHandler.getStackInSlot(index);
@@ -42,6 +51,7 @@ public class TileItemEncoder extends AbstractTileItemProcessor {
                 ItemStack remainder = packetQueue.add(stack, getItemsPerProcess());
                 itemStackHandler.setStackInSlot(index, remainder);
             }
+            super.doProcess(); //use power and mark process
         }
     }
 

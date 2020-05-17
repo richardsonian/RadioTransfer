@@ -23,21 +23,32 @@ public class TileItemDecoder extends AbstractTileItemProcessor {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     //~~~~~~~~~~~~~~~~~~~~~~~~~~Process Logic~~~~~~~~~~~~~~~~~~~~~~~~~//
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
-    @Override
-    public boolean canDoProcess() {
-        boolean superCheck = super.canDoProcess();
+    private boolean hasPacketsAndSpace() { //Server and client, as packet queue is sent to clients with network messages
         boolean hasPackets = !packetQueue.isEmpty();
         boolean hasSpace = ItemUtils.canMergeAnyIntoInventory(packetQueue.peekNextPacket(ItemPacketQueue.MAX_QUANTITY), itemStackHandler, getNonUpgradeInventorySlots());
+        return hasPackets && hasSpace;
+    }
 
-        //Debug.sendToAllPlayers(String.format("Decoder hasPackets(%b), hasSpace(%b)", hasPackets, hasSpace), world);
-        return superCheck && hasPackets && hasSpace;
+    @Override
+    public boolean canDoProcessServer() {
+        boolean superCheck = super.canDoProcessServer();
+        boolean hasPacketsAndSpace = hasPacketsAndSpace();
+        return superCheck && hasPacketsAndSpace;
+    }
+
+    @Override
+    public boolean canDoProcessClient() {
+        boolean superCheck = super.canDoProcessClient();
+        boolean hasPacketsAndSpace = hasPacketsAndSpace();
+        return superCheck && hasPacketsAndSpace;
     }
     @Override
     public void doProcess() {
-        //super.doProcess();
         ItemStack toProcess = packetQueue.getNextPacket(getItemsPerProcess());
         ItemStack remainder = ItemUtils.mergeStackIntoInventory(toProcess, itemStackHandler, getNonUpgradeInventorySlots());
         packetQueue.add(remainder);
+        if(toProcess != null && !toProcess.isEmpty() && !ItemStack.areItemStacksEqual(toProcess, remainder))
+            super.doProcess(); //Mark process and use power
         //Debug.sendToAllPlayers("Processing packet " + toProcess + " into items in " + this, world);
     }
 

@@ -68,7 +68,7 @@ public class MessageUpdateClientTileMultiblockNodePowered implements IMessage {
                 WorldClient world = mc.world;
                 EntityPlayerSP player = mc.player;
 
-                player.sendMessage(new TextComponentString(TextFormatting.YELLOW + "Updating clients nodes to " + (message.target ? TextFormatting.DARK_GREEN + "powered" : TextFormatting.DARK_RED + "unpowered")));
+                player.sendMessage(new TextComponentString(TextFormatting.YELLOW + "Updated client nodes to " + (message.target ? TextFormatting.DARK_GREEN + "powered" : TextFormatting.DARK_RED + "unpowered")));
                 for(BlockPos pos : message.tilePoss) {
                     if (world.isBlockLoaded(pos)) {
                         TileEntity te = world.getTileEntity(pos);
@@ -79,9 +79,10 @@ public class MessageUpdateClientTileMultiblockNodePowered implements IMessage {
                             tile.setClientPowered(message.target);
 
                             //debug
+                            /*
                             player.sendMessage(new TextComponentString( (message.target ? (TextFormatting.GREEN + "[POWERED] ") : (TextFormatting.RED + "[UNPOWERED] "))
                                     + TextFormatting.DARK_AQUA + " Client data updated for "+ TextFormatting.RESET + tile.getClass().getSimpleName()));
-
+                            */
                         }
                     }
                 }

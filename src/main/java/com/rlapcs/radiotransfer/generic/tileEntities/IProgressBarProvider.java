@@ -8,27 +8,54 @@ import net.minecraft.world.World;
  */
 public interface IProgressBarProvider {
     void doProcess();
-    boolean canDoProcess();
+    boolean canDoProcessServer();
+    default boolean canDoProcessClient() {return canDoProcessServer();}
 
     int getProcessTime();
     int getProcessTimeElapsed();
     void setProcessTimeElapsed(int target);
 
     default void doProcessUpdate(World world, int ticksSinceLastCall) {
-        if (getProcessTimeElapsed() >= getProcessTime()) {
-            if(!world.isRemote) { //server side
-                doProcess();
+        doServerProcessUpdate(world, ticksSinceLastCall);
+        doClientProcessUpdate(world, ticksSinceLastCall);
+    }
+
+    /**
+     * Instead of tracking the status of the server process with network packets, we're just going to assume that the
+     * client and server ticks match, and update this one blind. Works well, and saves some network traffic.
+     * @param world
+     * @param ticksSinceLastCall
+     */
+    default void doClientProcessUpdate(World world, int ticksSinceLastCall) {
+        if(world.isRemote) { //Client Side only
+            if (getProcessTimeElapsed() >= getProcessTime()) {
+                setProcessTimeElapsed(0);
             }
-            setProcessTimeElapsed(0);
-        }
-        else if (canDoProcess()) {
-            incrementProcessTimeElapsed(ticksSinceLastCall);
-            setProcessTimeElapsed(MathHelper.clamp(getProcessTimeElapsed(), 0, getProcessTime()));
-        }
-        else {
-            setProcessTimeElapsed(0);
+            else if (canDoProcessClient()) {
+                incrementProcessTimeElapsed(ticksSinceLastCall);
+                setProcessTimeElapsed(MathHelper.clamp(getProcessTimeElapsed(), 0, getProcessTime()));
+            }
+            else {
+                setProcessTimeElapsed(0);
+            }
         }
     }
+    default void doServerProcessUpdate(World world, int ticksSinceLastCall) {
+        if(!world.isRemote) { //Server Side only
+            if (getProcessTimeElapsed() >= getProcessTime()) {
+                doProcess();
+                setProcessTimeElapsed(0);
+            }
+            else if (canDoProcessServer()) {
+                incrementProcessTimeElapsed(ticksSinceLastCall);
+                setProcessTimeElapsed(MathHelper.clamp(getProcessTimeElapsed(), 0, getProcessTime()));
+            }
+            else {
+                setProcessTimeElapsed(0);
+            }
+        }
+    }
+
 
     default void incrementProcessTimeElapsed(int by) {
         setProcessTimeElapsed(getProcessTimeElapsed() + by);

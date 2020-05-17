@@ -35,12 +35,12 @@ public abstract class AbstractTileItemProcessor extends AbstractTileMaterialProc
                     //dumpable data update
                     if(getProcessorType() == ProcessorType.ENCODER) {
                         AbstractTileItemProcessor.this.doClientDumpableUpdate();
-                        Debug.sendToAllPlayers("Updated encoder dumpable from self", world);
+                        //Debug.sendToAllPlayers("Updated encoder dumpable from self", world);
                     }
                     else {
                         AbstractTileMaterialProcessor encoder = ((AbstractTileMaterialProcessor) AbstractTileItemProcessor.this.getController().getEncoder(AbstractTileItemProcessor.this.getTransferType()));
                         if(encoder != null) encoder.doClientDumpableUpdate();
-                        Debug.sendToAllPlayers("Updated encoder dumpable from decoder", world);
+                        //Debug.sendToAllPlayers("Updated encoder dumpable from decoder", world);
                     }
                 }
             }
