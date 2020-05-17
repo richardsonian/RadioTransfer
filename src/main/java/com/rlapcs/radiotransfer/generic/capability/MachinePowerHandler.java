@@ -15,29 +15,20 @@ public class MachinePowerHandler implements IEnergyStorage, INBTSerializable<NBT
     //init values
     private AbstractTileMachine owner;
     private int maxEnergy;
-    private int maxReceive;
-    private int maxExtract;
 
     //data
     private int energyStored;
 
 
-    public MachinePowerHandler(int startEnergy, int maxEnergy, int maxReceive, int maxExtract, AbstractTileMachine owner) {
+    public MachinePowerHandler(int startEnergy, int maxEnergy, AbstractTileMachine owner) {
         this.energyStored = MathHelper.clamp(startEnergy, 0, maxEnergy);
         this.maxEnergy = maxEnergy;
-        this.maxReceive = maxReceive;
-        this.maxExtract = maxExtract;
         this.owner = owner;
     }
-    public MachinePowerHandler(int maxEnergy, int maxReceive, int maxExtract, AbstractTileMachine owner) {
-        this(0, maxEnergy, maxReceive, maxExtract, owner);
-    }
-    public MachinePowerHandler(int maxEnergy, int maxTransfer, AbstractTileMachine owner) {
-        this(maxEnergy, maxTransfer, maxTransfer, owner);
-    }
     public MachinePowerHandler(int maxEnergy, AbstractTileMachine owner) {
-        this(maxEnergy, maxEnergy, owner);
+        this(0, maxEnergy, owner);
     }
+
 
     @Override
     public NBTTagCompound serializeNBT() {
@@ -50,6 +41,7 @@ public class MachinePowerHandler implements IEnergyStorage, INBTSerializable<NBT
     public void deserializeNBT(NBTTagCompound nbt) {
         if(nbt.hasKey("energy")) {
             energyStored = nbt.getInteger("energy");
+            onContentsChanged();
         }
     }
 
@@ -66,10 +58,11 @@ public class MachinePowerHandler implements IEnergyStorage, INBTSerializable<NBT
             return 0;
         }
 
-        int energyReceived = Math.min(maxEnergy - energyStored, Math.min(this.maxReceive, maxReceive));
+        int energyReceived = Math.min(maxEnergy - energyStored, maxReceive);
         if (!simulate) {
             energyStored += energyReceived;
             onContentsChanged();
+            onEnergyReceived();
         }
 
         return energyReceived;
@@ -87,10 +80,11 @@ public class MachinePowerHandler implements IEnergyStorage, INBTSerializable<NBT
         if (!canExtract())
             return 0;
 
-        int energyExtracted = Math.min(energyStored, Math.min(this.maxExtract, maxExtract));
+        int energyExtracted = Math.min(energyStored, maxExtract);
         if (!simulate) {
             energyStored -= energyExtracted;
             onContentsChanged();
+            onEnergyExtracted();
         }
 
         return energyExtracted;
@@ -118,9 +112,7 @@ public class MachinePowerHandler implements IEnergyStorage, INBTSerializable<NBT
      */
     @Override
     public boolean canExtract() {
-        boolean bandwidth = maxExtract > 0;
-
-        return bandwidth;
+        return true;
     }
 
     /**
@@ -129,10 +121,10 @@ public class MachinePowerHandler implements IEnergyStorage, INBTSerializable<NBT
      */
     @Override
     public boolean canReceive() {
-        boolean bandwidth = maxReceive > 0;
-
-        return bandwidth;
+        return true;
     }
 
     protected void onContentsChanged() {}
+    protected void onEnergyReceived() {}
+    protected void onEnergyExtracted() {}
 }

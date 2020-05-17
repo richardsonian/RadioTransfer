@@ -37,7 +37,6 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
 
     //move to config
     public static final int ENERGY_CAPACITY = 10000; //FE
-    public static final int MAX_ENERGY_TRANSFER = 100; //FE/t
 
     //~~~~~~~~~~~~~~~~~~INSTANCE VARS~~~~~~~~~~~~~~~~~~~~~~~~~~//
     //for client
@@ -55,7 +54,7 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
         //server
         clientListeners = new HashSet<>();
         upgradeSlotWhitelists.put(POWER_ITEM_INDEX, ModConstants.UpgradeCards.POWER_ITEM_WHITELIST); //"upgrade card" lol
-        energyStorage = new MachinePowerHandler(ENERGY_CAPACITY, MAX_ENERGY_TRANSFER, this);
+        energyStorage = new MachinePowerHandler(ENERGY_CAPACITY, this);
 
         //client
         displayEnergy = 0;
@@ -91,7 +90,7 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
             if(powerItem.hasCapability(CapabilityEnergy.ENERGY, null)) {
                 IEnergyStorage itemEnergyStorage = powerItem.getCapability(CapabilityEnergy.ENERGY, null);
                 if(itemEnergyStorage.canExtract() && energyStorage.canReceive()) {
-                    int space = MathHelper.clamp(energyStorage.getMaxEnergyStored() - energyStorage.getEnergyStored(), 0, (MAX_ENERGY_TRANSFER * ticksSinceLastUpdate));
+                    int space = energyStorage.getMaxEnergyStored() - energyStorage.getEnergyStored();
                     int extracted = itemEnergyStorage.extractEnergy(space, false);
                     energyStorage.receiveEnergy(extracted, false);
                 }
