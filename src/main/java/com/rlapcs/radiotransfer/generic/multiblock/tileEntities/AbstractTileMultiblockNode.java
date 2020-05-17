@@ -4,7 +4,9 @@ import com.rlapcs.radiotransfer.generic.multiblock.MultiblockRadioController;
 import com.rlapcs.radiotransfer.network.messages.toClient.MessageUpdateClientMultiblockNodeRegistered;
 import com.rlapcs.radiotransfer.generic.tileEntities.AbstractTileMachine;
 import com.rlapcs.radiotransfer.machines.radio.TileRadio;
+import com.rlapcs.radiotransfer.network.messages.toClient.MessageUpdateClientTileMultiblockNodePowered;
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
+import com.rlapcs.radiotransfer.util.Debug;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -28,7 +30,7 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
     protected MultiblockRadioController controller;
 
     //client
-    protected boolean cachedPowered; //or should this be
+    protected boolean cachedPowered; //use controller.isPowered() for server side check
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
     public AbstractTileMultiblockNode() {
@@ -225,12 +227,24 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
      */
     public boolean useProcessPower() {
         int needed = this.getPowerPerProcess();
+        Debug.sendToAllPlayers(String.format("%s[PROCESS PWR]%s %s using %dFE", TextFormatting.AQUA, TextFormatting.RESET, getClass().getSimpleName(), needed), world);
         if(controller.hasPowerForProcess(needed)) {
             return controller.useProcessPower(needed); //extra check returning this val
         }
         //if not enough power for process
+        Debug.sendToAllPlayers(String.format("%s[PROCESS PWR]%s Not enough power for %s%s's%s process.", TextFormatting.AQUA, TextFormatting.DARK_RED, TextFormatting.RESET, getClass().getSimpleName(), TextFormatting.DARK_RED), world);
         controller.setPowered(false);
         return false;
+    }
+
+    //~~~~~~~~~~~~~~~~~~Client Cached Powered State~~~~~~~~~~~~~~~~~~~~//
+    //Client only
+    public void setClientPowered(boolean target) {
+        this.cachedPowered = target;
+        Debug.sendToAllPlayers(TextFormatting.GRAY + "[CLIENT]" + this.getClass().getSimpleName() + (target ? " powered." : " unpowered."), world);
+    }
+    public boolean getClientPowered() {
+        return cachedPowered;
     }
 
     //##################################################################################################//
@@ -241,6 +255,10 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
         NBTTagCompound tag = super.getUpdateTag();
         if(!world.isRemote) { //assure server side
             tag.setBoolean("registeredInMultiblock", registeredInMultiblock); //make sure client has latest registration info when they load the te
+            if(registeredInMultiblock && controller != null)
+                tag.setBoolean("powered", controller.isPowered());
+            else
+                tag.setBoolean("powered", false);
         }
         return tag;
     }
@@ -250,6 +268,7 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
         if(world.isRemote) { //assure client side
             if(tag.hasKey("registeredInMultiblock")) {
                 setRegisteredInMultiblock(tag.getBoolean("registeredInMultiblock")); //make sure client has latest registration info when they load the te
+                setClientPowered(tag.getBoolean("powered"));
             }
         }
     }

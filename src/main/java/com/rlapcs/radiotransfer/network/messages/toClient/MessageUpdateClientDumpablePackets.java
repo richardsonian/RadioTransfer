@@ -83,7 +83,7 @@ public class MessageUpdateClientDumpablePackets implements IMessage {
                     }
                 }
                 else {
-                    player.sendMessage(new TextComponentString(TextFormatting.DARK_RED + "Tileentity not loaded on client"));
+                    //player.sendMessage(new TextComponentString(TextFormatting.DARK_RED + "Tileentity not loaded on client"));
                 }
             }
         }

@@ -10,6 +10,8 @@ import com.rlapcs.radiotransfer.machines.processors.ProcessorType;
 import com.rlapcs.radiotransfer.machines.processors.abstract_processor.AbstractTileProcessor;
 import com.rlapcs.radiotransfer.machines.processors.material_processor.AbstractTileMaterialProcessor;
 import com.rlapcs.radiotransfer.machines.radio.TileRadio;
+import com.rlapcs.radiotransfer.network.messages.toClient.MessageUpdateClientTileMultiblockNodePowered;
+import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import com.rlapcs.radiotransfer.server.radio.RadioNetwork;
 import com.rlapcs.radiotransfer.server.radio.TxMode;
 import com.rlapcs.radiotransfer.server.radio.UnsupportedTransferException;
@@ -17,7 +19,9 @@ import com.rlapcs.radiotransfer.server.radio.TransferType;
 import com.rlapcs.radiotransfer.util.Debug;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -105,18 +109,25 @@ public class MultiblockRadioController {
         return sum;
     }
     public boolean hasSufficientConstantPower(int ticksSinceLastUpdate) {
+        //Debug.sendToAllPlayers("mltblk#hasSuffConstantPwr():", tileEntity.getWorld());
         if (powerSupply != null && !powerSupply.isInvalid()) {
             int needed = calculateRequiredPowerPerTick() * ticksSinceLastUpdate;
-            int extracted = powerSupply.extractEnergy(needed, true);
-            return extracted >= needed;
+            /*
+            if(powerSupply.getEnergyStorage().canUsePower(needed))
+                Debug.sendToAllPlayers("  - Sufficient, can supply " + needed + "FE", tileEntity.getWorld());
+            else
+                Debug.sendToAllPlayers("  - Insufficient, can't supply " + needed + "FE", tileEntity.getWorld());
+            */
+            return powerSupply.getEnergyStorage().canUsePower(needed);
         }
+        //Debug.sendToAllPlayers("  - PSU Invalid", tileEntity.getWorld());
         return false;
     }
     public boolean useConstantPower(int ticksSinceLastUpdate) {
         if(!hasSufficientConstantPower(ticksSinceLastUpdate)) return false;
 
         int needed = calculateRequiredPowerPerTick() * ticksSinceLastUpdate;
-        int extracted = powerSupply.extractEnergy(needed, false);
+        int extracted = powerSupply.getEnergyStorage().usePower(needed);
         //Debug.sendToAllPlayers(tileEntity + " extracting " + extracted + "FE of power.", tileEntity.getWorld());
         return extracted >= needed; //whether enough power was taken
     }
@@ -126,8 +137,7 @@ public class MultiblockRadioController {
     //If this returns false, the caller should call setPowered() to false
     public boolean hasPowerForProcess(int processPower) {
         if(powerSupply != null && !powerSupply.isInvalid()) {
-            int extracted = powerSupply.extractEnergy(processPower, true);
-            return extracted >= processPower;
+            return powerSupply.getEnergyStorage().canUsePower(processPower);
         }
         return false;
     }
@@ -136,7 +146,7 @@ public class MultiblockRadioController {
     public boolean useProcessPower(int processPower) {
         if(!hasPowerForProcess(processPower)) return false;
 
-        int extracted = powerSupply.extractEnergy(processPower, false);
+        int extracted = powerSupply.getEnergyStorage().usePower(processPower);
         return extracted >= processPower;
     }
 
@@ -152,13 +162,28 @@ public class MultiblockRadioController {
      * @param target
      */
     public void setPowered(boolean target) {
+        if (target != isPowered) //if this is a new update, tell the clients
+            updateClientNodesPowerState(target);
+        if(!target)
+            emptyPower();
         isPowered = target;
-        if(powerSupply != null && powerSupply.hasCapability(CapabilityEnergy.ENERGY, null)) {
-            if (!isPowered)
-                powerSupply.getCapability(CapabilityEnergy.ENERGY, null).extractEnergy(Integer.MAX_VALUE, true);
+    }
+
+    public void emptyPower() {
+        if(powerSupply != null && !powerSupply.isInvalid()) {
+            if(powerSupply.getEnergyStorage().getEnergyStored() > 0) {
+                Debug.sendToAllPlayers("Emptying Remaining " + powerSupply.getEnergyStorage().getEnergyStored() + "FE in PSU.", tileEntity.getWorld());
+                powerSupply.getEnergyStorage().useAllPower();
+            }
         }
     }
 
+    public void updateClientNodesPowerState(boolean target) {
+        int dimension = tileEntity.getWorld().provider.getDimension();
+        ModNetworkMessages.INSTANCE.sendToAllTracking(new MessageUpdateClientTileMultiblockNodePowered(this.getAllActiveNodes(), target), new NetworkRegistry.TargetPoint(
+                dimension, tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ(), -1
+        ));
+    }
     //##################################################################################################//
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~TRANSMISSION AND RECEIVING~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     //##################################################################################################//
@@ -252,6 +277,15 @@ public class MultiblockRadioController {
         list.addAll(decoders.values());
 
         return list;
+    }
+
+    /**
+     * Returns list of all active nodes, without nulls.
+     */
+    private List<AbstractTileMultiblockNode> getAllActiveNodes() {
+        List<AbstractTileMultiblockNode> temp = getAllNodes();
+        temp.removeIf(n -> n == null || n.isInvalid());
+        return temp;
     }
     //##################################################################################################//
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~MULTIBLOCK DETECTION~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
