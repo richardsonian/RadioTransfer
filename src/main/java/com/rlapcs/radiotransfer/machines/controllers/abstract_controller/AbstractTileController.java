@@ -67,7 +67,12 @@ public abstract class AbstractTileController extends AbstractTileMultiblockNodeW
     public double getAverageProcessesRate() {
         return lastAverageProcessRate;
     }
-    public void incrementProcessesCompletedInCycle() {processesCompletedInCycle++;} //Called in TileRadio on sendResources for TX, and
+    protected void incrementProcessesCompletedInCycle() {processesCompletedInCycle++;}
+    //Call this to track power usage for controler processes
+    public void doProcess() {
+        this.incrementProcessesCompletedInCycle();
+        this.useProcessPower();
+    }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     //~~~~~~~~~~~~GETTERS AND SETTERS~~~~~~~~~~~~~~~~~~~//

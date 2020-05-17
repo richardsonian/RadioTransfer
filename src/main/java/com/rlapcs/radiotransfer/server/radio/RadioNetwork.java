@@ -129,8 +129,7 @@ public enum RadioNetwork {
 
         //Track processes + power for RX Controller in receiving radio
         if(transferSuccessful) {
-            receiver.getRxController().incrementProcessesCompletedInCycle(); //Mark that a process was done
-            receiver.getRxController().useProcessPower(); //use power
+            receiver.getRxController().doProcess();
         }
 
         return transferSuccessful;

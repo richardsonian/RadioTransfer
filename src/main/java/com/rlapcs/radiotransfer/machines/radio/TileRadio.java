@@ -4,6 +4,8 @@ import com.rlapcs.radiotransfer.generic.multiblock.MultiblockRadioController;
 import com.rlapcs.radiotransfer.generic.tileEntities.AbstractTileMachineWithInventory;
 import com.rlapcs.radiotransfer.server.radio.RadioNetwork;
 import com.rlapcs.radiotransfer.server.radio.TransferType;
+import com.rlapcs.radiotransfer.util.Debug;
+import net.minecraft.util.text.TextFormatting;
 
 public class TileRadio extends AbstractTileMachineWithInventory { //power requirements?
     public final int MULTIBLOCK_UPDATE_TICKS = 20;
@@ -23,8 +25,7 @@ public class TileRadio extends AbstractTileMachineWithInventory { //power requir
         if(multiblock.canTransmit(TransferType.ITEM)) {
             boolean success = RadioNetwork.INSTANCE.sendItems(multiblock, 16, multiblock.getTransmitMode(TransferType.ITEM));
             if(success) {
-                multiblock.getTxController().incrementProcessesCompletedInCycle(); //for marking average process rate
-                multiblock.getTxController().useProcessPower();
+                multiblock.getTxController().doProcess();
             }
         }
     }
@@ -63,9 +64,12 @@ public class TileRadio extends AbstractTileMachineWithInventory { //power requir
             if(ticksSinceCreation % SEND_RESOURCES_UPDATE_TICKS == 0) {
                 sendResources();
             }
-            if(ticksSinceCreation % POWER_CHECK_TICKS == 0) { //separate into update use more frequently and update visual less frequently
+            if(ticksSinceCreation % POWER_CHECK_TICKS == 0) {
+                Debug.sendToAllPlayers(String.format("%s[CONST PWR]%s %dFE/t x %dt = %dFE", TextFormatting.YELLOW, TextFormatting.GRAY, multiblock.calculateRequiredPowerPerTick(), POWER_CHECK_TICKS, (multiblock.calculateRequiredPowerPerTick() * POWER_CHECK_TICKS)), world);
+                Debug.sendToAllPlayers(multiblock.hasSufficientConstantPower(POWER_CHECK_TICKS) ? "Has enough power" : "Not enough power",world);
                 //use power from nodes
                 if(multiblock.hasSufficientConstantPower(POWER_CHECK_TICKS)) {
+
                     if(!multiblock.isPowered()) multiblock.setPowered(true);
                     multiblock.useConstantPower(POWER_CHECK_TICKS); //assuming we don't have to check whether this was successful, because we already checked that there was enough power. If something went wrong, we'll catch it in the next cycle.
                 }
