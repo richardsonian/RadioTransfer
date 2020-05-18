@@ -5,30 +5,38 @@ import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.tooltip.ITo
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.lists.IGuiListContent;
 import com.rlapcs.radiotransfer.generic.multiblock.tileEntities.AbstractTileMultiblockNode;
 import com.rlapcs.radiotransfer.registries.ModBlocks;
-import com.rlapcs.radiotransfer.util.Debug;
 import com.rlapcs.radiotransfer.util.NBTUtils;
 import net.minecraft.block.Block;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * This class is so incredibly memory and network inefficient but I don't care
  */
 public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializable<NBTTagCompound> {
+    public static final List<Block> NODE_ORDER;
+    static {
+        NODE_ORDER = new ArrayList<>();
+        NODE_ORDER.add(ModBlocks.radio);
+        NODE_ORDER.add(ModBlocks.tx_controller);
+        NODE_ORDER.add(ModBlocks.rx_controller);
+        NODE_ORDER.add(ModBlocks.item_encoder);
+        NODE_ORDER.add(ModBlocks.item_decoder);
+        NODE_ORDER.add(ModBlocks.power_supply);
+        NODE_ORDER.add(ModBlocks.basic_antenna);
+    }
+    public static final Comparator<PowerUsageEntry> ENTRY_ORDERING = Comparator.comparingInt(n -> NODE_ORDER.indexOf(n.block));
+
+    //Instance Vars
     private Set<PowerUsageEntry> entries;
 
     public MultiblockPowerUsageData() {
@@ -42,13 +50,9 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
     }
 
     public List<PowerUsageEntry> getSortedEntries() {
-        /*
         List<PowerUsageEntry> outList = new ArrayList<>(entries);
-        outList.sort(null); //sort by natural ordering (see PowerUsageEntry#compareTo())
+        outList.sort(ENTRY_ORDERING);
         return outList;
-         */
-        //Removing this feature temporarily
-        return new ArrayList<>(entries);
     }
 
     //For Server
@@ -82,8 +86,10 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
         entries = new HashSet<>();
         entries.add(getRadioEntry());
         for(AbstractTileMultiblockNode n : nodes) {
-            if(n != null) {
-                entries.add(new PowerUsageEntry(n));
+            if(n != null && !n.isInvalid()) { //If node is valid
+                if(n.getPowerPerTick() != 0 || n.getPowerPerProcess() != 0) { //if node requires power
+                    entries.add(new PowerUsageEntry(n));
+                }
             }
         }
     }
@@ -91,7 +97,11 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
         PowerUsageEntry radio = new PowerUsageEntry();
         radio.block = ModBlocks.radio;
         radio.basePowerPerTick = ModConfig.power_options.radio.powerPerTick;
+        radio.effectivePowerPerTick = radio.basePowerPerTick;
         radio.totalPowerPerTick = radio.basePowerPerTick;
+
+        radio.basePowerPerProcess = 0;
+        radio.effectivePowerPerProcess = 0;
         radio.upgradeCardConstantCosts = new HashSet<>();
         radio.upgradeCardProcessCosts = new HashSet<>();
 
@@ -163,7 +173,7 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
             //Debug.sendDebugMessage("Serializing Block " + block.getRegistryName().toString());
             nbt.setString("block", block.getRegistryName().toString());
             //Constant Power Data
-            nbt.setInteger("powerPerTick", basePowerPerTick);
+            nbt.setInteger("basePowerPerTick", basePowerPerTick);
             nbt.setInteger("effectivePowerPerTick", effectivePowerPerTick);
             //Process Power Data
             nbt.setInteger("basePowerPerProcess", basePowerPerProcess);
@@ -199,8 +209,8 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
                 block = Block.getBlockFromName(nbt.getString("block"));
             }
             //Constant Power Data
-            if(nbt.hasKey("powerPerTick")) {
-                basePowerPerTick = nbt.getInteger("powerPerTick");
+            if(nbt.hasKey("basePowerPerTick")) {
+                basePowerPerTick = nbt.getInteger("basePowerPerTick");
             }
             if(nbt.hasKey("effectivePowerPerTick")) {
                 effectivePowerPerTick = nbt.getInteger("effectivePowerPerTick");
@@ -237,7 +247,7 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
             }
 
             //calculations
-            totalPowerPerTick = effectivePowerPerTick + effectivePowerPerProcess;
+            totalPowerPerTick = effectivePowerPerTick + averageProcessPowerPerTick;
         }
 
         @Override
@@ -245,6 +255,12 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
             return "test\nof\nthis\nidea, yay!";
         }
 
+        /**
+         * Indicates the natural ordering of a list of PowerUsageEntries.
+         * One PowerUsageEntry is greater than other if its totalPowerPerTick is greater
+         * @param o the object to compare to
+         * @return Positive if this is greater than o, negative otherwise, or 0 if equal
+         */
         @Override
         public int compareTo(PowerUsageEntry o) {
             return Double.compare(this.totalPowerPerTick, o.totalPowerPerTick);
@@ -253,6 +269,20 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
         //~~~~~~~~~~~~ToString Methods~~~~~~~~~~~~~~~~~~~//
         public String getTitle() {
             return block.getLocalizedName();
+        }
+
+        @Override
+        public String toString() {
+            String str = TextFormatting.DARK_PURPLE + "PowerUsageEntry: " + block.getLocalizedName() + TextFormatting.RESET;
+            str += "\n - basePowerPerTick: " + basePowerPerTick;
+            str += "\n - effectivePowerPerTick: " + effectivePowerPerTick;
+            str += "\n - basePowerPerProcess: " + basePowerPerProcess;
+            str += "\n - effectivePowerPerProcess: " + effectivePowerPerProcess;
+            str += "\n - processRate: " + processRate;
+            str += "\n - averageProcessPowerPerTick: " + averageProcessPowerPerTick;
+            str += "\n - totalPowerPerTick: " + totalPowerPerTick;
+
+            return str;
         }
 
         /**

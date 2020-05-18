@@ -179,7 +179,12 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
         return getBasePowerPerProcess() + getProcessPowerUpgradeTotalCost();
     }
     public double getAverageProcessPowerPerTick() {
-        return getPowerPerProcess() * getAverageProcessesRate();
+        if(getAverageProcessesRate() != -1) {
+            return getPowerPerProcess() * getAverageProcessesRate();
+        }
+        else {
+            return 0;
+        }
     }
     public int getConstantPowerUpgradeTotalCost() {
         int sum = 0;
@@ -227,12 +232,12 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
      */
     public boolean useProcessPower() {
         int needed = this.getPowerPerProcess();
-        Debug.sendToAllPlayers(String.format("%s[PROCESS PWR]%s %s using %dFE", TextFormatting.AQUA, TextFormatting.RESET, getClass().getSimpleName(), needed), world);
+        //Debug.sendToAllPlayers(String.format("%s[PROCESS PWR]%s %s using %dFE", TextFormatting.AQUA, TextFormatting.RESET, getClass().getSimpleName(), needed), world);
         if(controller.hasPowerForProcess(needed)) {
             return controller.useProcessPower(needed); //extra check returning this val
         }
         //if not enough power for process
-        Debug.sendToAllPlayers(String.format("%s[PROCESS PWR]%s Not enough power for %s%s's%s process.", TextFormatting.AQUA, TextFormatting.DARK_RED, TextFormatting.RESET, getClass().getSimpleName(), TextFormatting.DARK_RED), world);
+        //Debug.sendToAllPlayers(String.format("%s[PROCESS PWR]%s Not enough power for %s%s's%s process.", TextFormatting.AQUA, TextFormatting.DARK_RED, TextFormatting.RESET, getClass().getSimpleName(), TextFormatting.DARK_RED), world);
         controller.setPowered(false);
         return false;
     }
