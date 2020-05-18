@@ -61,6 +61,15 @@ public class PowerSupplyListItem extends AbstractGuiListItem {
         RenderHelper.enableStandardItemLighting();
 
         wasClicking = flag;
+
+        //Debug power data:
+        if(hovered) {
+            int liney = 0;
+            for (String line : powerData.toString().split("\n")) {
+                screen.drawString(mc.fontRenderer, line, getGuiPos().x + getGuiSize().width + 10, getGuiPos().y + liney, Color.white.getRGB());
+                liney += mc.fontRenderer.FONT_HEIGHT;
+            }
+        }
     }
 
     private ItemStack getRenderItem() {

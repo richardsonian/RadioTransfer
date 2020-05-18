@@ -50,16 +50,19 @@ public class GuiPowerSupply extends AbstractGuiMachine<TilePowerSupply> {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
-        list.drawList(mouseX, mouseY, partialTicks, mc.getRenderItem());
         powerBar.draw();
+        list.drawList(mouseX, mouseY, partialTicks, mc.getRenderItem()); //changed this to be drawn after powerbar for debug, is that ok?
         tooltip.draw();
+
+        //Debug: draw power
+        String power = String.format("%d/%dFE", tileEntity.getDisplayEnergy(), tileEntity.getMaxEnergy());
+        fontRenderer.drawString(power,  guiLeft + 150,  guiTop + 30, Color.white.getRGB());
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-        String power = String.format("%d/%dFE", tileEntity.getDisplayEnergy(), tileEntity.getMaxEnergy());
-        fontRenderer.drawString(power,  150,  30, Color.white.getRGB());
+
     }
 
     public GuiTooltip getTooltip() {
