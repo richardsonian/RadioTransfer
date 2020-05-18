@@ -56,6 +56,8 @@ public class TileItemDecoder extends AbstractTileItemProcessor {
     //~~~~~~~~~~~~~~~~~~~~~~~~POWER USAGE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
+    //isActive() implemented in AbstractTileMaterialProcessor
+
     //~~~~~~~~~~~~~~~~~~~~Base Power Values~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     @Override
     public int getBasePowerPerTick() {

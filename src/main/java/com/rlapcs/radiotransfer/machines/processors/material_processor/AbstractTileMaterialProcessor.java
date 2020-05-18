@@ -172,6 +172,11 @@ public abstract class AbstractTileMaterialProcessor<T extends IMaterialTransferH
         return lastAverageProcessRate;
     }
 
+    //For Power Display Calculations, just putting here because fuck you
+    @Override
+    public boolean isActive() {
+        return canDoProcessServer();
+    }
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     //~~~~~~~~~~~~~~~~~~~~~~~~MISC~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//

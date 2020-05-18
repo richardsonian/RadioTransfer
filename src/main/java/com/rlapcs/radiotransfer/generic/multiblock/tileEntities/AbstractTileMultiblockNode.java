@@ -157,6 +157,12 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
     //##################################################################################################//
 
     //~~~~~~~~~~Abstract Methods to be overridden by individual machines~~~~~~~~~~~~~~~~~~~~~//
+
+    /**
+     * Returns whether currently using power or not, process or constant
+     * @return
+     */
+    public abstract boolean isActive();
     public abstract int getBasePowerPerTick();
     public abstract Map<Item, Integer> getUpgradeCardConstantPowerCosts();
     public abstract int getBasePowerPerProcess();
@@ -173,9 +179,14 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
     //~~~~~~~~~~~~~~~~~~~~~~~Universal Calculations for Power Data~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     //- Move some of this to MultiblockPowerData object, so it can be calculated on call instead of sending over network?
     public int getPowerPerTick() {
-        return getBasePowerPerTick() + getConstantPowerUpgradeTotalCost();
+        if(isActive()) { //Only require constant power if active
+            return getBasePowerPerTick() + getConstantPowerUpgradeTotalCost();
+        }
+        else {
+            return 0;
+        }
     }
-    public int getPowerPerProcess() {
+    public int getPowerPerProcess() { //This is triggered only when active anyways, so we don't need to check
         return getBasePowerPerProcess() + getProcessPowerUpgradeTotalCost();
     }
     public double getAverageProcessPowerPerTick() {
@@ -189,14 +200,14 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
     public int getConstantPowerUpgradeTotalCost() {
         int sum = 0;
         for(Item k : getConstantPowerContributingUpgrades()) {
-            sum += getUpgradeCardConstantPowerCosts().get(k);
+            sum += (getUpgradeCardConstantPowerCosts().get(k) * getUpgradeCardQuantities().get(k));
         }
         return sum;
     }
     public int getProcessPowerUpgradeTotalCost() {
         int sum = 0;
-        for(Item k : getConstantPowerContributingUpgrades()) {
-            sum += getUpgradeCardConstantPowerCosts().get(k);
+        for(Item k : getProcessPowerContributingUpgrades()) {
+            sum += (getUpgradeCardProcessPowerCosts().get(k) * getUpgradeCardQuantities().get(k));
         }
         return sum;
     }

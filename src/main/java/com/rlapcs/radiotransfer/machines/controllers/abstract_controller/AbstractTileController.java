@@ -61,8 +61,12 @@ public abstract class AbstractTileController extends AbstractTileMultiblockNodeW
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     //~~~~~~~~~~~~~~POWER / PROCESSES~~~~~~~~~~~~~~~~~~~//
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
-
     //Used for power display calculations
+    @Override
+    public boolean isActive() {
+        return this.activated;
+    }
+
     @Override
     public double getAverageProcessesRate() {
         return lastAverageProcessRate;

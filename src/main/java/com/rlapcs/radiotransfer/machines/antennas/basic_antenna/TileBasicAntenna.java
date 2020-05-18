@@ -16,6 +16,11 @@ public class TileBasicAntenna extends AbstractTileMultiblockNode{
     // No intention for the Antenna to require any power to run atm, but these fields are required as an AbstractTileMultiblockNode
 
     @Override
+    public boolean isActive() {
+        return false;
+    }
+
+    @Override
     public int getBasePowerPerTick() {
         return 0;
     }

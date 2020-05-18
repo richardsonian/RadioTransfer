@@ -185,6 +185,11 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
     // No intention for the PSU to require any power to run atm, but these fields are required as an AbstractTileMultiblockNode
 
     @Override
+    public boolean isActive() {
+        return false;
+    }
+
+    @Override
     public int getBasePowerPerTick() {
         return 0;
     }

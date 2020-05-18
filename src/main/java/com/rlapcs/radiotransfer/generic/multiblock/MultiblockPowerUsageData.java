@@ -5,19 +5,24 @@ import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.tooltip.ITo
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.lists.IGuiListContent;
 import com.rlapcs.radiotransfer.generic.multiblock.tileEntities.AbstractTileMultiblockNode;
 import com.rlapcs.radiotransfer.registries.ModBlocks;
+import com.rlapcs.radiotransfer.util.Debug;
 import com.rlapcs.radiotransfer.util.NBTUtils;
 import net.minecraft.block.Block;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import java.time.Instant;
 import java.util.*;
+
+import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
 
 /**
  * This class is so incredibly memory and network inefficient but I don't care
@@ -96,6 +101,7 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
     private PowerUsageEntry getRadioEntry() {
         PowerUsageEntry radio = new PowerUsageEntry();
         radio.block = ModBlocks.radio;
+        radio.isActive = true;
         radio.basePowerPerTick = ModConfig.power_options.radio.powerPerTick;
         radio.effectivePowerPerTick = radio.basePowerPerTick;
         radio.totalPowerPerTick = radio.basePowerPerTick;
@@ -117,6 +123,7 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
 
         public Instant lastUpdated;
 
+        public boolean isActive;
         public int basePowerPerTick;
         public Set<UpgradeCardPowerEntry> upgradeCardConstantCosts;
         public int effectivePowerPerTick;
@@ -143,6 +150,8 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
         public void update(AbstractTileMultiblockNode te) {
             //get the block from the TE
             block = te.getWorld().getBlockState(te.getPos()).getBlock();
+            //Get the Active State
+            isActive = te.isActive();
 
             //Grab all the constant power values
             basePowerPerTick = te.getBasePowerPerTick();
@@ -153,7 +162,7 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
             //Grab all the process power values
             basePowerPerProcess = te.getBasePowerPerProcess();
             upgradeCardProcessCosts = new HashSet<>();
-            te.getProcessPowerContributingUpgrades().forEach((u) -> upgradeCardConstantCosts.add(new UpgradeCardPowerEntry(u, te.getUpgradeCardProcessPowerCosts().get(u), te.getUpgradeCardQuantities().get(u))));
+            te.getProcessPowerContributingUpgrades().forEach((u) -> upgradeCardProcessCosts.add(new UpgradeCardPowerEntry(u, te.getUpgradeCardProcessPowerCosts().get(u), te.getUpgradeCardQuantities().get(u))));
             effectivePowerPerProcess = te.getPowerPerProcess();
             processRate = te.getAverageProcessesRate();
             averageProcessPowerPerTick = te.getAverageProcessPowerPerTick(); //unnecessary
@@ -172,6 +181,7 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
 
             //Debug.sendDebugMessage("Serializing Block " + block.getRegistryName().toString());
             nbt.setString("block", block.getRegistryName().toString());
+            nbt.setBoolean("isActive", isActive);
             //Constant Power Data
             nbt.setInteger("basePowerPerTick", basePowerPerTick);
             nbt.setInteger("effectivePowerPerTick", effectivePowerPerTick);
@@ -207,6 +217,9 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
 
             if(nbt.hasKey("block")) {
                 block = Block.getBlockFromName(nbt.getString("block"));
+            }
+            if(nbt.hasKey("isActive")) {
+                isActive = nbt.getBoolean("isActive");
             }
             //Constant Power Data
             if(nbt.hasKey("basePowerPerTick")) {
@@ -249,6 +262,39 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
             //calculations
             totalPowerPerTick = effectivePowerPerTick + averageProcessPowerPerTick;
         }
+        public List<UpgradeCardPowerEntry> getSortedUpgradeCardConstantCosts() {
+            ArrayList<UpgradeCardPowerEntry> out = new ArrayList<>(upgradeCardConstantCosts);
+            out.removeIf(u -> u.quantity == 0);
+            out.sort(Comparator.comparingInt(u -> u.total));
+            return out;
+        }
+        public List<UpgradeCardPowerEntry> getSortedUpgradeCardProcessCosts() {
+            ArrayList<UpgradeCardPowerEntry> out = new ArrayList<>(upgradeCardProcessCosts);
+            out.removeIf(u -> u.total == 0);
+            out.sort(Comparator.comparingInt(u -> u.total));
+            return out;
+        }
+
+
+        public boolean requiresConstantPower() {
+            if(effectivePowerPerTick > 0) return true;
+            //Account for when inactive
+            boolean hasUpgradeCost = false;
+            for(UpgradeCardPowerEntry u : upgradeCardConstantCosts) {
+                if(u.total > 0) hasUpgradeCost = true;
+            }
+            return ((basePowerPerTick > 0) || hasUpgradeCost);
+        }
+        public boolean requiresProcessPower() {
+            if(effectivePowerPerProcess > 0) return true;
+            //Account for when inactive
+            boolean hasUpgradeCost = false;
+            for(UpgradeCardPowerEntry u : upgradeCardProcessCosts) {
+                if(u.total > 0) hasUpgradeCost = true;
+            }
+            return ((basePowerPerProcess > 0) || hasUpgradeCost);
+        }
+
 
         @Override
         public String getFormattedContent() {
@@ -272,15 +318,22 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
         }
 
         @Override
-        public String toString() {
+        public String toString() { //For debug
             String str = TextFormatting.DARK_PURPLE + "PowerUsageEntry: " + block.getLocalizedName() + TextFormatting.RESET;
             str += "\n - basePowerPerTick: " + basePowerPerTick;
+            for(UpgradeCardPowerEntry u : getSortedUpgradeCardConstantCosts()) {
+                str += "\n   - " + u.getDebugString();
+            }
             str += "\n - effectivePowerPerTick: " + effectivePowerPerTick;
             str += "\n - basePowerPerProcess: " + basePowerPerProcess;
+            for(UpgradeCardPowerEntry u : getSortedUpgradeCardProcessCosts()) {
+                str += "\n   - " + u.getDebugString();
+            }
             str += "\n - effectivePowerPerProcess: " + effectivePowerPerProcess;
             str += "\n - processRate: " + processRate;
             str += "\n - averageProcessPowerPerTick: " + averageProcessPowerPerTick;
             str += "\n - totalPowerPerTick: " + totalPowerPerTick;
+
 
             return str;
         }
@@ -297,7 +350,7 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
             public UpgradeCardPowerEntry() {
                 this(null, 0, 0);
             }
-            public UpgradeCardPowerEntry(Item item, int quantity, int cost) {
+            public UpgradeCardPowerEntry(Item item, int cost, int quantity) {
                 this.item = item;
                 this.quantity = quantity;
                 this.cost = cost;
@@ -314,6 +367,7 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
                 NBTTagCompound nbt = new NBTTagCompound();
 
                 //item
+                //sendDebugMessage("Serializing Item " + item);
                 ResourceLocation resourcelocation = Item.REGISTRY.getNameForObject(this.item);
                 nbt.setString("item", resourcelocation == null ? "minecraft:air" : resourcelocation.toString());
                 //ints
@@ -325,7 +379,9 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
 
             @Override
             public void deserializeNBT(NBTTagCompound nbt) {
-                this.item = nbt.hasKey("id", Constants.NBT.TAG_STRING) ? Item.getByNameOrId(nbt.getString("id")) : Items.AIR;
+                if(nbt.hasKey("item", Constants.NBT.TAG_STRING)) {
+                    this.item = Item.getByNameOrId(nbt.getString("item"));
+                } else {this.item = Items.FISH;}
                 if(nbt.hasKey("quantity")) {
                     this.quantity = nbt.getInteger("quantity");
                 }
@@ -343,6 +399,9 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
             @Override
             public String toString() {
                 return String.format("x%d = +%d", quantity, total);
+            }
+            public String getDebugString() { //CLIENT ONLY OR WILL CRASH
+                return String.format("%s (%dFE)x%d = +%dFE", I18n.format(item.getUnlocalizedName()), cost, quantity, total);
             }
         }
     }
