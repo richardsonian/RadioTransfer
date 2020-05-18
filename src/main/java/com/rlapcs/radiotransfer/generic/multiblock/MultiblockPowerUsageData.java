@@ -298,7 +298,7 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
 
         @Override
         public String getFormattedContent() {
-            return "test\nof\nthis\nidea, yay!";
+            return this.toString();
         }
 
         /**
@@ -369,7 +369,7 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
                 //item
                 //sendDebugMessage("Serializing Item " + item);
                 ResourceLocation resourcelocation = Item.REGISTRY.getNameForObject(this.item);
-                nbt.setString("item", resourcelocation == null ? "minecraft:air" : resourcelocation.toString());
+                nbt.setString("item", resourcelocation == null ? "minecraft:fish" : resourcelocation.toString());
                 //ints
                 nbt.setInteger("quantity", quantity);
                 nbt.setInteger("cost", cost);
@@ -398,7 +398,7 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
              */
             @Override
             public String toString() {
-                return String.format("x%d = +%d", quantity, total);
+                return String.format("×%d = +%d", quantity, total);
             }
             public String getDebugString() { //CLIENT ONLY OR WILL CRASH
                 return String.format("%s (%dFE)x%d = +%dFE", I18n.format(item.getUnlocalizedName()), cost, quantity, total);

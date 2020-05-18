@@ -16,8 +16,6 @@ import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 
-import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
-
 public class PowerSupplyListItem extends AbstractGuiListItem {
     /* copied values from AbstractItemProcessorGuiListItem; should change */
     public static final CoordinateUV UV = new CoordinateUV(0,30); //has getter method to be accessed by superclass if needed
@@ -52,24 +50,24 @@ public class PowerSupplyListItem extends AbstractGuiListItem {
         //draw power usage
         screen.drawString(mc.fontRenderer, powerData.totalPowerPerTick + " FE/t", this.x + POWER_TEXT_REL_POS.x, this.y + POWER_TEXT_REL_POS.y, Color.white.getRGB());
 
-        //sendDebugMessage("hovering: " + hovered);
+        //sendDebugMessage(this.toString() + " hovering: " + hovered);
         if (this.hovered)
-            ((GuiPowerSupply) screen).getTooltip().activate(powerData);
+            ((GuiPowerSupply) screen).radioEntryTooltip.activate(powerData);
         else if (wasHovering)
-            ((GuiPowerSupply) screen).getTooltip().deactivate();
+            ((GuiPowerSupply) screen).radioEntryTooltip.deactivate();
 
         RenderHelper.enableStandardItemLighting();
 
         wasClicking = flag;
 
         //Debug power data:
-        if(hovered) {
+        /*if(hovered) {
             int liney = 0;
             for (String line : powerData.toString().split("\n")) {
                 screen.drawString(mc.fontRenderer, line, getGuiPos().x + getGuiSize().width + 10, getGuiPos().y + liney, Color.white.getRGB());
                 liney += mc.fontRenderer.FONT_HEIGHT;
             }
-        }
+        }*/
     }
 
     private ItemStack getRenderItem() {

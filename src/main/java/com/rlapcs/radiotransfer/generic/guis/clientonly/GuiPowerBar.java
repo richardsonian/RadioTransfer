@@ -9,6 +9,7 @@ import com.rlapcs.radiotransfer.machines.power_supply.GuiPowerSupply;
 import com.rlapcs.radiotransfer.machines.power_supply.TilePowerSupply;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.ResourceLocation;
@@ -66,11 +67,12 @@ public class GuiPowerBar {
         RenderHelper.enableStandardItemLighting();
 
         wasHovering = isHovering;
-        isHovering = Mouse.getX() >= pos.x && Mouse.getY() >= pos.y && Mouse.getX() < pos.x + size.width && Mouse.getY() < pos.y + size.height;
-        if (isHovering && !wasHovering)
-            ((GuiPowerSupply) gui).getTooltip().activate(new TooltipContent(String.format("%d / %d FE", tile.getDisplayEnergy(), tile.getMaxEnergy())));
+        int scaleFactor = new ScaledResolution(Minecraft.getMinecraft()).getScaleFactor();
+        isHovering = Mouse.getX() / scaleFactor >= pos.x && gui.height - Mouse.getY() / scaleFactor >= pos.y && Mouse.getX() / scaleFactor < pos.x + size.width && gui.height - Mouse.getY() / scaleFactor < pos.y + size.height;
+        if (isHovering)
+            ((GuiPowerSupply) gui).tooltip.activate(new TooltipContent(String.format("%d / %d FE", tile.getDisplayEnergy(), tile.getMaxEnergy())));
         else if (wasHovering)
-            ((GuiPowerSupply) gui).getTooltip().deactivate();
+            ((GuiPowerSupply) gui).tooltip.deactivate();
     }
 
     private float[] interpolateColorsToRGB(float interpolation) {

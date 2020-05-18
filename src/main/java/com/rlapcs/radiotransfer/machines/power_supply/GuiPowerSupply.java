@@ -5,6 +5,7 @@ import com.rlapcs.radiotransfer.generic.guis.clientonly.AbstractGuiMachine;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.GuiPowerBar;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.tooltip.GuiTooltip;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.lists.PowerSupplyList;
+import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.tooltip.RadioEntryTooltip;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateXY;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.DimensionWidthHeight;
 import com.rlapcs.radiotransfer.network.messages.toServer.MessageAddClientListener;
@@ -12,16 +13,13 @@ import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Mouse;
 
-import java.awt.*;
-
-import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
-
 public class GuiPowerSupply extends AbstractGuiMachine<TilePowerSupply> {
     private GuiPowerBar powerBar;
     private PowerSupplyList list;
-    private GuiTooltip tooltip;
+    public GuiTooltip tooltip;
+    public RadioEntryTooltip radioEntryTooltip;
 
-    private final CoordinateXY LIST_POS = new CoordinateXY(7, 24);
+    private final CoordinateXY LIST_POS = new CoordinateXY(8, 27);
     private final CoordinateXY POWER_BAR_POS = new CoordinateXY(162, 25);
     //private DimensionWidthHeight LIST_SIZE = new DimensionWidthHeight(80, 75);
 
@@ -30,6 +28,7 @@ public class GuiPowerSupply extends AbstractGuiMachine<TilePowerSupply> {
         size = new DimensionWidthHeight(188, 197);
         texture = new ResourceLocation(RadioTransfer.MODID, "textures/gui/power_supply.png");
         tooltip = new GuiTooltip(new CoordinateXY(Mouse.getX(), Mouse.getY()), new DimensionWidthHeight(4, 4));
+        radioEntryTooltip = new RadioEntryTooltip(new CoordinateXY(Mouse.getX(), Mouse.getY()), new DimensionWidthHeight(4, 4));
     }
 
     @Override
@@ -38,6 +37,8 @@ public class GuiPowerSupply extends AbstractGuiMachine<TilePowerSupply> {
         ModNetworkMessages.INSTANCE.sendToServer(new MessageAddClientListener(tileEntity, true));
         list = new PowerSupplyList(mc, this, tileEntity.getCachedPowerUsageData(), LIST_POS.x, LIST_POS.y, pos.x, pos.y, tileEntity);
         powerBar = new GuiPowerBar((CoordinateXY) POWER_BAR_POS.addTo(pos), tileEntity, this);
+        tooltip.setWorldAndResolution(mc, this.width, this.height);
+        radioEntryTooltip.setWorldAndResolution(mc, this.width, this.height);
         //sendDebugMessage("init power gui");
     }
 
@@ -53,19 +54,12 @@ public class GuiPowerSupply extends AbstractGuiMachine<TilePowerSupply> {
         powerBar.draw();
         list.drawList(mouseX, mouseY, partialTicks, mc.getRenderItem()); //changed this to be drawn after powerbar for debug, is that ok?
         tooltip.draw();
-
-        //Debug: draw power
-        String power = String.format("%d/%dFE", tileEntity.getDisplayEnergy(), tileEntity.getMaxEnergy());
-        fontRenderer.drawString(power,  guiLeft + 150,  guiTop + 30, Color.white.getRGB());
+        radioEntryTooltip.draw();
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
-    }
-
-    public GuiTooltip getTooltip() {
-        return tooltip;
     }
 }

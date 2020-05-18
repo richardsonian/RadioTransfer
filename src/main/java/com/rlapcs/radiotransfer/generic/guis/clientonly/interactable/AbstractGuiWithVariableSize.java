@@ -10,6 +10,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 
 import java.awt.*;
 
@@ -19,7 +20,7 @@ public class AbstractGuiWithVariableSize extends GuiScreen {
             new CoordinateUV(186, 18), // top right
             new CoordinateUV(0, 195), // bottom left
             new CoordinateUV(186, 195)}; // bottom right
-    private static final Color OUTLINE = Color.decode("#B3B3B3");
+    private static final Color OUTLINE = Color.decode("#939393");
     private static final Color INTERIOR = Color.decode("#383838");
     protected static final int MINIMUM_SIZE = 4;
 
@@ -39,13 +40,13 @@ public class AbstractGuiWithVariableSize extends GuiScreen {
         // CRUNCH POS & SIZE NUMBERS
         int widthDifference = targetSize.width - interpolatedSize.width;
         int heightDifference = targetSize.height - interpolatedSize.height;
-        int widthToAdd = Math.abs(widthDifference) < 3 ? widthDifference : (widthDifference) / 5;
-        int heightToAdd = Math.abs(heightDifference) < 3 ? heightDifference : (heightDifference) / 5;
+        int widthToAdd = Math.abs(widthDifference) < 4 ? MathHelper.clamp(Integer.compare(widthDifference, 0), -1, 1) : (widthDifference) / 4;
+        int heightToAdd = Math.abs(heightDifference) < 4 ? MathHelper.clamp(Integer.compare(heightDifference, 0), -1, 1) : (heightDifference) / 4;
         interpolatedSize = (DimensionWidthHeight) interpolatedSize.addTo(new DimensionWidthHeight(widthToAdd, heightToAdd));
         isAtTargetSize = interpolatedSize.equals(targetSize);
 
         if (pos.x + interpolatedSize.width > this.width)
-            pos = (CoordinateXY) pos.addTo(new CoordinateXY(-interpolatedSize.width, 0));
+            pos = (CoordinateXY) pos.addTo(new CoordinateXY(- interpolatedSize.width, 0));
 
         // SETUP
         RenderHelper.disableStandardItemLighting();
@@ -54,10 +55,10 @@ public class AbstractGuiWithVariableSize extends GuiScreen {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
         // DRAW BODY AND OUTLINE
-        drawRect(pos.x + 1, pos.y + 1, pos.x + interpolatedSize.width - 1, pos.y + interpolatedSize.height - 1, INTERIOR.getRGB());
+        drawRect(pos.x + 1, pos.y + 1, pos.x + interpolatedSize.width, pos.y + interpolatedSize.height, INTERIOR.getRGB());
 
-        drawVerticalLine(pos.x, pos.y + 2, pos.y + interpolatedSize.height - 2, OUTLINE.getRGB());
-        drawVerticalLine(pos.x + interpolatedSize.width, pos.y + 2, pos.y + interpolatedSize.height - 2, OUTLINE.getRGB());
+        drawVerticalLine(pos.x, pos.y + 1, pos.y + interpolatedSize.height - 1, OUTLINE.getRGB());
+        drawVerticalLine(pos.x + interpolatedSize.width, pos.y + 1, pos.y + interpolatedSize.height - 1, OUTLINE.getRGB());
         drawHorizontalLine(pos.x + 2, pos.x + interpolatedSize.width - 2, pos.y, OUTLINE.getRGB());
         drawHorizontalLine(pos.x + 2, pos.x + interpolatedSize.width - 2, pos.y + interpolatedSize.height, OUTLINE.getRGB());
 
