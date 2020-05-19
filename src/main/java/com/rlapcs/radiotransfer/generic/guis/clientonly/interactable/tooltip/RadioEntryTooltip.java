@@ -2,7 +2,6 @@ package com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.tooltip;
 
 import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateXY;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.DimensionWidthHeight;
-import com.rlapcs.radiotransfer.generic.multiblock.MultiblockPowerUsageData;
 import com.rlapcs.radiotransfer.generic.multiblock.MultiblockPowerUsageData.PowerUsageEntry;
 import com.rlapcs.radiotransfer.generic.multiblock.MultiblockPowerUsageData.PowerUsageEntry.UpgradeCardPowerEntry;
 import net.minecraft.item.ItemStack;
@@ -16,11 +15,13 @@ public class RadioEntryTooltip extends GuiTooltip {
     private static final double ITEM_SCALE = .6875;
     private int yOffset;
     private ArrayList<String> textBeingDrawn;
+    private boolean isFirstPass;
 
     public RadioEntryTooltip(CoordinateXY pos, DimensionWidthHeight targetSize) {
         super(pos, targetSize);
         textBeingDrawn = new ArrayList<>();
         yOffset = 15;
+        isFirstPass = false;
     }
 
     @Override
@@ -29,8 +30,9 @@ public class RadioEntryTooltip extends GuiTooltip {
         yOffset = 0;
         textBeingDrawn.clear();
 
-        drawText(TextFormatting.DARK_PURPLE.toString() + TextFormatting.UNDERLINE + entry.getTitle() + TextFormatting.RESET, Color.WHITE);
-        drawString(mc.fontRenderer, String.format("%sACTIVE", entry.isActive ? "" : "IN"), getActiveX(), pos.y + 3, entry.isActive ? Color.GREEN.getRGB() : Color.RED.getRGB());
+        drawText(TextFormatting.UNDERLINE + entry.getTitle() + TextFormatting.RESET, Color.decode("#E8B07B"));
+        if (!isFirstPass)
+            drawString(mc.fontRenderer, String.format("%s%sACTIVE", TextFormatting.BOLD, entry.isActive ? "" : "IN"), getActiveX(), pos.y + 3, entry.isActive ? Color.GREEN.getRGB() : Color.RED.getRGB());
         if (entry.requiresConstantPower()) {
             drawText("Base: " + entry.basePowerPerTick + " FE/t", Color.WHITE);
             if (entry.getSortedUpgradeCardConstantCosts().size() > 0) {
@@ -44,7 +46,8 @@ public class RadioEntryTooltip extends GuiTooltip {
             drawText("Does not require constant power.", Color.GRAY);
 
         yOffset++;
-        drawHorizontalLine(pos.x + 4, pos.x + interpolatedSize.width - 4, pos.y + yOffset, Color.decode("#202020").getRGB());
+        if (!isFirstPass)
+            drawHorizontalLine(pos.x + 4, pos.x + interpolatedSize.width - 4, pos.y + yOffset, Color.decode("#202020").getRGB());
         yOffset++;
 
         if (entry.requiresProcessPower()) {
@@ -62,6 +65,9 @@ public class RadioEntryTooltip extends GuiTooltip {
 
     @Override
     protected DimensionWidthHeight calculateTargetSize() {
+        isFirstPass = true;
+        renderContent();
+        isFirstPass = false;
         int width = 15;
         if (textBeingDrawn.size() > 0) {
             width = getLineLength(textBeingDrawn.get(0));
@@ -72,21 +78,20 @@ public class RadioEntryTooltip extends GuiTooltip {
     }
 
     private void drawText(String text, Color color) {
-        drawString(mc.fontRenderer, text, pos.x + 3, pos.y + yOffset + 3, color.getRGB());
+        if (!isFirstPass)
+            drawString(mc.fontRenderer, text, pos.x + 3, pos.y + yOffset + 3, color.getRGB());
         yOffset += 12;
         textBeingDrawn.add(text);
     }
 
     private void renderCardItem(ItemStack item) {
         GL11.glScaled(ITEM_SCALE, ITEM_SCALE, ITEM_SCALE);
-        mc.getRenderItem().renderItemIntoGUI(item, (int)((pos.x + 14) / ITEM_SCALE), (int)((pos.y + yOffset + 1) / ITEM_SCALE));
+        if (!isFirstPass)
+            mc.getRenderItem().renderItemIntoGUI(item, (int)((pos.x + 14) / ITEM_SCALE), (int)((pos.y + yOffset + 1) / ITEM_SCALE));
         GL11.glScaled(1 / ITEM_SCALE,1 / ITEM_SCALE,1 / ITEM_SCALE);
     }
 
     private int getActiveX() {
-        //int min = pos.x + getLineLength(((PowerUsageEntry) this.content).getTitle()) + 8 + getLineLength(String.format("%sACTIVE", ((PowerUsageEntry) this.content).isActive ? "" : "IN"));
-        //if (targetSize.width < min)
-        //    return min;
-        return pos.x + targetSize.width - getLineLength(String.format("%s", ((PowerUsageEntry) this.content).isActive ? "ACTIVE" : "INACTIVE")) - 2;
+        return pos.x + targetSize.width - getLineLength(String.format("%s", ((PowerUsageEntry) this.content).isActive ? "ACTIVE" : "INACTIVE")) - 5;
     }
 }

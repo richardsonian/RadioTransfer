@@ -10,6 +10,7 @@ import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateXY;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.DimensionWidthHeight;
 import com.rlapcs.radiotransfer.network.messages.toServer.MessageAddClientListener;
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Mouse;
 
@@ -53,13 +54,10 @@ public class GuiPowerSupply extends AbstractGuiMachine<TilePowerSupply> {
         super.drawScreen(mouseX, mouseY, partialTicks);
         powerBar.draw();
         list.drawList(mouseX, mouseY, partialTicks, mc.getRenderItem()); //changed this to be drawn after powerbar for debug, is that ok?
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(0f, 0f, 500);
         tooltip.draw();
         radioEntryTooltip.draw();
-    }
-
-    @Override
-    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-
+        GlStateManager.popMatrix();
     }
 }
