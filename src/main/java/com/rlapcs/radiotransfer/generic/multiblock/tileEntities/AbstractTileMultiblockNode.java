@@ -48,6 +48,7 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
             sendDebugMessage(TextFormatting.GREEN + " " + this + " registered " + TextFormatting.RESET + " to: " + controller);
 
             updateClientsRegisteredState(true);
+            updateClientsPowerState(controller.isPowered());
             onRegisterInMultiblock();
         }
     }
@@ -60,6 +61,7 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
             this.controller = null; //must come after notify surrounding
 
             updateClientsRegisteredState(false);
+            updateClientsPowerState(false);
             onDeregisterInMultiblock();
         }
     }
@@ -68,6 +70,7 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
     }
     protected void onRegisterInMultiblock() {}
     protected void onDeregisterInMultiblock() {}
+
     /**
      * Sets the registered state without performing any logic
      */
@@ -254,6 +257,18 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
     }
 
     //~~~~~~~~~~~~~~~~~~Client Cached Powered State~~~~~~~~~~~~~~~~~~~~//
+    //Server Only
+    /**
+     * Updates this Node's powered state to all clients that have it loaded.
+     * If updating multiple nodes at once, use MultiblockRadioController#updateClientNodesPowerState();
+     * @param target The state to update; true = powered, false = unpowered.
+     */
+    public void updateClientsPowerState(boolean target) {
+        int dimension = this.world.provider.getDimension();
+        ModNetworkMessages.INSTANCE.sendToAllTracking(new MessageUpdateClientTileMultiblockNodePowered(Collections.singletonList(this), target), new NetworkRegistry.TargetPoint(
+                dimension, pos.getX(), pos.getY(), pos.getZ(), -1
+        ));
+    }
     //Client only
     public void setClientPowered(boolean target) {
         this.cachedPowered = target;

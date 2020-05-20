@@ -59,6 +59,11 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
         outList.sort(ENTRY_ORDERING);
         return outList;
     }
+    
+    //Either side
+    public double getTotalPowerUsage() {
+        return entries.stream().mapToDouble(e -> e.totalPowerPerTick).sum();
+    }
 
     //For Server
     @Override
