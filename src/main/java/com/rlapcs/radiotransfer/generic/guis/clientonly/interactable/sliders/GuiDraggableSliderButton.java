@@ -4,8 +4,10 @@ import com.rlapcs.radiotransfer.ModConstants;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.InteractiveGuiElement;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateUV;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateXY;
+import com.rlapcs.radiotransfer.generic.guis.coordinate.DimensionWidthHeight;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.util.math.MathHelper;
 
 public class GuiDraggableSliderButton extends InteractiveGuiElement {
@@ -13,22 +15,20 @@ public class GuiDraggableSliderButton extends InteractiveGuiElement {
     private static final CoordinateXY DIMS = new CoordinateXY(8, 15);
 
     private CoordinateXY pos;
-    private int guiLeft, guiTop, mouseOffset, min, max;
+    private int mouseOffset, min, max;
     private boolean wasDragging;
 
-    public GuiDraggableSliderButton(int id, int x, int y, int guiLeft, int guiTop, int min, int max) {
-        super(id, x, y, DIMS.x, DIMS.y);
+    public GuiDraggableSliderButton(CoordinateXY pos) {
+        super(0, pos.x, pos.y, DIMS.x, DIMS.y);
 
-        pos = new CoordinateXY(guiLeft + x, guiTop + y);
-        this.min = min;
-        this.max = max;
-        this.guiLeft = guiLeft;
-        this.guiTop = guiTop;
+        this.pos = pos;
+        this.min = pos.y;
+        this.max = pos.y + 58; // MAGIC SIZE NUMBER
         this.wasDragging = false;
     }
 
-    public int getY() {
-        return pos.y - guiTop;
+    public double getScrollPos() {
+        return (double) (pos.y - min) / (double) (max - min + 1);
     }
 
     @Override
@@ -55,6 +55,8 @@ public class GuiDraggableSliderButton extends InteractiveGuiElement {
      */
     public void drawButton(Minecraft mc, int mouseX, int mouseY, boolean dragging, double scroll) {
         if (this.visible) {
+            RenderHelper.disableStandardItemLighting();
+            RenderHelper.enableGUIStandardItemLighting();
             mc.getTextureManager().bindTexture(ModConstants.ICONS);
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
@@ -71,10 +73,11 @@ public class GuiDraggableSliderButton extends InteractiveGuiElement {
             //XY[1] = 2 * XY[1] - mouseY;
             boolean up = scroll > 0;
             int scrollChange = up ? (int) Math.ceil(Math.abs(scroll)) : - (int) Math.ceil(Math.abs(scroll));
-            pos.y = MathHelper.clamp(pos.y - scrollChange, guiTop + min, guiTop + max);
+            pos.y = MathHelper.clamp(pos.y - scrollChange, min, max);
             this.drawTexturedModalRect(pos.x, pos.y, getUV().u, getUV().v, this.width, this.height);
             wasDragging = dragging;
             this.hovered = mouseX >= pos.x && mouseY >= pos.y && mouseX < pos.x + this.width && mouseY < pos.y + this.height;
+            RenderHelper.enableStandardItemLighting();
         }
     }
 }

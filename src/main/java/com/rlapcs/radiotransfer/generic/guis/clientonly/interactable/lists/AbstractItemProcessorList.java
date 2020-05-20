@@ -4,17 +4,19 @@ import com.rlapcs.radiotransfer.generic.capability.ItemPacketQueue;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.items.AbstractItemProcessorGuiListItem;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.items.ItemDecoderGuiListItem;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateXY;
+import com.rlapcs.radiotransfer.generic.guis.coordinate.DimensionWidthHeight;
 import com.rlapcs.radiotransfer.machines.processors.item_processors.item_decoder.TileItemDecoder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 
 public abstract class AbstractItemProcessorList extends AbstractGuiList{
-    public static final CoordinateXY BAR_REL_COORDS = new CoordinateXY(59, -3);
-    public static final int NUM_ITEMS = 4;
-    public static final int LIST_ITEM_SPACING = 3;
+    private static final CoordinateXY BAR_REL_COORDS = new CoordinateXY(59, -2);
+    private static final int NUM_ITEMS = 4;
+    protected static final int LIST_ITEM_SPACING = 3;
+    private static final DimensionWidthHeight SIZE = new DimensionWidthHeight(66, 73);
 
-    public AbstractItemProcessorList(Minecraft mc, GuiScreen screen, ItemPacketQueue queue, int x, int y, int guiLeft, int guiTop) {
-        super(mc, screen, queue, x, y, guiLeft, guiTop);
+    public AbstractItemProcessorList(CoordinateXY pos, GuiScreen screen, ItemPacketQueue queue, int guiLeft, int guiTop) {
+        super(pos, SIZE, screen, queue, guiLeft, guiTop);
     }
 
     @Override

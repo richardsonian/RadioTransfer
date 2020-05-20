@@ -52,9 +52,9 @@ public class PowerSupplyListItem extends AbstractGuiListItem {
 
         //sendDebugMessage(this.toString() + " hovering: " + hovered);
         if (this.hovered)
-            ((GuiPowerSupply) screen).radioEntryTooltip.activate(powerData);
+            ((GuiPowerSupply) screen).powerSupplyEntryTooltip.activate(powerData);
         else if (wasHovering)
-            ((GuiPowerSupply) screen).radioEntryTooltip.deactivate();
+            ((GuiPowerSupply) screen).powerSupplyEntryTooltip.deactivate();
 
         RenderHelper.enableStandardItemLighting();
 

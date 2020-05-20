@@ -14,7 +14,7 @@ public class CoordinateUV extends Coordinate {
     }
 
     @Override
-    public Coordinate addTo(Coordinate coordinate) {
+    public CoordinateUV addTo(Coordinate coordinate) {
         return new CoordinateUV(u + coordinate.getDimension1(), v + coordinate.getDimension2());
     }
 

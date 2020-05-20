@@ -21,6 +21,6 @@ public class GuiItemEncoder extends AbstractGuiItemProcessor<TileItemEncoder> {
     public void initGui() {
         super.initGui();
 
-        visual = new ItemEncoderGuiList(Minecraft.getMinecraft(), this, tileEntity.getHandler(), LIST_POS.x, LIST_POS.y, guiLeft, guiTop, tileEntity);
+        visual = new ItemEncoderGuiList(LIST_POS, this, tileEntity.getHandler(), guiLeft, guiTop, tileEntity);
     }
 }

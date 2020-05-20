@@ -11,13 +11,13 @@ import org.lwjgl.opengl.GL11;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class RadioEntryTooltip extends GuiTooltip {
+public class PowerSupplyEntryTooltip extends GuiTooltip {
     private static final double ITEM_SCALE = .6875;
     private int yOffset;
     private ArrayList<String> textBeingDrawn;
     private boolean isFirstPass;
 
-    public RadioEntryTooltip(CoordinateXY pos, DimensionWidthHeight targetSize) {
+    public PowerSupplyEntryTooltip(CoordinateXY pos, DimensionWidthHeight targetSize) {
         super(pos, targetSize);
         textBeingDrawn = new ArrayList<>();
         yOffset = 15;
@@ -87,7 +87,7 @@ public class RadioEntryTooltip extends GuiTooltip {
     private void renderCardItem(ItemStack item) {
         GL11.glScaled(ITEM_SCALE, ITEM_SCALE, ITEM_SCALE);
         if (!isFirstPass)
-            mc.getRenderItem().renderItemIntoGUI(item, (int)((pos.x + 14) / ITEM_SCALE), (int)((pos.y + yOffset + 1) / ITEM_SCALE));
+            mc.getRenderItem().renderItemIntoGUI(item, (int)((pos.x + 13) / ITEM_SCALE), (int)((pos.y + yOffset + 1) / ITEM_SCALE));
         GL11.glScaled(1 / ITEM_SCALE,1 / ITEM_SCALE,1 / ITEM_SCALE);
     }
 

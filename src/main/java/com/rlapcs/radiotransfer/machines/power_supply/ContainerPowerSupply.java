@@ -8,7 +8,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
 public class ContainerPowerSupply extends AbstractContainerMachine<TilePowerSupply> {
-    protected CoordinateXY POWER_ITEM_POS = new CoordinateXY(39, 52);
+    protected CoordinateXY POWER_ITEM_POS = new CoordinateXY(141, 83);
 
     public ContainerPowerSupply(IInventory playerInventory, TilePowerSupply te) {
         super(playerInventory, te);

@@ -42,6 +42,8 @@ public class GuiTooltip extends AbstractGuiWithVariableSize {
             targetSize = calculateTargetSize();
             int scaleFactor = new ScaledResolution(mc).getScaleFactor();
             pos = new CoordinateXY(Mouse.getX() / scaleFactor, this.height - Mouse.getY() / scaleFactor);
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(0f, 0f, 500);
             super.draw();
             //sendDebugMessage(this.toString() + " is active target size: " + targetSize + "  real size: " + interpolatedSize);
             if (isAtTargetSize) {
@@ -50,6 +52,7 @@ public class GuiTooltip extends AbstractGuiWithVariableSize {
                 renderContent();
                 RenderHelper.enableStandardItemLighting();
             }
+            GlStateManager.popMatrix();
         }
     }
 

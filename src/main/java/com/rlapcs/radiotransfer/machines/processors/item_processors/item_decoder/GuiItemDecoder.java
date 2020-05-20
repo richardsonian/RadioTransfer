@@ -23,6 +23,6 @@ public class GuiItemDecoder extends AbstractGuiItemProcessor<TileItemDecoder> {
     public void initGui() {
         super.initGui();
 
-        visual = new ItemDecoderGuiList(Minecraft.getMinecraft(), this, tileEntity.getHandler(), LIST_POS.x, LIST_POS.y, guiLeft, guiTop, tileEntity);
+        visual = new ItemDecoderGuiList(LIST_POS, this, tileEntity.getHandler(), guiLeft, guiTop, tileEntity);
     }
 }
