@@ -17,6 +17,7 @@ import com.rlapcs.radiotransfer.util.Debug;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
@@ -64,9 +65,12 @@ public abstract class AbstractGuiListItem extends InteractiveGuiElement {
         }
 
         void draw(int x, int y, Minecraft mc, GuiScreen screen) {
+            RenderHelper.disableStandardItemLighting();
+            RenderHelper.enableGUIStandardItemLighting();
             mc.getTextureManager().bindTexture(ModConstants.ICONS);
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             screen.drawTexturedModalRect(x, y, UV.u, UV.v, 59, 4);
+            RenderHelper.enableStandardItemLighting();
         }
     }
 }

@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.util.text.TextFormatting;
 
 public class ItemEncoderGuiListItem extends AbstractItemProcessorGuiListItem {
-    public static CoordinateXY DUMP_REL_POS = new CoordinateXY(DIMS.x - 36, 2);
+    public static CoordinateXY DUMP_REL_POS = new CoordinateXY(DIMS.x - 29, 2);
 
     protected GuiDumpButton dumpButton;
 

@@ -86,7 +86,7 @@ public abstract class AbstractGuiList {
             scrollBar.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, isScrolling, scrollVal / (double) listContent.size());
             if (start != 0)
                 upIndicator.draw();
-            if (start + 3 < listContent.size())
+            if (start + 3 < listContent.size() - 1)
                 downIndicator.draw();
         }
     }
@@ -103,13 +103,13 @@ public abstract class AbstractGuiList {
         private double tick;
         private CoordinateXY pos;
 
-        public MoreItemsIndicator(boolean up, CoordinateXY pos) {
+        MoreItemsIndicator(boolean up, CoordinateXY pos) {
             this.up = up;
             this.pos = pos;
             this.tick = 0;
         }
 
-        public void draw() {
+        void draw() {
             // calculate y pos
 
             tick += SPEED;
