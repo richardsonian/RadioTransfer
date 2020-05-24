@@ -181,9 +181,12 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
 
     //~~~~~~~~~~~~~~~~~~~~~~~Universal Calculations for Power Data~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     //- Move some of this to MultiblockPowerData object, so it can be calculated on call instead of sending over network?
+    public int getPowerPerTickIgnoreStatus() {
+        return getBasePowerPerTick() + getConstantPowerUpgradeTotalCost();
+    }
     public int getPowerPerTick() {
         if(isActive()) { //Only require constant power if active
-            return getBasePowerPerTick() + getConstantPowerUpgradeTotalCost();
+            return getPowerPerTickIgnoreStatus();
         }
         else {
             return 0;

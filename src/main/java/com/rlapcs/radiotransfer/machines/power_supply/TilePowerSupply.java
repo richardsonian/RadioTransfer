@@ -1,7 +1,6 @@
 package com.rlapcs.radiotransfer.machines.power_supply;
 
 import com.rlapcs.radiotransfer.ModConstants;
-import com.rlapcs.radiotransfer.generic.capability.MachinePowerHandler;
 import com.rlapcs.radiotransfer.generic.multiblock.MultiblockPowerUsageData;
 import com.rlapcs.radiotransfer.generic.multiblock.tileEntities.AbstractTileMultiblockNodeWithInventory;
 import com.rlapcs.radiotransfer.generic.tileEntities.ITileClientUpdater;
@@ -9,14 +8,11 @@ import com.rlapcs.radiotransfer.generic.tileEntities.ITilePowerBarProvider;
 import com.rlapcs.radiotransfer.network.messages.toClient.MessageUpdateClientTileMultiblockPowerData;
 import com.rlapcs.radiotransfer.network.messages.toClient.MessageUpdateClientTilePowerBar;
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
-import com.rlapcs.radiotransfer.util.Debug;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -31,8 +27,8 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
     public static final int INVENTORY_SIZE = 1;
     public static final int POWER_ITEM_INDEX = 0;
 
-    public static final int POWER_ITEM_UPDATE_TICKS = 20;
-    public static final int POWER_BAR_CLIENT_UPDATE_TICKS = 10;
+    public static final int POWER_ITEM_UPDATE_TICKS = 1;
+    public static final int POWER_BAR_CLIENT_UPDATE_TICKS = 5;
     public static final int MULTIBLOCK_POWER_DATA_CLIENT_UPDATE_TICKS = 20;
 
     //~~~~~~~~~~~~~~~~~~INSTANCE VARS~~~~~~~~~~~~~~~~~~~~~~~~~~//

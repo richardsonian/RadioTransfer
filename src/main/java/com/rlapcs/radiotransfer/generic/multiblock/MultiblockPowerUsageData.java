@@ -1,11 +1,10 @@
 package com.rlapcs.radiotransfer.generic.multiblock;
 
 import com.rlapcs.radiotransfer.ModConfig;
-import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.tooltip.ITooltipContent;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.lists.IGuiListContent;
+import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.tooltip.ITooltipContent;
 import com.rlapcs.radiotransfer.generic.multiblock.tileEntities.AbstractTileMultiblockNode;
 import com.rlapcs.radiotransfer.registries.ModBlocks;
-import com.rlapcs.radiotransfer.util.Debug;
 import com.rlapcs.radiotransfer.util.NBTUtils;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
@@ -14,15 +13,12 @@ import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import java.time.Instant;
 import java.util.*;
-
-import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
 
 /**
  * This class is so incredibly memory and network inefficient but I don't care
@@ -97,7 +93,7 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
         entries.add(getRadioEntry());
         for(AbstractTileMultiblockNode n : nodes) {
             if(n != null && !n.isInvalid()) { //If node is valid
-                if(n.getPowerPerTick() != 0 || n.getPowerPerProcess() != 0) { //if node requires power
+                if(n.getPowerPerTickIgnoreStatus() != 0 || n.getPowerPerProcess() != 0) { //if node requires power
                     entries.add(new PowerUsageEntry(n));
                 }
             }
@@ -162,7 +158,7 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
             basePowerPerTick = te.getBasePowerPerTick();
             upgradeCardConstantCosts = new HashSet<>();
             te.getConstantPowerContributingUpgrades().forEach((u) -> upgradeCardConstantCosts.add(new UpgradeCardPowerEntry(u, te.getUpgradeCardConstantPowerCosts().get(u), te.getUpgradeCardQuantities().get(u))));
-            effectivePowerPerTick = te.getPowerPerTick();
+            effectivePowerPerTick = te.getPowerPerTickIgnoreStatus();
 
             //Grab all the process power values
             basePowerPerProcess = te.getBasePowerPerProcess();
@@ -282,22 +278,10 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
 
 
         public boolean requiresConstantPower() {
-            if(effectivePowerPerTick > 0) return true;
-            //Account for when inactive
-            boolean hasUpgradeCost = false;
-            for(UpgradeCardPowerEntry u : upgradeCardConstantCosts) {
-                if(u.total > 0) hasUpgradeCost = true;
-            }
-            return ((basePowerPerTick > 0) || hasUpgradeCost);
+            return (effectivePowerPerTick > 0);
         }
         public boolean requiresProcessPower() {
-            if(effectivePowerPerProcess > 0) return true;
-            //Account for when inactive
-            boolean hasUpgradeCost = false;
-            for(UpgradeCardPowerEntry u : upgradeCardProcessCosts) {
-                if(u.total > 0) hasUpgradeCost = true;
-            }
-            return ((basePowerPerProcess > 0) || hasUpgradeCost);
+            return (effectivePowerPerProcess > 0);
         }
 
 
