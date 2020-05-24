@@ -263,6 +263,7 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
             //calculations
             totalPowerPerTick = effectivePowerPerTick + averageProcessPowerPerTick;
         }
+        
         public List<UpgradeCardPowerEntry> getSortedUpgradeCardConstantCosts() {
             ArrayList<UpgradeCardPowerEntry> out = new ArrayList<>(upgradeCardConstantCosts);
             out.removeIf(u -> u.quantity == 0);

@@ -38,7 +38,7 @@ public class PowerSupplyEntryTooltip extends GuiTooltip {
             if (entry.getSortedUpgradeCardConstantCosts().size() > 0) {
                 for (UpgradeCardPowerEntry cardEntry : entry.getSortedUpgradeCardConstantCosts()) {
                     renderCardItem(new ItemStack(cardEntry.item));
-                    drawText(" -   " + cardEntry + " FE/t", Color.WHITE);
+                    drawText("      " + cardEntry + " FE/t", Color.WHITE);
                 }
             }
             drawText(String.format("Total per tick: %d FE/t", entry.effectivePowerPerTick), Color.WHITE);
@@ -55,10 +55,11 @@ public class PowerSupplyEntryTooltip extends GuiTooltip {
             if (entry.getSortedUpgradeCardProcessCosts().size() > 0) {
                 for (UpgradeCardPowerEntry cardEntry : entry.getSortedUpgradeCardProcessCosts()) {
                     renderCardItem(new ItemStack(cardEntry.item));
-                    drawText(" -   " + cardEntry + " FE/process", Color.WHITE);
+                    drawText("      " + cardEntry + " FE/process", Color.WHITE);
                 }
             }
-            drawText(String.format("Total per tick: %d FE/process", entry.effectivePowerPerProcess), Color.WHITE);
+            drawText(String.format("Total per process: %d FE/process", entry.effectivePowerPerProcess), Color.WHITE);
+            drawText(String.format("Average cost per tick: %f FE/t", entry.averageProcessPowerPerTick), Color.WHITE);
         } else
             drawText("Does not require power per process.", Color.GRAY);
     }

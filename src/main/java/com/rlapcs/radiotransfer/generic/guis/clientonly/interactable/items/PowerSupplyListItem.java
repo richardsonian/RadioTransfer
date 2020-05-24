@@ -48,7 +48,7 @@ public class PowerSupplyListItem extends AbstractGuiListItem {
         GL11.glScaled(1 / ITEM_SCALE,1 / ITEM_SCALE,1 / ITEM_SCALE);
 
         //draw power usage
-        screen.drawString(mc.fontRenderer, powerData.totalPowerPerTick + " FE/t", this.x + POWER_TEXT_REL_POS.x, this.y + POWER_TEXT_REL_POS.y, Color.white.getRGB());
+        screen.drawString(mc.fontRenderer, powerData.totalPowerPerTick + " FE/t", this.x + POWER_TEXT_REL_POS.x, this.y + POWER_TEXT_REL_POS.y, ((TilePowerSupply) tile).getClientPowered() ? Color.white.getRGB() : Color.red.getRGB());
 
         //sendDebugMessage(this.toString() + " hovering: " + hovered);
         if (this.hovered)
