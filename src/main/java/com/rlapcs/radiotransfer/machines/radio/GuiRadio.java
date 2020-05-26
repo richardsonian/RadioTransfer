@@ -4,6 +4,7 @@ import com.enderio.core.common.util.NNList;
 import com.rlapcs.radiotransfer.RadioTransfer;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.AbstractGuiMachine;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.GuiEmbedded3DBlockViewer;
+import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.indicators.GuiPowerIndicator;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateXY;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.DimensionWidthHeight;
 import com.rlapcs.radiotransfer.machines.antennas.basic_antenna.BlockBasicAntenna;

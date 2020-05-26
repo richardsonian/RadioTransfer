@@ -11,6 +11,8 @@ import org.lwjgl.opengl.GL11;
 import java.awt.*;
 import java.util.ArrayList;
 
+import static com.rlapcs.radiotransfer.generic.guis.clientonly.GuiUtil.getLineLength;
+
 public class PowerSupplyEntryTooltip extends GuiTooltip {
     private static final double ITEM_SCALE = .6875;
     private int yOffset;
@@ -59,7 +61,7 @@ public class PowerSupplyEntryTooltip extends GuiTooltip {
                 }
             }
             drawText(String.format("Total per process: %d FE/process", entry.effectivePowerPerProcess), Color.WHITE);
-            drawText(String.format("Average cost per tick: %f FE/t", entry.averageProcessPowerPerTick), Color.WHITE);
+            drawText(String.format("Average cost per tick: %d FE/t", Math.round(entry.averageProcessPowerPerTick)), Color.WHITE);
         } else
             drawText("Does not require power per process.", Color.GRAY);
     }
@@ -88,11 +90,11 @@ public class PowerSupplyEntryTooltip extends GuiTooltip {
     private void renderCardItem(ItemStack item) {
         GL11.glScaled(ITEM_SCALE, ITEM_SCALE, ITEM_SCALE);
         if (!isFirstPass)
-            mc.getRenderItem().renderItemIntoGUI(item, (int)((pos.x + 13) / ITEM_SCALE), (int)((pos.y + yOffset + 1) / ITEM_SCALE));
+            mc.getRenderItem().renderItemIntoGUI(item, (int)((pos.x + 15) / ITEM_SCALE), (int)((pos.y + yOffset + 1) / ITEM_SCALE));
         GL11.glScaled(1 / ITEM_SCALE,1 / ITEM_SCALE,1 / ITEM_SCALE);
     }
 
     private int getActiveX() {
-        return pos.x + targetSize.width - getLineLength(String.format("%s", ((PowerUsageEntry) this.content).isActive ? "ACTIVE" : "INACTIVE")) - 5;
+        return pos.x + targetSize.width - getLineLength(String.format("%s", ((PowerUsageEntry) this.content).isActive ? "ACTIVE" : "INACTIVE")) - (((PowerUsageEntry) this.content).isActive ? 7 : 9);
     }
 }

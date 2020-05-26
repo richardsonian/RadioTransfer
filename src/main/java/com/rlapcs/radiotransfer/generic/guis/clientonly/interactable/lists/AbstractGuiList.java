@@ -62,7 +62,7 @@ public abstract class AbstractGuiList {
         scrollVal = up ? Math.log(Math.abs(scroll) + 1) : -Math.log(Math.abs(scroll) + 1);
 
         int start = MathHelper.clamp((int) ((listContent.size() - 3) * scrollBar.getScrollPos()), 0, listContent.size() - 3);
-        sendDebugMessage("scrollBar: " + scrollBar.getScrollPos());
+        //sendDebugMessage("scrollBar: " + scrollBar.getScrollPos());
 
         /* Render Items */
         if (listContent.size() > 0) {
