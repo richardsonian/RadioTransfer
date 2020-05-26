@@ -106,7 +106,7 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
         if(!clientListeners.isEmpty()) {
             //Debug.sendToAllPlayers(TextFormatting.GRAY + "Sending power bar to clients with power: " + energyStorage.getEnergyStored(), world);
             //need to change power input
-            clientListeners.forEach((p) -> ModNetworkMessages.INSTANCE.sendToAll(new MessageUpdateClientTilePowerBar(this, energyStorage.getEnergyStored())));
+            clientListeners.forEach((p) -> ModNetworkMessages.INSTANCE.sendTo(new MessageUpdateClientTilePowerBar(this, energyStorage.getEnergyStored()), p));
         }
     }
     public void updateClientMultiblockPowerData() {
@@ -115,7 +115,7 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
             //Tell controller to update data
             this.getController().updatePowerUsageData();
             //Send message
-            clientListeners.forEach((p) -> ModNetworkMessages.INSTANCE.sendToAll(new MessageUpdateClientTileMultiblockPowerData(this)));
+            clientListeners.forEach((p) -> ModNetworkMessages.INSTANCE.sendTo(new MessageUpdateClientTileMultiblockPowerData(this), p));
         }
     }
 
