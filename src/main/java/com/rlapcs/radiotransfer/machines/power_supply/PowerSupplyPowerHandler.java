@@ -2,7 +2,6 @@ package com.rlapcs.radiotransfer.machines.power_supply;
 
 import com.rlapcs.radiotransfer.ModConfig;
 import com.rlapcs.radiotransfer.generic.capability.MachinePowerHandler;
-import com.rlapcs.radiotransfer.util.Debug;
 
 /**
  * The Power handler for the PowerSupply
@@ -38,12 +37,14 @@ public class PowerSupplyPowerHandler extends MachinePowerHandler {
     public int usePower(int energy) {
         int toExtract = Math.min(energyStored, energy);
         energyStored -= toExtract;
+        this.onContentsChanged();
         return toExtract;
     }
 
     public int useAllPower() {
         int used = energyStored;
         energyStored = 0;
+        this.onContentsChanged();
         return used;
     }
 }

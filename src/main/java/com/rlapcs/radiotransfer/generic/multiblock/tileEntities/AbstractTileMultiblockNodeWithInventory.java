@@ -2,6 +2,7 @@ package com.rlapcs.radiotransfer.generic.multiblock.tileEntities;
 
 import com.rlapcs.radiotransfer.generic.other.UpgradeSlotWhitelist;
 import com.rlapcs.radiotransfer.generic.tileEntities.ITileItemHandlerProvider;
+import com.rlapcs.radiotransfer.util.Debug;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -30,6 +31,8 @@ AbstractTileMultiblockNodeWithInventory extends AbstractTileMultiblockNode imple
             protected void onContentsChanged(int slot) {
                 super.onContentsChanged(slot);
                 AbstractTileMultiblockNodeWithInventory.this.markDirty();
+                Debug.sendToAllPlayers("itemStackHandler changed. Sending Status Update.", world);
+                AbstractTileMultiblockNodeWithInventory.this.onStatusChange();
             }
             @Override
             public boolean isItemValid(int slot, @Nonnull ItemStack stack) {

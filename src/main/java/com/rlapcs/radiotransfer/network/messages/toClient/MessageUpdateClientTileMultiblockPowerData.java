@@ -1,9 +1,6 @@
 package com.rlapcs.radiotransfer.network.messages.toClient;
 
-import com.rlapcs.radiotransfer.generic.multiblock.MultiblockPowerUsageData;
-import com.rlapcs.radiotransfer.generic.tileEntities.ITilePowerBarProvider;
 import com.rlapcs.radiotransfer.machines.power_supply.TilePowerSupply;
-import com.rlapcs.radiotransfer.machines.radio.TileRadio;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -11,8 +8,6 @@ import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;

@@ -9,6 +9,7 @@ import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import com.rlapcs.radiotransfer.util.Debug;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
@@ -37,6 +38,30 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
         registeredInMultiblock = false;
         cachedPowered = false;
     }
+    //##################################################################################################//
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~STATUS UPDATES~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //##################################################################################################//
+    //Reporting data for radio gui
+    public NBTTagCompound writeStatusToNBT() {
+        NBTTagCompound nbt = new NBTTagCompound();
+        nbt.setLong("pos", pos.toLong());
+        nbt.setString("block", world.getBlockState(pos).getBlock().getRegistryName().toString());
+
+        NBTTagList tagList = new NBTTagList();
+        nbt.setTag("statuses", tagList);
+
+        return nbt;
+    }
+
+    /**
+     * Call this method whenever a setting changes that you want to be shown on the Radio GUI.
+     */
+    public void onStatusChange() {
+        if(registeredInMultiblock && controller != null && !controller.getTileEntity().isInvalid()) {
+            controller.getTileEntity().updateMultiblockStatusData(this);
+        }
+    }
+
 
     //##################################################################################################//
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~MULTIBLOCK REGISTRY~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
@@ -165,7 +190,7 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
      * Returns whether currently using power or not, process or constant
      * @return
      */
-    public abstract boolean isActive();
+    public boolean isActive() {return controller.isPowered();}
     public abstract int getBasePowerPerTick();
     public abstract Map<Item, Integer> getUpgradeCardConstantPowerCosts();
     public abstract int getBasePowerPerProcess();
@@ -271,6 +296,7 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
         ModNetworkMessages.INSTANCE.sendToAllTracking(new MessageUpdateClientTileMultiblockNodePowered(Collections.singletonList(this), target), new NetworkRegistry.TargetPoint(
                 dimension, pos.getX(), pos.getY(), pos.getZ(), -1
         ));
+        this.onStatusChange();
     }
     //Client only
     public void setClientPowered(boolean target) {

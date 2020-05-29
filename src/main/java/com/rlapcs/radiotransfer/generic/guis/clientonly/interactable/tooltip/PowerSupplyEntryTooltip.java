@@ -2,8 +2,8 @@ package com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.tooltip;
 
 import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateXY;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.DimensionWidthHeight;
-import com.rlapcs.radiotransfer.generic.multiblock.MultiblockPowerUsageData.PowerUsageEntry;
-import com.rlapcs.radiotransfer.generic.multiblock.MultiblockPowerUsageData.PowerUsageEntry.UpgradeCardPowerEntry;
+import com.rlapcs.radiotransfer.generic.multiblock.data.MultiblockPowerUsageData.PowerUsageEntry;
+import com.rlapcs.radiotransfer.generic.multiblock.data.MultiblockPowerUsageData.PowerUsageEntry.UpgradeCardPowerEntry;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.opengl.GL11;

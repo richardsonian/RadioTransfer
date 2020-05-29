@@ -1,6 +1,7 @@
-package com.rlapcs.radiotransfer.generic.multiblock;
+package com.rlapcs.radiotransfer.generic.multiblock.data;
 
 import com.rlapcs.radiotransfer.ModConfig;
+import com.rlapcs.radiotransfer.ModConstants;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.lists.IGuiListContent;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.tooltip.ITooltipContent;
 import com.rlapcs.radiotransfer.generic.multiblock.tileEntities.AbstractTileMultiblockNode;
@@ -24,18 +25,8 @@ import java.util.*;
  * This class is so incredibly memory and network inefficient but I don't care
  */
 public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializable<NBTTagCompound> {
-    public static final List<Block> NODE_ORDER;
-    static {
-        NODE_ORDER = new ArrayList<>();
-        NODE_ORDER.add(ModBlocks.radio);
-        NODE_ORDER.add(ModBlocks.tx_controller);
-        NODE_ORDER.add(ModBlocks.rx_controller);
-        NODE_ORDER.add(ModBlocks.item_encoder);
-        NODE_ORDER.add(ModBlocks.item_decoder);
-        NODE_ORDER.add(ModBlocks.power_supply);
-        NODE_ORDER.add(ModBlocks.basic_antenna);
-    }
-    public static final Comparator<PowerUsageEntry> ENTRY_ORDERING = Comparator.comparingInt(n -> NODE_ORDER.indexOf(n.block));
+    //Static values
+    public static final Comparator<PowerUsageEntry> ENTRY_ORDERING = Comparator.comparingInt(n -> ModConstants.NODE_ORDER.indexOf(n.block));
 
     //Instance Vars
     private Set<PowerUsageEntry> entries;
@@ -102,7 +93,7 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
     private PowerUsageEntry getRadioEntry() {
         PowerUsageEntry radio = new PowerUsageEntry();
         radio.block = ModBlocks.radio;
-        radio.isActive = true;
+        radio.isActive = true; //how to get this data?
         radio.basePowerPerTick = ModConfig.power_options.radio.powerPerTick;
         radio.effectivePowerPerTick = radio.basePowerPerTick;
         radio.totalPowerPerTick = radio.basePowerPerTick;

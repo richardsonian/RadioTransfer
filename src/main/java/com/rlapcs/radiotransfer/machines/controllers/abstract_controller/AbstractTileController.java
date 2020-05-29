@@ -1,10 +1,13 @@
 package com.rlapcs.radiotransfer.machines.controllers.abstract_controller;
 
+import com.rlapcs.radiotransfer.ModConstants;
+import com.rlapcs.radiotransfer.generic.multiblock.data.MultiblockStatusData;
 import com.rlapcs.radiotransfer.generic.multiblock.tileEntities.AbstractTileMultiblockNodeWithInventory;
 import com.rlapcs.radiotransfer.server.radio.RadioNetwork;
-import com.rlapcs.radiotransfer.ModConstants;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.common.util.Constants;
 
 import static com.rlapcs.radiotransfer.server.radio.RadioNetwork.MAX_FREQUENCY;
 import static com.rlapcs.radiotransfer.server.radio.RadioNetwork.MIN_FREQUENCY;
@@ -59,12 +62,27 @@ public abstract class AbstractTileController extends AbstractTileMultiblockNodeW
     }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //~~~~~~~~~~~~~~~~~~STATUS UPDATES~~~~~~~~~~~~~~~~~~//
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    @Override
+    public NBTTagCompound writeStatusToNBT() {
+        NBTTagCompound nbt = super.writeStatusToNBT();
+        NBTTagList tagList = nbt.getTagList("statuses", Constants.NBT.TAG_COMPOUND);
+
+        tagList.appendTag(new MultiblockStatusData.StatusBool("Activated", activated).toNBT());
+        tagList.appendTag(new MultiblockStatusData.StatusInt("Frequency", frequency).toNBT());
+
+        nbt.setTag("statuses", tagList);
+        return nbt;
+    }
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     //~~~~~~~~~~~~~~POWER / PROCESSES~~~~~~~~~~~~~~~~~~~//
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     //Used for power display calculations
     @Override
     public boolean isActive() {
-        return this.activated;
+        return super.isActive() && this.activated; //super checks powered state
     }
 
     @Override
@@ -84,6 +102,7 @@ public abstract class AbstractTileController extends AbstractTileMultiblockNodeW
     public void setActivated(boolean target) {
         activated = target;
         this.markDirty();
+        this.onStatusChange();
     }
     public boolean getActivated() {return activated;}
 
@@ -95,6 +114,7 @@ public abstract class AbstractTileController extends AbstractTileMultiblockNodeW
     private void setFrequency(int target) {
         frequency = target;
         this.markDirty();
+        this.onStatusChange();
     }
     public int getFrequency() {
         return frequency;

@@ -1,13 +1,16 @@
 package com.rlapcs.radiotransfer.machines.controllers.tx_controller;
 
 import com.rlapcs.radiotransfer.ModConfig;
+import com.rlapcs.radiotransfer.ModConstants;
+import com.rlapcs.radiotransfer.generic.multiblock.data.MultiblockStatusData;
 import com.rlapcs.radiotransfer.machines.controllers.abstract_controller.AbstractTileController;
 import com.rlapcs.radiotransfer.registries.ModItems;
 import com.rlapcs.radiotransfer.server.radio.TxMode;
-import com.rlapcs.radiotransfer.ModConstants;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.common.util.Constants;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -42,6 +45,7 @@ public class TileTxController extends AbstractTileController {
             mode = TxMode.SEQUENTIAL;
         }
         this.markDirty();
+        this.onStatusChange();
     }
     public TxMode getMode() {
         return mode;
@@ -64,7 +68,19 @@ public class TileTxController extends AbstractTileController {
 
         return compound;
     }
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //~~~~~~~~~~~~~~~~~~STATUS UPDATES~~~~~~~~~~~~~~~~~~//
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    @Override
+    public NBTTagCompound writeStatusToNBT() {
+        NBTTagCompound nbt = super.writeStatusToNBT();
+        NBTTagList tagList = nbt.getTagList("statuses", Constants.NBT.TAG_COMPOUND);
 
+        tagList.appendTag(new MultiblockStatusData.StatusString("Transmission Mode", mode.getFriendlyName()).toNBT());
+
+        nbt.setTag("statuses", tagList);
+        return nbt;
+    }
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     //~~~~~~~~~~~~~~~~~~~~~~~~POWER USAGE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//

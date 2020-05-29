@@ -3,6 +3,7 @@ package com.rlapcs.radiotransfer.machines.processors.material_processor;
 import com.rlapcs.radiotransfer.ModConstants;
 import com.rlapcs.radiotransfer.generic.capability.IMaterialTransferHandler;
 import com.rlapcs.radiotransfer.generic.capability.IMaterialTransferHandler.Packet;
+import com.rlapcs.radiotransfer.generic.multiblock.data.MultiblockStatusData;
 import com.rlapcs.radiotransfer.generic.tileEntities.IProgressBarProvider;
 import com.rlapcs.radiotransfer.generic.tileEntities.ITileClientUpdater;
 import com.rlapcs.radiotransfer.machines.processors.ProcessorType;
@@ -11,7 +12,10 @@ import com.rlapcs.radiotransfer.network.messages.toClient.MessageUpdateClientDum
 import com.rlapcs.radiotransfer.network.messages.toClient.MessageUpdateClientPacketQueue;
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.common.util.Constants;
 
 import java.util.HashSet;
 import java.util.List;
@@ -175,7 +179,24 @@ public abstract class AbstractTileMaterialProcessor<T extends IMaterialTransferH
     //For Power Display Calculations, just putting here because fuck you
     @Override
     public boolean isActive() {
-        return canDoProcessServer();
+        return super.isActive() && canDoProcessServer();
+    } //super checks powered
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //~~~~~~~~~~~~~~~~~~STATUS UPDATES~~~~~~~~~~~~~~~~~~//
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    @Override
+    public NBTTagCompound writeStatusToNBT() {
+        NBTTagCompound nbt = super.writeStatusToNBT();
+        NBTTagList tagList = nbt.getTagList("statuses", Constants.NBT.TAG_COMPOUND);
+
+        String status = canDoProcessServer() ? "processing" : "standby"; //no catch for whether this has changed, but status update is called on packetQueue change, inventory change, and powered state change—so this should be fine
+        tagList.appendTag(new MultiblockStatusData.StatusString("Status", status).toNBT());
+        int numSpeedUpgrades = itemStackHandler.getStackInSlot(SPEED_UPGRADE_SLOT_INDEX).getCount();
+        tagList.appendTag(new MultiblockStatusData.StatusInt("Speed Upgrades", numSpeedUpgrades).toNBT());
+
+        nbt.setTag("statuses", tagList);
+        return nbt;
     }
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     //~~~~~~~~~~~~~~~~~~~~~~~~MISC~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//

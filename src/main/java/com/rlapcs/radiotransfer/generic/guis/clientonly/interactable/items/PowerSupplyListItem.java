@@ -3,7 +3,7 @@ package com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.items;
 import com.rlapcs.radiotransfer.ModConstants;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateUV;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateXY;
-import com.rlapcs.radiotransfer.generic.multiblock.MultiblockPowerUsageData;
+import com.rlapcs.radiotransfer.generic.multiblock.data.MultiblockPowerUsageData;
 import com.rlapcs.radiotransfer.machines.power_supply.GuiPowerSupply;
 import com.rlapcs.radiotransfer.machines.power_supply.TilePowerSupply;
 import net.minecraft.client.Minecraft;

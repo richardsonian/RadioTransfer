@@ -1,17 +1,11 @@
 package com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.lists;
 
-import com.rlapcs.radiotransfer.generic.capability.ItemPacketQueue;
-import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.items.AbstractItemProcessorGuiListItem;
-import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.items.ItemDecoderGuiListItem;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.items.PowerSupplyListItem;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateXY;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.DimensionWidthHeight;
-import com.rlapcs.radiotransfer.generic.multiblock.MultiblockPowerUsageData;
+import com.rlapcs.radiotransfer.generic.multiblock.data.MultiblockPowerUsageData;
 import com.rlapcs.radiotransfer.machines.power_supply.TilePowerSupply;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-
-import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
 
 public class PowerSupplyList extends AbstractGuiList {
     public static final CoordinateXY BAR_REL_COORDS = new CoordinateXY(71, -2);

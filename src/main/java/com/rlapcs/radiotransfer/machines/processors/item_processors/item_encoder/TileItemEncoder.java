@@ -1,12 +1,16 @@
 package com.rlapcs.radiotransfer.machines.processors.item_processors.item_encoder;
 
 import com.rlapcs.radiotransfer.ModConfig;
+import com.rlapcs.radiotransfer.generic.multiblock.data.MultiblockStatusData;
 import com.rlapcs.radiotransfer.machines.processors.ProcessorType;
 import com.rlapcs.radiotransfer.machines.processors.item_processors.abstract_item_processor.AbstractTileItemProcessor;
 import com.rlapcs.radiotransfer.registries.ModItems;
 import com.rlapcs.radiotransfer.util.ItemUtils;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.common.util.Constants;
 
 import java.util.Collections;
 import java.util.HashMap;

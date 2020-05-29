@@ -6,34 +6,12 @@ import com.rlapcs.radiotransfer.generic.guis.clientonly.AbstractGuiMachine;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.GuiEmbedded3DBlockViewer;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateXY;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.DimensionWidthHeight;
-import com.rlapcs.radiotransfer.machines.antennas.basic_antenna.BlockBasicAntenna;
-import com.rlapcs.radiotransfer.machines.processors.item_processors.item_encoder.BlockItemEncoder;
-import net.minecraft.block.BlockBeacon;
-import net.minecraft.block.BlockDirt;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.renderer.texture.TextureUtil;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.inventory.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import com.rlapcs.radiotransfer.generic.multiblock.data.MultiblockStatusData;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 
-import java.io.IOException;
+import java.awt.*;
 import java.util.List;
-
-import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
 
 public class GuiRadio extends AbstractGuiMachine {
     private GuiEmbedded3DBlockViewer multiblockViewer;
@@ -68,10 +46,10 @@ public class GuiRadio extends AbstractGuiMachine {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         if (isClosed) {
-            coords = ((TileRadio) tileEntity).getMultiblockController().getMultiblockPositions();
+            coords = ((TileRadio) tileEntity).getMultiblockStatusData().getAllNodePositions();
+            coords.add(tileEntity.getPos());
             multiblockViewer.updateBlocksInList(new NNList<>(coords), selectedBlock);
             isClosed = false;
-            sendDebugMessage("screen opened");
         }
         super.drawScreen(mouseX, mouseY, partialTicks);
         selectedBlock = multiblockViewer.draw(mouseX, mouseY, partialTicks, new CoordinateXY(VIEWER_POS.x + pos.x, this.height - (VIEWER_POS.y + VIEWER_SIZE.height + pos.y)), VIEWER_SIZE);
@@ -79,6 +57,20 @@ public class GuiRadio extends AbstractGuiMachine {
     }
 
     private void drawText() {
+        CoordinateXY startPos = VIEWER_POS.addTo(VIEWER_SIZE).addTo(new CoordinateXY(10, 0));
+        int liney = 0;
 
+        if(selectedBlock.equals(tileEntity.getPos())) {
+            drawString(mc.fontRenderer, "Radio Selected.", startPos.x, startPos.y + liney, Color.white.getRGB());
+        }
+        else {
+            MultiblockStatusData statusData = ((TileRadio)tileEntity).getMultiblockStatusData();
+            MultiblockStatusData.NodeStatusEntry entry = statusData.getEntry(selectedBlock);
+            List<MultiblockStatusData.Status> statuses = entry.getStatuses();
+            for (MultiblockStatusData.Status status : statuses) {
+                drawString(mc.fontRenderer, status.toString(), startPos.x, startPos.y + liney, Color.white.getRGB());
+                liney += mc.fontRenderer.FONT_HEIGHT;
+            }
+        }
     }
 }

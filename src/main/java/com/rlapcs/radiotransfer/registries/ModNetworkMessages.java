@@ -24,6 +24,7 @@ public class ModNetworkMessages {
         INSTANCE.registerMessage(MessageUpdateClientTilePowerBar.Handler.class, MessageUpdateClientTilePowerBar.class, nextID(), Side.CLIENT);
         INSTANCE.registerMessage(MessageUpdateClientTileMultiblockPowerData.Handler.class, MessageUpdateClientTileMultiblockPowerData.class, nextID(), Side.CLIENT);
         INSTANCE.registerMessage(MessageUpdateClientTileMultiblockNodePowered.Handler.class, MessageUpdateClientTileMultiblockNodePowered.class, nextID(), Side.CLIENT);
+        INSTANCE.registerMessage(MessageUpdateClientTileMultiblockStatusData.Handler.class, MessageUpdateClientTileMultiblockStatusData.class, nextID(), Side.CLIENT);
     }
 
     private static int packetId = 0;

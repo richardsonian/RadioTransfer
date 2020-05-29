@@ -1,16 +1,16 @@
 package com.rlapcs.radiotransfer.machines.processors.item_processors.abstract_item_processor;
 
-import com.rlapcs.radiotransfer.ModConstants;
 import com.rlapcs.radiotransfer.generic.capability.ItemPacketQueue;
-import com.rlapcs.radiotransfer.generic.tileEntities.IProgressBarProvider;
+import com.rlapcs.radiotransfer.generic.multiblock.data.MultiblockStatusData;
 import com.rlapcs.radiotransfer.machines.processors.ProcessorType;
 import com.rlapcs.radiotransfer.machines.processors.material_processor.AbstractTileMaterialProcessor;
 import com.rlapcs.radiotransfer.server.radio.TransferType;
-import com.rlapcs.radiotransfer.util.Debug;
+import com.rlapcs.radiotransfer.util.ItemUtils;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraftforge.common.util.Constants;
 
 
 public abstract class AbstractTileItemProcessor extends AbstractTileMaterialProcessor<ItemPacketQueue> {
@@ -28,6 +28,7 @@ public abstract class AbstractTileItemProcessor extends AbstractTileMaterialProc
             public void onContentsChanged() {
                 super.onContentsChanged();
                 AbstractTileItemProcessor.this.markDirty();
+                AbstractTileItemProcessor.this.onStatusChange(); //should handle status updates for both canDoProcess and packetQueue
 
                 if(!AbstractTileItemProcessor.this.world.isRemote) {
                     AbstractTileItemProcessor.this.doClientPacketQueueUpdate();
@@ -85,7 +86,20 @@ public abstract class AbstractTileItemProcessor extends AbstractTileMaterialProc
 
         return compound;
     }
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //~~~~~~~~~~~~~~~~~~STATUS UPDATES~~~~~~~~~~~~~~~~~~//
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    @Override
+    public NBTTagCompound writeStatusToNBT() {
+        NBTTagCompound nbt = super.writeStatusToNBT();
+        NBTTagList tagList = nbt.getTagList("statuses", Constants.NBT.TAG_COMPOUND);
 
+        tagList.appendTag(new MultiblockStatusData.StatusBool("Has Items", !ItemUtils.isInventoryEmpty(itemStackHandler, getNonUpgradeInventorySlots())).toNBT());
+        tagList.appendTag(new MultiblockStatusData.StatusBool("Has Packets", packetQueue.isEmpty()).toNBT());
+
+        nbt.setTag("statuses", tagList);
+        return nbt;
+    }
 
     //Getters and setters
     @Override

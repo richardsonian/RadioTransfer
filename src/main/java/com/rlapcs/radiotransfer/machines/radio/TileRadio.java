@@ -1,24 +1,76 @@
 package com.rlapcs.radiotransfer.machines.radio;
 
 import com.rlapcs.radiotransfer.generic.multiblock.MultiblockRadioController;
+import com.rlapcs.radiotransfer.generic.multiblock.data.MultiblockStatusData;
+import com.rlapcs.radiotransfer.generic.multiblock.tileEntities.AbstractTileMultiblockNode;
 import com.rlapcs.radiotransfer.generic.tileEntities.AbstractTileMachineWithInventory;
+import com.rlapcs.radiotransfer.generic.tileEntities.ITileClientUpdater;
+import com.rlapcs.radiotransfer.network.messages.toClient.MessageUpdateClientTileMultiblockStatusData;
+import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import com.rlapcs.radiotransfer.server.radio.RadioNetwork;
 import com.rlapcs.radiotransfer.server.radio.TransferType;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 
-public class TileRadio extends AbstractTileMachineWithInventory { //power requirements?
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+public class TileRadio extends AbstractTileMachineWithInventory implements ITileClientUpdater {
     public final int MULTIBLOCK_UPDATE_TICKS = 20;
     public final int REGISTER_UPDATE_TICKS = 20;
     private final int SEND_RESOURCES_UPDATE_TICKS = 20;
     private static final int POWER_CHECK_TICKS = 1;
 
 
-    private MultiblockRadioController multiblock;
+    protected MultiblockRadioController multiblock;
+    protected MultiblockStatusData multiblockStatusData; //Client only-server side isn't updated
+    protected Set<EntityPlayerMP> clientListeners;
 
     public TileRadio() {
         super(0);
+
         multiblock = new MultiblockRadioController(this);
+        multiblockStatusData = new MultiblockStatusData();
+        clientListeners = new HashSet<>();
+    }
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //~~~~~~~~~~~~~~~~~~~~~~~~~STATUS DATA~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    @Override
+    public Set<EntityPlayerMP> getClientListeners() {
+        return clientListeners;
     }
 
+    public void updateMultiblockStatusData(AbstractTileMultiblockNode te) {
+        NBTTagCompound nbt = te.writeStatusToNBT();
+        clientListeners.forEach(p -> ModNetworkMessages.INSTANCE.sendTo(new MessageUpdateClientTileMultiblockStatusData(this.getPos(), nbt), p));
+    }
+
+    public void updateMultiblockStatusData(List<AbstractTileMultiblockNode> tes) {
+        //Agregate all the nodes into a single NBT tag and send to the client.
+        NBTTagList tagList = new NBTTagList();
+        for(AbstractTileMultiblockNode te : tes) {
+            tagList.appendTag(te.writeStatusToNBT());
+        }
+
+        NBTTagCompound nbt = new NBTTagCompound();
+        nbt.setTag("node_status_list", tagList);
+
+        clientListeners.forEach(p -> ModNetworkMessages.INSTANCE.sendTo(new MessageUpdateClientTileMultiblockStatusData(this.getPos(), nbt), p));
+    }
+
+    @Override
+    public void doAllClientUpdates() { //A bit of a hack to use this method, but it should be called on initGui so it works
+        updateMultiblockStatusData(multiblock.getAllActiveNodes());
+    }
+
+    //Client Side Only
+    public MultiblockStatusData getMultiblockStatusData() {return multiblockStatusData;}
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~RESOURCE SENDING~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     private void sendResources() {
         if(multiblock.canTransmit(TransferType.ITEM)) {
             boolean success = RadioNetwork.INSTANCE.sendItems(multiblock, 16, multiblock.getTransmitMode(TransferType.ITEM));
@@ -27,6 +79,10 @@ public class TileRadio extends AbstractTileMachineWithInventory { //power requir
             }
         }
     }
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~TILE ENTITY FUNCTION~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
     @Override
     public void invalidate() {

@@ -44,4 +44,17 @@ public class NBTUtils {
             throw new IllegalArgumentException("NBTTagCompound argument of deserializeInstant() must contain keys \"seconds\" (long) and \"nanos\" (int)");
         }
     }
+    /*
+    public static NBTTagCompound writeEnumToNBT(NBTTagCompound nbt, Enum<?> enom, String tag) {
+        nbt.setString(enom.name(), tag);
+        return nbt;
+    }
+
+    public static Enum<?> readEnumFromNBT(NBTTagCompound nbt, String tag) throws IllegalArgumentException {
+        if(nbt.hasKey(tag)) {
+            Enum.nbt.getString(tag);
+        }
+    }
+    */
+
 }

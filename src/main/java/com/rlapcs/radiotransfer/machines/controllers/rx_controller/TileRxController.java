@@ -1,13 +1,15 @@
 package com.rlapcs.radiotransfer.machines.controllers.rx_controller;
 
 import com.rlapcs.radiotransfer.ModConfig;
-import com.rlapcs.radiotransfer.machines.controllers.abstract_controller.AbstractTileController;
 import com.rlapcs.radiotransfer.ModConstants;
+import com.rlapcs.radiotransfer.generic.multiblock.data.MultiblockStatusData;
+import com.rlapcs.radiotransfer.machines.controllers.abstract_controller.AbstractTileController;
 import com.rlapcs.radiotransfer.registries.ModItems;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.common.util.Constants;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -39,6 +41,7 @@ public class TileRxController extends AbstractTileController {
     public void changePriority(boolean toIncrement) {
         priority = MathHelper.clamp(getPriority() + (toIncrement ? 1 : -1), MIN_PRIORITY, MAX_PRIORITY);
         this.markDirty();
+        this.onStatusChange();
     }
     public int getPriority() {
         return priority;
@@ -61,7 +64,19 @@ public class TileRxController extends AbstractTileController {
 
         return compound;
     }
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //~~~~~~~~~~~~~~~~~~STATUS UPDATES~~~~~~~~~~~~~~~~~~//
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    @Override
+    public NBTTagCompound writeStatusToNBT() {
+        NBTTagCompound nbt = super.writeStatusToNBT();
+        NBTTagList tagList = nbt.getTagList("statuses", Constants.NBT.TAG_COMPOUND);
 
+        tagList.appendTag(new MultiblockStatusData.StatusInt("Priority", priority).toNBT());
+
+        nbt.setTag("statuses", tagList);
+        return nbt;
+    }
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     //~~~~~~~~~~~~~~~~~~~~~~~~POWER USAGE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//

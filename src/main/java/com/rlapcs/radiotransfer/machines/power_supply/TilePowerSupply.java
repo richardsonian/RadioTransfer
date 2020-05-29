@@ -1,7 +1,8 @@
 package com.rlapcs.radiotransfer.machines.power_supply;
 
 import com.rlapcs.radiotransfer.ModConstants;
-import com.rlapcs.radiotransfer.generic.multiblock.MultiblockPowerUsageData;
+import com.rlapcs.radiotransfer.generic.multiblock.data.MultiblockPowerUsageData;
+import com.rlapcs.radiotransfer.generic.multiblock.data.MultiblockStatusData;
 import com.rlapcs.radiotransfer.generic.multiblock.tileEntities.AbstractTileMultiblockNodeWithInventory;
 import com.rlapcs.radiotransfer.generic.tileEntities.ITileClientUpdater;
 import com.rlapcs.radiotransfer.generic.tileEntities.ITilePowerBarProvider;
@@ -12,8 +13,10 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
@@ -47,7 +50,13 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
         //server
         clientListeners = new HashSet<>();
         upgradeSlotWhitelists.put(POWER_ITEM_INDEX, ModConstants.UpgradeCards.POWER_ITEM_WHITELIST); //"upgrade card" lol
-        energyStorage = new PowerSupplyPowerHandler(this);
+        energyStorage = new PowerSupplyPowerHandler(this) {
+            @Override
+            protected void onContentsChanged() {
+                super.onContentsChanged();
+                TilePowerSupply.this.onStatusChange();
+            }
+        };
 
         //client
         displayEnergy = 0;
@@ -77,16 +86,19 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
 
     protected void getEnergyFromPowerItem(int ticksSinceLastUpdate) {
         ItemStack powerItem = itemStackHandler.getStackInSlot(POWER_ITEM_INDEX);
-        if(powerItem != null && !powerItem.isEmpty()) {
-            if(powerItem.hasCapability(CapabilityEnergy.ENERGY, null)) {
-                IEnergyStorage itemEnergyStorage = powerItem.getCapability(CapabilityEnergy.ENERGY, null);
-                if(itemEnergyStorage.canExtract() && energyStorage.canReceive()) { //can use PSU energy storage capability methods here, b/c receiving
-                    int space = energyStorage.getMaxEnergyStored() - energyStorage.getEnergyStored();
-                    int extracted = itemEnergyStorage.extractEnergy(space, false);
-                    energyStorage.receiveEnergy(extracted, false);
-                }
+        if(powerItem != null && !powerItem.isEmpty() && powerItem.hasCapability(CapabilityEnergy.ENERGY, null)) {
+            IEnergyStorage itemEnergyStorage = powerItem.getCapability(CapabilityEnergy.ENERGY, null);
+            if(itemEnergyStorage.canExtract() && energyStorage.canReceive()) { //can use PSU energy storage capability methods here, b/c receiving
+                int space = energyStorage.getMaxEnergyStored() - energyStorage.getEnergyStored();
+                int extracted = itemEnergyStorage.extractEnergy(space, false);
+                energyStorage.receiveEnergy(extracted, false);
             }
         }
+    }
+
+    protected boolean hasPowerItem() {
+        ItemStack powerItem = itemStackHandler.getStackInSlot(POWER_ITEM_INDEX);
+        return powerItem != null && !powerItem.isEmpty() && powerItem.hasCapability(CapabilityEnergy.ENERGY, null);
     }
 
     //For multiblock power usage
@@ -174,6 +186,21 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
         }
         else { //client side
         }
+    }
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //~~~~~~~~~~~~~~~~~~STATUS UPDATES~~~~~~~~~~~~~~~~~~//
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    @Override
+    public NBTTagCompound writeStatusToNBT() {
+        NBTTagCompound nbt = super.writeStatusToNBT();
+        NBTTagList tagList = nbt.getTagList("statuses", Constants.NBT.TAG_COMPOUND);
+
+        tagList.appendTag(new MultiblockStatusData.StatusInt("Energy Stored", energyStorage.getEnergyStored()).toNBT());
+        String powerItemName = hasPowerItem() ? itemStackHandler.getStackInSlot(POWER_ITEM_INDEX).getDisplayName() : "none";
+        tagList.appendTag(new MultiblockStatusData.StatusString("Power Item", powerItemName).toNBT());
+
+        nbt.setTag("statuses", tagList);
+        return nbt;
     }
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     //~~~~~~~~~~~~~~~~~~~~~~PSU POWER USAGE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//

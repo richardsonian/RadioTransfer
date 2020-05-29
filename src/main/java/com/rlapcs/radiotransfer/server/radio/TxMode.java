@@ -1,8 +1,18 @@
 package com.rlapcs.radiotransfer.server.radio;
 
 public enum TxMode {
-    ROUND_ROBIN,
-    SEQUENTIAL;
+    ROUND_ROBIN("Round Robin"),
+    SEQUENTIAL("Sequential");
+
+    private String friendlyName;
+
+    private TxMode(String friendlyName) {
+        this.friendlyName = friendlyName;
+    }
+
+    public String getFriendlyName() {
+        return friendlyName;
+    }
 
     public static TxMode getNext(TxMode current) {
         if(current.ordinal() < values().length - 1) {

@@ -2,16 +2,33 @@ package com.rlapcs.radiotransfer;
 
 import com.rlapcs.radiotransfer.generic.other.UpgradeSlotWhitelist;
 import com.rlapcs.radiotransfer.generic.other.UpgradeSlotWhitelist.UpgradeCardEntry;
+import com.rlapcs.radiotransfer.registries.ModBlocks;
 import com.rlapcs.radiotransfer.registries.ModItems;
-import net.minecraft.init.Items;
+import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.energy.CapabilityEnergy;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class is for global mod variables, but NOT CONFIG VARIABLES. Just meant to get some central information in one place,
  * but most of these shouldn't ever really change in the hands of the end user.
  */
 public class ModConstants {
+    //The order of how radio multiblock nodes should appear in a list.
+    public static final List<Block> NODE_ORDER;
+    static {
+        NODE_ORDER = new ArrayList<>();
+        NODE_ORDER.add(ModBlocks.radio);
+        NODE_ORDER.add(ModBlocks.tx_controller);
+        NODE_ORDER.add(ModBlocks.rx_controller);
+        NODE_ORDER.add(ModBlocks.item_encoder);
+        NODE_ORDER.add(ModBlocks.item_decoder);
+        NODE_ORDER.add(ModBlocks.power_supply);
+        NODE_ORDER.add(ModBlocks.basic_antenna);
+    }
+
     public static class UpgradeCards {
         public static final int DEFAULT_MAX_QUANTITY = 64;
 

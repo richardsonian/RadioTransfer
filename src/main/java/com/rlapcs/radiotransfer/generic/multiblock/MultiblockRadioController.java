@@ -2,6 +2,7 @@ package com.rlapcs.radiotransfer.generic.multiblock;
 
 import com.rlapcs.radiotransfer.ModConfig;
 import com.rlapcs.radiotransfer.generic.capability.ITransferHandler;
+import com.rlapcs.radiotransfer.generic.multiblock.data.MultiblockPowerUsageData;
 import com.rlapcs.radiotransfer.generic.multiblock.tileEntities.AbstractTileMultiblockNode;
 import com.rlapcs.radiotransfer.machines.controllers.rx_controller.TileRxController;
 import com.rlapcs.radiotransfer.machines.controllers.tx_controller.TileTxController;
@@ -13,14 +14,12 @@ import com.rlapcs.radiotransfer.machines.radio.TileRadio;
 import com.rlapcs.radiotransfer.network.messages.toClient.MessageUpdateClientTileMultiblockNodePowered;
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import com.rlapcs.radiotransfer.server.radio.RadioNetwork;
+import com.rlapcs.radiotransfer.server.radio.TransferType;
 import com.rlapcs.radiotransfer.server.radio.TxMode;
 import com.rlapcs.radiotransfer.server.radio.UnsupportedTransferException;
-import com.rlapcs.radiotransfer.server.radio.TransferType;
 import com.rlapcs.radiotransfer.util.Debug;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import javax.annotation.Nonnull;
@@ -78,6 +77,10 @@ public class MultiblockRadioController {
         RadioNetwork.INSTANCE.deregister(this);
         registeredToNetwork = false;
     }
+    //##################################################################################################//
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~STATUS UPDATES~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //##################################################################################################//
+    //Reporting data for radio gui
 
     //##################################################################################################//
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~POWER LOGIC~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
@@ -183,6 +186,7 @@ public class MultiblockRadioController {
         ModNetworkMessages.INSTANCE.sendToAllTracking(new MessageUpdateClientTileMultiblockNodePowered(this.getAllActiveNodes(), target), new NetworkRegistry.TargetPoint(
                 dimension, tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ(), -1
         ));
+        getAllActiveNodes().forEach(AbstractTileMultiblockNode::onStatusChange);
     }
     //##################################################################################################//
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~TRANSMISSION AND RECEIVING~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
@@ -267,7 +271,7 @@ public class MultiblockRadioController {
      * LIST MAY RETURN SOME NULLS
      * @return List of all nodes
      */
-    private List<AbstractTileMultiblockNode> getAllNodes() {
+    public List<AbstractTileMultiblockNode> getAllNodes() {
         List<AbstractTileMultiblockNode> list = new ArrayList<>();
 
         list.add(txController);
@@ -282,7 +286,7 @@ public class MultiblockRadioController {
     /**
      * Returns list of all active nodes, without nulls.
      */
-    private List<AbstractTileMultiblockNode> getAllActiveNodes() {
+    public List<AbstractTileMultiblockNode> getAllActiveNodes() {
         List<AbstractTileMultiblockNode> temp = getAllNodes();
         temp.removeIf(n -> n == null || n.isInvalid());
         return temp;
