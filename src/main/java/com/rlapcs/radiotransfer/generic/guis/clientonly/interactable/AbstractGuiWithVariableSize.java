@@ -14,7 +14,7 @@ import net.minecraft.util.math.MathHelper;
 
 import java.awt.*;
 
-public class AbstractGuiWithVariableSize extends GuiScreen {
+public abstract class AbstractGuiWithVariableSize extends GuiScreen {
     private static final CoordinateUV[] CORNERS = {
             new CoordinateUV(0, 18), // top left
             new CoordinateUV(186, 18), // top right

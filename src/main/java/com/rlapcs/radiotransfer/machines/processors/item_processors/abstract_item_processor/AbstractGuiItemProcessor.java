@@ -1,6 +1,7 @@
 package com.rlapcs.radiotransfer.machines.processors.item_processors.abstract_item_processor;
 
 import com.rlapcs.radiotransfer.RadioTransfer;
+import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.indicators.GuiCanProcessIndicator;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.lists.AbstractGuiList;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.lists.AbstractItemProcessorList;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.sliders.GuiDraggableSliderButton;
@@ -19,6 +20,7 @@ public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcess
     protected CoordinateXY LIST_POS;
     protected CoordinateXY PROGRESS_BAR_POS;
     protected AbstractItemProcessorList visual;
+    protected GuiCanProcessIndicator canProcessIndicator;
 
     public static final CoordinateUV PROGRESS_BAR_UV = new CoordinateUV(8, 15);
     public static final DimensionWidthHeight PROGRESS_BAR_DIMS = new DimensionWidthHeight(9, 6);
@@ -26,6 +28,12 @@ public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcess
     public AbstractGuiItemProcessor(T tileEntity, AbstractContainerItemProcessor container) {
         super(tileEntity, container);
         size = new DimensionWidthHeight(188, 197);
+    }
+
+    @Override
+    public void initGui() {
+        super.initGui();
+        canProcessIndicator = new GuiCanProcessIndicator(this, pos.addTo(PROGRESS_BAR_POS.addTo(new CoordinateXY(0, -2))));
     }
 
     @Override
@@ -43,7 +51,8 @@ public abstract class AbstractGuiItemProcessor<T extends AbstractTileItemProcess
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
-
         visual.drawList(mouseX, mouseY, partialTicks, this.itemRender);
+        if (!tileEntity.getClientPowered())
+            canProcessIndicator.draw();
     }
 }

@@ -14,6 +14,7 @@ import org.lwjgl.input.Mouse;
 
 import java.awt.*;
 
+import static com.rlapcs.radiotransfer.generic.guis.clientonly.GuiUtil.getLineLength;
 import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
 
 public class GuiTooltip extends AbstractGuiWithVariableSize {
@@ -43,7 +44,7 @@ public class GuiTooltip extends AbstractGuiWithVariableSize {
             int scaleFactor = new ScaledResolution(mc).getScaleFactor();
             pos = new CoordinateXY(Mouse.getX() / scaleFactor, this.height - Mouse.getY() / scaleFactor);
             GlStateManager.pushMatrix();
-            GlStateManager.translate(0f, 0f, 500);
+            GlStateManager.translate(0f, 0f, 400);
             super.draw();
             //sendDebugMessage(this.toString() + " is active target size: " + targetSize + "  real size: " + interpolatedSize);
             if (isAtTargetSize) {
@@ -68,30 +69,5 @@ public class GuiTooltip extends AbstractGuiWithVariableSize {
         for (String line : lines)
             longestLine = Math.max(longestLine, getLineLength(line));
         return new DimensionWidthHeight(longestLine + 4, lines.length * 12);
-    }
-
-    protected int getLineLength(String line) {
-        char[] letters = line.toCharArray();
-        int length = 1;
-        for (char letter : letters) {
-            switch (letter) {
-                case 't':
-                case ' ':
-                    length += 3; break;
-                case 'k':
-                case 'f':
-                    length += 4; break;
-                case 'i':
-                case '.':
-                case ':':
-                    length += 1; break;
-                case 'l':
-                    length += 2; break;
-                default:
-                    length += 5;
-            }
-            length += 1;
-        }
-        return length;
     }
 }

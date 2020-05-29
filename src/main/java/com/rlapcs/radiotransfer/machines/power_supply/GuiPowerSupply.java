@@ -18,7 +18,6 @@ import java.awt.*;
 public class GuiPowerSupply extends AbstractGuiMachine<TilePowerSupply> {
     private GuiPowerBar powerBar;
     private PowerSupplyList list;
-    public GuiTooltip tooltip;
     public PowerSupplyEntryTooltip powerSupplyEntryTooltip;
 
     private static final CoordinateXY IN_OUT_POS = new CoordinateXY(95, 30);
@@ -30,7 +29,6 @@ public class GuiPowerSupply extends AbstractGuiMachine<TilePowerSupply> {
         super(tileEntity, container);
         size = new DimensionWidthHeight(188, 197);
         texture = new ResourceLocation(RadioTransfer.MODID, "textures/gui/power_supply.png");
-        tooltip = new GuiTooltip(new CoordinateXY(Mouse.getX(), Mouse.getY()), new DimensionWidthHeight(4, 4));
         powerSupplyEntryTooltip = new PowerSupplyEntryTooltip(new CoordinateXY(Mouse.getX(), Mouse.getY()), new DimensionWidthHeight(4, 4));
     }
 
@@ -40,7 +38,6 @@ public class GuiPowerSupply extends AbstractGuiMachine<TilePowerSupply> {
         ModNetworkMessages.INSTANCE.sendToServer(new MessageAddClientListener(tileEntity, true));
         list = new PowerSupplyList(LIST_POS, LIST_SIZE, this, tileEntity.getCachedPowerUsageData(), pos.x, pos.y, tileEntity);
         powerBar = new GuiPowerBar(POWER_BAR_POS.addTo(pos), tileEntity, this);
-        tooltip.setWorldAndResolution(mc, this.width, this.height);
         powerSupplyEntryTooltip.setWorldAndResolution(mc, this.width, this.height);
         //sendDebugMessage("init power gui");
     }
@@ -55,8 +52,7 @@ public class GuiPowerSupply extends AbstractGuiMachine<TilePowerSupply> {
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
         powerBar.draw();
-        list.drawList(mouseX, mouseY, partialTicks, mc.getRenderItem()); //changed this to be drawn after powerbar for debug, is that ok?
-        tooltip.draw();
+        list.drawList(mouseX, mouseY, partialTicks, mc.getRenderItem());
         powerSupplyEntryTooltip.draw();
     }
 
