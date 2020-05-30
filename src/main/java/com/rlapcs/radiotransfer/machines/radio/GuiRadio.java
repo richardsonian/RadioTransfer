@@ -4,7 +4,6 @@ import com.enderio.core.common.util.NNList;
 import com.rlapcs.radiotransfer.RadioTransfer;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.AbstractGuiMachine;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.GuiEmbedded3DBlockViewer;
-import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.indicators.GuiPowerIndicator;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateXY;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.DimensionWidthHeight;
 import com.rlapcs.radiotransfer.generic.multiblock.data.MultiblockStatusData;
@@ -37,9 +36,11 @@ public class GuiRadio extends AbstractGuiMachine {
     public void initGui() {
         super.initGui();
         ModNetworkMessages.INSTANCE.sendToServer(new MessageAddClientListener(tileEntity, true));
+
         coords = ((TileRadio) tileEntity).getMultiblockStatusData().getAllNodePositions();
-        coords.add(tileEntity.getPos());
+        coords.add(tileEntity.getPos()); //add radio pos
         selectedBlock = coords.get(0);
+
         multiblockViewer = new GuiEmbedded3DBlockViewer(new NNList<>(coords), selectedBlock);
         isClosed = true;
     }

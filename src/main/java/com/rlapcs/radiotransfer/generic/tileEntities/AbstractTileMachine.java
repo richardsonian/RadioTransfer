@@ -91,6 +91,6 @@ public abstract class AbstractTileMachine extends TileEntity implements ITickabl
 
     @Override
     public String toString() {
-        return String.format("%s at [%d, %d, %d] @%d", this.getClass().getSimpleName(), pos.getX(), pos.getY(), pos.getZ(), this.hashCode());
+        return String.format("%s at [%d, %d, %d]", this.getClass().getSimpleName(), pos.getX(), pos.getY(), pos.getZ());
     }
 }

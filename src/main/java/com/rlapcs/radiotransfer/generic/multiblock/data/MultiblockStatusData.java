@@ -1,10 +1,12 @@
 package com.rlapcs.radiotransfer.generic.multiblock.data;
 
 import com.rlapcs.radiotransfer.ModConstants;
+import com.rlapcs.radiotransfer.util.Debug;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.Constants;
 
 import java.util.*;
@@ -28,17 +30,34 @@ public class MultiblockStatusData {
     }
 
     public void readNodeFromNBT(NBTTagCompound nbt) {
-        boolean flag = false;
+        boolean entryAlreadyExisted = false;
+        //loop through entries to see if one with the same pos already exists
         for(NodeStatusEntry e : entries) {
             if(nbt.hasKey("pos")) {
                 if(BlockPos.fromLong(nbt.getLong("pos")).equals(e.pos)) {
-                    e.readFromNBT(nbt);
-                    flag = true;
+                    //If this is a remove message, remove the entry
+                    if(nbt.hasKey("removeme") && nbt.getBoolean("removeme")) {
+                        entries.remove(e);
+                        Debug.sendDebugMessage(TextFormatting.YELLOW + "[CLIENT]" + TextFormatting.DARK_RED + "Removed status entry " + TextFormatting.RESET + e.getBlock().getLocalizedName());
+                    }
+                    //otherwise, update it with the nbt
+                    else {
+                        e.readFromNBT(nbt);
+                        Debug.sendDebugMessage(TextFormatting.YELLOW + "[CLIENT]" + TextFormatting.BLUE + "Updated status entry " + TextFormatting.RESET + e.getBlock().getLocalizedName());
+                        //Debug: Show the contents of the status entry
+                        Debug.sendDebugMessage(e.toString());
+                    }
+                    entryAlreadyExisted = true;
                 }
             }
         }
-        if(!flag) {
-            entries.add(new NodeStatusEntry(nbt));
+        //Add this as a new entry if not already included
+        if(!entryAlreadyExisted) {
+            NodeStatusEntry newEntry = new NodeStatusEntry(nbt);
+            entries.add(newEntry);
+            Debug.sendDebugMessage(TextFormatting.YELLOW + "[CLIENT]" + TextFormatting.GREEN + "Added new status entry " + TextFormatting.RESET + newEntry.getBlock().getLocalizedName());
+            //Debug: Show the contents of the status entry
+            Debug.sendDebugMessage(newEntry.toString());
         }
     }
 
@@ -107,6 +126,38 @@ public class MultiblockStatusData {
         }
         public List<Status> getStatuses() {
             return statuses;
+        }
+
+        /**
+         * Returns a string representation of the object. In general, the
+         * {@code toString} method returns a string that
+         * "textually represents" this object. The result should
+         * be a concise but informative representation that is easy for a
+         * person to read.
+         * It is recommended that all subclasses override this method.
+         * <p>
+         * The {@code toString} method for class {@code Object}
+         * returns a string consisting of the name of the class of which the
+         * object is an instance, the at-sign character `{@code @}', and
+         * the unsigned hexadecimal representation of the hash code of the
+         * object. In other words, this method returns a string equal to the
+         * value of:
+         * <blockquote>
+         * <pre>
+         * getClass().getName() + '@' + Integer.toHexString(hashCode())
+         * </pre></blockquote>
+         *
+         * @return a string representation of the object.
+         */
+        @Override
+        public String toString() {
+            StringBuilder str = new StringBuilder();
+            str.append(TextFormatting.UNDERLINE + "NodeStatus - " + block.getLocalizedName());
+            str.append(String.format("%s\nPOS:[%d, %d, %d]", TextFormatting.RESET, pos.getX(), pos.getY(), pos.getZ()));
+            for(Status s : statuses) {
+                str.append("\n - " + s);
+            }
+            return str.toString();
         }
     }
 

@@ -62,7 +62,6 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
         }
     }
 
-
     //##################################################################################################//
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~MULTIBLOCK REGISTRY~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     //##################################################################################################//
@@ -74,6 +73,7 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
 
             updateClientsRegisteredState(true);
             updateClientsPowerState(controller.isPowered());
+            onStatusChange();
             onRegisterInMultiblock();
         }
     }
@@ -87,6 +87,7 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
 
             updateClientsRegisteredState(false);
             updateClientsPowerState(false);
+            controller.getTileEntity().notifyStatusDataDeregister(this);
             onDeregisterInMultiblock();
         }
     }
@@ -361,5 +362,10 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
                 controller.checkForNewNodes(this.pos);
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        return super.toString();
     }
 }

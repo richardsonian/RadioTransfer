@@ -43,8 +43,18 @@ public class TileRadio extends AbstractTileMachineWithInventory implements ITile
         return clientListeners;
     }
 
+    public void notifyStatusDataDeregister(AbstractTileMultiblockNode te) {
+        NBTTagCompound nbt = new NBTTagCompound();
+        nbt.setLong("pos", te.getPos().toLong());
+        nbt.setString("block", world.getBlockState(te.getPos()).getBlock().getRegistryName().toString());
+        nbt.setBoolean("removeme", true);
+
+        clientListeners.forEach(p -> ModNetworkMessages.INSTANCE.sendTo(new MessageUpdateClientTileMultiblockStatusData(this.getPos(), nbt), p));
+    }
+
     public void updateMultiblockStatusData(AbstractTileMultiblockNode te) {
         NBTTagCompound nbt = te.writeStatusToNBT();
+        //Debug.sendToAllPlayers(TextFormatting.AQUA + "Sending Status Update to Clients for " + TextFormatting.RESET + te, world);
         clientListeners.forEach(p -> ModNetworkMessages.INSTANCE.sendTo(new MessageUpdateClientTileMultiblockStatusData(this.getPos(), nbt), p));
     }
 
@@ -57,12 +67,12 @@ public class TileRadio extends AbstractTileMachineWithInventory implements ITile
 
         NBTTagCompound nbt = new NBTTagCompound();
         nbt.setTag("node_status_list", tagList);
-
+        //Debug.sendToAllPlayers(TextFormatting.AQUA + "Sending Status Update to Clients for " + TextFormatting.RESET + "ALL", world);
         clientListeners.forEach(p -> ModNetworkMessages.INSTANCE.sendTo(new MessageUpdateClientTileMultiblockStatusData(this.getPos(), nbt), p));
     }
 
     @Override
-    public void doAllClientUpdates() { //A bit of a hack to use this method, but it should be called on initGui so it works
+    public void doAllClientUpdates() { //A bit of a hack to use this method, but is called when new clientListener added, so it works
         updateMultiblockStatusData(multiblock.getAllActiveNodes());
     }
 
