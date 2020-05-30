@@ -81,11 +81,6 @@ public class RendererMultiblock {
     private boolean inNeigButBounds = false;
 
     public RendererMultiblock(@Nonnull final NNList<BlockPos> blocks, BlockPos selected) {
-        blocks.add(blocks.get(0).south());
-        blocks.add(blocks.get(0).east());
-        blocks.add(blocks.get(0).east(2));
-        blocks.add(blocks.get(0).west());
-        blocks.add(blocks.get(0).west(2));
         this.blocks.addAll(blocks);
 
         //sendDebugMessage(blocks.toString());

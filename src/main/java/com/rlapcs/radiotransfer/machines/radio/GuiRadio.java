@@ -8,6 +8,8 @@ import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.indicators.
 import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateXY;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.DimensionWidthHeight;
 import com.rlapcs.radiotransfer.generic.multiblock.data.MultiblockStatusData;
+import com.rlapcs.radiotransfer.network.messages.toServer.MessageAddClientListener;
+import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 
@@ -19,6 +21,8 @@ public class GuiRadio extends AbstractGuiMachine {
 
     private static final CoordinateXY VIEWER_POS = new CoordinateXY(8, 25);
     private static final DimensionWidthHeight VIEWER_SIZE = new DimensionWidthHeight(95, 73);
+    private static final CoordinateXY BLOCK_NAME_POS = new CoordinateXY(110, 25);
+    private static final CoordinateXY INFO_START_POS = new CoordinateXY(110, 39);
 
     private boolean isClosed;
     private List<BlockPos> coords;
@@ -32,7 +36,9 @@ public class GuiRadio extends AbstractGuiMachine {
 
     public void initGui() {
         super.initGui();
-        coords = ((TileRadio) tileEntity).getMultiblockController().getMultiblockPositions();
+        ModNetworkMessages.INSTANCE.sendToServer(new MessageAddClientListener(tileEntity, true));
+        coords = ((TileRadio) tileEntity).getMultiblockStatusData().getAllNodePositions();
+        coords.add(tileEntity.getPos());
         selectedBlock = coords.get(0);
         multiblockViewer = new GuiEmbedded3DBlockViewer(new NNList<>(coords), selectedBlock);
         isClosed = true;
@@ -41,6 +47,7 @@ public class GuiRadio extends AbstractGuiMachine {
     @Override
     public void onGuiClosed() {
         super.onGuiClosed();
+        ModNetworkMessages.INSTANCE.sendToServer(new MessageAddClientListener(tileEntity, false));
         isClosed = true;
     }
 
@@ -74,4 +81,11 @@ public class GuiRadio extends AbstractGuiMachine {
             }
         }
     }
+
+    /*
+        RenderHelper.disableStandardItemLighting();
+        RenderHelper.enableGUIStandardItemLighting();
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        drawString(mc.fontRenderer, "BlockName", pos.x + BLOCK_NAME_POS.x, pos.y + BLOCK_NAME_POS.y, Color.WHITE.getRGB());
+        RenderHelper.enableStandardItemLighting(); */
 }
