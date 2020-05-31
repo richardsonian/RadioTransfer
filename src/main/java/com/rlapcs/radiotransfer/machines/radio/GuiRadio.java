@@ -3,11 +3,14 @@ package com.rlapcs.radiotransfer.machines.radio;
 import com.enderio.core.common.util.NNList;
 import com.rlapcs.radiotransfer.RadioTransfer;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.AbstractGuiMachine;
+import com.rlapcs.radiotransfer.generic.guis.clientonly.GuiUtil;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.GuiEmbedded3DBlockViewer;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.tooltip.TooltipContent;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateXY;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.DimensionWidthHeight;
 import com.rlapcs.radiotransfer.generic.multiblock.data.MultiblockStatusData;
+import com.rlapcs.radiotransfer.generic.multiblock.data.MultiblockStatusData.StatusBool;
+import com.rlapcs.radiotransfer.generic.multiblock.data.MultiblockStatusData.StatusItemStack;
 import com.rlapcs.radiotransfer.network.messages.toServer.MessageAddClientListener;
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import net.minecraft.client.Minecraft;
@@ -18,6 +21,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 import java.util.List;
@@ -32,6 +36,7 @@ public class GuiRadio extends AbstractGuiMachine {
     private static final CoordinateXY MULTIBLOCK_NAME_POS = new CoordinateXY(9, 26);
     private static final CoordinateXY BLOCK_NAME_POS = new CoordinateXY(113, 26);
     private static final CoordinateXY INFO_START_POS = new CoordinateXY(113, 39);
+    private static final double ITEM_SCALE = .625;
 
     private boolean isClosed;
     private List<BlockPos> coords;
@@ -110,11 +115,16 @@ public class GuiRadio extends AbstractGuiMachine {
             List<MultiblockStatusData.Status> statuses = entry.getStatuses();
             this.drawString(mc.fontRenderer, entry.getBlock().getLocalizedName(), namePos.x, namePos.y, Color.decode("#E8B07B").getRGB());
             for (MultiblockStatusData.Status status : statuses) {
-                String toDraw = "";
-                switch (status.getKey()) {
-
+                if (status instanceof StatusItemStack) {
+                    String key = status.getKey() + ": ";
+                    this.drawString(mc.fontRenderer, key + "  ×" + ((StatusItemStack) status).getValue().getCount(), infoPos.x, infoPos.y + liney, Color.WHITE.getRGB());
+                    GL11.glScaled(ITEM_SCALE, ITEM_SCALE, ITEM_SCALE);
+                    mc.getRenderItem().renderItemAndEffectIntoGUI(((StatusItemStack) status).getValue(), (int) ((infoPos.x + GuiUtil.getLineLength(key) - 3) / ITEM_SCALE), (int) ((infoPos.y + liney - 1) / ITEM_SCALE));
+                    GL11.glScaled(1 / ITEM_SCALE, 1 / ITEM_SCALE, 1 / ITEM_SCALE);
+                } else if (status instanceof StatusBool) {
+                    this.drawString(mc.fontRenderer, status.getKey() + ": " + (((StatusBool) status).getValue() ? TextFormatting.GREEN + "✔" : TextFormatting.RED + "✘"), infoPos.x, infoPos.y + liney, Color.WHITE.getRGB());
                 }
-                this.drawString(mc.fontRenderer, status.toString(), infoPos.x, infoPos.y + liney, Color.WHITE.getRGB());
+                //this.drawString(mc.fontRenderer, status.toString(), infoPos.x, infoPos.y + liney, Color.WHITE.getRGB());
                 liney += mc.fontRenderer.FONT_HEIGHT + 2;
             }
         }
