@@ -1,7 +1,6 @@
 package com.rlapcs.radiotransfer.generic.multiblock.data;
 
 import com.rlapcs.radiotransfer.ModConstants;
-import com.rlapcs.radiotransfer.util.Debug;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -154,6 +153,9 @@ public class MultiblockStatusData {
         public static final int FRACTION = 4;
         public static final int ITEMSTACK = 5;
         public static final int LIST = 6;
+        public static final int INT_WITH_UNITS = 7;
+        public static final int DOUBLE_WITH_UNITS = 8;
+        public static final int FRACTION_WITH_UNITS = 9;
 
         //Data
         protected String key;
@@ -175,6 +177,9 @@ public class MultiblockStatusData {
                     case FRACTION: return new StatusFraction(key, (NBTTagCompound) nbt.getTag("value"));
                     case ITEMSTACK: return new StatusItemStack(key, (NBTTagCompound) nbt.getTag("value"));
                     case LIST: return new StatusList(key, nbt.getTagList("value", Constants.NBT.TAG_COMPOUND));
+                    case INT_WITH_UNITS: return new StatusInt.WithUnits(key, nbt);
+                    case DOUBLE_WITH_UNITS: return new StatusDouble.WithUnits(key, nbt);
+                    case FRACTION_WITH_UNITS: return new StatusFraction.WithUnits(key, nbt);
                 }
             }
             return null;
@@ -231,6 +236,34 @@ public class MultiblockStatusData {
             nbt.setInteger("value", value);
             return nbt;
         }
+
+        public static class WithUnits extends StatusInt {
+            private String units;
+            public WithUnits(String key, Integer value, String units) {
+                super(key, value);
+                this.units = units;
+            }
+            public WithUnits(String key, NBTTagCompound nbt) {
+                super(key, null);
+                if(nbt.hasKey("value")) {
+                    value = nbt.getInteger("value");
+                }
+                if(nbt.hasKey("units")) {
+                    units = nbt.getString("units");
+                }
+            }
+            @Override
+            public String getFormattedValue() {
+                return value + units;
+            }
+            @Override
+            public NBTTagCompound toNBT() {
+                NBTTagCompound nbt = super.toNBT();
+                nbt.setInteger("type", INT_WITH_UNITS);
+                nbt.setString("units", units);
+                return nbt;
+            }
+        }
     }
     public static class StatusDouble extends Status<Double> {
         public StatusDouble(String key, Double value) {
@@ -240,13 +273,40 @@ public class MultiblockStatusData {
         public String getFormattedValue() {
             return super.getFormattedValue();
         }
-
         @Override
         public NBTTagCompound toNBT() {
             NBTTagCompound nbt = super.toNBT();
             nbt.setInteger("type", DOUBLE);
             nbt.setDouble("value", value);
             return nbt;
+        }
+
+        public static class WithUnits extends StatusDouble {
+            private String units;
+            public WithUnits(String key, Double value, String units) {
+                super(key, value);
+                this.units = units;
+            }
+            public WithUnits(String key, NBTTagCompound nbt) {
+                super(key, null);
+                if(nbt.hasKey("value")) {
+                    value = nbt.getDouble("value");
+                }
+                if(nbt.hasKey("units")) {
+                    units = nbt.getString("units");
+                }
+            }
+            @Override
+            public String getFormattedValue() {
+                return String.format("%.2f%s", value, units);
+            }
+            @Override
+            public NBTTagCompound toNBT() {
+                NBTTagCompound nbt = super.toNBT();
+                nbt.setInteger("type", DOUBLE_WITH_UNITS);
+                nbt.setString("units", units);
+                return nbt;
+            }
         }
     }
     public static class StatusBool extends Status<Boolean> {
@@ -357,13 +417,42 @@ public class MultiblockStatusData {
                 this.denominator = denominator;
             }
         }
+
+        public static class WithUnits extends StatusFraction {
+            private String units;
+            public WithUnits(String key, Fraction value, String units) {
+                super(key, value);
+                this.units = units;
+            }
+            public WithUnits(String key, int numerator, int denominator, String units) {
+                super(key, numerator, denominator);
+                this.units = units;
+            }
+            public WithUnits(String key, NBTTagCompound nbt) {
+                super(key, nbt);
+                if(nbt.hasKey("units")) {
+                    units = nbt.getString("units");
+                }
+            }
+            @Override
+            public String getFormattedValue() {
+                return value + units;
+            }
+            @Override
+            public NBTTagCompound toNBT() {
+                NBTTagCompound nbt = super.toNBT();
+                nbt.setInteger("type", FRACTION_WITH_UNITS);
+                nbt.setString("units", units);
+                return nbt;
+            }
+        }
     }
     public static class StatusItemStack extends Status<ItemStack> {
         public StatusItemStack(String key, ItemStack value) {
             super(key, value);
         }
         public StatusItemStack(String key, NBTTagCompound valueNBT) {
-            super(key, new ItemStack(valueNBT));
+            this(key, new ItemStack(valueNBT));
         }
         @Override
         public String getFormattedValue() {
@@ -385,7 +474,7 @@ public class MultiblockStatusData {
             super(key, value);
         }
         public StatusList(String key, NBTTagList value) {
-            super(key, new ArrayList<>());
+            this(key, new ArrayList<>());
             for(int i = 0; i < value.tagCount(); i++) {
                 this.value.add(Status.fromNBT((NBTTagCompound) value.get(i)));
             }
