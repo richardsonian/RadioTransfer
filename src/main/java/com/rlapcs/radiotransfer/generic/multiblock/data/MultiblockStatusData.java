@@ -3,11 +3,13 @@ package com.rlapcs.radiotransfer.generic.multiblock.data;
 import com.rlapcs.radiotransfer.ModConstants;
 import com.rlapcs.radiotransfer.util.Debug;
 import net.minecraft.block.Block;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.*;
 
@@ -72,7 +74,7 @@ public class MultiblockStatusData {
         }
         return out;
     }
-    public List<NodeStatusEntry> getSortedEntries() {
+    public List<NodeStatusEntry> getSortedEntries() { //is this needed?
         List<NodeStatusEntry> outList = new ArrayList<>(entries);
         outList.sort(ENTRY_ORDERING);
         return outList;
@@ -128,27 +130,6 @@ public class MultiblockStatusData {
             return statuses;
         }
 
-        /**
-         * Returns a string representation of the object. In general, the
-         * {@code toString} method returns a string that
-         * "textually represents" this object. The result should
-         * be a concise but informative representation that is easy for a
-         * person to read.
-         * It is recommended that all subclasses override this method.
-         * <p>
-         * The {@code toString} method for class {@code Object}
-         * returns a string consisting of the name of the class of which the
-         * object is an instance, the at-sign character `{@code @}', and
-         * the unsigned hexadecimal representation of the hash code of the
-         * object. In other words, this method returns a string equal to the
-         * value of:
-         * <blockquote>
-         * <pre>
-         * getClass().getName() + '@' + Integer.toHexString(hashCode())
-         * </pre></blockquote>
-         *
-         * @return a string representation of the object.
-         */
         @Override
         public String toString() {
             StringBuilder str = new StringBuilder();
@@ -170,6 +151,9 @@ public class MultiblockStatusData {
         public static final int DOUBLE = 1;
         public static final int BOOL = 2;
         public static final int STRING = 3; //Use this for enums
+        public static final int FRACTION = 4;
+        public static final int ITEMSTACK = 5;
+        public static final int LIST = 6;
 
         //Data
         protected String key;
@@ -188,6 +172,9 @@ public class MultiblockStatusData {
                     case DOUBLE: return new StatusDouble(key, nbt.getDouble("value"));
                     case BOOL: return new StatusBool(key, nbt.getBoolean("value"));
                     case STRING: return new StatusString(key, nbt.getString("value"));
+                    case FRACTION: return new StatusFraction(key, (NBTTagCompound) nbt.getTag("value"));
+                    case ITEMSTACK: return new StatusItemStack(key, (NBTTagCompound) nbt.getTag("value"));
+                    case LIST: return new StatusList(key, nbt.getTagList("value", Constants.NBT.TAG_COMPOUND));
                 }
             }
             return null;
@@ -292,6 +279,135 @@ public class MultiblockStatusData {
             NBTTagCompound nbt = super.toNBT();
             nbt.setInteger("type", STRING);
             nbt.setString("value", value);
+            return nbt;
+        }
+    }
+    public static class StatusFraction extends Status<StatusFraction.Fraction> { //test if this apache dependency causes problems
+        public StatusFraction(String key, Fraction value) {
+            super(key, value);
+        }
+        public StatusFraction(String key, NBTTagCompound valueNBT) {
+            this(key, new Fraction(valueNBT));
+        }
+        public StatusFraction(String key, int numerator, int denominator) {
+            this(key, new Fraction(numerator, denominator));
+        }
+
+        @Override
+        public String getFormattedValue() {
+            return super.getFormattedValue();
+        }
+        @Override
+        public NBTTagCompound toNBT() {
+            NBTTagCompound nbt = super.toNBT();
+            nbt.setInteger("type", FRACTION);
+            nbt.setTag("value", value.serializeNBT());
+            return nbt;
+        }
+        public static class Fraction implements INBTSerializable<NBTTagCompound> {
+            private int numerator;
+            private int denominator;
+
+            public Fraction(int numerator, int denominator) {
+                this.numerator = numerator;
+                this.denominator = denominator;
+            }
+            public Fraction(NBTTagCompound nbt) {
+                this(0, 0);
+                this.deserializeNBT(nbt);
+            }
+
+            @Override
+            public NBTTagCompound serializeNBT() {
+                NBTTagCompound nbt = new NBTTagCompound();
+                nbt.setInteger("numerator", numerator);
+                nbt.setInteger("denominator", denominator);
+                return nbt;
+            }
+
+            @Override
+            public void deserializeNBT(NBTTagCompound nbt) {
+                if(nbt.hasKey("numerator")) {
+                    numerator = nbt.getInteger("numerator");
+                }
+                if(nbt.hasKey("denominator")) {
+                    denominator = nbt.getInteger("denominator");
+                }
+            }
+
+            @Override
+            public String toString() {
+                return (numerator + "/" + denominator);
+            }
+
+            public int getNumerator() {
+                return numerator;
+            }
+            public void setNumerator(int numerator) {
+                this.numerator = numerator;
+            }
+            public int getDenominator() {
+                return denominator;
+            }
+            public void setDenominator(int denominator) {
+                this.denominator = denominator;
+            }
+            public void set(int numerator, int denominator) {
+                this.numerator = numerator;
+                this.denominator = denominator;
+            }
+        }
+    }
+    public static class StatusItemStack extends Status<ItemStack> {
+        public StatusItemStack(String key, ItemStack value) {
+            super(key, value);
+        }
+        public StatusItemStack(String key, NBTTagCompound valueNBT) {
+            super(key, new ItemStack(valueNBT));
+        }
+        @Override
+        public String getFormattedValue() {
+            return value.getDisplayName() + " ×" + value.getCount();
+        }
+        @Override
+        public NBTTagCompound toNBT() {
+            NBTTagCompound nbt = super.toNBT();
+            nbt.setInteger("type", ITEMSTACK);
+            nbt.setTag("value", value.serializeNBT());
+            return nbt;
+        }
+        public int getQuantity() {
+            return value.getCount();
+        }
+    }
+    public static class StatusList extends Status<List<Status>> {
+        public StatusList(String key, List<Status> value) {
+            super(key, value);
+        }
+        public StatusList(String key, NBTTagList value) {
+            super(key, new ArrayList<>());
+            for(int i = 0; i < value.tagCount(); i++) {
+                this.value.add(Status.fromNBT((NBTTagCompound) value.get(i)));
+            }
+        }
+        @Override
+        public String getFormattedValue() {
+            StringBuilder str = new StringBuilder();
+            for(Status s : value) {
+                str.append("\n  " + s.getFormattedValue());
+            }
+            return str.toString();
+        }
+        @Override
+        public NBTTagCompound toNBT() {
+            NBTTagCompound nbt = super.toNBT();
+            nbt.setInteger("type", ITEMSTACK);
+
+            NBTTagList tagList = new NBTTagList();
+            for(Status s : value) {
+                tagList.appendTag(s.toNBT());
+            }
+            nbt.setTag("value", tagList);
             return nbt;
         }
     }

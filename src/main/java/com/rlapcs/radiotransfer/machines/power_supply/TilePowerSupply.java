@@ -195,9 +195,8 @@ public class TilePowerSupply extends AbstractTileMultiblockNodeWithInventory imp
         NBTTagCompound nbt = super.writeStatusToNBT();
         NBTTagList tagList = nbt.getTagList("statuses", Constants.NBT.TAG_COMPOUND);
 
-        tagList.appendTag(new MultiblockStatusData.StatusInt("Energy Stored", energyStorage.getEnergyStored()).toNBT());
-        String powerItemName = hasPowerItem() ? itemStackHandler.getStackInSlot(POWER_ITEM_INDEX).getDisplayName() : "none";
-        tagList.appendTag(new MultiblockStatusData.StatusString("Power Item", powerItemName).toNBT());
+        tagList.appendTag(new MultiblockStatusData.StatusFraction("Energy Stored", energyStorage.getEnergyStored(), energyStorage.getMaxEnergyStored()).toNBT());
+        tagList.appendTag(new MultiblockStatusData.StatusItemStack("Power Item", itemStackHandler.getStackInSlot(POWER_ITEM_INDEX)).toNBT());
 
         nbt.setTag("statuses", tagList);
         return nbt;
