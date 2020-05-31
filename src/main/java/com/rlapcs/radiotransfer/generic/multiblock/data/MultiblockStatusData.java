@@ -38,14 +38,14 @@ public class MultiblockStatusData {
                     //If this is a remove message, remove the entry
                     if(nbt.hasKey("removeme") && nbt.getBoolean("removeme")) {
                         entries.remove(e);
-                        Debug.sendDebugMessage(TextFormatting.YELLOW + "[CLIENT]" + TextFormatting.DARK_RED + "Removed status entry " + TextFormatting.RESET + e.getBlock().getLocalizedName());
+                        //Debug.sendDebugMessage(TextFormatting.YELLOW + "[CLIENT]" + TextFormatting.DARK_RED + "Removed status entry " + TextFormatting.RESET + e.getBlock().getLocalizedName());
                     }
                     //otherwise, update it with the nbt
                     else {
                         e.readFromNBT(nbt);
-                        Debug.sendDebugMessage(TextFormatting.YELLOW + "[CLIENT]" + TextFormatting.BLUE + "Updated status entry " + TextFormatting.RESET + e.getBlock().getLocalizedName());
+                        //Debug.sendDebugMessage(TextFormatting.YELLOW + "[CLIENT]" + TextFormatting.BLUE + "Updated status entry " + TextFormatting.RESET + e.getBlock().getLocalizedName());
                         //Debug: Show the contents of the status entry
-                        Debug.sendDebugMessage(e.toString());
+                        //Debug.sendDebugMessage(e.toString());
                     }
                     entryAlreadyExisted = true;
                 }
@@ -55,9 +55,9 @@ public class MultiblockStatusData {
         if(!entryAlreadyExisted) {
             NodeStatusEntry newEntry = new NodeStatusEntry(nbt);
             entries.add(newEntry);
-            Debug.sendDebugMessage(TextFormatting.YELLOW + "[CLIENT]" + TextFormatting.GREEN + "Added new status entry " + TextFormatting.RESET + newEntry.getBlock().getLocalizedName());
+            //Debug.sendDebugMessage(TextFormatting.YELLOW + "[CLIENT]" + TextFormatting.GREEN + "Added new status entry " + TextFormatting.RESET + newEntry.getBlock().getLocalizedName());
             //Debug: Show the contents of the status entry
-            Debug.sendDebugMessage(newEntry.toString());
+            //Debug.sendDebugMessage(newEntry.toString());
         }
     }
 
