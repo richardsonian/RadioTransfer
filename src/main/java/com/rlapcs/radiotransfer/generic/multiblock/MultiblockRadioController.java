@@ -4,6 +4,7 @@ import com.rlapcs.radiotransfer.ModConfig;
 import com.rlapcs.radiotransfer.generic.capability.ITransferHandler;
 import com.rlapcs.radiotransfer.generic.multiblock.data.MultiblockPowerUsageData;
 import com.rlapcs.radiotransfer.generic.multiblock.tileEntities.AbstractTileMultiblockNode;
+import com.rlapcs.radiotransfer.machines.antennas.abstract_antenna.AbstractTileAntenna;
 import com.rlapcs.radiotransfer.machines.controllers.rx_controller.TileRxController;
 import com.rlapcs.radiotransfer.machines.controllers.tx_controller.TileTxController;
 import com.rlapcs.radiotransfer.machines.power_supply.TilePowerSupply;
@@ -46,6 +47,9 @@ public class MultiblockRadioController {
 
     private EnumMap<TransferType, AbstractTileProcessor> encoders;
     private EnumMap<TransferType, AbstractTileProcessor> decoders;
+
+    private AbstractTileAntenna antenna;
+
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
     public MultiblockRadioController(TileRadio te) {
@@ -80,7 +84,8 @@ public class MultiblockRadioController {
     //##################################################################################################//
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~STATUS UPDATES~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     //##################################################################################################//
-    //Reporting data for radio gui
+
+    //All Methods in TileRadio, as they need access to clientListener set
 
     //##################################################################################################//
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~POWER LOGIC~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
@@ -226,15 +231,17 @@ public class MultiblockRadioController {
     public boolean canTransmit(@Nonnull TransferType type) {
         boolean hasEncoder = encoders.get(type) != null && !encoders.get(type).isInvalid() && !encoders.get(type).getHandler().isEmpty(); //invalid check redundant
         boolean hasTransmitter = txController != null && !txController.isInvalid() && txController.getActivated();
+        boolean hasAntenna = antenna != null && !antenna.isInvalid();
 
-        return hasEncoder && hasTransmitter;
+        return hasEncoder && hasTransmitter && hasAntenna && isPowered();
     }
 
     public boolean canReceive(@Nonnull TransferType type) {
         boolean hasDecoder = decoders.get(type) != null && !decoders.get(type).isInvalid(); //invalid check redundant
         boolean hasReceiver = rxController != null && !rxController.isInvalid() && rxController.getActivated();
+        boolean hasAntenna = antenna != null && !antenna.isInvalid();
 
-        return hasDecoder && hasReceiver;
+        return hasDecoder && hasReceiver && hasAntenna && isPowered();
     }
 
     //##################################################################################################//
@@ -277,6 +284,7 @@ public class MultiblockRadioController {
         list.add(txController);
         list.add(rxController);
         list.add(powerSupply);
+        list.add(antenna);
         list.addAll(encoders.values());
         list.addAll(decoders.values());
 
@@ -318,6 +326,12 @@ public class MultiblockRadioController {
                         if (powerSupply == null || powerSupply.isInvalid()) {
                             powerSupply = (TilePowerSupply) node;
                             powerSupply.registerInMultiblock(this);
+                            return true;
+                        }
+                    } else if (node instanceof AbstractTileAntenna) {
+                        if (antenna == null || antenna.isInvalid()) {
+                            antenna = (AbstractTileAntenna) node;
+                            antenna.registerInMultiblock(this);
                             return true;
                         }
                     } else if (node instanceof AbstractTileProcessor) {
