@@ -380,6 +380,7 @@ public class MultiblockRadioController {
         if (node == txController) txController = null;
         else if (node == rxController) rxController = null;
         else if (node == powerSupply) powerSupply = null;
+        else if (node == antenna) antenna = null;
         else if (node instanceof AbstractTileProcessor) {
             AbstractTileProcessor processor = (AbstractTileProcessor) node;
             if (processor.getProcessorType() == ProcessorType.ENCODER) {
