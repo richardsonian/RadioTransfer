@@ -20,7 +20,7 @@ public abstract class AbstractItemProcessorGuiListItem extends AbstractGuiListIt
     public static final CoordinateUV UV = new CoordinateUV(0,0); //has getter method to be accessed by superclass if needed
     public static final CoordinateXY DIMS = new CoordinateXY(59, 15);
     public static final CoordinateXY ITEM_REL_POS = new CoordinateXY(3, 2);
-    public static final double ITEM_SCALE = .6875;
+    private static final double ITEM_SCALE = .6875;
     public static final CoordinateXY ITEM_QUANTITY_REL_POS = new CoordinateXY(15,4);
 
     //instance variables
