@@ -9,7 +9,6 @@ import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.tooltip.Too
 import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateXY;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.DimensionWidthHeight;
 import com.rlapcs.radiotransfer.generic.multiblock.data.MultiblockStatusData;
-import com.rlapcs.radiotransfer.generic.multiblock.data.MultiblockStatusData.StatusBool;
 import com.rlapcs.radiotransfer.generic.multiblock.data.MultiblockStatusData.StatusItemStack;
 import com.rlapcs.radiotransfer.network.messages.toServer.MessageAddClientListener;
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
@@ -25,8 +24,6 @@ import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 import java.util.List;
-
-import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
 
 public class GuiRadio extends AbstractGuiMachine {
     private GuiEmbedded3DBlockViewer multiblockViewer;
@@ -121,8 +118,8 @@ public class GuiRadio extends AbstractGuiMachine {
                     GL11.glScaled(ITEM_SCALE, ITEM_SCALE, ITEM_SCALE);
                     mc.getRenderItem().renderItemAndEffectIntoGUI(((StatusItemStack) status).getValue(), (int) ((infoPos.x + GuiUtil.getLineLength(key) - 3) / ITEM_SCALE), (int) ((infoPos.y + liney - 1) / ITEM_SCALE));
                     GL11.glScaled(1 / ITEM_SCALE, 1 / ITEM_SCALE, 1 / ITEM_SCALE);
-                } else if (status instanceof StatusBool) {
-                    this.drawString(mc.fontRenderer, status.getKey() + ": " + (((StatusBool) status).getValue() ? TextFormatting.GREEN + "✔" : TextFormatting.RED + "✘"), infoPos.x, infoPos.y + liney, Color.WHITE.getRGB());
+                } else { //ian r changed this, not sure if correct
+                    this.drawString(mc.fontRenderer, status.toString(), infoPos.x, infoPos.y + liney, Color.WHITE.getRGB());
                 }
                 //this.drawString(mc.fontRenderer, status.toString(), infoPos.x, infoPos.y + liney, Color.WHITE.getRGB());
                 liney += mc.fontRenderer.FONT_HEIGHT + 2;

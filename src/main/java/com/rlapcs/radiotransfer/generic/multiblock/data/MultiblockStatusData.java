@@ -315,7 +315,7 @@ public class MultiblockStatusData {
         }
         @Override
         public String getFormattedValue() {
-            return (value ? "yes" : "no");
+            return (value ? (TextFormatting.GREEN + "✔") : (TextFormatting.RED + "✘"));
         }
         @Override
         public NBTTagCompound toNBT() {

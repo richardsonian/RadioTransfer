@@ -12,9 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class TileTxController extends AbstractTileController {
     //~~~~~~~~~~~~~~~~~~~~~Constants~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
@@ -77,6 +75,12 @@ public class TileTxController extends AbstractTileController {
         NBTTagList tagList = nbt.getTagList("statuses", Constants.NBT.TAG_COMPOUND);
 
         tagList.appendTag(new MultiblockStatusData.StatusString("Transmission Mode", mode.getFriendlyName()).toNBT());
+
+        List<MultiblockStatusData.Status> upgradeList = new ArrayList<>();
+        upgradeList.add(new MultiblockStatusData.StatusItemStack("Encryption Card", itemStackHandler.getStackInSlot(ENCRYPTION_CARD_SLOT_INDEX)));
+        upgradeList.add(new MultiblockStatusData.StatusItemStack("Speed Upgrade", itemStackHandler.getStackInSlot(SPEED_UPGRADE_SLOT_INDEX)));
+        upgradeList.add(new MultiblockStatusData.StatusItemStack("Stack Upgrade", itemStackHandler.getStackInSlot(STACK_UPGRADE_SLOT_INDEX)));
+        tagList.appendTag(new MultiblockStatusData.StatusList("Upgrades", upgradeList).toNBT());
 
         nbt.setTag("statuses", tagList);
         return nbt;

@@ -11,9 +11,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.util.Constants;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static com.rlapcs.radiotransfer.server.radio.RadioNetwork.MAX_PRIORITY;
 import static com.rlapcs.radiotransfer.server.radio.RadioNetwork.MIN_PRIORITY;
@@ -73,6 +71,11 @@ public class TileRxController extends AbstractTileController {
         NBTTagList tagList = nbt.getTagList("statuses", Constants.NBT.TAG_COMPOUND);
 
         tagList.appendTag(new MultiblockStatusData.StatusInt("Priority", priority).toNBT());
+
+        List<MultiblockStatusData.Status> upgradeList = new ArrayList<>();
+        upgradeList.add(new MultiblockStatusData.StatusItemStack("Encryption Card", itemStackHandler.getStackInSlot(ENCRYPTION_CARD_SLOT_INDEX)));
+        upgradeList.add(new MultiblockStatusData.StatusItemStack("Filter Card", itemStackHandler.getStackInSlot(FILTER_SLOT_INDEX)));
+        tagList.appendTag(new MultiblockStatusData.StatusList("Upgrades", upgradeList).toNBT());
 
         nbt.setTag("statuses", tagList);
         return nbt;

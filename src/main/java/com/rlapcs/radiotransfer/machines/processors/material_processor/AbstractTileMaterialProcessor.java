@@ -17,6 +17,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.util.Constants;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -192,8 +193,11 @@ public abstract class AbstractTileMaterialProcessor<T extends IMaterialTransferH
 
         String status = canDoProcessServer() ? "processing" : "standby"; //no catch for whether this has changed, but status update is called on packetQueue change, inventory change, and powered state change—so this should be fine
         tagList.appendTag(new MultiblockStatusData.StatusString("Status", status).toNBT());
-        int numSpeedUpgrades = itemStackHandler.getStackInSlot(SPEED_UPGRADE_SLOT_INDEX).getCount();
-        tagList.appendTag(new MultiblockStatusData.StatusInt("Speed Upgrades", numSpeedUpgrades).toNBT());
+
+        //upgrades
+        List<MultiblockStatusData.Status> upgradeList = new ArrayList<>();
+        upgradeList.add(new MultiblockStatusData.StatusItemStack("Speed Upgrades", itemStackHandler.getStackInSlot(SPEED_UPGRADE_SLOT_INDEX)));
+        tagList.appendTag(new MultiblockStatusData.StatusList("Upgrades", upgradeList).toNBT());
 
         nbt.setTag("statuses", tagList);
         return nbt;
