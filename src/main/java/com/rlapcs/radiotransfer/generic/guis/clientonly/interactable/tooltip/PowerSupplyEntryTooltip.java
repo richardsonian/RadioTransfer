@@ -39,7 +39,7 @@ public class PowerSupplyEntryTooltip extends GuiTooltip {
             drawText("Base: " + entry.basePowerPerTick + " FE/t", Color.WHITE);
             if (entry.getSortedUpgradeCardConstantCosts().size() > 0) {
                 for (UpgradeCardPowerEntry cardEntry : entry.getSortedUpgradeCardConstantCosts()) {
-                    renderCardItem(new ItemStack(cardEntry.item));
+                    renderCardItem(cardEntry.getItemStackForRender());
                     drawText("      " + cardEntry + " FE/t", Color.WHITE);
                 }
             }
@@ -56,7 +56,7 @@ public class PowerSupplyEntryTooltip extends GuiTooltip {
             drawText("Base: " + entry.basePowerPerProcess + " FE/process", Color.WHITE);
             if (entry.getSortedUpgradeCardProcessCosts().size() > 0) {
                 for (UpgradeCardPowerEntry cardEntry : entry.getSortedUpgradeCardProcessCosts()) {
-                    renderCardItem(new ItemStack(cardEntry.item));
+                    renderCardItem(cardEntry.getItemStackForRender());
                     drawText("      " + cardEntry + " FE/process", Color.WHITE);
                 }
             }

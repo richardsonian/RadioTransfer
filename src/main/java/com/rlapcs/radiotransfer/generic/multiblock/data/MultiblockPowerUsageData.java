@@ -1,17 +1,18 @@
 package com.rlapcs.radiotransfer.generic.multiblock.data;
 
-import com.google.common.collect.Lists;
 import com.rlapcs.radiotransfer.ModConfig;
 import com.rlapcs.radiotransfer.ModConstants;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.lists.IGuiListContent;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.tooltip.ITooltipContent;
 import com.rlapcs.radiotransfer.generic.multiblock.tileEntities.AbstractTileMultiblockNode;
 import com.rlapcs.radiotransfer.registries.ModBlocks;
+import com.rlapcs.radiotransfer.util.Debug;
 import com.rlapcs.radiotransfer.util.NBTUtils;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
@@ -372,6 +373,16 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
                 }
 
                 this.total = this.quantity * this.cost;
+            }
+
+            /**
+             * Gets ItemStack of Item for render. Does not contain accurate quantity.
+             * @return the ItemStack
+             */
+            public ItemStack getItemStackForRender() {
+                ItemStack stack = new ItemStack(item, 1);
+                Debug.sendDebugMessage("Getting ItemStack for render: " + stack);
+                return stack;
             }
 
             /**

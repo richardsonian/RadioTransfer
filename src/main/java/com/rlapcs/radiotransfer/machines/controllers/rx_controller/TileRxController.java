@@ -73,8 +73,8 @@ public class TileRxController extends AbstractTileController {
         tagList.appendTag(new MultiblockStatusData.StatusInt("Priority", priority).toNBT());
 
         List<MultiblockStatusData.Status> upgradeList = new ArrayList<>();
-        upgradeList.add(new MultiblockStatusData.StatusItemStack("Encryption Card", itemStackHandler.getStackInSlot(ENCRYPTION_CARD_SLOT_INDEX)));
-        upgradeList.add(new MultiblockStatusData.StatusItemStack("Filter Card", itemStackHandler.getStackInSlot(FILTER_SLOT_INDEX)));
+            upgradeList.add(new MultiblockStatusData.StatusUpgradeCard(ModItems.encryption_card, itemStackHandler.getStackInSlot(ENCRYPTION_CARD_SLOT_INDEX).getCount()));
+            upgradeList.add(new MultiblockStatusData.StatusUpgradeCard(ModItems.filter_card, itemStackHandler.getStackInSlot(FILTER_SLOT_INDEX).getCount()));
         tagList.appendTag(new MultiblockStatusData.StatusList("Upgrades", upgradeList).toNBT());
 
         nbt.setTag("statuses", tagList);

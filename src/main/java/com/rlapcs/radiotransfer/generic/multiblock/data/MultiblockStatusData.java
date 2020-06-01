@@ -3,6 +3,7 @@ package com.rlapcs.radiotransfer.generic.multiblock.data;
 import com.rlapcs.radiotransfer.ModConstants;
 import com.rlapcs.radiotransfer.util.Debug;
 import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -200,6 +201,7 @@ public class MultiblockStatusData {
         public static final int INT_WITH_UNITS = 7;
         public static final int DOUBLE_WITH_UNITS = 8;
         public static final int FRACTION_WITH_UNITS = 9;
+        public static final int UPGRADECARD = 10;
 
         //Data
         protected String key;
@@ -227,6 +229,7 @@ public class MultiblockStatusData {
                     case INT_WITH_UNITS: return new StatusInt.WithUnits(key, nbt);
                     case DOUBLE_WITH_UNITS: return new StatusDouble.WithUnits(key, nbt);
                     case FRACTION_WITH_UNITS: return new StatusFraction.WithUnits(key, nbt);
+                    case UPGRADECARD: return new StatusUpgradeCard(key, nbt.getInteger("value"));
                     default: {
                         Debug.sendDebugMessage(RED + "[ERROR]" + RESET + " status type not found.");
                         throw new IllegalArgumentException("Tag \"type\" contains unrecognizable content.");
@@ -507,6 +510,12 @@ public class MultiblockStatusData {
             }
         }
     }
+
+    /**
+     * Key: String
+     * Value: ItemStack
+     * Ex: "Power Item": [ItemStack]
+     */
     public static class StatusItemStack extends Status<ItemStack> {
         boolean shouldRenderQuantity;
         public StatusItemStack(String key, ItemStack value, boolean renderQuantity) {
@@ -558,6 +567,61 @@ public class MultiblockStatusData {
             return shouldRenderQuantity;
         }
     }
+
+    /**
+     * Unlike StatusItemStack, this stores an Item as key and a quantity as a value.
+     * In the backend, this is actually stored as a modified StatusInt.
+     * The Item key is stored as a string key, the Int value is the quantity.
+     *
+     * A bit of a hack, but should work.
+     */
+    public static class StatusUpgradeCard extends StatusInt {
+        public StatusUpgradeCard(String itemName, int quantity) {
+            super(itemName, quantity);
+        }
+        public StatusUpgradeCard(Item upgradeItem, int quantity) {
+            this(Item.REGISTRY.getNameForObject(upgradeItem).toString(), quantity);
+            Debug.sendDebugMessage("Created UpgradeStatus Card with key: " + key);
+        }
+
+        @Override
+        public String getFormattedValue() {
+            if(getQuantity() > 0) {
+                return "×" + getQuantity();
+            }
+            else {
+                return RESET + ": " + RED + "✘";
+            }
+        }
+
+        @Override
+        public String toString() {
+            return getItemStack().getDisplayName() + getFormattedValue();
+        }
+
+        @Override
+        public NBTTagCompound toNBT() {
+            NBTTagCompound nbt = super.toNBT();
+            nbt.setInteger("type", UPGRADECARD);
+            return nbt;
+        }
+
+        public Item getItem() {
+            return Item.getByNameOrId(this.key);
+        }
+        public int getQuantity() {
+            return this.getValue();
+        }
+
+        /**
+         * Gets ItemStack for render. If actual quantity is 0, sets it to 1 to prevent it from
+         * @return the ItemStack
+         */
+        public ItemStack getItemStack() {
+            return new ItemStack(getItem(), getQuantity() > 0 ? getQuantity() : 1);
+        }
+    }
+
     public static class StatusList extends Status<List<Status>> {
         public StatusList(String key, List<Status> value) {
             super(key, value);
