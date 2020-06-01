@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 
@@ -32,6 +33,21 @@ public class MultiblockStatusData {
         entries = new HashSet<>();
     }
 
+    public void readNodesFromNBT(NBTTagCompound nbt) {
+        if(nbt.hasKey("node_status_list")) {
+            NBTTagList tagList = nbt.getTagList("node_status_list", Constants.NBT.TAG_COMPOUND);
+            Debug.sendDebugMessage(ITALIC.toString() + DARK_GRAY + "...adding list of " + tagList.tagCount() + " nodes");
+            for(int i = 0; i < tagList.tagCount(); i++) {
+                Debug.sendDebugMessage(ITALIC.toString() + TextFormatting.GRAY + "...adding node " + i);
+                NBTTagCompound nodeNBT = (NBTTagCompound) tagList.get(i);
+                this.readNodeFromNBT(nodeNBT);
+            }
+            onNodeListChanged();
+        }
+        else {
+            Debug.sendDebugMessage(RED + "[WARNING]" + RESET + " nbt at MultiblockStatusData#readNodesFromNBT() does not contain node list.");
+        }
+    }
     public void readNodeFromNBT(NBTTagCompound nbt) {
         Debug.sendDebugMessage(String.format("%s%s...reading node from NBT in %s[msd]", ITALIC, DARK_GRAY, GRAY));
         boolean entryAlreadyExisted = false;
@@ -45,6 +61,7 @@ public class MultiblockStatusData {
                         Debug.sendDebugMessage(DARK_GRAY.toString() + ITALIC + "...is remove key");
                         entries.remove(e);
                         Debug.sendDebugMessage(YELLOW + "[CLIENT]" + DARK_RED + "Removed status entry " + RESET + e.getBlock().getLocalizedName());
+                        onNodeListChanged();
                     }
                     //otherwise, update it with the nbt
                     else {
@@ -66,6 +83,7 @@ public class MultiblockStatusData {
             entries.add(newEntry);
             Debug.sendDebugMessage(GRAY.toString() + ITALIC + "...added object");
             Debug.sendDebugMessage(YELLOW + "[CLIENT]" + GREEN + "Added new status entry " + RESET + newEntry.getBlock().getLocalizedName());
+            onNodeListChanged();
             //Debug: Show the contents of the status entry
             //Debug.sendDebugMessage(newEntry.toString());
         }
@@ -100,6 +118,12 @@ public class MultiblockStatusData {
         return null;
     }
 
+    /**
+     * Override this to get a hook for when a node is added or removed
+     */
+    public void onNodeListChanged() {
+
+    }
     public static class NodeStatusEntry {
         private BlockPos pos;
         private Block block;
@@ -110,33 +134,33 @@ public class MultiblockStatusData {
         }
         public NodeStatusEntry(NBTTagCompound nbt) {
             this();
-            Debug.sendDebugMessage(GRAY.toString() + ITALIC + "....inside constructor");
+            //Debug.sendDebugMessage(GRAY.toString() + ITALIC + "....inside constructor");
             this.readFromNBT(nbt);
-            Debug.sendDebugMessage(GRAY.toString() + ITALIC + "....finished constructor");
+            //Debug.sendDebugMessage(GRAY.toString() + ITALIC + "....finished constructor");
         }
         public void readFromNBT(NBTTagCompound nbt) {
             Debug.sendDebugMessage(WHITE.toString() + ITALIC + "....parsing node NBT");
             if(nbt.hasKey("pos")) {
-                Debug.sendDebugMessage(WHITE.toString() + ITALIC + "....has pos key");
+                //Debug.sendDebugMessage(WHITE.toString() + ITALIC + "....has pos key");
                 pos = BlockPos.fromLong(nbt.getLong("pos"));
-                Debug.sendDebugMessage(WHITE.toString() + ITALIC + "....got pos key");
+                //Debug.sendDebugMessage(WHITE.toString() + ITALIC + "....got pos key");
             }
             if(nbt.hasKey("block")) {
-                Debug.sendDebugMessage(WHITE.toString() + ITALIC + "....has block key");
+                //Debug.sendDebugMessage(WHITE.toString() + ITALIC + "....has block key");
                 block = Block.getBlockFromName(nbt.getString("block"));
-                Debug.sendDebugMessage(WHITE.toString() + ITALIC + "....got block key");
+                //Debug.sendDebugMessage(WHITE.toString() + ITALIC + "....got block key");
             }
             if(nbt.hasKey("statuses")) {
-                Debug.sendDebugMessage(WHITE.toString() + ITALIC + "....has statuses key");
+                //Debug.sendDebugMessage(WHITE.toString() + ITALIC + "....has statuses key");
                 statuses = new ArrayList<>();
                 NBTTagList tagList = nbt.getTagList("statuses", Constants.NBT.TAG_COMPOUND);
-                Debug.sendDebugMessage(WHITE.toString() + ITALIC + "....got statuses key. Parsing");
+                //Debug.sendDebugMessage(WHITE.toString() + ITALIC + "....got statuses key. Parsing");
                 for(int i = 0; i < tagList.tagCount(); i++) {
-                    Debug.sendDebugMessage(WHITE.toString() + ITALIC + ".... - reading status " + i);
+                    //Debug.sendDebugMessage(WHITE.toString() + ITALIC + ".... - reading status " + i);
                     statuses.add(Status.fromNBT((NBTTagCompound) tagList.get(i)));
                 }
             }
-            Debug.sendDebugMessage(WHITE.toString() + ITALIC + "....finished node NBT parsing");
+            //Debug.sendDebugMessage(WHITE.toString() + ITALIC + "....finished node NBT parsing");
         }
 
         public BlockPos getPos() {
@@ -187,12 +211,11 @@ public class MultiblockStatusData {
         }
 
         public static Status fromNBT(NBTTagCompound nbt) {
-            Debug.sendDebugMessage(WHITE.toString() + ITALIC + "....creating new status from NBT");
+            Debug.sendDebugMessage(GRAY.toString() + ITALIC + "   ...creating new status from NBT");
             if(nbt.hasKey("key") && nbt.hasKey("type") && nbt.hasKey("value")) {
-                Debug.sendDebugMessage(WHITE.toString() + ITALIC + "....(has sufficient keys)");
                 String key = nbt.getString("key");
                 int type = nbt.getInteger("type");
-                Debug.sendDebugMessage(WHITE.toString() + ITALIC + "....[key: " + key + " ; type: " + type + "]");
+                Debug.sendDebugMessage(WHITE.toString() + ITALIC + "      [key: " + key + " ; type: " + type + "]");
                 switch(type) {
                     case INT: return new StatusInt(key, nbt.getInteger("value"));
                     case DOUBLE: return new StatusDouble(key, nbt.getDouble("value"));
@@ -204,9 +227,15 @@ public class MultiblockStatusData {
                     case INT_WITH_UNITS: return new StatusInt.WithUnits(key, nbt);
                     case DOUBLE_WITH_UNITS: return new StatusDouble.WithUnits(key, nbt);
                     case FRACTION_WITH_UNITS: return new StatusFraction.WithUnits(key, nbt);
+                    default: {
+                        Debug.sendDebugMessage(RED + "[ERROR]" + RESET + " status type not found.");
+                        throw new IllegalArgumentException("Tag \"type\" contains unrecognizable content.");
+                    }
                 }
             }
-            return null;
+            //if above didn't return
+            Debug.sendDebugMessage(RED + "[ERROR]" + RESET + " Status NBT does not contain correct tags.");
+            throw new IllegalArgumentException("NBT at Status.fromNBT does not contain required tags.");
         }
 
         public NBTTagCompound toNBT() {
@@ -247,12 +276,10 @@ public class MultiblockStatusData {
         public StatusInt(String key, Integer value) {
             super(key, value);
         }
-
         @Override
         public String getFormattedValue() {
             return super.getFormattedValue();
         }
-
         @Override
         public NBTTagCompound toNBT() {
             NBTTagCompound nbt = super.toNBT();
@@ -260,7 +287,6 @@ public class MultiblockStatusData {
             nbt.setInteger("value", value);
             return nbt;
         }
-
         public static class WithUnits extends StatusInt {
             private String units;
             public WithUnits(String key, Integer value, String units) {
@@ -269,12 +295,14 @@ public class MultiblockStatusData {
             }
             public WithUnits(String key, NBTTagCompound nbt) {
                 super(key, null);
-                if(nbt.hasKey("value")) {
+                if(nbt.hasKey("value") && nbt.hasKey("units")) {
                     value = nbt.getInteger("value");
-                }
-                if(nbt.hasKey("units")) {
                     units = nbt.getString("units");
                 }
+                else {
+                    Debug.sendDebugMessage(RED + "[ERROR]" + RESET + " Failed to read NBT when creating StatusInt.WithUnits");
+                    throw new IllegalArgumentException("Required tags not present.");
+                } //error catching
             }
             @Override
             public String getFormattedValue() {
@@ -313,12 +341,14 @@ public class MultiblockStatusData {
             }
             public WithUnits(String key, NBTTagCompound nbt) {
                 super(key, null);
-                if(nbt.hasKey("value")) {
+                if(nbt.hasKey("value") && nbt.hasKey("units")) {
                     value = nbt.getDouble("value");
-                }
-                if(nbt.hasKey("units")) {
                     units = nbt.getString("units");
                 }
+                else {
+                    Debug.sendDebugMessage(RED + "[ERROR]" + RESET + " Failed to read NBT when creating StatusDouble.WithUnits");
+                    throw new IllegalArgumentException("Required tags not present.");
+                } //error catching
             }
             @Override
             public String getFormattedValue() {
@@ -411,12 +441,14 @@ public class MultiblockStatusData {
 
             @Override
             public void deserializeNBT(NBTTagCompound nbt) {
-                if(nbt.hasKey("numerator")) {
+                if(nbt.hasKey("numerator") && nbt.hasKey("denominator")) {
                     numerator = nbt.getInteger("numerator");
-                }
-                if(nbt.hasKey("denominator")) {
                     denominator = nbt.getInteger("denominator");
                 }
+                else {
+                    Debug.sendDebugMessage(RED + "[ERROR]" + RESET + " Failed to read NBT when deserializing StatusFraction.Fraction");
+                    throw new IllegalArgumentException("Required tags not present.");
+                } //error catching
             }
 
             @Override
@@ -453,10 +485,14 @@ public class MultiblockStatusData {
                 this.units = units;
             }
             public WithUnits(String key, NBTTagCompound nbt) {
-                super(key, nbt);
+                super(key, nbt.getCompoundTag("value"));
                 if(nbt.hasKey("units")) {
                     units = nbt.getString("units");
                 }
+                else {
+                    Debug.sendDebugMessage(RED + "[ERROR]" + RESET + " Failed to read NBT when creating StatusFraction.WithUnits");
+                    throw new IllegalArgumentException("Required tags not present.");
+                } //error catching
             }
             @Override
             public String getFormattedValue() {
@@ -472,17 +508,33 @@ public class MultiblockStatusData {
         }
     }
     public static class StatusItemStack extends Status<ItemStack> {
-        public StatusItemStack(String key, ItemStack value) {
+        boolean shouldRenderQuantity;
+        public StatusItemStack(String key, ItemStack value, boolean renderQuantity) {
             super(key, value);
+            this.shouldRenderQuantity = renderQuantity;
+        }
+        public StatusItemStack(String key, ItemStack value) {
+            this(key, value, true);
         }
         public StatusItemStack(String key, NBTTagCompound valueNBT) {
             this(key, new ItemStack(valueNBT));
-            Debug.sendDebugMessage(WHITE.toString() + ITALIC + "....creating new StatusItemStack");
+            if(valueNBT.hasKey("_status_renderQuantity")) {
+                this.shouldRenderQuantity = valueNBT.getBoolean("_status_renderQuantity");
+            }
+            else {
+                Debug.sendDebugMessage(RED + "[ERROR]" + RESET + " Failed to read NBT when creating StatusItemStack");
+                throw new IllegalArgumentException("Required tags not present.");
+            } //error catching
         }
         @Override
         public String getFormattedValue() {
-            if (value.isEmpty()) {
-                return value.getDisplayName() + " ×" + value.getCount();
+            if (!value.isEmpty()) {
+                if(shouldRenderQuantity) {
+                    return value.getDisplayName() + " ×" + value.getCount();
+                }
+                else {
+                    return value.getDisplayName();
+                }
             }
             else {
                 return RED + "✘";
@@ -492,35 +544,44 @@ public class MultiblockStatusData {
         public NBTTagCompound toNBT() {
             NBTTagCompound nbt = super.toNBT();
             nbt.setInteger("type", ITEMSTACK);
-            nbt.setTag("value", value.serializeNBT());
+
+            NBTTagCompound valueNBT = value.serializeNBT();
+            valueNBT.setBoolean("_status_renderQuantity", shouldRenderQuantity); //sneak this in the ItemStack NBT so we can use it
+            nbt.setTag("value", valueNBT);
+
             return nbt;
         }
         public int getQuantity() {
             return value.getCount();
+        }
+        public boolean shouldRenderQuantity() {
+            return shouldRenderQuantity;
         }
     }
     public static class StatusList extends Status<List<Status>> {
         public StatusList(String key, List<Status> value) {
             super(key, value);
         }
-        public StatusList(String key, NBTTagList value) {
+        public StatusList(String key, NBTTagList valueNBT) {
             this(key, new ArrayList<>());
-            for(int i = 0; i < value.tagCount(); i++) {
-                this.value.add(Status.fromNBT((NBTTagCompound) value.get(i)));
+            Debug.sendDebugMessage(GRAY.toString() + ITALIC + "      ...creating StatusList from NBT (count: " + valueNBT.tagCount() + ")");
+            for(int i = 0; i < valueNBT.tagCount(); i++) {
+                Debug.sendDebugMessage(WHITE.toString() + ITALIC + "[LIST TAG " + i + "]:");
+                this.value.add(Status.fromNBT((NBTTagCompound) valueNBT.get(i)));
             }
         }
         @Override
         public String getFormattedValue() {
             StringBuilder str = new StringBuilder();
             for(Status s : value) {
-                str.append("\n  " + s.getFormattedValue());
+                str.append("\n  " + RESET + s.toString());
             }
             return str.toString();
         }
         @Override
         public NBTTagCompound toNBT() {
             NBTTagCompound nbt = super.toNBT();
-            nbt.setInteger("type", ITEMSTACK);
+            nbt.setInteger("type", LIST);
 
             NBTTagList tagList = new NBTTagList();
             for(Status s : value) {

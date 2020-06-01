@@ -7,11 +7,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -68,13 +65,7 @@ public class MessageUpdateClientTileMultiblockStatusData implements IMessage {
                         TileRadio tile = (TileRadio) te;
 
                         if(message.statusNBT.hasKey("node_status_list")) {
-                            NBTTagList tagList = message.statusNBT.getTagList("node_status_list", Constants.NBT.TAG_COMPOUND);
-                            Debug.sendDebugMessage(ITALIC.toString() + DARK_GRAY + "...adding list of " + tagList.tagCount() + " nodes");
-                            for(int i = 0; i < tagList.tagCount(); i++) {
-                                Debug.sendDebugMessage(ITALIC.toString() + TextFormatting.GRAY + "...adding node " + i);
-                                NBTTagCompound nbt = (NBTTagCompound) tagList.get(i);
-                                tile.getMultiblockStatusData().readNodeFromNBT(nbt);
-                            }
+                            tile.getMultiblockStatusData().readNodesFromNBT(message.statusNBT);
                         }
                         else {
                             Debug.sendDebugMessage(ITALIC.toString() + DARK_GRAY + "...adding single node");
