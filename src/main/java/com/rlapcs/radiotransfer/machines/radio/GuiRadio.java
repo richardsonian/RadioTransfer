@@ -56,7 +56,7 @@ public class GuiRadio extends AbstractGuiMachine {
             selectedBlock = coords.get(0);
 
         multiblockViewer = new GuiEmbedded3DBlockViewer(new NNList<>(coords), selectedBlock);
-        hoverables.put("Help", new GuiHoverable(pos.addTo(VIEWER_POS).addTo(VIEWER_SIZE).addTo(new CoordinateXY(-11, -11)), new DimensionWidthHeight(8, 9), this));
+        hoverables.put("Help", new GuiHoverable(pos.addTo(VIEWER_POS).addTo(VIEWER_SIZE).addTo(new CoordinateXY(-11, -11)), new DimensionWidthHeight(9, 9), this));
         isClosed = true;
     }
 
@@ -105,11 +105,10 @@ public class GuiRadio extends AbstractGuiMachine {
                 if (status instanceof StatusItemStack) {
                     StatusItemStack statusItemStack = (StatusItemStack) status;
                     String key = status.getKey() + ": ";
-                    if (statusItemStack.getValue().isEmpty()) {
-                    this.drawString(mc.fontRenderer, key + "  ×" + ((StatusItemStack) status).getValue().getCount(), infoPos.x, infoPos.y + liney, Color.WHITE.getRGB());
-                    drawItem(statusItemStack.getValue(), new CoordinateXY(infoPos.x + GuiUtil.getLineLength(key) - 3, infoPos.y + liney - 1), status.getKey());
-                    }
-                    else {
+                    if (!statusItemStack.getValue().isEmpty()) {
+                        this.drawString(mc.fontRenderer, key + "  ×" + ((StatusItemStack) status).getValue().getCount(), infoPos.x, infoPos.y + liney, Color.WHITE.getRGB());
+                        drawItem(statusItemStack.getValue(), new CoordinateXY(infoPos.x + GuiUtil.getLineLength(key) - 3, infoPos.y + liney - 1), status.getKey());
+                    } else {
                         drawItem(new ItemStack(Items.ACACIA_BOAT), new CoordinateXY(infoPos.x + GuiUtil.getLineLength(key) - 3, infoPos.y + liney - 1), status.getKey());
                     }
                 } else {

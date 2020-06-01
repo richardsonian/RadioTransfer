@@ -1,5 +1,6 @@
 # items
-item.radiotransfer.speed_upgrade.name=Speed
+item.radiotransfer.speed_upgrade.name=Speed Upgrade
+item.radiotransfer.stack_upgrade.name=Stack Upgrade
 item.radiotransfer.unbaked_resistor.name=Unbaked Resistor
 item.radiotransfer.baked_resistor.name=Baked Resistor
 item.radiotransfer.unbaked_capacitor.name=Unbaked Capacitor

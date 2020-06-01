@@ -32,7 +32,7 @@ public class ModItems {
     //upgrade cards
     public static final Item speed_upgrade = null;
     public static final Item stack_upgrade = null;
-    public static final Item stack_downgrade = null;
+    public static final Item stack_downgrade = null; // Are we using this?
     public static final ItemEncryptionCard encryption_card = null;
     public static final ItemFilterCard filter_card = null;
 
