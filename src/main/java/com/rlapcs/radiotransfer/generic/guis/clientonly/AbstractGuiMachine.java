@@ -4,6 +4,7 @@ import com.rlapcs.radiotransfer.ModConstants;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.indicators.GuiPowerIndicator;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.lists.AbstractGuiList;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.sliders.GuiDraggableSliderButton;
+import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.tooltip.GuiHoverable;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.tooltip.GuiTooltip;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateXY;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.DimensionWidthHeight;
@@ -18,6 +19,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Mouse;
 
 import java.awt.*;
+import java.util.HashMap;
 
 
 public abstract class AbstractGuiMachine<T extends TileEntity> extends GuiContainer implements IGui {
@@ -26,6 +28,7 @@ public abstract class AbstractGuiMachine<T extends TileEntity> extends GuiContai
     protected CoordinateXY pos;
     protected DimensionWidthHeight size;
     protected GuiPowerIndicator powerIndicator;
+    protected HashMap<String, GuiHoverable> hoverables;
     public GuiTooltip tooltip;
 
     private static int nextButtonID;
@@ -35,6 +38,7 @@ public abstract class AbstractGuiMachine<T extends TileEntity> extends GuiContai
 
         this.tileEntity = tileEntity;
         this.tooltip = new GuiTooltip(new CoordinateXY(Mouse.getX(), Mouse.getY()), new DimensionWidthHeight(4, 4));
+        this.hoverables = new HashMap<>();
     }
 
     protected static int getNextButtonID() {

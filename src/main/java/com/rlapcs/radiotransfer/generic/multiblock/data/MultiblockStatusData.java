@@ -397,7 +397,7 @@ public class MultiblockStatusData {
 
             @Override
             public String toString() {
-                return (numerator + "/" + denominator);
+                return (numerator + " / " + denominator);
             }
 
             public int getNumerator() {

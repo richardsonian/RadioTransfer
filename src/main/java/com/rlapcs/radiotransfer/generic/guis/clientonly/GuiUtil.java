@@ -12,6 +12,8 @@ public class GuiUtil {
                     length += 3; break;
                 case 'k':
                 case 'f':
+                case '(':
+                case ')':
                     length += 4; break;
                 case 'i':
                 case '.':

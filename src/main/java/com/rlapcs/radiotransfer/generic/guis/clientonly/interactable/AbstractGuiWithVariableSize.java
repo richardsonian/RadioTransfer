@@ -42,11 +42,11 @@ public abstract class AbstractGuiWithVariableSize extends GuiScreen {
         int heightDifference = targetSize.height - interpolatedSize.height;
         int widthToAdd = Math.abs(widthDifference) < 4 ? MathHelper.clamp(Integer.compare(widthDifference, 0), -1, 1) : (widthDifference) / 4;
         int heightToAdd = Math.abs(heightDifference) < 4 ? MathHelper.clamp(Integer.compare(heightDifference, 0), -1, 1) : (heightDifference) / 4;
-        interpolatedSize = (DimensionWidthHeight) interpolatedSize.addTo(new DimensionWidthHeight(widthToAdd, heightToAdd));
+        interpolatedSize = interpolatedSize.addTo(new DimensionWidthHeight(widthToAdd, heightToAdd));
         isAtTargetSize = interpolatedSize.equals(targetSize);
 
         if (pos.x + interpolatedSize.width > this.width)
-            pos = (CoordinateXY) pos.addTo(new CoordinateXY(- interpolatedSize.width, 0));
+            pos = pos.addTo(new CoordinateXY(-interpolatedSize.width, 0));
 
         // SETUP
         RenderHelper.disableStandardItemLighting();

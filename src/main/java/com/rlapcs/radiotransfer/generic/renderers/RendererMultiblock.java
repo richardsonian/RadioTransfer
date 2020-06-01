@@ -243,13 +243,16 @@ public class RendererMultiblock {
     }
 
     public BlockPos drawScreen(int mouseX, int mouseY, float partialTick, @Nonnull Rectangle vp) {
-
         if (!updateCamera(partialTick, vp.x, vp.y, vp.width, vp.height)) return selected;
+
+        GlStateManager.pushMatrix();
 
         applyCamera(partialTick);
         Vector3d transform = renderScene();
         handleMouseInput(transform);
         drawHighlight(selected, transform, 0xC29429FF);
+
+        GlStateManager.popMatrix();
         //renderSelection();
         //renderOverlay(par1, par2);
         return selected;
