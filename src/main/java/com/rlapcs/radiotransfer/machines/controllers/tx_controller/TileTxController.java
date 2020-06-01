@@ -77,9 +77,9 @@ public class TileTxController extends AbstractTileController {
         tagList.appendTag(new MultiblockStatusData.StatusString("Transmission Mode", mode.getFriendlyName()).toNBT());
 
         List<MultiblockStatusData.Status> upgradeList = new ArrayList<>();
-        upgradeList.add(new MultiblockStatusData.StatusItemStack("Encryption Card", itemStackHandler.getStackInSlot(ENCRYPTION_CARD_SLOT_INDEX)));
-        upgradeList.add(new MultiblockStatusData.StatusItemStack("Speed Upgrade", itemStackHandler.getStackInSlot(SPEED_UPGRADE_SLOT_INDEX)));
-        upgradeList.add(new MultiblockStatusData.StatusItemStack("Stack Upgrade", itemStackHandler.getStackInSlot(STACK_UPGRADE_SLOT_INDEX)));
+            upgradeList.add(new MultiblockStatusData.StatusUpgradeCard(ModItems.encryption_card, itemStackHandler.getStackInSlot(ENCRYPTION_CARD_SLOT_INDEX).getCount()));
+            upgradeList.add(new MultiblockStatusData.StatusUpgradeCard(ModItems.speed_upgrade, itemStackHandler.getStackInSlot(SPEED_UPGRADE_SLOT_INDEX).getCount()));
+            upgradeList.add(new MultiblockStatusData.StatusUpgradeCard(ModItems.stack_upgrade, itemStackHandler.getStackInSlot(STACK_UPGRADE_SLOT_INDEX).getCount()));
         tagList.appendTag(new MultiblockStatusData.StatusList("Upgrades", upgradeList).toNBT());
 
         nbt.setTag("statuses", tagList);

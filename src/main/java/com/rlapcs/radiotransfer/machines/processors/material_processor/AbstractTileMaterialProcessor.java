@@ -10,6 +10,7 @@ import com.rlapcs.radiotransfer.machines.processors.ProcessorType;
 import com.rlapcs.radiotransfer.machines.processors.abstract_processor.AbstractTileProcessor;
 import com.rlapcs.radiotransfer.network.messages.toClient.MessageUpdateClientDumpablePackets;
 import com.rlapcs.radiotransfer.network.messages.toClient.MessageUpdateClientPacketQueue;
+import com.rlapcs.radiotransfer.registries.ModItems;
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -196,7 +197,7 @@ public abstract class AbstractTileMaterialProcessor<T extends IMaterialTransferH
 
         //upgrades
         List<MultiblockStatusData.Status> upgradeList = new ArrayList<>();
-        upgradeList.add(new MultiblockStatusData.StatusItemStack("Speed Upgrades", itemStackHandler.getStackInSlot(SPEED_UPGRADE_SLOT_INDEX)));
+            upgradeList.add(new MultiblockStatusData.StatusUpgradeCard(ModItems.speed_upgrade, itemStackHandler.getStackInSlot(SPEED_UPGRADE_SLOT_INDEX).getCount()));
         tagList.appendTag(new MultiblockStatusData.StatusList("Upgrades", upgradeList).toNBT());
 
         nbt.setTag("statuses", tagList);
