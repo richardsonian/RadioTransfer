@@ -11,6 +11,7 @@ import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateXY;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.DimensionWidthHeight;
 import com.rlapcs.radiotransfer.generic.multiblock.data.MultiblockStatusData;
 import com.rlapcs.radiotransfer.generic.multiblock.data.MultiblockStatusData.StatusItemStack;
+import com.rlapcs.radiotransfer.generic.multiblock.data.MultiblockStatusData.StatusList;
 import com.rlapcs.radiotransfer.network.messages.toServer.MessageAddClientListener;
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import net.minecraft.client.renderer.GlStateManager;
@@ -67,7 +68,9 @@ public class GuiRadio extends AbstractGuiMachine {
     }
 
     public void updateMultiblockViewer() {
-
+        coords = ((TileRadio) tileEntity).getMultiblockStatusData().getAllNodePositions();
+        coords.add(tileEntity.getPos());
+        multiblockViewer.updateBlocksInList(new NNList<>(coords), selectedBlock);
     }
 
     @Override
@@ -98,29 +101,38 @@ public class GuiRadio extends AbstractGuiMachine {
         if (selectedBlock.equals(tileEntity.getPos())) {
             this.drawString(mc.fontRenderer, "Radio", namePos.x, namePos.y, Color.decode("#E8B07B").getRGB());
         } else {
-            CoordinateXY infoPos = pos.addTo(INFO_START_POS);
-            int liney = 0;
             MultiblockStatusData statusData = ((TileRadio) tileEntity).getMultiblockStatusData();
             MultiblockStatusData.NodeStatusEntry entry = statusData.getEntry(selectedBlock);
-            List<MultiblockStatusData.Status> statuses = entry.getStatuses();
             this.drawString(mc.fontRenderer, entry.getBlock().getLocalizedName(), namePos.x, namePos.y, Color.decode("#E8B07B").getRGB());
-            for (MultiblockStatusData.Status status : statuses) {
-                if (status instanceof StatusItemStack) {
-                    StatusItemStack statusItemStack = (StatusItemStack) status;
-                    String key = status.getKey() + ": ";
-                    if (!statusItemStack.getValue().isEmpty()) {
-                        this.drawString(mc.fontRenderer, key + "  ×" + ((StatusItemStack) status).getValue().getCount(), infoPos.x, infoPos.y + liney, Color.WHITE.getRGB());
-                        drawItem(statusItemStack.getValue(), new CoordinateXY(infoPos.x + GuiUtil.getLineLength(key) - 3, infoPos.y + liney - 1), status.getKey());
-                    } else {
-                        drawItem(new ItemStack(Items.ACACIA_BOAT), new CoordinateXY(infoPos.x + GuiUtil.getLineLength(key) - 3, infoPos.y + liney - 1), status.getKey());
-                    }
-                } else {
-                    this.drawString(mc.fontRenderer, status.toString(), infoPos.x, infoPos.y + liney, Color.WHITE.getRGB());
-                }
-                liney += mc.fontRenderer.FONT_HEIGHT + 2;
-            }
+            List<MultiblockStatusData.Status> statuses = entry.getStatuses();
+            iterateThroughStatuses(statuses, 0, 0);
         }
         RenderHelper.enableStandardItemLighting();
+    }
+
+    private int iterateThroughStatuses(List<MultiblockStatusData.Status> statuses, int offset, int liney) {
+        CoordinateXY infoPos = pos.addTo(INFO_START_POS).addTo(new CoordinateXY(offset * 5, 0));
+        for (MultiblockStatusData.Status status : statuses) {
+            if (status instanceof StatusItemStack) {
+                StatusItemStack statusItemStack = (StatusItemStack) status;
+                String key = status.getKey() + ": ";
+                if (!statusItemStack.getValue().isEmpty()) {
+                    this.drawString(mc.fontRenderer, key + "  ×" + ((StatusItemStack) status).getValue().getCount(), infoPos.x, infoPos.y + liney, Color.WHITE.getRGB());
+                    drawItem(statusItemStack.getValue(), new CoordinateXY(infoPos.x + GuiUtil.getLineLength(key) - 3, infoPos.y + liney - 1), status.getKey());
+                } else {
+                    this.drawString(mc.fontRenderer, key + "  ×" + ((StatusItemStack) status).getValue().toString(), infoPos.x, infoPos.y + liney, Color.WHITE.getRGB());
+                    drawItem(new ItemStack(Items.ACACIA_BOAT), new CoordinateXY(infoPos.x + GuiUtil.getLineLength(key) - 3, infoPos.y + liney - 1), status.getKey());
+                }
+            } else if (status instanceof StatusList) {
+                StatusList statusList = (StatusList) status;
+                this.drawString(mc.fontRenderer, status.getKey() + ":", infoPos.x, infoPos.y + liney, Color.WHITE.getRGB());
+                liney = iterateThroughStatuses(statusList.getValue(), offset + 1, liney + mc.fontRenderer.FONT_HEIGHT + 2);
+            } else {
+                this.drawString(mc.fontRenderer, status.toString(), infoPos.x, infoPos.y + liney, Color.WHITE.getRGB());
+            }
+            liney += mc.fontRenderer.FONT_HEIGHT + 2;
+        }
+        return liney;
     }
 
     private void drawItem(ItemStack itemStack, CoordinateXY pos, String label) {
