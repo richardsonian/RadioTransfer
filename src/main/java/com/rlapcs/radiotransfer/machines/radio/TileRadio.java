@@ -10,6 +10,8 @@ import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import com.rlapcs.radiotransfer.server.radio.RadioNetwork;
 import com.rlapcs.radiotransfer.server.radio.TransferType;
 import com.rlapcs.radiotransfer.util.Debug;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -33,9 +35,19 @@ public class TileRadio extends AbstractTileMachineWithInventory implements ITile
     public TileRadio() {
         super(0);
 
-        multiblock = new MultiblockRadioController(this);
-        multiblockStatusData = new MultiblockStatusData();
         clientListeners = new HashSet<>();
+        multiblock = new MultiblockRadioController(this);
+        multiblockStatusData = new MultiblockStatusData() {
+            //CLIENT SIDE ONLY
+            @Override
+            public void onNodeListChanged() {
+                super.onNodeListChanged();
+                GuiScreen currentScreen = Minecraft.getMinecraft().currentScreen;
+                if(currentScreen instanceof GuiRadio) {
+                    ((GuiRadio) currentScreen).updateMultiblockViewer();
+                }
+            }
+        };
     }
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     //~~~~~~~~~~~~~~~~~~~~~~~~~STATUS DATA~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//

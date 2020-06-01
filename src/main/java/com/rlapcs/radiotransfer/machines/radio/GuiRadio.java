@@ -66,6 +66,10 @@ public class GuiRadio extends AbstractGuiMachine {
         isClosed = true;
     }
 
+    public void updateMultiblockViewer() {
+
+    }
+
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         if (isClosed) {
