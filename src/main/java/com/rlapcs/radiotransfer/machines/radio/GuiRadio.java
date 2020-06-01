@@ -16,6 +16,7 @@ import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -47,6 +48,7 @@ public class GuiRadio extends AbstractGuiMachine {
     public void initGui() {
         super.initGui();
         ModNetworkMessages.INSTANCE.sendToServer(new MessageAddClientListener(tileEntity, true));
+
         hoverables.clear();
         coords = ((TileRadio) tileEntity).getMultiblockStatusData().getAllNodePositions();
         coords.add(tileEntity.getPos());
@@ -101,9 +103,15 @@ public class GuiRadio extends AbstractGuiMachine {
             this.drawString(mc.fontRenderer, entry.getBlock().getLocalizedName(), namePos.x, namePos.y, Color.decode("#E8B07B").getRGB());
             for (MultiblockStatusData.Status status : statuses) {
                 if (status instanceof StatusItemStack) {
+                    StatusItemStack statusItemStack = (StatusItemStack) status;
                     String key = status.getKey() + ": ";
+                    if (statusItemStack.getValue().isEmpty()) {
                     this.drawString(mc.fontRenderer, key + "  ×" + ((StatusItemStack) status).getValue().getCount(), infoPos.x, infoPos.y + liney, Color.WHITE.getRGB());
-                    drawItem(((StatusItemStack) status).getValue(), new CoordinateXY(infoPos.x + GuiUtil.getLineLength(key) - 3, infoPos.y + liney - 1), status.getKey());
+                    drawItem(statusItemStack.getValue(), new CoordinateXY(infoPos.x + GuiUtil.getLineLength(key) - 3, infoPos.y + liney - 1), status.getKey());
+                    }
+                    else {
+                        drawItem(new ItemStack(Items.ACACIA_BOAT), new CoordinateXY(infoPos.x + GuiUtil.getLineLength(key) - 3, infoPos.y + liney - 1), status.getKey());
+                    }
                 } else {
                     this.drawString(mc.fontRenderer, status.toString(), infoPos.x, infoPos.y + liney, Color.WHITE.getRGB());
                 }
