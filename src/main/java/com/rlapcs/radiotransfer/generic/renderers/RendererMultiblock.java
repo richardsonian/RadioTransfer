@@ -245,16 +245,16 @@ public class RendererMultiblock {
     public BlockPos drawScreen(int mouseX, int mouseY, float partialTick, @Nonnull Rectangle vp) {
         if (!updateCamera(partialTick, vp.x, vp.y, vp.width, vp.height)) return selected;
 
-        GlStateManager.pushMatrix();
+        //GlStateManager.pushMatrix();
 
         applyCamera(partialTick);
         Vector3d transform = renderScene();
         handleMouseInput(transform);
         drawHighlight(selected, transform, 0xC29429FF);
 
-        GlStateManager.popMatrix();
+        //GlStateManager.popMatrix();
         //renderSelection();
-        //renderOverlay(par1, par2);
+        renderOverlay(Mouse.getX(), Mouse.getY());
         return selected;
     }
 
@@ -298,7 +298,7 @@ public class RendererMultiblock {
         GL11.glOrtho(0.0D, scaledresolution.getScaledWidth_double(), scaledresolution.getScaledHeight_double(), 0.0D, 1000.0D, 3000.0D);
         GL11.glMatrixMode(GL11.GL_MODELVIEW);
         GL11.glLoadIdentity();
-        GL11.glTranslatef(vpx, vpy, -2000.0F);
+        GL11.glTranslatef(0, 0, -2000.0F);
 
         GlStateManager.disableLighting();
 
@@ -470,23 +470,8 @@ public class RendererMultiblock {
     }
 
     public void renderBlock(@Nonnull IBlockState state, @Nonnull BlockPos pos, @Nonnull IBlockAccess blockAccess, @Nonnull BufferBuilder worldRendererIn) {
-
-        try {
-            BlockRendererDispatcher blockrendererdispatcher = mc.getBlockRendererDispatcher();
-            EnumBlockRenderType type = state.getRenderType();
-            if (type != EnumBlockRenderType.MODEL) {
-                blockrendererdispatcher.renderBlock(state, pos, blockAccess, worldRendererIn);
-                return;
-            }
-
-            // We only want to change one param here, the check sides
-            IBakedModel ibakedmodel = blockrendererdispatcher.getModelForState(state);
-            state = state.getBlock().getExtendedState(state, world, pos);
-            blockrendererdispatcher.getBlockModelRenderer().renderModel(blockAccess, ibakedmodel, state, pos, worldRendererIn, false);
-
-        } catch (Throwable throwable) {
-            // Just bury a render issue here, it is only the IO screen
-        }
+        BlockRendererDispatcher blockrendererdispatcher = mc.getBlockRendererDispatcher();
+        blockrendererdispatcher.renderBlock(state, pos, blockAccess, worldRendererIn);
     }
 
     private void setGlStateForPass(@Nonnull BlockRenderLayer layer, boolean isNeighbour) {

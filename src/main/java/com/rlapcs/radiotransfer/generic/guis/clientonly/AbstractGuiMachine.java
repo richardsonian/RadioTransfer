@@ -72,6 +72,8 @@ public abstract class AbstractGuiMachine<T extends TileEntity> extends GuiContai
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        preDrawScreen();
+
         super.drawScreen(mouseX, mouseY, partialTicks);
 
         for (Slot slot : inventorySlots.inventorySlots) {
@@ -86,8 +88,14 @@ public abstract class AbstractGuiMachine<T extends TileEntity> extends GuiContai
 
         if (tileEntity instanceof AbstractTileMultiblockNode && !((AbstractTileMultiblockNode) tileEntity).getClientPowered())
             powerIndicator.draw();
+
+        drawContentBeforeTooltip(mouseX, mouseY, partialTicks);
+
         tooltip.draw();
     }
+
+    protected void drawContentBeforeTooltip(int mouseX, int mouseY, float partialTicks) {}
+    protected void preDrawScreen() {}
 
     @Override
     public CoordinateXY getGuiPos() {
