@@ -26,11 +26,16 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
     //~~~~~~~~~~~~~~Instance Variables~~~~~~~~~~~~~~~//
-    //server
+    ////server\\\\
     protected boolean registeredInMultiblock;
     protected MultiblockRadioController controller;
 
-    //client
+    //For status Updates
+    protected int STATUS_COOLDOWN_TICKS = 5; //can override this value in subclass if you want
+    private int ticksLeftInStatusCooldown = 0;
+    private boolean needsStatusUpdate = false;
+
+    ////client\\\\
     protected boolean cachedPowered; //use controller.isPowered() for server side check
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
@@ -57,8 +62,19 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
      * Call this method whenever a setting changes that you want to be shown on the Radio GUI.
      */
     public void onStatusChange() {
-        if(registeredInMultiblock && controller != null && !controller.getTileEntity().isInvalid()) {
-            controller.getTileEntity().updateMultiblockStatusData(this);
+        needsStatusUpdate = true;
+    }
+
+    protected void doStatusUpdateCheck() { //called in TileEntity#update() override
+        if(needsStatusUpdate && ticksLeftInStatusCooldown <= 0) {
+            if (registeredInMultiblock && controller != null && !controller.getTileEntity().isInvalid()) {
+                controller.getTileEntity().updateMultiblockStatusData(this);
+                ticksLeftInStatusCooldown = STATUS_COOLDOWN_TICKS;
+                needsStatusUpdate = false;
+            }
+        }
+        else {
+            ticksLeftInStatusCooldown = Math.max(ticksLeftInStatusCooldown - 1, 0);
         }
     }
 
@@ -361,6 +377,7 @@ public abstract class AbstractTileMultiblockNode extends AbstractTileMachine {
             if (this.registeredInMultiblock && ticksSinceCreation % MULTIBLOCK_UPDATE_TICKS == 0) {
                 controller.checkForNewNodes(this.pos);
             }
+            doStatusUpdateCheck();
         }
     }
 
