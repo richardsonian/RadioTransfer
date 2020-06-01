@@ -1,5 +1,7 @@
 package com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.tooltip;
 
+import java.util.List;
+
 public interface ITooltipContent {
-    String getFormattedContent();
+    List<String> getFormattedContent();
 }

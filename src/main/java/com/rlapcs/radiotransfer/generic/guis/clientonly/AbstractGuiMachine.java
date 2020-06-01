@@ -6,6 +6,7 @@ import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.lists.Abstr
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.sliders.GuiDraggableSliderButton;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.tooltip.GuiHoverable;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.tooltip.GuiTooltip;
+import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.tooltip.TooltipContent;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateXY;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.DimensionWidthHeight;
 import com.rlapcs.radiotransfer.generic.multiblock.tileEntities.AbstractTileMultiblockNode;
@@ -13,13 +14,17 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.Slot;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Mouse;
 
 import java.awt.*;
 import java.util.HashMap;
+
+import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
 
 
 public abstract class AbstractGuiMachine<T extends TileEntity> extends GuiContainer implements IGui {
@@ -53,6 +58,8 @@ public abstract class AbstractGuiMachine<T extends TileEntity> extends GuiContai
         pos = new CoordinateXY(guiLeft, guiTop);
         powerIndicator = new GuiPowerIndicator(this);
         tooltip.setWorldAndResolution(mc, this.width, this.height);
+
+        hoverables.clear();
     }
 
     @Override
@@ -66,6 +73,17 @@ public abstract class AbstractGuiMachine<T extends TileEntity> extends GuiContai
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
+
+        for (Slot slot : inventorySlots.inventorySlots) {
+            String key = "slot_" + slot.hashCode();
+            if (slot.getHasStack()) {
+                if (hoverables.get(key) == null)
+                    hoverables.put(key, new GuiHoverable(new CoordinateXY(pos.x + slot.xPos, pos.y + slot.yPos), new DimensionWidthHeight(16, 16), this));
+                hoverables.get(key).check(new TooltipContent(slot.getStack().getTooltip(mc.player, ITooltipFlag.TooltipFlags.NORMAL)));
+            } else if (hoverables.get(key) != null)
+                hoverables.remove(key);
+        }
+
         if (tileEntity instanceof AbstractTileMultiblockNode && !((AbstractTileMultiblockNode) tileEntity).getClientPowered())
             powerIndicator.draw();
         tooltip.draw();

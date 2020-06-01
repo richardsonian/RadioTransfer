@@ -25,7 +25,7 @@ public class GuiHoverable {
     public boolean check(ITooltipContent content) {
         wasHovering = isHovering;
         int scaleFactor = new ScaledResolution(Minecraft.getMinecraft()).getScaleFactor();
-        isHovering = Mouse.getX() / scaleFactor >= pos.x && Mouse.getX() / scaleFactor <= pos.x + size.width && screen.height - Mouse.getY() / scaleFactor >= pos.y && screen.height - Mouse.getY() / scaleFactor <= pos.y + size.height;
+        isHovering = Mouse.getX() / scaleFactor >= pos.x - 1 && Mouse.getX() / scaleFactor <= pos.x + size.width && screen.height - Mouse.getY() / scaleFactor >= pos.y && screen.height - Mouse.getY() / scaleFactor <= pos.y + size.height + 1;
         if (isHovering)
             screen.tooltip.activate(content);
         else if (wasHovering)

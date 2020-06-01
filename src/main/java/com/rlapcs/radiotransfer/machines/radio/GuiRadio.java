@@ -49,7 +49,6 @@ public class GuiRadio extends AbstractGuiMachine {
         super.initGui();
         ModNetworkMessages.INSTANCE.sendToServer(new MessageAddClientListener(tileEntity, true));
 
-        hoverables.clear();
         coords = ((TileRadio) tileEntity).getMultiblockStatusData().getAllNodePositions();
         coords.add(tileEntity.getPos());
         if (selectedBlock == null)
@@ -123,7 +122,7 @@ public class GuiRadio extends AbstractGuiMachine {
     private void drawItem(ItemStack itemStack, CoordinateXY pos, String label) {
         if (hoverables.get(label) == null)
             hoverables.put(label, new GuiHoverable(pos, new DimensionWidthHeight((int) (16 * ITEM_SCALE), (int) (16 * ITEM_SCALE)), this));
-        ((GuiHoverable) hoverables.get(label)).check(new TooltipContent(String.join("\n", itemStack.getTooltip(mc.player, ITooltipFlag.TooltipFlags.NORMAL))));
+        ((GuiHoverable) hoverables.get(label)).check(new TooltipContent(itemStack.getTooltip(mc.player, ITooltipFlag.TooltipFlags.NORMAL)));
 
         GL11.glScaled(ITEM_SCALE, ITEM_SCALE, ITEM_SCALE);
         mc.getRenderItem().renderItemAndEffectIntoGUI(itemStack, (int) (pos.x / ITEM_SCALE), (int) (pos.y / ITEM_SCALE));
