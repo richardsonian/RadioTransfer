@@ -47,6 +47,8 @@ public abstract class AbstractGuiWithVariableSize extends GuiScreen {
 
         if (pos.x + interpolatedSize.width > this.width)
             pos = pos.addTo(new CoordinateXY(-interpolatedSize.width, 0));
+        if (pos.y + interpolatedSize.height > this.height)
+            pos = pos.addTo(new CoordinateXY(0, -interpolatedSize.height));
 
         // SETUP
         RenderHelper.disableStandardItemLighting();

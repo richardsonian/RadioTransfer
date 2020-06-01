@@ -1,14 +1,24 @@
 package com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.tooltip;
 
+import com.google.common.collect.Lists;
+import scala.actors.threadpool.Arrays;
+
+import java.util.List;
+
 public class TooltipContent implements ITooltipContent {
-    String content;
+    private List<String> contentList;
 
     public TooltipContent(String content) {
-        this.content = content;
+        String[] temp = { content };
+        this.contentList = Arrays.asList(temp);
+    }
+
+    public TooltipContent(List<String> contentList) {
+        this.contentList = contentList;
     }
 
     @Override
-    public String getFormattedContent() {
-        return content;
+    public List<String> getFormattedContent() {
+        return contentList;
     }
 }

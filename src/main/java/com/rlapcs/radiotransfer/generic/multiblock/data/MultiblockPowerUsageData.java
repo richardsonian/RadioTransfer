@@ -1,5 +1,6 @@
 package com.rlapcs.radiotransfer.generic.multiblock.data;
 
+import com.google.common.collect.Lists;
 import com.rlapcs.radiotransfer.ModConfig;
 import com.rlapcs.radiotransfer.ModConstants;
 import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.lists.IGuiListContent;
@@ -278,8 +279,8 @@ public class MultiblockPowerUsageData implements IGuiListContent, INBTSerializab
 
 
         @Override
-        public String getFormattedContent() {
-            return this.toString();
+        public List<String> getFormattedContent() {
+            return Arrays.asList(this.toString().split("\n"));
         }
 
         /**

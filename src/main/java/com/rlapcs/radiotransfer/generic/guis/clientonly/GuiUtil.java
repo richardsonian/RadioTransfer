@@ -1,8 +1,12 @@
 package com.rlapcs.radiotransfer.generic.guis.clientonly;
 
+import net.minecraft.util.text.TextFormatting;
+
+import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
+
 public class GuiUtil {
     public static int getLineLength(String line) {
-        char[] letters = line.toCharArray();
+        char[] letters = TextFormatting.getTextWithoutFormattingCodes(line).toCharArray();
         int length = 1;
         for (char letter : letters) {
             switch (letter) {
@@ -25,7 +29,9 @@ public class GuiUtil {
                     length += 5;
             }
             length += 1;
+            //sendDebugMessage("char: " + letter + " : currentLength: " + length);
         }
+        //sendDebugMessage("string: " + line + " : totalLength " + length);
         return length;
     }
 }

@@ -66,13 +66,13 @@ public class GuiTooltip extends AbstractGuiWithVariableSize {
         int longestLine = 0;
         for (String line : lines)
             longestLine = Math.max(longestLine, getLineLength(line));
-        return new DimensionWidthHeight(longestLine, lines.size() * 12);
+        return new DimensionWidthHeight(longestLine + 4, lines.size() * 12);
     }
 
     private void formatLines() {
         int maxAllowableSize = pos.x + interpolatedSize.width > this.width ? pos.x : this.width - pos.x;
         lines = new ArrayList<>();
-        lines.addAll(Arrays.asList(content.getFormattedContent().split("\n")));
+        lines.addAll(content.getFormattedContent());
         if (pos.x + interpolatedSize.width > this.width) {
             List<String> linesToIterate = new ArrayList<>();
             linesToIterate.addAll(lines);
