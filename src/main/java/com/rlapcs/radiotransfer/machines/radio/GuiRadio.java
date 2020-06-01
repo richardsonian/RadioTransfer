@@ -70,22 +70,26 @@ public class GuiRadio extends AbstractGuiMachine {
     public void updateMultiblockViewer() {
         coords = ((TileRadio) tileEntity).getMultiblockStatusData().getAllNodePositions();
         coords.add(tileEntity.getPos());
+
+        if (!coords.contains(selectedBlock))
+            selectedBlock = coords.get(0);
+
         multiblockViewer.updateBlocksInList(new NNList<>(coords), selectedBlock);
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+    protected void preDrawScreen() {
         if (isClosed) {
             coords = ((TileRadio) tileEntity).getMultiblockStatusData().getAllNodePositions();
             coords.add(tileEntity.getPos());
             multiblockViewer.updateBlocksInList(new NNList<>(coords), selectedBlock);
             isClosed = false;
         }
+    }
 
+    @Override
+    protected void drawContentBeforeTooltip(int mouseX, int mouseY, float partialTicks) {
         CoordinateXY questionPos = pos.addTo(VIEWER_POS).addTo(VIEWER_SIZE).addTo(new CoordinateXY(-9, -9));
-
-        super.drawScreen(mouseX, mouseY, partialTicks);
-
         boolean isHoveringOnHelp = ((GuiHoverable) hoverables.get("Help")).check(new TooltipContent(String.format("Select a block to see its status.\n%sRight-click%s to rotate.\n%sLeft-click%s to select a block.", TextFormatting.DARK_GRAY, TextFormatting.RESET, TextFormatting.DARK_GRAY, TextFormatting.RESET)));
         drawString(mc.fontRenderer, TextFormatting.BOLD + "?", questionPos.x, questionPos.y, isHoveringOnHelp ? Color.GREEN.getRGB() : Color.WHITE.getRGB());
         drawString(mc.fontRenderer, "Multiblock viewer", pos.x + MULTIBLOCK_NAME_POS.x, pos.y + MULTIBLOCK_NAME_POS.y, Color.WHITE.getRGB());

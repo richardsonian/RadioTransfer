@@ -9,7 +9,7 @@ public class TooltipContent implements ITooltipContent {
     private List<String> contentList;
 
     public TooltipContent(String content) {
-        String[] temp = { content };
+        String[] temp = content.split("\n");
         this.contentList = Arrays.asList(temp);
     }
 
