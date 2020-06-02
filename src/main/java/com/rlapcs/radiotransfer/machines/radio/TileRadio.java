@@ -27,16 +27,22 @@ public class TileRadio extends AbstractTileMachineWithInventory implements ITile
     private final int SEND_RESOURCES_UPDATE_TICKS = 20;
     private static final int POWER_CHECK_TICKS = 1;
 
-
+    //for server
     protected MultiblockRadioController multiblock;
-    protected MultiblockStatusData multiblockStatusData; //Client only-server side isn't updated
     protected Set<EntityPlayerMP> clientListeners;
+
+    //for client
+    protected MultiblockStatusData multiblockStatusData; //Client only-server side isn't updated
+    protected boolean clientPowered;
 
     public TileRadio() {
         super(0);
 
+        //for server
         clientListeners = new HashSet<>();
         multiblock = new MultiblockRadioController(this);
+
+        //for client
         multiblockStatusData = new MultiblockStatusData() {
             //CLIENT SIDE ONLY
             @Override
@@ -48,6 +54,7 @@ public class TileRadio extends AbstractTileMachineWithInventory implements ITile
                 }
             }
         };
+        clientPowered = false;
     }
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     //~~~~~~~~~~~~~~~~~~~~~~~~~STATUS DATA~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
@@ -162,9 +169,14 @@ public class TileRadio extends AbstractTileMachineWithInventory implements ITile
         }
     }
 
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+    //~~~~~~~~~~~~~GETTERS AND SETTERS~~~~~~~~~~~~~~~//
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     public MultiblockRadioController getMultiblockController() {
         return multiblock;
     }
-
-
+    public boolean getClientPowered() {
+        return clientPowered;
+    }
+    public void setClientPowered(boolean target) {clientPowered = target;}
 }
