@@ -70,7 +70,7 @@ public class GuiPowerBar {
         int scaleFactor = new ScaledResolution(Minecraft.getMinecraft()).getScaleFactor();
         isHovering = Mouse.getX() / scaleFactor >= pos.x && gui.height - Mouse.getY() / scaleFactor >= pos.y && Mouse.getX() / scaleFactor < pos.x + size.width && gui.height - Mouse.getY() / scaleFactor < pos.y + size.height;
         if (isHovering)
-            ((GuiPowerSupply) gui).tooltip.activate(new TooltipContent(String.format("%d / %d FE", tile.getDisplayEnergy(), tile.getMaxEnergy())));
+            ((GuiPowerSupply) gui).tooltip.activate(new TooltipContent(String.format("%s / %s", GuiUtil.formatUnit(tile.getDisplayEnergy(), "FE"), GuiUtil.formatUnit(tile.getMaxEnergy(), "FE"))));
         else if (wasHovering)
             ((GuiPowerSupply) gui).tooltip.deactivate();
     }

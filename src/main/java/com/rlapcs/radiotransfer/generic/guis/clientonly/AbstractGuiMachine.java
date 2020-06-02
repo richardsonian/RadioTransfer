@@ -10,6 +10,7 @@ import com.rlapcs.radiotransfer.generic.guis.clientonly.interactable.tooltip.Too
 import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateXY;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.DimensionWidthHeight;
 import com.rlapcs.radiotransfer.generic.multiblock.tileEntities.AbstractTileMultiblockNode;
+import com.rlapcs.radiotransfer.machines.radio.TileRadio;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -86,14 +87,17 @@ public abstract class AbstractGuiMachine<T extends TileEntity> extends GuiContai
                 hoverables.remove(key);
         }
 
-        if (tileEntity instanceof AbstractTileMultiblockNode && !((AbstractTileMultiblockNode) tileEntity).getClientPowered())
+        if ((tileEntity instanceof AbstractTileMultiblockNode) && !((AbstractTileMultiblockNode) tileEntity).getClientPowered())
+            powerIndicator.draw();
+        if ((tileEntity instanceof TileRadio) && !((TileRadio) tileEntity).getClientPowered())
             powerIndicator.draw();
 
         drawContentBeforeTooltip(mouseX, mouseY, partialTicks);
 
-        tooltip.draw();
+        drawTooltips();
     }
 
+    protected void drawTooltips() { tooltip.draw(); }
     protected void drawContentBeforeTooltip(int mouseX, int mouseY, float partialTicks) {}
     protected void preDrawScreen() {}
 

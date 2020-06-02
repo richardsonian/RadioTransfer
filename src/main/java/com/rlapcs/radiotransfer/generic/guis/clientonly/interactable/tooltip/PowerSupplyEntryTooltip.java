@@ -4,6 +4,7 @@ import com.rlapcs.radiotransfer.generic.guis.coordinate.CoordinateXY;
 import com.rlapcs.radiotransfer.generic.guis.coordinate.DimensionWidthHeight;
 import com.rlapcs.radiotransfer.generic.multiblock.data.MultiblockPowerUsageData.PowerUsageEntry;
 import com.rlapcs.radiotransfer.generic.multiblock.data.MultiblockPowerUsageData.PowerUsageEntry.UpgradeCardPowerEntry;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.opengl.GL11;
@@ -12,6 +13,7 @@ import java.awt.*;
 import java.util.ArrayList;
 
 import static com.rlapcs.radiotransfer.generic.guis.clientonly.GuiUtil.getLineLength;
+import static com.rlapcs.radiotransfer.util.Debug.sendDebugMessage;
 
 public class PowerSupplyEntryTooltip extends GuiTooltip {
     private static final double ITEM_SCALE = .6875;
@@ -90,7 +92,7 @@ public class PowerSupplyEntryTooltip extends GuiTooltip {
     private void renderCardItem(ItemStack item) {
         GL11.glScaled(ITEM_SCALE, ITEM_SCALE, ITEM_SCALE);
         if (!isFirstPass)
-            mc.getRenderItem().renderItemIntoGUI(item, (int)((pos.x + 15) / ITEM_SCALE), (int)((pos.y + yOffset + 1) / ITEM_SCALE));
+            mc.getRenderItem().renderItemAndEffectIntoGUI(item, (int) ((pos.x + 15) / ITEM_SCALE), (int) ((pos.y + yOffset + 1) / ITEM_SCALE));
         GL11.glScaled(1 / ITEM_SCALE,1 / ITEM_SCALE,1 / ITEM_SCALE);
     }
 

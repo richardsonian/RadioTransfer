@@ -1,6 +1,7 @@
 package com.rlapcs.radiotransfer.generic.multiblock.data;
 
 import com.rlapcs.radiotransfer.ModConstants;
+import com.rlapcs.radiotransfer.generic.guis.clientonly.GuiUtil;
 import com.rlapcs.radiotransfer.util.Debug;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -309,7 +310,7 @@ public class MultiblockStatusData {
             }
             @Override
             public String getFormattedValue() {
-                return value + units;
+                return GuiUtil.formatUnit(value, units).toString();
             }
             @Override
             public NBTTagCompound toNBT() {
@@ -355,7 +356,7 @@ public class MultiblockStatusData {
             }
             @Override
             public String getFormattedValue() {
-                return String.format("%.2f%s", value, units);
+                return GuiUtil.formatUnit(value, units).toString();
             }
             @Override
             public NBTTagCompound toNBT() {
@@ -499,7 +500,7 @@ public class MultiblockStatusData {
             }
             @Override
             public String getFormattedValue() {
-                return value + units;
+                return String.format("%.1f / %s", GuiUtil.formatUnit(value.numerator, units).getValue(), GuiUtil.formatUnit(value.denominator, units));
             }
             @Override
             public NBTTagCompound toNBT() {
