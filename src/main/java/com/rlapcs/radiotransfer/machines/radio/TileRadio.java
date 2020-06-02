@@ -9,13 +9,11 @@ import com.rlapcs.radiotransfer.network.messages.toClient.MessageUpdateClientTil
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import com.rlapcs.radiotransfer.server.radio.RadioNetwork;
 import com.rlapcs.radiotransfer.server.radio.TransferType;
-import com.rlapcs.radiotransfer.util.Debug;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.util.text.TextFormatting;
 
 import java.util.HashSet;
 import java.util.List;
@@ -74,31 +72,35 @@ public class TileRadio extends AbstractTileMachineWithInventory implements ITile
     }
 
     public void updateMultiblockStatusData(AbstractTileMultiblockNode te) {
-        Debug.sendToAllPlayers(TextFormatting.DARK_PURPLE + "[SERVER]" + TextFormatting.RESET + " Sending update packet for " + TextFormatting.GRAY + te, world);
+        //Debug.sendToAllPlayers(TextFormatting.DARK_PURPLE + "[SERVER]" + TextFormatting.RESET + " Sending update packet for " + TextFormatting.GRAY + te, world);
         NBTTagCompound nbt = te.writeStatusToNBT();
         //Debug.sendToAllPlayers(TextFormatting.AQUA + "Sending Status Update to Clients for " + TextFormatting.RESET + te, world);
         clientListeners.forEach(p -> ModNetworkMessages.INSTANCE.sendTo(new MessageUpdateClientTileMultiblockStatusData(this.getPos(), nbt), p));
     }
 
-    public void updateMultiblockStatusData(List<AbstractTileMultiblockNode> tes) {
+    public void updateAllMultiblockStatusData() {
         //Agregate all the nodes into a single NBT tag and send to the client.
-        Debug.sendToAllPlayers(TextFormatting.DARK_PURPLE + "[SERVER]" + TextFormatting.RESET + " Sending initial update packet. Includes:", world);
+            //Debug.sendToAllPlayers(TextFormatting.DARK_PURPLE + "[SERVER]" + TextFormatting.RESET + " Sending initial update packet. Includes:", world);
+
+        List<AbstractTileMultiblockNode> tes = multiblock.getAllActiveNodes();
+
         NBTTagList tagList = new NBTTagList();
         for(AbstractTileMultiblockNode te : tes) {
-            Debug.sendToAllPlayers(TextFormatting.GRAY + " - " + te, world);
+            //Debug.sendToAllPlayers(TextFormatting.GRAY + " - " + te, world);
             tagList.appendTag(te.writeStatusToNBT());
         }
-        //This is a bit of hack, but throw in the radio to this packet:
+        //Add the radio Tag
         tagList.appendTag(this.writeStatusToNBT());
+        
         NBTTagCompound nbt = new NBTTagCompound();
         nbt.setTag("node_status_list", tagList);
-        //Debug.sendToAllPlayers(TextFormatting.AQUA + "Sending Status Update to Clients for " + TextFormatting.RESET + "ALL", world);
+
         clientListeners.forEach(p -> ModNetworkMessages.INSTANCE.sendTo(new MessageUpdateClientTileMultiblockStatusData(this.getPos(), nbt), p));
     }
 
     @Override
     public void doAllClientUpdates() { //A bit of a hack to use this method, but is called when new clientListener added, so it works
-        updateMultiblockStatusData(multiblock.getAllActiveNodes());
+        updateAllMultiblockStatusData();
     }
 
     //Client Side Only
@@ -155,7 +157,21 @@ public class TileRadio extends AbstractTileMachineWithInventory implements ITile
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     //~~~~~~~~~~~~~~~~~~~~~~~~~~TILE ENTITY FUNCTION~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
-
+    @Override
+    public NBTTagCompound getUpdateTag() {
+        NBTTagCompound tag = super.getUpdateTag();
+        if(!world.isRemote) { //assure server side
+            tag.setBoolean("powered", multiblock.isPowered());
+        }
+        return tag;
+    }
+    @Override
+    public void handleUpdateTag(NBTTagCompound tag) {
+        super.handleUpdateTag(tag);
+        if(world.isRemote) { //assure client side
+            setClientPowered(tag.getBoolean("powered"));
+        }
+    }
     @Override
     public void invalidate() {
         super.invalidate();
