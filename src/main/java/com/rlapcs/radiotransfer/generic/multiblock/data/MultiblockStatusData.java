@@ -500,7 +500,7 @@ public class MultiblockStatusData {
             }
             @Override
             public String getFormattedValue() {
-                return String.format("%.1f / %s", GuiUtil.formatUnit(value.numerator, units).getValue(), GuiUtil.formatUnit(value.denominator, units));
+                return String.format("%s / %s", GuiUtil.formatUnit(value.numerator, units), GuiUtil.formatUnit(value.denominator, units));
             }
             @Override
             public NBTTagCompound toNBT() {

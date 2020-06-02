@@ -26,6 +26,8 @@ import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class GuiRadio extends AbstractGuiMachine {
@@ -137,7 +139,13 @@ public class GuiRadio extends AbstractGuiMachine {
                 drawItem(statusUpgradeCard.getItemStack(), new CoordinateXY(infoPos.x, infoPos.y + liney - 1), String.valueOf(statusUpgradeCard.hashCode()));
                 this.drawString(mc.fontRenderer, "×" + statusUpgradeCard.getQuantity(), infoPos.x + 12, infoPos.y + liney, Color.WHITE.getRGB());
             } else {
-                this.drawString(mc.fontRenderer, status.toString(), infoPos.x, infoPos.y + liney, Color.WHITE.getRGB());
+                ArrayList<String> lines = new ArrayList<>();
+                lines.add(status.toString());
+                GuiUtil.formatLines(lines, 100, true);
+                for (String line : lines) {
+                    this.drawString(mc.fontRenderer, line, infoPos.x, infoPos.y + liney, Color.WHITE.getRGB());
+                    liney += mc.fontRenderer.FONT_HEIGHT + 2;
+                }
             }
             liney += mc.fontRenderer.FONT_HEIGHT + 2;
         }
