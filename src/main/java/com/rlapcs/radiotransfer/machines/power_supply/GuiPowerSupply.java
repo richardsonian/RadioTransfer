@@ -53,6 +53,11 @@ public class GuiPowerSupply extends AbstractGuiMachine<TilePowerSupply> {
         super.drawScreen(mouseX, mouseY, partialTicks);
         powerBar.draw();
         list.drawList(mouseX, mouseY, partialTicks, mc.getRenderItem());
+    }
+
+    @Override
+    protected void drawTooltips() {
+        super.drawTooltips();
         powerSupplyEntryTooltip.draw();
     }
 

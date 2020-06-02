@@ -12,6 +12,7 @@ import com.rlapcs.radiotransfer.generic.guis.coordinate.DimensionWidthHeight;
 import com.rlapcs.radiotransfer.generic.multiblock.data.MultiblockStatusData;
 import com.rlapcs.radiotransfer.generic.multiblock.data.MultiblockStatusData.StatusItemStack;
 import com.rlapcs.radiotransfer.generic.multiblock.data.MultiblockStatusData.StatusList;
+import com.rlapcs.radiotransfer.generic.multiblock.data.MultiblockStatusData.StatusUpgradeCard;
 import com.rlapcs.radiotransfer.network.messages.toServer.MessageAddClientListener;
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import net.minecraft.client.renderer.GlStateManager;
@@ -91,10 +92,10 @@ public class GuiRadio extends AbstractGuiMachine {
     protected void drawContentBeforeTooltip(int mouseX, int mouseY, float partialTicks) {
         CoordinateXY questionPos = pos.addTo(VIEWER_POS).addTo(VIEWER_SIZE).addTo(new CoordinateXY(-9, -9));
         boolean isHoveringOnHelp = ((GuiHoverable) hoverables.get("Help")).check(new TooltipContent(String.format("Select a block to see its status.\n%sRight-click%s to rotate.\n%sLeft-click%s to select a block.", TextFormatting.DARK_GRAY, TextFormatting.RESET, TextFormatting.DARK_GRAY, TextFormatting.RESET)));
-        drawString(mc.fontRenderer, TextFormatting.BOLD + "?", questionPos.x, questionPos.y, isHoveringOnHelp ? Color.GREEN.getRGB() : Color.WHITE.getRGB());
         drawString(mc.fontRenderer, "Multiblock viewer", pos.x + MULTIBLOCK_NAME_POS.x, pos.y + MULTIBLOCK_NAME_POS.y, Color.WHITE.getRGB());
         this.drawText();
         selectedBlock = multiblockViewer.draw(mouseX, mouseY, partialTicks, new CoordinateXY(VIEWER_POS.x + pos.x, this.height - (VIEWER_POS.y + VIEWER_SIZE.height + pos.y)), VIEWER_SIZE);
+        drawString(mc.fontRenderer, TextFormatting.BOLD + "?", questionPos.x, questionPos.y, isHoveringOnHelp ? Color.GREEN.getRGB() : Color.WHITE.getRGB());
     }
 
     private void drawText() {
@@ -130,7 +131,11 @@ public class GuiRadio extends AbstractGuiMachine {
             } else if (status instanceof StatusList) {
                 StatusList statusList = (StatusList) status;
                 this.drawString(mc.fontRenderer, status.getKey() + ":", infoPos.x, infoPos.y + liney, Color.WHITE.getRGB());
-                liney = iterateThroughStatuses(statusList.getValue(), offset + 1, liney + mc.fontRenderer.FONT_HEIGHT + 2);
+                liney = iterateThroughStatuses(statusList.getValue(), offset + 1, liney + mc.fontRenderer.FONT_HEIGHT + 2) - mc.fontRenderer.FONT_HEIGHT - 2;
+            } else if (status instanceof StatusUpgradeCard) {
+                StatusUpgradeCard statusUpgradeCard = (StatusUpgradeCard) status;
+                drawItem(statusUpgradeCard.getItemStack(), new CoordinateXY(infoPos.x, infoPos.y + liney - 1), String.valueOf(statusUpgradeCard.hashCode()));
+                this.drawString(mc.fontRenderer, "×" + statusUpgradeCard.getQuantity(), infoPos.x + 12, infoPos.y + liney, Color.WHITE.getRGB());
             } else {
                 this.drawString(mc.fontRenderer, status.toString(), infoPos.x, infoPos.y + liney, Color.WHITE.getRGB());
             }
