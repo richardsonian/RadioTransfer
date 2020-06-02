@@ -18,7 +18,6 @@ import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -27,7 +26,6 @@ import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class GuiRadio extends AbstractGuiMachine {
@@ -106,9 +104,11 @@ public class GuiRadio extends AbstractGuiMachine {
 
         MultiblockStatusData statusData = ((TileRadio) tileEntity).getMultiblockStatusData();
         MultiblockStatusData.NodeStatusEntry entry = statusData.getEntry(selectedBlock);
-        this.drawString(mc.fontRenderer, entry.getBlock().getLocalizedName(), namePos.x, namePos.y, Color.decode("#E8B07B").getRGB());
-        List<MultiblockStatusData.Status> statuses = entry.getStatuses();
-        iterateThroughStatuses(statuses, 0, 0);
+        if (entry != null) {
+            this.drawString(mc.fontRenderer, entry.getBlock().getLocalizedName(), namePos.x, namePos.y, Color.decode("#E8B07B").getRGB());
+            List<MultiblockStatusData.Status> statuses = entry.getStatuses();
+            iterateThroughStatuses(statuses, 0, 0);
+        }
 
         RenderHelper.enableStandardItemLighting();
     }

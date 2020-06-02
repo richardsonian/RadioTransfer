@@ -14,6 +14,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.text.TextFormatting;
 
 import java.util.HashSet;
 import java.util.List;
@@ -91,7 +92,7 @@ public class TileRadio extends AbstractTileMachineWithInventory implements ITile
         }
         //Add the radio Tag
         tagList.appendTag(this.writeStatusToNBT());
-        
+
         NBTTagCompound nbt = new NBTTagCompound();
         nbt.setTag("node_status_list", tagList);
 
@@ -117,26 +118,30 @@ public class TileRadio extends AbstractTileMachineWithInventory implements ITile
 
         NBTTagList tagList = new NBTTagList();
 
-        tagList.appendTag(new MultiblockStatusData.StatusBool("Has Sufficient Power", multiblock.isPowered()).toNBT());
+        tagList.appendTag(new MultiblockStatusData.StatusBool("Is Powered", multiblock.isPowered()).toNBT());
 
         StringBuilder whatCanTransmit = new StringBuilder();
+        boolean canTransmitAny = false;
         StringBuilder whatCanReceive = new StringBuilder();
+        boolean canReceiveAny = false;
 
         for(int i = 0; i < TransferType.values().length; i++) {
             TransferType type = TransferType.values()[i];
             if(multiblock.canTransmit(type)) {
+                canTransmitAny = true;
                 whatCanTransmit.append(type.getFriendlyName());
                 if(i != TransferType.values().length - 1)
                     whatCanTransmit.append(", ");
             }
             if(multiblock.canReceive(type)) {
+                canReceiveAny = true;
                 whatCanReceive.append(type.getFriendlyName());
                 if(i != TransferType.values().length - 1)
                     whatCanReceive.append(", ");
             }
         }
-        tagList.appendTag(new MultiblockStatusData.StatusString("Can Transmit", whatCanTransmit.toString()).toNBT());
-        tagList.appendTag(new MultiblockStatusData.StatusString("Can Receive", whatCanReceive.toString()).toNBT());
+        tagList.appendTag(new MultiblockStatusData.StatusString("Can Transmit", canTransmitAny ? whatCanTransmit.toString() : TextFormatting.RED + "none").toNBT());
+        tagList.appendTag(new MultiblockStatusData.StatusString("Can Receive", canReceiveAny ? whatCanReceive.toString() : TextFormatting.RED + "none").toNBT());
 
         nbt.setTag("statuses", tagList);
 

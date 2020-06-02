@@ -44,14 +44,14 @@ public class MultiblockStatusData {
                 NBTTagCompound nodeNBT = (NBTTagCompound) tagList.get(i);
                 this.readNodeFromNBT(nodeNBT);
             }
-            onNodeListChanged();
+            onNodeListChanged(); //this is redundant, with readNodeFromNBT() updates but should be here- need to fix
         }
         else {
             Debug.sendDebugMessage(RED + "[WARNING]" + RESET + " nbt at MultiblockStatusData#readNodesFromNBT() does not contain node list.");
         }
     }
     public void readNodeFromNBT(NBTTagCompound nbt) {
-        Debug.sendDebugMessage(String.format("%s%s...reading node from NBT in %s[msd]", ITALIC, DARK_GRAY, GRAY));
+        //Debug.sendDebugMessage(String.format("%s%s...reading node from NBT in %s[msd]", ITALIC, DARK_GRAY, GRAY));
         boolean entryAlreadyExisted = false;
         //loop through entries to see if one with the same pos already exists
         for(NodeStatusEntry e : entries) {
@@ -60,14 +60,14 @@ public class MultiblockStatusData {
                     Debug.sendDebugMessage(DARK_GRAY.toString() + ITALIC + "...found existing entry of same pos");
                     //If this is a remove message, remove the entry
                     if(nbt.hasKey("removeme") && nbt.getBoolean("removeme")) {
-                        Debug.sendDebugMessage(DARK_GRAY.toString() + ITALIC + "...is remove key");
+                        //Debug.sendDebugMessage(DARK_GRAY.toString() + ITALIC + "...is remove key");
                         entries.remove(e);
                         Debug.sendDebugMessage(YELLOW + "[CLIENT]" + DARK_RED + "Removed status entry " + RESET + e.getBlock().getLocalizedName());
                         onNodeListChanged();
                     }
                     //otherwise, update it with the nbt
                     else {
-                        Debug.sendDebugMessage(DARK_GRAY.toString() + ITALIC + "...isn't remove key. Just reading normally.");
+                        //Debug.sendDebugMessage(DARK_GRAY.toString() + ITALIC + "...isn't remove key. Just reading normally.");
                         e.readFromNBT(nbt);
                         Debug.sendDebugMessage(YELLOW + "[CLIENT]" + BLUE + "Updated status entry " + RESET + e.getBlock().getLocalizedName());
                         //Debug: Show the contents of the status entry
@@ -81,11 +81,10 @@ public class MultiblockStatusData {
         if(!entryAlreadyExisted) {
             Debug.sendDebugMessage(DARK_GRAY.toString() + ITALIC + "...no existing entry found. Creating new one.");
             NodeStatusEntry newEntry = new NodeStatusEntry(nbt);
-            Debug.sendDebugMessage(GRAY.toString() + ITALIC + "...Constructed new object");
             entries.add(newEntry);
-            Debug.sendDebugMessage(GRAY.toString() + ITALIC + "...added object");
             Debug.sendDebugMessage(YELLOW + "[CLIENT]" + GREEN + "Added new status entry " + RESET + newEntry.getBlock().getLocalizedName());
             onNodeListChanged();
+
             //Debug: Show the contents of the status entry
             //Debug.sendDebugMessage(newEntry.toString());
         }
@@ -150,7 +149,7 @@ public class MultiblockStatusData {
             if(nbt.hasKey("block")) {
                 //Debug.sendDebugMessage(WHITE.toString() + ITALIC + "....has block key");
                 block = Block.getBlockFromName(nbt.getString("block"));
-                //Debug.sendDebugMessage(WHITE.toString() + ITALIC + "....got block key");
+                Debug.sendDebugMessage(WHITE.toString() + ITALIC + "....block: " + block.getLocalizedName());
             }
             if(nbt.hasKey("statuses")) {
                 //Debug.sendDebugMessage(WHITE.toString() + ITALIC + "....has statuses key");
