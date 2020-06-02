@@ -89,8 +89,8 @@ public abstract class AbstractGuiMachine<T extends TileEntity> extends GuiContai
 
         if ((tileEntity instanceof AbstractTileMultiblockNode) && !((AbstractTileMultiblockNode) tileEntity).getClientPowered())
             powerIndicator.draw();
-        //if ((tileEntity instanceof TileRadio) && !((TileRadio) tileEntity).getClientPowered())
-        //    powerIndicator.draw();
+        if ((tileEntity instanceof TileRadio) && !((TileRadio) tileEntity).getClientPowered())
+            powerIndicator.draw();
 
         drawContentBeforeTooltip(mouseX, mouseY, partialTicks);
 
