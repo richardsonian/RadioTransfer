@@ -119,7 +119,7 @@ public class TileRadio extends AbstractTileMachineWithInventory implements ITile
         NBTTagList tagList = new NBTTagList();
 
         tagList.appendTag(new MultiblockStatusData.StatusBool("Is Powered", multiblock.isPowered()).toNBT());
-
+        /*
         StringBuilder whatCanTransmit = new StringBuilder();
         boolean canTransmitAny = false;
         StringBuilder whatCanReceive = new StringBuilder();
@@ -139,6 +139,10 @@ public class TileRadio extends AbstractTileMachineWithInventory implements ITile
         }
         tagList.appendTag(new MultiblockStatusData.StatusString("Can Transmit", canTransmitAny ? whatCanTransmit.toString() : TextFormatting.RED + "none").toNBT());
         tagList.appendTag(new MultiblockStatusData.StatusString("Can Receive", canReceiveAny ? whatCanReceive.toString() : TextFormatting.RED + "none").toNBT());
+        */
+
+        tagList.appendTag(new MultiblockStatusData.StatusString("Can Transmit", TextFormatting.YELLOW + "Items").toNBT());
+        tagList.appendTag(new MultiblockStatusData.StatusString("Can Receive", TextFormatting.YELLOW + "Items").toNBT());
 
         nbt.setTag("statuses", tagList);
 
