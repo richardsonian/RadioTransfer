@@ -96,7 +96,7 @@ public class GuiUtil {
         //sendDebugMessage(text);
         int maxIndex = 0;
         while (getLineLength(combineWords(words, maxIndex)) < maxSize) {
-            sendDebugMessage(combineWords(words, maxIndex));
+            //sendDebugMessage(combineWords(words, maxIndex));
             maxIndex++;
         }
         return combineWords(words, maxIndex - 1);
