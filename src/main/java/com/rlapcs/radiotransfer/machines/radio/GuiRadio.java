@@ -72,7 +72,6 @@ public class GuiRadio extends AbstractGuiMachine {
 
     public void updateMultiblockViewer() {
         coords = ((TileRadio) tileEntity).getMultiblockStatusData().getAllNodePositions();
-        coords.add(tileEntity.getPos());
 
         if (!coords.contains(selectedBlock))
             selectedBlock = coords.get(0);
@@ -84,7 +83,6 @@ public class GuiRadio extends AbstractGuiMachine {
     protected void preDrawScreen() {
         if (isClosed) {
             coords = ((TileRadio) tileEntity).getMultiblockStatusData().getAllNodePositions();
-            coords.add(tileEntity.getPos());
             multiblockViewer.updateBlocksInList(new NNList<>(coords), selectedBlock);
             isClosed = false;
         }
@@ -105,15 +103,13 @@ public class GuiRadio extends AbstractGuiMachine {
         RenderHelper.enableGUIStandardItemLighting();
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         CoordinateXY namePos = pos.addTo(BLOCK_NAME_POS);
-        if (selectedBlock.equals(tileEntity.getPos())) {
-            this.drawString(mc.fontRenderer, "Radio", namePos.x, namePos.y, Color.decode("#E8B07B").getRGB());
-        } else {
-            MultiblockStatusData statusData = ((TileRadio) tileEntity).getMultiblockStatusData();
-            MultiblockStatusData.NodeStatusEntry entry = statusData.getEntry(selectedBlock);
-            this.drawString(mc.fontRenderer, entry.getBlock().getLocalizedName(), namePos.x, namePos.y, Color.decode("#E8B07B").getRGB());
-            List<MultiblockStatusData.Status> statuses = entry.getStatuses();
-            iterateThroughStatuses(statuses, 0, 0);
-        }
+
+        MultiblockStatusData statusData = ((TileRadio) tileEntity).getMultiblockStatusData();
+        MultiblockStatusData.NodeStatusEntry entry = statusData.getEntry(selectedBlock);
+        this.drawString(mc.fontRenderer, entry.getBlock().getLocalizedName(), namePos.x, namePos.y, Color.decode("#E8B07B").getRGB());
+        List<MultiblockStatusData.Status> statuses = entry.getStatuses();
+        iterateThroughStatuses(statuses, 0, 0);
+
         RenderHelper.enableStandardItemLighting();
     }
 
@@ -127,8 +123,7 @@ public class GuiRadio extends AbstractGuiMachine {
                     this.drawString(mc.fontRenderer, key + "  ×" + ((StatusItemStack) status).getValue().getCount(), infoPos.x, infoPos.y + liney, Color.WHITE.getRGB());
                     drawItem(statusItemStack.getValue(), new CoordinateXY(infoPos.x + GuiUtil.getLineLength(key) - 3, infoPos.y + liney - 1), status.getKey());
                 } else {
-                    this.drawString(mc.fontRenderer, key + "  ×" + ((StatusItemStack) status).getValue().toString(), infoPos.x, infoPos.y + liney, Color.WHITE.getRGB());
-                    drawItem(new ItemStack(Items.ACACIA_BOAT), new CoordinateXY(infoPos.x + GuiUtil.getLineLength(key) - 3, infoPos.y + liney - 1), status.getKey());
+                    this.drawString(mc.fontRenderer, status.toString(), infoPos.x, infoPos.y + liney, Color.WHITE.getRGB());
                 }
             } else if (status instanceof StatusList) {
                 StatusList statusList = (StatusList) status;
@@ -146,6 +141,7 @@ public class GuiRadio extends AbstractGuiMachine {
                     this.drawString(mc.fontRenderer, line, infoPos.x, infoPos.y + liney, Color.WHITE.getRGB());
                     liney += mc.fontRenderer.FONT_HEIGHT + 2;
                 }
+                liney -= mc.fontRenderer.FONT_HEIGHT + 2;
             }
             liney += mc.fontRenderer.FONT_HEIGHT + 2;
         }
