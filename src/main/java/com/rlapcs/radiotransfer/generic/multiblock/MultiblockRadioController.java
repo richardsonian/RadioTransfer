@@ -12,6 +12,7 @@ import com.rlapcs.radiotransfer.machines.processors.ProcessorType;
 import com.rlapcs.radiotransfer.machines.processors.abstract_processor.AbstractTileProcessor;
 import com.rlapcs.radiotransfer.machines.processors.material_processor.AbstractTileMaterialProcessor;
 import com.rlapcs.radiotransfer.machines.radio.TileRadio;
+import com.rlapcs.radiotransfer.network.messages.toClient.MessageUpdateClientRadioPowered;
 import com.rlapcs.radiotransfer.network.messages.toClient.MessageUpdateClientTileMultiblockNodePowered;
 import com.rlapcs.radiotransfer.registries.ModNetworkMessages;
 import com.rlapcs.radiotransfer.server.radio.RadioNetwork;
@@ -170,8 +171,10 @@ public class MultiblockRadioController {
      * @param target
      */
     public void setPowered(boolean target) {
-        if (target != isPowered) //if this is a new update, tell the clients
+        if (target != isPowered) {//if this is a new update, tell the clients
             updateClientNodesPowerState(target);
+            updateClientRadioPowerState(target);
+        }
         if(!target)
             emptyPower();
         isPowered = target;
@@ -192,6 +195,13 @@ public class MultiblockRadioController {
                 dimension, tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ(), -1
         ));
         getAllActiveNodes().forEach(AbstractTileMultiblockNode::onStatusChange);
+    }
+    public void updateClientRadioPowerState(boolean target) {
+        int dimension = tileEntity.getWorld().provider.getDimension();
+        ModNetworkMessages.INSTANCE.sendToAllTracking(new MessageUpdateClientRadioPowered(this.getTileEntity(), target), new NetworkRegistry.TargetPoint(
+                dimension, tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ(), -1
+        ));
+        this.tileEntity.onStatusChange();
     }
     //##################################################################################################//
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~TRANSMISSION AND RECEIVING~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//

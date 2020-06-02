@@ -88,7 +88,8 @@ public class TileRadio extends AbstractTileMachineWithInventory implements ITile
             Debug.sendToAllPlayers(TextFormatting.GRAY + " - " + te, world);
             tagList.appendTag(te.writeStatusToNBT());
         }
-
+        //This is a bit of hack, but throw in the radio to this packet:
+        tagList.appendTag(this.writeStatusToNBT());
         NBTTagCompound nbt = new NBTTagCompound();
         nbt.setTag("node_status_list", tagList);
         //Debug.sendToAllPlayers(TextFormatting.AQUA + "Sending Status Update to Clients for " + TextFormatting.RESET + "ALL", world);
@@ -102,6 +103,43 @@ public class TileRadio extends AbstractTileMachineWithInventory implements ITile
 
     //Client Side Only
     public MultiblockStatusData getMultiblockStatusData() {return multiblockStatusData;}
+
+    //~~~~~~~~~~~For Radio Status writing~~~~~~~~~~~//
+    public void onStatusChange() {
+        clientListeners.forEach(p -> ModNetworkMessages.INSTANCE.sendTo(new MessageUpdateClientTileMultiblockStatusData(this.getPos(), this.writeStatusToNBT()), p));
+    }
+    public NBTTagCompound writeStatusToNBT() {
+        NBTTagCompound nbt = new NBTTagCompound();
+        nbt.setLong("pos", pos.toLong());
+        nbt.setString("block", world.getBlockState(pos).getBlock().getRegistryName().toString());
+
+        NBTTagList tagList = new NBTTagList();
+
+        tagList.appendTag(new MultiblockStatusData.StatusBool("Has Sufficient Power", multiblock.isPowered()).toNBT());
+
+        StringBuilder whatCanTransmit = new StringBuilder();
+        StringBuilder whatCanReceive = new StringBuilder();
+
+        for(int i = 0; i < TransferType.values().length; i++) {
+            TransferType type = TransferType.values()[i];
+            if(multiblock.canTransmit(type)) {
+                whatCanTransmit.append(type.getFriendlyName());
+                if(i != TransferType.values().length - 1)
+                    whatCanTransmit.append(", ");
+            }
+            if(multiblock.canReceive(type)) {
+                whatCanReceive.append(type.getFriendlyName());
+                if(i != TransferType.values().length - 1)
+                    whatCanReceive.append(", ");
+            }
+        }
+        tagList.appendTag(new MultiblockStatusData.StatusString("Can Transmit", whatCanTransmit.toString()).toNBT());
+        tagList.appendTag(new MultiblockStatusData.StatusString("Can Receive", whatCanReceive.toString()).toNBT());
+
+        nbt.setTag("statuses", tagList);
+
+        return nbt;
+    }
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~RESOURCE SENDING~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
