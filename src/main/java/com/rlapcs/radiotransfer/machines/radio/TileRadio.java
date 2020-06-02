@@ -125,19 +125,16 @@ public class TileRadio extends AbstractTileMachineWithInventory implements ITile
         StringBuilder whatCanReceive = new StringBuilder();
         boolean canReceiveAny = false;
 
-        for(int i = 0; i < TransferType.values().length; i++) {
-            TransferType type = TransferType.values()[i];
+        for(TransferType type : TransferType.values()) {
             if(multiblock.canTransmit(type)) {
                 canTransmitAny = true;
                 whatCanTransmit.append(type.getFriendlyName());
-                if(i != TransferType.values().length - 1)
-                    whatCanTransmit.append(", ");
+                whatCanTransmit.append(", ");
             }
             if(multiblock.canReceive(type)) {
                 canReceiveAny = true;
                 whatCanReceive.append(type.getFriendlyName());
-                if(i != TransferType.values().length - 1)
-                    whatCanReceive.append(", ");
+                whatCanReceive.append(", ");
             }
         }
         tagList.appendTag(new MultiblockStatusData.StatusString("Can Transmit", canTransmitAny ? whatCanTransmit.toString() : TextFormatting.RED + "none").toNBT());
