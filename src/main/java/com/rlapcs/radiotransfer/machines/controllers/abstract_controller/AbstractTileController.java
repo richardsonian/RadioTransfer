@@ -70,7 +70,7 @@ public abstract class AbstractTileController extends AbstractTileMultiblockNodeW
         NBTTagList tagList = nbt.getTagList("statuses", Constants.NBT.TAG_COMPOUND);
 
         tagList.appendTag(new MultiblockStatusData.StatusBool("Activated", activated).toNBT());
-        tagList.appendTag(new MultiblockStatusData.StatusInt("Frequency", frequency).toNBT());
+        tagList.appendTag(new MultiblockStatusData.StatusInt.WithUnits("Frequency", frequency, "MHz").toNBT());
 
         nbt.setTag("statuses", tagList);
         return nbt;

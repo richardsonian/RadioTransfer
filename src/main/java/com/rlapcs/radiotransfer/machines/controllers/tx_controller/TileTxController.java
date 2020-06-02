@@ -74,7 +74,7 @@ public class TileTxController extends AbstractTileController {
         NBTTagCompound nbt = super.writeStatusToNBT();
         NBTTagList tagList = nbt.getTagList("statuses", Constants.NBT.TAG_COMPOUND);
 
-        tagList.appendTag(new MultiblockStatusData.StatusString("Transmission Mode", mode.getFriendlyName()).toNBT());
+        tagList.appendTag(new MultiblockStatusData.StatusString("Mode", mode.getFriendlyName()).toNBT());
 
         List<MultiblockStatusData.Status> upgradeList = new ArrayList<>();
             upgradeList.add(new MultiblockStatusData.StatusUpgradeCard(ModItems.encryption_card, itemStackHandler.getStackInSlot(ENCRYPTION_CARD_SLOT_INDEX).getCount()));
