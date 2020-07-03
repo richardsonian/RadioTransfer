@@ -7,6 +7,7 @@ import com.rlapcs.radiotransfer.machines.processors.item_processors.item_decoder
 import com.rlapcs.radiotransfer.machines.processors.item_processors.item_encoder.BlockItemEncoder;
 import com.rlapcs.radiotransfer.machines.power_supply.BlockPowerSupply;
 import com.rlapcs.radiotransfer.machines.radio.BlockRadio;
+import com.rlapcs.radiotransfer.machines.radio_cable.BlockRadioCable;
 import net.minecraft.block.Block;
 import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 import net.minecraftforge.fml.relauncher.Side;
@@ -40,6 +41,8 @@ public class ModBlocks {
 
     public static final BlockBasicAntenna basic_antenna = null;
 
+    public static final BlockRadioCable radio_cable = null;
+
     /**
      * Returns a list of instances of blocks that are to be added to the registry.
      * @return The list.
@@ -57,6 +60,7 @@ public class ModBlocks {
         blocks.add(new BlockItemDecoder());
         blocks.add(new BlockPowerSupply());
         blocks.add(new BlockBasicAntenna());
+        blocks.add(new BlockRadioCable());
         /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
         return blocks;
@@ -84,6 +88,7 @@ public class ModBlocks {
         item_decoder.initModel();
         power_supply.initModel();
         basic_antenna.initModel();
+        radio_cable.initModel();
     }
 
     /**

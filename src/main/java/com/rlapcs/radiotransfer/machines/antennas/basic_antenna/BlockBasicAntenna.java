@@ -1,6 +1,7 @@
 package com.rlapcs.radiotransfer.machines.antennas.basic_antenna;
 
 import com.rlapcs.radiotransfer.RadioTransfer;
+import com.rlapcs.radiotransfer.generic.blocks.IRadioCableConnectable;
 import com.rlapcs.radiotransfer.machines.antennas.abstract_antenna.AbstractAntenna;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
@@ -11,7 +12,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class BlockBasicAntenna extends AbstractAntenna {
+public class BlockBasicAntenna extends AbstractAntenna implements IRadioCableConnectable {
     public static final String NAME = "basic_antenna";
     private IBlockState stateForPlacement;
 
@@ -47,5 +48,11 @@ public class BlockBasicAntenna extends AbstractAntenna {
     @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
         worldIn.setBlockState(pos, stateForPlacement);
+    }
+
+    @Override
+    public boolean canConnect(EnumFacing facing) {
+        if(facing == EnumFacing.DOWN) return true;
+        else return false;
     }
 }

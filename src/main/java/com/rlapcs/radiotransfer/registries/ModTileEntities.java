@@ -8,6 +8,7 @@ import com.rlapcs.radiotransfer.machines.processors.item_processors.item_decoder
 import com.rlapcs.radiotransfer.machines.processors.item_processors.item_encoder.TileItemEncoder;
 import com.rlapcs.radiotransfer.machines.power_supply.TilePowerSupply;
 import com.rlapcs.radiotransfer.machines.radio.TileRadio;
+import com.rlapcs.radiotransfer.machines.radio_cable.TileRadioCable;
 import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -26,6 +27,8 @@ public class ModTileEntities {
         GameRegistry.registerTileEntity(TilePowerSupply.class, getTeResourceLocation(ModBlocks.power_supply));
 
         GameRegistry.registerTileEntity(TileBasicAntenna.class, getTeResourceLocation(ModBlocks.basic_antenna));
+
+        GameRegistry.registerTileEntity(TileRadioCable.class, getTeResourceLocation(ModBlocks.radio_cable));
     }
 
     private static ResourceLocation getTeResourceLocation(Block block) {
