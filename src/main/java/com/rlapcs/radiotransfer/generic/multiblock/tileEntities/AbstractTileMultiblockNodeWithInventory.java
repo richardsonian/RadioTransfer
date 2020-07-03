@@ -31,7 +31,7 @@ AbstractTileMultiblockNodeWithInventory extends AbstractTileMultiblockNode imple
             protected void onContentsChanged(int slot) {
                 super.onContentsChanged(slot);
                 AbstractTileMultiblockNodeWithInventory.this.markDirty();
-                Debug.sendToAllPlayers("itemStackHandler changed. Sending Status Update.", world);
+                //Debug.sendToAllPlayers("itemStackHandler changed. Sending Status Update.", world);
                 AbstractTileMultiblockNodeWithInventory.this.onStatusChange();
             }
             @Override

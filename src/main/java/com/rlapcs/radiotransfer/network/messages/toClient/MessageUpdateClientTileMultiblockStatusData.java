@@ -31,7 +31,7 @@ public class MessageUpdateClientTileMultiblockStatusData implements IMessage {
 
     @Override
     public void toBytes(ByteBuf buf) {
-        Debug.sendDebugMessage(ITALIC.toString() + DARK_GRAY + "...sending message");
+        //Debug.sendDebugMessage(ITALIC.toString() + DARK_GRAY + "...sending message");
         buf.writeLong(controllerPos.toLong());
         ByteBufUtils.writeTag(buf, statusNBT);
     }
@@ -53,7 +53,7 @@ public class MessageUpdateClientTileMultiblockStatusData implements IMessage {
 
         private void handle(MessageUpdateClientTileMultiblockStatusData message, MessageContext ctx) {
             if(ctx.side == Side.CLIENT) {
-                Debug.sendDebugMessage(ITALIC.toString() + DARK_GRAY + "...message received");
+                //Debug.sendDebugMessage(ITALIC.toString() + DARK_GRAY + "...message received");
                 Minecraft mc = Minecraft.getMinecraft();
                 WorldClient world = mc.world;
                 EntityPlayerSP player = mc.player;
@@ -68,7 +68,7 @@ public class MessageUpdateClientTileMultiblockStatusData implements IMessage {
                             tile.getMultiblockStatusData().readNodesFromNBT(message.statusNBT);
                         }
                         else {
-                            Debug.sendDebugMessage(ITALIC.toString() + DARK_GRAY + "...adding single node");
+                            //Debug.sendDebugMessage(ITALIC.toString() + DARK_GRAY + "...adding single node");
                             tile.getMultiblockStatusData().readNodeFromNBT(message.statusNBT);
                         }
 
