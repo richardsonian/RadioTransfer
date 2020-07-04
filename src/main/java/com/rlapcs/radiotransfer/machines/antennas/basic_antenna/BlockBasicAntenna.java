@@ -52,7 +52,6 @@ public class BlockBasicAntenna extends AbstractAntenna implements IRadioCableCon
 
     @Override
     public boolean canConnect(EnumFacing facing) {
-        if(facing == EnumFacing.DOWN) return true;
-        else return false;
+        return facing == EnumFacing.DOWN;
     }
 }

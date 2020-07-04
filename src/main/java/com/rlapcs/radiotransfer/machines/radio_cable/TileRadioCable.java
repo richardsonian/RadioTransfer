@@ -37,31 +37,41 @@ public class TileRadioCable extends TileEntity {
     //~~~~~~~~~~~CONNECTION UPDATE LOGIC~~~~~~~~~~~~~//
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 
+    /*
+     * To be called on server only
+     */
     public void onNeighborChange(BlockPos neighbor) {
         if(updateNeighborConnection(neighbor)) {
             this.markDirty();
 
             //Send the new connections list to the client
+            Debug.sendToAllPlayers(String.format("%sCable@(%d, %d, %d) %sNotifying Block Update", TextFormatting.GRAY, pos.getX(), pos.getY(), pos.getZ(), TextFormatting.DARK_GREEN), world);
             IBlockState state = world.getBlockState(getPos());
             world.notifyBlockUpdate(getPos(), state, state, 3); //this probably causes some extra updates, not sure
         }
     }
 
+    /*
+     * Called when the TE is placed
+     */
     @Override
     public void onLoad() {
-        boolean actionPerformed = false;
-        for(EnumFacing facing : EnumFacing.values()) { //Check all surrounding sides
-            BlockPos neighbor = this.pos.offset(facing);
-            if(updateNeighborConnection(neighbor)) { //for each side, check whether it is a connection
-                actionPerformed = true;
+        if(!world.isRemote) {
+            boolean actionPerformed = false;
+            for (EnumFacing facing : EnumFacing.values()) { //Check all surrounding sides
+                BlockPos neighbor = this.pos.offset(facing);
+                if (updateNeighborConnection(neighbor)) { //for each side, check whether it is a connection
+                    actionPerformed = true;
+                }
             }
-        }
-        if(actionPerformed) {
-            this.markDirty(); //if any connections were added or removed, mark the TE
+            if (actionPerformed) {
+                this.markDirty(); //if any connections were added or removed, mark the TE
 
-            //Send the new connections list to the client
-            IBlockState state = world.getBlockState(getPos());
-            world.notifyBlockUpdate(getPos(), state, state, 3); //this probably causes some extra updates, not sure
+                //Send the new connections list to the client
+                Debug.sendToAllPlayers(String.format("%sCable@(%d, %d, %d) %sNotifying Block Update", TextFormatting.GRAY, pos.getX(), pos.getY(), pos.getZ(), TextFormatting.DARK_GREEN), world);
+                IBlockState state = world.getBlockState(getPos());
+                world.notifyBlockUpdate(getPos(), state, state, 3); //this probably causes some extra updates, not sure
+            }
         }
     }
 
@@ -97,6 +107,7 @@ public class TileRadioCable extends TileEntity {
         if(compound.hasKey("connections")) {
             int[] serialized_connections = compound.getIntArray("connections");
             connections = EnumSet.copyOf(IntStream.of(serialized_connections).mapToObj(EnumFacing::getFront).collect(Collectors.toList()));
+            Debug.sendToAllPlayers(String.format("%sCable@(%d, %d, %d) %sUpdated connections from NBT. %s(%s)", TextFormatting.GRAY, pos.getX(), pos.getY(), pos.getZ(), TextFormatting.DARK_GREEN, TextFormatting.RESET, (world.isRemote ? "client" : "server")), world);
         }
     }
     @Override
@@ -137,5 +148,21 @@ public class TileRadioCable extends TileEntity {
     @Override
     public String toString() {
         return String.format("%s at [%d, %d, %d]", this.getClass().getSimpleName(), pos.getX(), pos.getY(), pos.getZ());
+    }
+
+    public String getConnectionsAsString() {
+        StringBuilder str = new StringBuilder();
+        if(connections.isEmpty()) {
+            return TextFormatting.YELLOW + "none";
+        }
+        else {
+            for (EnumFacing facing : connections) {
+                str.append(TextFormatting.YELLOW);
+                str.append(facing.getName2());
+                str.append(TextFormatting.RESET);
+                str.append(", ");
+            }
+            return str.substring(0, str.length() - 2);
+        }
     }
 }
