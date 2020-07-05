@@ -25,3 +25,6 @@ tile.radiotransfer.item_encoder.name=Item Encoder
 tile.radiotransfer.item_decoder.name=Item Decoder
 tile.radiotransfer.power_supply.name=Power Supply
 tile.radiotransfer.basic_antenna.name=Basic Antenna
+
+# cable
+tile.radiotransfer.radio_cable.name=Radio Cable

@@ -9,6 +9,7 @@ import com.rlapcs.radiotransfer.machines.power_supply.BlockPowerSupply;
 import com.rlapcs.radiotransfer.machines.radio.BlockRadio;
 import com.rlapcs.radiotransfer.machines.radio_cable.BlockRadioCable;
 import net.minecraft.block.Block;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -28,6 +29,7 @@ public class ModBlocks {
         public static final ItemClass item_name = null;
      */
 
+
     //multiblock radio
     public static final BlockRadio radio = null;
 
@@ -41,7 +43,8 @@ public class ModBlocks {
 
     public static final BlockBasicAntenna basic_antenna = null;
 
-    public static final BlockRadioCable radio_cable = null;
+    @GameRegistry.ObjectHolder("radiotransfer:radio_cable")
+    public static BlockRadioCable radio_cable;
 
     /**
      * Returns a list of instances of blocks that are to be added to the registry.
@@ -89,6 +92,11 @@ public class ModBlocks {
         power_supply.initModel();
         basic_antenna.initModel();
         radio_cable.initModel();
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static void initItemModels() {
+        radio_cable.initItemModel();
     }
 
     /**

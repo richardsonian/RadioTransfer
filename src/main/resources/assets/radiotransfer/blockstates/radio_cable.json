@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "normal": { "model": "radiotransfer:radio_cable" }
+  }
+}
