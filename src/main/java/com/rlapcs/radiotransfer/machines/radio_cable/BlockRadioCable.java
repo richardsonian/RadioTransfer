@@ -57,7 +57,7 @@ public class BlockRadioCable extends Block {
 
     @SideOnly(Side.CLIENT)
     public void initModel() {
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(getRegistryName(), "inventory"));
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(REG_NAME, "inventory"));
         StateMapperBase ignoreState = new StateMapperBase() {
             @Override
             protected ModelResourceLocation getModelResourceLocation(IBlockState iBlockState) {
@@ -72,7 +72,7 @@ public class BlockRadioCable extends Block {
         // For our item model we want to use a normal json model. This has to be called in
         // ClientProxy.postInit (not preInit) so that's why it is a separate method.
         Item itemBlock = Item.REGISTRY.getObject(new ResourceLocation(RadioTransfer.MODID, REG_NAME));
-        ModelResourceLocation itemModelResourceLocation = new ModelResourceLocation(getRegistryName(), "inventory");
+        ModelResourceLocation itemModelResourceLocation = new ModelResourceLocation(REG_NAME, "inventory");
         final int DEFAULT_ITEM_SUBTYPE = 0;
         Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(itemBlock, DEFAULT_ITEM_SUBTYPE, itemModelResourceLocation);
     }
