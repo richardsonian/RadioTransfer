@@ -1,6 +1,7 @@
 package com.rlapcs.radiotransfer.machines.radio_cable;
 
 import com.rlapcs.radiotransfer.RadioTransfer;
+import com.rlapcs.radiotransfer.generic.blocks.AbstractBlockMachine;
 import com.rlapcs.radiotransfer.generic.blocks.IRadioCableConnectable;
 import com.rlapcs.radiotransfer.registries.ModBlocks;
 import com.rlapcs.radiotransfer.util.Debug;
@@ -57,7 +58,7 @@ public class BlockRadioCable extends Block {
 
     @SideOnly(Side.CLIENT)
     public void initModel() {
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(REG_NAME, "inventory"));
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(this), 0, new ModelResourceLocation(REG_NAME, "normal"));
         StateMapperBase ignoreState = new StateMapperBase() {
             @Override
             protected ModelResourceLocation getModelResourceLocation(IBlockState iBlockState) {
@@ -72,7 +73,7 @@ public class BlockRadioCable extends Block {
         // For our item model we want to use a normal json model. This has to be called in
         // ClientProxy.postInit (not preInit) so that's why it is a separate method.
         Item itemBlock = Item.REGISTRY.getObject(new ResourceLocation(RadioTransfer.MODID, REG_NAME));
-        ModelResourceLocation itemModelResourceLocation = new ModelResourceLocation(REG_NAME, "inventory");
+        ModelResourceLocation itemModelResourceLocation = new ModelResourceLocation(REG_NAME, "normal"); // how tf do i make this not crash
         final int DEFAULT_ITEM_SUBTYPE = 0;
         Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(itemBlock, DEFAULT_ITEM_SUBTYPE, itemModelResourceLocation);
     }
@@ -98,12 +99,12 @@ public class BlockRadioCable extends Block {
     public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
         IExtendedBlockState extendedBlockState = (IExtendedBlockState) state;
 
-        boolean north = isSameBlock(world, pos.north());
-        boolean south = isSameBlock(world, pos.south());
-        boolean west = isSameBlock(world, pos.west());
-        boolean east = isSameBlock(world, pos.east());
-        boolean up = isSameBlock(world, pos.up());
-        boolean down = isSameBlock(world, pos.down());
+        boolean north = isValidBlock(world, pos.north());
+        boolean south = isValidBlock(world, pos.south());
+        boolean west = isValidBlock(world, pos.west());
+        boolean east = isValidBlock(world, pos.east());
+        boolean up = isValidBlock(world, pos.up());
+        boolean down = isValidBlock(world, pos.down());
 
         return extendedBlockState
                 .withProperty(NORTH, north)
@@ -114,6 +115,10 @@ public class BlockRadioCable extends Block {
                 .withProperty(DOWN, down);
     }
 
+    private boolean isValidBlock(IBlockAccess world, BlockPos pos) {
+        Block neighbor = world.getBlockState(pos).getBlock();
+        return neighbor instanceof BlockRadioCable || neighbor instanceof AbstractBlockMachine; // maybe make it a lil more specific
+    }
     private boolean isSameBlock(IBlockAccess world, BlockPos pos) {
         return world.getBlockState(pos).getBlock() == ModBlocks.radio_cable;
     }
